@@ -1,4 +1,7 @@
-<meta charset="UTF-8"/>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>BIM Hub - Danh sach du an</title>
   <style>
@@ -81,17 +84,45 @@
     .btn-add-task { background:#fff; border:1.5px dashed #0096c7; color:#0096c7; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; width:100%; transition:all .15s; margin-top:4px; }
     .btn-add-task:hover { background:#f0f7ff; }
     .btn-remove-task { position:absolute; top:8px; right:10px; background:none; border:none; color:#e63946; cursor:pointer; font-size:16px; }
+
+    /* PROJECT TABLE */
     .proj-table { width:100%; border-collapse:collapse; background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.07); }
     .proj-table thead th { padding:12px 16px; text-align:left; font-size:12px; font-weight:700; color:#fff; background:#0077b6; }
     .proj-table tbody td { padding:13px 16px; font-size:13px; color:#333; border-bottom:1px solid #f0f0f0; vertical-align:middle; }
-    .proj-table tbody tr:hover td { background:#f8fbff; }
     .proj-table tbody tr:last-child td { border-bottom:none; }
+    .proj-row { cursor:pointer; transition:background .15s; }
+    .proj-row:hover td { background:#f0f7ff; }
+    .proj-row.expanded td { background:#e8f4fe; }
     .proj-code { font-weight:700; color:#0077b6; font-size:13px; }
+
+    /* STT BADGE */
     .stt-badge { display:inline-flex; align-items:center; justify-content:center; min-width:36px; height:36px; border-radius:10px; font-size:13px; font-weight:800; padding:0 6px; }
     .stt-a { background:#e8f4fe; color:#0077b6; }
     .stt-b { background:#d4edda; color:#1a7c3a; }
     .stt-c { background:#fff3cd; color:#856404; }
     .stt-d { background:#f3e8ff; color:#7b2d8b; }
+
+    /* CHEVRON */
+    .chevron { display:inline-block; transition:transform .25s; font-size:12px; color:#aaa; margin-left:6px; }
+    .chevron.open { transform:rotate(90deg); }
+
+    /* TASK EXPAND ROW */
+    .task-expand-row { display:none; }
+    .task-expand-row.open { display:table-row; }
+    .task-expand-cell { padding:0 !important; border-bottom:2px solid #0096c7 !important; background:#f8fbff !important; }
+    .task-expand-inner { padding:12px 20px 16px 56px; }
+    .task-expand-title { font-size:12px; font-weight:700; color:#0077b6; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+    .task-cards { display:flex; flex-wrap:wrap; gap:10px; }
+    .task-card { background:#fff; border:1.5px solid #dde2ea; border-radius:10px; padding:12px 14px; min-width:220px; max-width:280px; flex:1; transition:box-shadow .15s; }
+    .task-card:hover { box-shadow:0 4px 12px rgba(0,0,0,.1); }
+    .task-card-type { font-size:11px; font-weight:700; color:#fff; padding:2px 10px; border-radius:20px; display:inline-block; margin-bottom:7px; }
+    .task-card-row { display:flex; align-items:center; gap:6px; font-size:12px; color:#555; margin-bottom:4px; }
+    .task-card-row:last-child { margin-bottom:0; }
+    .task-card-label { color:#aaa; font-size:11px; min-width:56px; }
+    .task-card-val { font-weight:600; color:#333; }
+    .no-task-msg { font-size:13px; color:#aaa; padding:8px 0; }
+
+    /* GROUP SELECTOR */
     .group-selector { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:6px; }
     .group-opt { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:12px 8px; border:2px solid #dde2ea; border-radius:10px; cursor:pointer; transition:all .15s; background:#fff; }
     .group-opt:hover { border-color:#0096c7; background:#f0f7ff; }
@@ -115,17 +146,17 @@
     <div class="avatar" id="topAvatar">?</div>
     <span class="user-name" id="topName">...</span>
     <span class="role-badge" id="topRole"></span>
-    <a class="btn-top" href="my-tasks.html">📋 Lich cua toi</a>
-    <a class="btn-top admin-only" href="admin.html" style="display:none;">👥 Thanh vien</a>
+    <a class="btn-top" href="my-tasks.html">&#x1F4CB; Lich cua toi</a>
+    <a class="btn-top admin-only" href="admin.html" style="display:none;">&#x1F465; Thanh vien</a>
     <button class="btn-top" onclick="logout()">Dang xuat</button>
   </div>
 </nav>
 
 <div class="nav-tabs">
-  <a class="nav-tab active" href="view-list.html">📋 Danh sach du an</a>
-  <a class="nav-tab" href="view-category.html">🗂️ Theo the loai</a>
-  <a class="nav-tab" href="view-schedule.html">📅 Schedule du an</a>
-  <a class="nav-tab" href="view-staff.html">👥 Lich nhan vien</a>
+  <a class="nav-tab active" href="view-list.html">&#x1F4CB; Danh sach du an</a>
+  <a class="nav-tab" href="view-category.html">&#x1F5C2;&#xFE0F; Theo the loai</a>
+  <a class="nav-tab" href="view-schedule.html">&#x1F4C5; Schedule du an</a>
+  <a class="nav-tab" href="view-staff.html">&#x1F465; Lich nhan vien</a>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -133,22 +164,23 @@
 
 <div class="main">
   <div class="section-header">
-    <div class="section-title">🏗️ Danh sach du an</div>
-    <button class="btn-primary admin-only" onclick="openModal()" style="display:none;">➕ Tao du an moi</button>
+    <div class="section-title">&#x1F3D7;&#xFE0F; Danh sach du an</div>
+    <button class="btn-primary admin-only" onclick="openModal()" style="display:none;">&#x2795; Tao du an moi</button>
   </div>
   <div class="filters">
-    <input class="filter-input" id="searchProj" placeholder="🔍 Tim ten du an..." oninput="renderList()" style="min-width:220px;"/>
+    <input class="filter-input" id="searchProj" placeholder="&#x1F50D; Tim ten du an..." oninput="renderList()" style="min-width:220px;"/>
     <button class="filter-btn active" id="fAll"    onclick="setFilter('all')">Tat ca</button>
-    <button class="filter-btn"        id="fActive" onclick="setFilter('active')">🟢 Dang hoat dong</button>
-    <button class="filter-btn"        id="fDone"   onclick="setFilter('done')">⬜ Da ket thuc</button>
+    <button class="filter-btn"        id="fActive" onclick="setFilter('active')">&#x1F7E2; Dang hoat dong</button>
+    <button class="filter-btn"        id="fDone"   onclick="setFilter('done')">&#x2B1C; Da ket thuc</button>
     <select class="filter-select" id="fGroup" onchange="renderList()">
       <option value="">Tat ca nhom</option>
-      <option value="A">A - 設計BIM</option>
-      <option value="B">B - 施工BIM</option>
-      <option value="C">C - 清算</option>
+      <option value="A">A - &#x8A2D;&#x8A08;BIM</option>
+      <option value="B">B - &#x65BD;&#x5DE5;BIM</option>
+      <option value="C">C - &#x6E05;&#x7B97;</option>
       <option value="D">D - M&amp;F</option>
     </select>
   </div>
+
   <table class="proj-table">
     <thead>
       <tr>
@@ -156,7 +188,7 @@
         <th>Ma du an</th>
         <th>Ten du an</th>
         <th>Chi nhanh</th>
-        <th>設計区分</th>
+        <th>&#x8A2D;&#x8A08;&#x533A;&#x5206;</th>
         <th>Nhom</th>
         <th>Trang thai</th>
         <th>Ngay tao</th>
@@ -173,10 +205,9 @@
 <div class="modal-overlay" id="createModal" onclick="if(event.target.id==='createModal')closeModal()">
   <div class="modal">
     <div class="modal-title">
-      🏗️ Tao du an moi
+      &#x1F3D7;&#xFE0F; Tao du an moi
       <button class="modal-close" onclick="closeModal()">&#x2715;</button>
     </div>
-
     <div class="preview-box">
       <div class="preview-label">Project Code Preview</div>
       <div class="preview-code">
@@ -186,7 +217,6 @@
         <span class="dim">_</span><span id="pName"   class="dim">&#x7269;&#x4EF6;&#x540D;</span>
       </div>
     </div>
-
     <div class="form-group" style="margin-bottom:16px;">
       <label>Nhom du an <span class="req">*</span></label>
       <div class="group-selector">
@@ -216,7 +246,6 @@
         <span style="color:#aaa;font-size:11px;">(reset theo nam)</span>
       </div>
     </div>
-
     <div class="form-grid">
       <div class="form-group">
         <label>&#x5E74;&#x5EA6; <span class="req">*</span></label>
@@ -252,7 +281,7 @@
       </div>
       <div class="form-group full">
         <label>&#x7269;&#x4EF6;&#x540D;&#x30FB;&#x5DE5;&#x4E8B;&#x540D;&#x79F0; <span class="req">*</span></label>
-        <input type="text" id="nameInput" placeholder="&#x4F8B;: NewSAMPLE&#x3001;&#x3007;&#x3007;&#x30D3;&#x30EB;&#x65B0;&#x7BC9;&#x5DE5;&#x4E8B;..." oninput="updatePreview()"/>
+        <input type="text" id="nameInput" placeholder="&#x4F8B;: NewSAMPLE..." oninput="updatePreview()"/>
       </div>
       <div class="form-group">
         <label>&#x958B;&#x59CB;&#x65E5;</label>
@@ -263,13 +292,11 @@
         <input type="date" id="projEnd"/>
       </div>
     </div>
-
     <div class="tasks-section">
       <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:10px;">&#x1F4CB; &#x5DE5;&#x7A0B;&#x30FB;&#x30BF;&#x30B9;&#x30AF;&#x5165;&#x529B;</div>
       <div id="taskRows"></div>
       <button class="btn-add-task" onclick="addTaskRow()">&#x2795; &#x30BF;&#x30B9;&#x30AF;&#x3092;&#x8FFD;&#x52A0;</button>
     </div>
-
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">&#x30AD;&#x30E3;&#x30F3;&#x30BB;&#x30EB;</button>
       <button class="btn-primary"   onclick="createProject()">&#x2705; &#x4F5C;&#x6210;&#x3059;&#x308B;</button>
@@ -279,16 +306,26 @@
 
 <script src="js/config.js"></script>
 <script>
-var filterStatus  = 'all';
-var taskRowCount  = 0;
-var selectedGroup = 'A';
+var filterStatus    = 'all';
+var taskRowCount    = 0;
+var selectedGroup   = 'A';
 var currentUserRole = 'Staff';
+var expandedId      = null;
 
 var GROUP_CFG = {
   A: { label:'設計BIM', icon:'🏛️', cls:'stt-a' },
   B: { label:'施工BIM', icon:'🏗️', cls:'stt-b' },
   C: { label:'清算',    icon:'💰', cls:'stt-c' },
   D: { label:'M&F',    icon:'🔧', cls:'stt-d' }
+};
+
+var TYPE_COLOR = {
+  'パース・動画': '#f4a261',
+  '意匠モデル':   '#4cc9f0',
+  '構造モデル':   '#52b788',
+  '清算モデル':   '#9b5de5',
+  '図面':         '#e63946',
+  '施工ステップ': '#ffd166'
 };
 
 window.onload = function() {
@@ -337,13 +374,10 @@ function updateSttPreview() {
   var count = 0;
   for (var i=0; i<allProjects.length; i++) {
     var p = allProjects[i];
-    if (p.proj_group === selectedGroup && (p.year === year || (p.code||'').startsWith(year))) {
-      count++;
-    }
+    if (p.proj_group === selectedGroup && (p.year === year || (p.code||'').startsWith(year))) count++;
   }
-  var sttText = selectedGroup + (count + 1);
   var sttEl = document.getElementById('sttVal');
-  sttEl.textContent = sttText;
+  sttEl.textContent = selectedGroup + (count + 1);
   var colorMap = {A:'#0077b6', B:'#1a7c3a', C:'#856404', D:'#7b2d8b'};
   sttEl.style.color = colorMap[selectedGroup] || '#0077b6';
 }
@@ -372,37 +406,113 @@ function calcStatus(p) {
     if (!t.send_date) { hasNoSend = true; allPast = false; break; }
     var sd = new Date(t.send_date);
     sd.setHours(0,0,0,0);
-    if (sd >= today) { allPast = false; }
+    if (sd >= today) allPast = false;
   }
   if (hasNoSend) return 'active';
   return allPast ? 'done' : 'active';
 }
 
+function getActiveTasks(projId) {
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  var result = [];
+  for (var i=0; i<allTasks.length; i++) {
+    var t = allTasks[i];
+    if (t.project_id !== projId) continue;
+    if (!t.send_date) { result.push(t); continue; }
+    var sd = new Date(t.send_date);
+    sd.setHours(0,0,0,0);
+    if (sd >= today) result.push(t);
+  }
+  return result;
+}
+
+function toggleExpand(projId) {
+  if (expandedId === projId) {
+    collapseRow(projId);
+    expandedId = null;
+  } else {
+    if (expandedId) collapseRow(expandedId);
+    expandRow(projId);
+    expandedId = projId;
+  }
+}
+
+function expandRow(projId) {
+  var projRow  = document.getElementById('proj-row-' + projId);
+  var taskRow  = document.getElementById('task-row-' + projId);
+  var chevron  = document.getElementById('chev-' + projId);
+  if (!projRow || !taskRow) return;
+  projRow.classList.add('expanded');
+  taskRow.classList.add('open');
+  if (chevron) chevron.classList.add('open');
+}
+
+function collapseRow(projId) {
+  var projRow  = document.getElementById('proj-row-' + projId);
+  var taskRow  = document.getElementById('task-row-' + projId);
+  var chevron  = document.getElementById('chev-' + projId);
+  if (!projRow || !taskRow) return;
+  projRow.classList.remove('expanded');
+  taskRow.classList.remove('open');
+  if (chevron) chevron.classList.remove('open');
+}
+
+function buildTaskExpand(projId, projColor) {
+  var tasks = getActiveTasks(projId);
+  if (tasks.length === 0) {
+    return '<div class="no-task-msg">&#x1F4AD; Khong co task dang hoat dong</div>';
+  }
+  var html = '<div class="task-cards">';
+  for (var i=0; i<tasks.length; i++) {
+    var t     = tasks[i];
+    var user  = null;
+    for (var j=0; j<allUsers.length; j++) { if (allUsers[j].id === t.assigned_to) { user = allUsers[j]; break; } }
+    var tc    = TYPE_COLOR[t.task_type] || projColor || '#a8dadc';
+    var rcv   = t.receive_date || '-';
+    var start = t.start_date   || '-';
+    var end   = t.end_date     || '-';
+    var send  = t.send_date    || '-';
+    var uname = user ? (user.name || user.email) : '- Chua phan cong -';
+    html += '<div class="task-card">'
+      + '<div class="task-card-type" style="background:' + tc + ';">' + (t.task_type || 'Task') + '</div>'
+      + '<div class="task-card-row"><span class="task-card-label">&#x1F464; Phu trach:</span><span class="task-card-val">' + uname + '</span></div>'
+      + '<div class="task-card-row"><span class="task-card-label">&#x1F4E5; Nhan data:</span><span class="task-card-val">' + rcv + '</span></div>'
+      + '<div class="task-card-row"><span class="task-card-label">&#x1F4C5; Bat dau:</span><span class="task-card-val">' + start + '</span></div>'
+      + '<div class="task-card-row"><span class="task-card-label">&#x1F3C1; Ket thuc:</span><span class="task-card-val">' + end + '</span></div>'
+      + '<div class="task-card-row"><span class="task-card-label">&#x1F4E4; Ngay gui:</span><span class="task-card-val">' + send + '</span></div>'
+      + (t.note ? '<div class="task-card-row"><span class="task-card-label">&#x1F4DD; Ghi chu:</span><span class="task-card-val">' + t.note + '</span></div>' : '')
+      + '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
 function renderList() {
   var q    = (document.getElementById('searchProj').value || '').toLowerCase();
   var grpF = document.getElementById('fGroup').value;
+  expandedId = null;
 
-  // Build STT map: reset per year per group
   var counters = {};
-  var sorted   = allProjects.slice().sort(function(a,b){ return new Date(a.created_at) - new Date(b.created_at); });
+  var sorted   = allProjects.slice().sort(function(a,b){ return new Date(a.created_at)-new Date(b.created_at); });
   var sttMap   = {};
   for (var s=0; s<sorted.length; s++) {
     var sp  = sorted[s];
     var yr  = sp.year || '26';
     var grp = sp.proj_group || 'A';
     var key = yr + '_' + grp;
-    counters[key] = (counters[key] || 0) + 1;
+    counters[key] = (counters[key]||0) + 1;
     sttMap[sp.id] = grp + counters[key];
   }
 
   var data = [];
   for (var i=0; i<allProjects.length; i++) {
-    var p = allProjects[i];
-    var autoStatus = calcStatus(p);
-    var mQ = !q || p.project_name.toLowerCase().indexOf(q) >= 0 || (p.code||'').toLowerCase().indexOf(q) >= 0;
+    var p  = allProjects[i];
+    var as = calcStatus(p);
+    var mQ = !q || p.project_name.toLowerCase().indexOf(q)>=0 || (p.code||'').toLowerCase().indexOf(q)>=0;
     var mS = true;
-    if (filterStatus === 'active') mS = (autoStatus === 'active');
-    if (filterStatus === 'done')   mS = (autoStatus === 'done');
+    if (filterStatus === 'active') mS = (as === 'active');
+    if (filterStatus === 'done')   mS = (as === 'done');
     var mG = !grpF || p.proj_group === grpF;
     if (mQ && mS && mG) data.push(p);
   }
@@ -417,65 +527,79 @@ function renderList() {
   for (var d=0; d<data.length; d++) {
     var p      = data[d];
     var color  = projColorMap[p.id] || '#a8dadc';
-    var grp    = p.proj_group || 'A';
-    var cfg    = GROUP_CFG[grp] || GROUP_CFG['A'];
-    var sttTxt = sttMap[p.id] || (grp + '?');
+    var grp2   = p.proj_group || 'A';
+    var cfg    = GROUP_CFG[grp2] || GROUP_CFG['A'];
+    var sttTxt = sttMap[p.id] || (grp2+'?');
     var autoSt = calcStatus(p);
     var stBadge = autoSt === 'done'
       ? '<span class="status-badge status-done">&#x2B1C; Da ket thuc</span>'
       : '<span class="status-badge status-active">&#x1F7E2; Dang hoat dong</span>';
     var date   = p.created_at ? new Date(p.created_at).toLocaleDateString('vi-VN') : '-';
-    var projId = p.year && p.seq_number
+    var projId2 = p.year && p.seq_number
       ? p.year + String(p.seq_number).padStart(3,'0')
-      : (p.code || '-').split('_')[0];
-    var delBtn = currentUserRole === 'Admin'
-      ? '<button class="btn-del-proj" onclick="deleteProject(\'' + p.id + '\',\'' + p.project_name.replace(/'/g,"\\'") + '\')">&#x1F5D1;&#xFE0F; Xoa</button>'
+      : (p.code||'-').split('_')[0];
+    var activeCnt = getActiveTasks(p.id).length;
+    var cntBadge  = activeCnt > 0
+      ? ' <span style="background:#e63946;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px;">' + activeCnt + '</span>'
       : '';
-    html += '<tr>'
+    var delBtn = currentUserRole === 'Admin'
+      ? '<button class="btn-del-proj" onclick="event.stopPropagation();deleteProject(\'' + p.id + '\',\'' + p.project_name.replace(/'/g,"\\'") + '\')">&#x1F5D1;&#xFE0F; Xoa</button>'
+      : '';
+    var taskExpandHtml = buildTaskExpand(p.id, color);
+
+    html += '<tr class="proj-row" id="proj-row-' + p.id + '" onclick="toggleExpand(\'' + p.id + '\')">'
       + '<td style="text-align:center;"><div class="stt-badge ' + cfg.cls + '">' + sttTxt + '</div></td>'
-      + '<td><span class="proj-code"><span class="color-dot" style="background:' + color + ';"></span>' + projId + '</span></td>'
-      + '<td style="font-weight:600;">' + p.project_name + '</td>'
-      + '<td>' + (p.branch || '-') + '</td>'
-      + '<td>' + (p.design_type || '-') + '</td>'
+      + '<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>' + projId2 + '</span></td>'
+      + '<td style="font-weight:600;">' + p.project_name + '<span class="chevron" id="chev-' + p.id + '">&#x25B6;</span>' + cntBadge + '</td>'
+      + '<td>' + (p.branch||'-') + '</td>'
+      + '<td>' + (p.design_type||'-') + '</td>'
       + '<td><span style="font-size:12px;">' + cfg.icon + ' ' + cfg.label + '</span></td>'
       + '<td>' + stBadge + '</td>'
       + '<td style="color:#888;">' + date + '</td>'
       + '<td>' + delBtn + '</td>'
+      + '</tr>'
+      + '<tr class="task-expand-row" id="task-row-' + p.id + '">'
+      + '<td class="task-expand-cell" colspan="9">'
+      + '<div class="task-expand-inner">'
+      + '<div class="task-expand-title">&#x1F4CB; Task dang hoat dong</div>'
+      + taskExpandHtml
+      + '</div>'
+      + '</td>'
       + '</tr>';
   }
   tbody.innerHTML = html;
 }
 
-function openModal() { suggestNextNum(); selectGroup('A'); document.getElementById('createModal').classList.add('open'); }
+function openModal()  { suggestNextNum(); selectGroup('A'); document.getElementById('createModal').classList.add('open'); }
 function closeModal() { document.getElementById('createModal').classList.remove('open'); }
 
 function addTaskRow() {
   taskRowCount++;
-  var id = 'task_' + taskRowCount;
+  var id = 'task_'+taskRowCount;
   var div = document.createElement('div');
-  div.className = 'task-row'; div.id = id;
-  var typeOpts = '';
-  for (var i=0; i<TASK_TYPES.length; i++) typeOpts += '<option value="' + TASK_TYPES[i] + '">' + TASK_TYPES[i] + '</option>';
-  var userOpts = '';
-  for (var j=0; j<allUsers.length; j++) userOpts += '<option value="' + allUsers[j].id + '">' + (allUsers[j].name || allUsers[j].email) + '</option>';
-  div.innerHTML = '<button class="btn-remove-task" onclick="document.getElementById(\'' + id + '\').remove()">&#x2715;</button>'
-    + '<div class="task-grid">'
-    + '<div class="form-group"><label>&#x5DE5;&#x7A2E;</label><select class="task-type">' + typeOpts + '</select></div>'
-    + '<div class="form-group"><label>&#x62C5;&#x5F53;&#x8005;</label><select class="task-user"><option value="">- &#x672A;&#x5B9A; -</option>' + userOpts + '</select></div>'
-    + '<div class="form-group"><label>&#x30E1;&#x30E2;</label><input type="text" class="task-note" placeholder="&#x5099;&#x8003;..."/></div>'
-    + '</div>'
-    + '<div class="task-dates">'
-    + '<div class="form-group"><label>&#x53D7;&#x4FE1;&#x65E5;</label><input type="date" class="task-receive"/></div>'
-    + '<div class="form-group"><label>&#x4F5C;&#x696D;&#x958B;&#x59CB;</label><input type="date" class="task-start"/></div>'
-    + '<div class="form-group"><label>&#x4F5C;&#x696D;&#x7D42;&#x4E86;</label><input type="date" class="task-end"/></div>'
-    + '<div class="form-group"><label>&#x9001;&#x4FE1;&#x65E5;</label><input type="date" class="task-send"/></div>'
-    + '</div>';
+  div.className='task-row'; div.id=id;
+  var typeOpts='';
+  for (var i=0;i<TASK_TYPES.length;i++) typeOpts+='<option value="'+TASK_TYPES[i]+'">'+TASK_TYPES[i]+'</option>';
+  var userOpts='';
+  for (var j=0;j<allUsers.length;j++) userOpts+='<option value="'+allUsers[j].id+'">'+(allUsers[j].name||allUsers[j].email)+'</option>';
+  div.innerHTML='<button class="btn-remove-task" onclick="document.getElementById(\''+id+'\').remove()">&#x2715;</button>'
+    +'<div class="task-grid">'
+    +'<div class="form-group"><label>&#x5DE5;&#x7A2E;</label><select class="task-type">'+typeOpts+'</select></div>'
+    +'<div class="form-group"><label>&#x62C5;&#x5F53;&#x8005;</label><select class="task-user"><option value="">- &#x672A;&#x5B9A; -</option>'+userOpts+'</select></div>'
+    +'<div class="form-group"><label>&#x30E1;&#x30E2;</label><input type="text" class="task-note" placeholder="&#x5099;&#x8003;..."/></div>'
+    +'</div>'
+    +'<div class="task-dates">'
+    +'<div class="form-group"><label>&#x53D7;&#x4FE1;&#x65E5;</label><input type="date" class="task-receive"/></div>'
+    +'<div class="form-group"><label>&#x4F5C;&#x696D;&#x958B;&#x59CB;</label><input type="date" class="task-start"/></div>'
+    +'<div class="form-group"><label>&#x4F5C;&#x696D;&#x7D42;&#x4E86;</label><input type="date" class="task-end"/></div>'
+    +'<div class="form-group"><label>&#x9001;&#x4FE1;&#x65E5;</label><input type="date" class="task-send"/></div>'
+    +'</div>';
   document.getElementById('taskRows').appendChild(div);
 }
 
 async function createProject() {
-  var year   = (document.getElementById('yearInput').value || '26').padStart(2,'0');
-  var num    = (document.getElementById('numInput').value  || '001').padStart(3,'0');
+  var year   = (document.getElementById('yearInput').value||'26').padStart(2,'0');
+  var num    = (document.getElementById('numInput').value||'001').padStart(3,'0');
   var branch = document.getElementById('branchInput').value.trim();
   var design = document.getElementById('designInput').value.trim();
   var name   = document.getElementById('nameInput').value.trim();
@@ -492,15 +616,12 @@ async function createProject() {
   try {
     var res = await fetch(SUPABASE_URL+'/rest/v1/projects', {
       method:'POST', headers:HDRS,
-      body: JSON.stringify({
-        code: code, year: year, seq_number: parseInt(num),
-        branch: branch, design_type: design||null, project_name: name,
-        status: 'active', color: color, proj_group: selectedGroup,
-        start_date: pStart||null, end_date: pEnd||null, created_by: createdBy
-      })
+      body: JSON.stringify({ code:code, year:year, seq_number:parseInt(num), branch:branch,
+        design_type:design||null, project_name:name, status:'active', color:color,
+        proj_group:selectedGroup, start_date:pStart||null, end_date:pEnd||null, created_by:createdBy })
     });
     if (!res.ok) { var e=await res.json(); showToast('❌ '+(e.message||'Error'),'error'); return; }
-    var arr = await res.json();
+    var arr  = await res.json();
     var proj = arr[0];
     allProjects.unshift(proj);
     projColorMap[proj.id] = color;
@@ -510,114 +631,90 @@ async function createProject() {
       var d2 = taskDivs[i];
       promises.push(fetch(SUPABASE_URL+'/rest/v1/project_tasks', {
         method:'POST', headers:HDRS,
-        body: JSON.stringify({
-          project_id:   proj.id,
-          task_type:    d2.querySelector('.task-type').value,
-          assigned_to:  d2.querySelector('.task-user').value || null,
-          note:         d2.querySelector('.task-note').value.trim() || null,
-          receive_date: d2.querySelector('.task-receive').value || null,
-          start_date:   d2.querySelector('.task-start').value  || null,
-          end_date:     d2.querySelector('.task-end').value    || null,
-          send_date:    d2.querySelector('.task-send').value   || null,
-          status:       'active'
-        })
+        body: JSON.stringify({ project_id:proj.id, task_type:d2.querySelector('.task-type').value,
+          assigned_to:d2.querySelector('.task-user').value||null, note:d2.querySelector('.task-note').value.trim()||null,
+          receive_date:d2.querySelector('.task-receive').value||null, start_date:d2.querySelector('.task-start').value||null,
+          end_date:d2.querySelector('.task-end').value||null, send_date:d2.querySelector('.task-send').value||null, status:'active' })
       }));
     }
     await Promise.all(promises);
+    await loadAllData();
     renderList();
     closeModal();
     var ids2 = ['nameInput','branchInput','designInput','projStart','projEnd'];
-    for (var k=0; k<ids2.length; k++) document.getElementById(ids2[k]).value = '';
-    document.getElementById('taskRows').innerHTML = '';
-    taskRowCount = 0; addTaskRow();
+    for (var k=0; k<ids2.length; k++) document.getElementById(ids2[k]).value='';
+    document.getElementById('taskRows').innerHTML='';
+    taskRowCount=0; addTaskRow();
     renderTags('branch'); renderTags('design'); updatePreview(); suggestNextNum();
-    showToast('✅ Da tao du an: ' + name, 'success');
-  } catch(e) {
-    showToast('❌ Loi: ' + e.message, 'error');
-  }
+    showToast('✅ Da tao du an: '+name, 'success');
+  } catch(e) { showToast('❌ Loi: '+e.message,'error'); }
 }
 
 async function deleteProject(id, name) {
-  if (!confirm('Xac nhan xoa du an:\\n' + name + '?')) return;
+  if (!confirm('Xac nhan xoa du an:\\n'+name+'?')) return;
   try {
-    await fetch(SUPABASE_URL+'/rest/v1/project_tasks?project_id=eq.'+id, { method:'DELETE', headers:HDRS });
-    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+id, { method:'DELETE', headers:HDRS });
-    var newList = [];
-    for (var i=0; i<allProjects.length; i++) {
-      if (allProjects[i].id !== id) newList.push(allProjects[i]);
-    }
-    allProjects = newList;
+    await fetch(SUPABASE_URL+'/rest/v1/project_tasks?project_id=eq.'+id, {method:'DELETE',headers:HDRS});
+    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+id, {method:'DELETE',headers:HDRS});
+    var newList=[];
+    for (var i=0;i<allProjects.length;i++) { if(allProjects[i].id!==id) newList.push(allProjects[i]); }
+    allProjects=newList;
     delete projColorMap[id];
+    expandedId=null;
     renderList();
-    showToast('🗑️ Da xoa du an: ' + name, 'success');
-  } catch(e) {
-    showToast('❌ Loi xoa: ' + e.message, 'error');
-  }
+    showToast('🗑️ Da xoa du an: '+name,'success');
+  } catch(e) { showToast('❌ Loi xoa: '+e.message,'error'); }
 }
 
 function suggestNextNum() {
-  var y = document.getElementById('yearInput').value || '26';
-  var count = 0;
-  for (var i=0; i<allProjects.length; i++) {
-    if ((allProjects[i].code||'').startsWith(y)) count++;
-  }
-  var n = String(count + 1).padStart(3,'0');
-  document.getElementById('numInput').value = n;
-  document.getElementById('numHint').innerHTML = '次番号: <b style="color:#0096c7;">' + n + '</b>';
-  updatePreview();
-  updateSttPreview();
+  var y=document.getElementById('yearInput').value||'26';
+  var count=0;
+  for (var i=0;i<allProjects.length;i++) { if((allProjects[i].code||'').startsWith(y)) count++; }
+  var n=String(count+1).padStart(3,'0');
+  document.getElementById('numInput').value=n;
+  document.getElementById('numHint').innerHTML='次番号: <b style="color:#0096c7;">'+n+'</b>';
+  updatePreview(); updateSttPreview();
 }
-function onYearChange(v) {
-  document.getElementById('yearDisp').textContent = String(v).padStart(2,'0');
-  suggestNextNum();
-}
+function onYearChange(v) { document.getElementById('yearDisp').textContent=String(v).padStart(2,'0'); suggestNextNum(); }
 function updatePreview() {
-  var y  = String(document.getElementById('yearInput').value  || '26').padStart(2,'0');
-  var n  = String(document.getElementById('numInput').value   || '001').padStart(3,'0');
-  var b  = document.getElementById('branchInput').value.trim();
-  var d  = document.getElementById('designInput').value.trim();
-  var nm = document.getElementById('nameInput').value.trim();
-  function se(id,v,ph){ var el=document.getElementById(id); el.textContent=v||ph; el.className=v?'':'dim'; }
-  document.getElementById('pYear').textContent = y;
-  document.getElementById('pNum').textContent  = n;
-  se('pBranch', b,  '支店');
-  se('pDesign', d,  '設計区分');
-  se('pName',   nm, '物件名');
+  var y=String(document.getElementById('yearInput').value||'26').padStart(2,'0');
+  var n=String(document.getElementById('numInput').value||'001').padStart(3,'0');
+  var b=document.getElementById('branchInput').value.trim();
+  var d=document.getElementById('designInput').value.trim();
+  var nm=document.getElementById('nameInput').value.trim();
+  function se(id,v,ph){var el=document.getElementById(id);el.textContent=v||ph;el.className=v?'':'dim';}
+  document.getElementById('pYear').textContent=y;
+  document.getElementById('pNum').textContent=n;
+  se('pBranch',b,'支店'); se('pDesign',d,'設計区分'); se('pName',nm,'物件名');
 }
-function onCombo(k)  { renderDD(k); updatePreview(); }
-function openDD(k)   { renderDD(k); }
-function closeDD(k)  { setTimeout(function(){ document.getElementById(k+'DD').classList.remove('open'); }, 200); }
+function onCombo(k) { renderDD(k); updatePreview(); }
+function openDD(k)  { renderDD(k); }
+function closeDD(k) { setTimeout(function(){ document.getElementById(k+'DD').classList.remove('open'); },200); }
 function renderDD(k) {
-  var data = k==='branch' ? BRANCHES : DESIGNS;
-  var val  = document.getElementById(k+'Input').value.trim();
-  var dd   = document.getElementById(k+'DD');
-  var filt = val ? data.filter(function(d){ return d.toLowerCase().indexOf(val.toLowerCase()) >= 0; }) : data;
-  var html = '';
-  for (var i=0; i<filt.length; i++) html += '<div class="combo-item" onmousedown="selectCombo(\''+k+'\',\''+filt[i]+'\')">'+filt[i]+'</div>';
-  var valLow = val.toLowerCase();
-  var found  = false;
-  for (var j=0; j<data.length; j++) { if (data[j].toLowerCase() === valLow) { found=true; break; } }
-  if (val && !found) html += '<div class="combo-item combo-new" onmousedown="selectCombo(\''+k+'\',\''+val+'\')">➕ 新規: '+val+'</div>';
-  if (!html) html = '<div class="combo-item" style="color:#aaa;cursor:default;">候補なし</div>';
-  dd.innerHTML = html; dd.classList.add('open'); renderTags(k);
+  var data=k==='branch'?BRANCHES:DESIGNS;
+  var val=document.getElementById(k+'Input').value.trim();
+  var dd=document.getElementById(k+'DD');
+  var filt=val?data.filter(function(d){return d.toLowerCase().indexOf(val.toLowerCase())>=0;}):data;
+  var html='';
+  for (var i=0;i<filt.length;i++) html+='<div class="combo-item" onmousedown="selectCombo(\''+k+'\',\''+filt[i]+'\')">'+filt[i]+'</div>';
+  var found=false;
+  for (var j=0;j<data.length;j++){if(data[j].toLowerCase()===val.toLowerCase()){found=true;break;}}
+  if (val&&!found) html+='<div class="combo-item combo-new" onmousedown="selectCombo(\''+k+'\',\''+val+'\')">➕ 新規: '+val+'</div>';
+  if (!html) html='<div class="combo-item" style="color:#aaa;cursor:default;">候補なし</div>';
+  dd.innerHTML=html; dd.classList.add('open'); renderTags(k);
 }
 function selectCombo(k,v) {
-  document.getElementById(k+'Input').value = v;
+  document.getElementById(k+'Input').value=v;
   document.getElementById(k+'DD').classList.remove('open');
   renderTags(k); updatePreview();
 }
 function renderTags(k) {
-  var data = k==='branch' ? BRANCHES : DESIGNS;
-  var cur  = document.getElementById(k+'Input').value.trim();
-  var html = '';
-  for (var i=0; i<data.length; i++) {
-    html += '<span class="tag '+(cur===data[i]?'active':'')+'" onclick="selectCombo(\''+k+'\',\''+data[i]+'\')">'+data[i]+'</span>';
-  }
-  document.getElementById(k+'Tags').innerHTML = html;
+  var data=k==='branch'?BRANCHES:DESIGNS;
+  var cur=document.getElementById(k+'Input').value.trim();
+  var html='';
+  for (var i=0;i<data.length;i++) html+='<span class="tag '+(cur===data[i]?'active':'')+'" onclick="selectCombo(\''+k+'\',\''+data[i]+'\')">'+data[i]+'</span>';
+  document.getElementById(k+'Tags').innerHTML=html;
 }
-function logout() {
-  if (confirm('Dang xuat?')) { localStorage.clear(); window.location.href='index.html'; }
-}
+function logout() { if(confirm('Dang xuat?')){localStorage.clear();window.location.href='index.html';} }
 </script>
 </body>
 </html>
