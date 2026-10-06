@@ -37,12 +37,10 @@ login_html = """<!DOCTYPE html>
       width:100%; padding:11px 40px 11px 14px;
       border:1.5px solid #dde2ea; border-radius:10px;
       font-size:14px; color:#222; outline:none;
-      transition:border-color .2s, box-shadow .2s;
-      font-family:inherit;
+      transition:border-color .2s, box-shadow .2s; font-family:inherit;
     }
     .input-wrap input:focus {
-      border-color:#0096c7;
-      box-shadow:0 0 0 3px rgba(0,150,199,.12);
+      border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.12);
     }
     .input-wrap input.error { border-color:#e63946; }
     .input-icon {
@@ -60,23 +58,26 @@ login_html = """<!DOCTYPE html>
       margin-bottom:20px; text-align:left; line-height:1.6;
     }
     .btn-login {
-      width:100%; padding:13px; background:linear-gradient(135deg,#0096c7,#0077b6);
+      width:100%; padding:13px;
+      background:linear-gradient(135deg,#0096c7,#0077b6);
       color:#fff; border:none; border-radius:10px; font-size:15px;
       font-weight:700; cursor:pointer; transition:all .2s;
       box-shadow:0 4px 14px rgba(0,119,182,.3); margin-top:4px;
     }
-    .btn-login:hover {
-      box-shadow:0 8px 24px rgba(0,119,182,.4); transform:translateY(-1px);
-    }
+    .btn-login:hover { box-shadow:0 8px 24px rgba(0,119,182,.4); transform:translateY(-1px); }
+    .btn-login:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+    .loading { display:inline-block; width:16px; height:16px; border:2px solid #fff;
+      border-top-color:transparent; border-radius:50%; animation:spin .7s linear infinite; margin-right:8px; vertical-align:middle; }
+    @keyframes spin { to { transform:rotate(360deg); } }
     .divider { height:1px; background:#eee; margin:20px 0; position:relative; }
     .divider span {
       position:absolute; top:-9px; left:50%; transform:translateX(-50%);
       background:#fff; padding:0 12px; font-size:12px; color:#bbb;
     }
     .hint { font-size:12px; color:#aaa; line-height:1.7; }
-    .footer { margin-top:28px; font-size:11px; color:#ccc; }
     .forgot { font-size:12px; color:#0096c7; text-align:right; margin-top:4px; cursor:pointer; }
     .forgot:hover { text-decoration:underline; }
+    .footer { margin-top:28px; font-size:11px; color:#ccc; }
   </style>
 </head>
 <body>
@@ -107,13 +108,13 @@ login_html = """<!DOCTYPE html>
     <label>Mật khẩu</label>
     <div class="input-wrap">
       <input type="password" id="pwInput" placeholder="Nhập mật khẩu"
-        id="pwInput" onkeydown="if(event.key==='Enter') doLogin()"/>
+        onkeydown="if(event.key==='Enter') doLogin()"/>
       <span class="input-icon" onclick="togglePw()" id="pwEye">👁️</span>
     </div>
     <div class="forgot" onclick="showForgot()">Quên mật khẩu? Liên hệ Admin</div>
   </div>
 
-  <button class="btn-login" onclick="doLogin()">🔐 Đăng nhập</button>
+  <button class="btn-login" id="loginBtn" onclick="doLogin()">🔐 Đăng nhập</button>
 
   <div class="divider"><span>vinadecons.vn</span></div>
   <p class="hint">
@@ -124,28 +125,58 @@ login_html = """<!DOCTYPE html>
 </div>
 
 <script>
-  // ── Danh sách users nội bộ (sau này lấy từ Supabase DB) ──
-  const USERS = [
-    { email:'admin@vinadecons.vn',        password:'Admin@2026', role:'Admin', name:'Admin' },
-    { email:'lqhuy@vinadecons.vn',         password:'Staff@2026', role:'Staff', name:'Lê Quang Huy' },
-    { email:'nguyen.van.a@vinadecons.vn',  password:'Staff@2026', role:'Staff', name:'Nguyễn Văn A' },
-    { email:'tran.thi.b@vinadecons.vn',    password:'Staff@2026', role:'Staff', name:'Trần Thị B' },
-  ];
+  const SUPABASE_URL = 'https://oyvwattigkqnimlmrqnj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_kcQtVjFP0m4ecWySEiwdEQ_rKFz1nn6';
 
-  function doLogin() {
-    const email = document.getElementById('emailInput').value.trim().toLowerCase();
-    const pw    = document.getElementById('pwInput').value;
-    const errBox = document.getElementById('errorBox');
-    const errMsg = document.getElementById('errorMsg');
+  async function queryUser(email, password) {
+    const url = SUPABASE_URL + '/rest/v1/users'
+      + '?email=eq.' + encodeURIComponent(email)
+      + '&password=eq.' + encodeURIComponent(password)
+      + '&select=email,name,role,status';
+    const res = await fetch(url, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json'
+      }
+    });
+    if (!res.ok) throw new Error('Network error');
+    return await res.json();
+  }
 
-    // Reset
+  async function updateLastLogin(email) {
+    const url = SUPABASE_URL + '/rest/v1/users?email=eq.' + encodeURIComponent(email);
+    await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ last_login: new Date().toISOString(), status: 'active' })
+    });
+  }
+
+  async function doLogin() {
+    const email   = document.getElementById('emailInput').value.trim().toLowerCase();
+    const pw      = document.getElementById('pwInput').value;
+    const errBox  = document.getElementById('errorBox');
+    const errMsg  = document.getElementById('errorMsg');
+    const btn     = document.getElementById('loginBtn');
+
     errBox.style.display = 'none';
     document.getElementById('emailInput').classList.remove('error');
     document.getElementById('pwInput').classList.remove('error');
 
-    // Validate empty
     if (!email) {
       errMsg.textContent = 'Vui lòng nhập email.';
+      errBox.style.display = 'block';
+      document.getElementById('emailInput').classList.add('error');
+      return;
+    }
+    if (!email.endsWith('@vinadecons.vn')) {
+      errMsg.textContent = 'Chỉ chấp nhận email @vinadecons.vn.';
       errBox.style.display = 'block';
       document.getElementById('emailInput').classList.add('error');
       return;
@@ -157,31 +188,32 @@ login_html = """<!DOCTYPE html>
       return;
     }
 
-    // Validate domain
-    if (!email.endsWith('@vinadecons.vn')) {
-      errMsg.textContent = 'Chỉ chấp nhận email @vinadecons.vn.';
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading"></span>Đang đăng nhập...';
+
+    try {
+      const users = await queryUser(email, pw);
+      if (!users || users.length === 0) {
+        errMsg.textContent = 'Email hoặc mật khẩu không đúng. Liên hệ Admin để được hỗ trợ.';
+        errBox.style.display = 'block';
+        document.getElementById('emailInput').classList.add('error');
+        document.getElementById('pwInput').classList.add('error');
+        btn.disabled = false;
+        btn.innerHTML = '🔐 Đăng nhập';
+        return;
+      }
+      const user = users[0];
+      localStorage.setItem('user_email', user.email);
+      localStorage.setItem('user_role',  user.role);
+      localStorage.setItem('user_name',  user.name);
+      await updateLastLogin(email);
+      window.location.href = 'dashboard.html';
+    } catch(e) {
+      errMsg.textContent = 'Lỗi kết nối. Vui lòng thử lại.';
       errBox.style.display = 'block';
-      document.getElementById('emailInput').classList.add('error');
-      return;
+      btn.disabled = false;
+      btn.innerHTML = '🔐 Đăng nhập';
     }
-
-    // Check user
-    const user = USERS.find(u => u.email === email && u.password === pw);
-    if (!user) {
-      errMsg.textContent = 'Email hoặc mật khẩu không đúng. Liên hệ Admin để được hỗ trợ.';
-      errBox.style.display = 'block';
-      document.getElementById('emailInput').classList.add('error');
-      document.getElementById('pwInput').classList.add('error');
-      return;
-    }
-
-    // Save session
-    localStorage.setItem('user_email', user.email);
-    localStorage.setItem('user_role',  user.role);
-    localStorage.setItem('user_name',  user.name);
-
-    // Redirect
-    window.location.href = 'dashboard.html';
   }
 
   function togglePw() {
