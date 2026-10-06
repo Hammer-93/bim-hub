@@ -1,79 +1,175 @@
-view_category = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>BIM Hub - Theo the loai</title>
   <style>
-CSS_PLACEHOLDER
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f4f8; min-height:100vh; }
+    .topbar { display:flex; align-items:center; justify-content:space-between; background:#1a1a2e; padding:0 24px; height:52px; position:sticky; top:0; z-index:200; }
+    .topbar-left { display:flex; align-items:center; gap:10px; }
+    .topbar-logo { width:30px; height:30px; background:linear-gradient(135deg,#00b4d8,#0077b6); border-radius:7px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:15px; }
+    .topbar-title { color:#fff; font-size:16px; font-weight:700; }
+    .topbar-right { display:flex; align-items:center; gap:12px; }
+    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#00b4d8,#0096c7); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:12px; }
+    .user-name { color:#ddd; font-size:13px; }
+    .role-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; }
+    .role-admin { background:#e63946; color:#fff; }
+    .role-staff { background:#0096c7; color:#fff; }
+    .btn-top { background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; text-decoration:none; transition:background .2s; font-family:inherit; }
+    .btn-top:hover { background:rgba(255,255,255,.22); }
+    .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; }
+    .nav-tab { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; text-decoration:none; display:flex; align-items:center; gap:7px; }
+    .nav-tab:hover { color:#0096c7; }
+    .nav-tab.active { color:#0077b6; border-bottom-color:#0077b6; }
+    .main { padding:28px 32px; }
+    .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
+    .section-title { font-size:18px; font-weight:700; color:#1a1a2e; }
+    .toast { position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:9999; transform:translateY(80px); opacity:0; transition:all .35s; }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .toast.success { border-left:4px solid #52b788; }
+    .toast.error   { border-left:4px solid #e63946; }
+    .tooltip { position:fixed; background:#1a1a2e; color:#fff; padding:8px 12px; border-radius:8px; font-size:12px; z-index:9999; pointer-events:none; display:none; max-width:260px; line-height:1.6; }
+    .color-dot { width:11px; height:11px; border-radius:50%; display:inline-block; margin-right:5px; vertical-align:middle; }
+
+    /* CATEGORY */
     .cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
-    .cat-card { background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); overflow:hidden; }
-    .cat-hdr  { padding:14px 20px; font-size:14px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; }
+    .cat-card { background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); overflow:hidden; transition:transform .2s, box-shadow .2s; }
+    .cat-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
+    .cat-hdr { padding:14px 20px; font-size:14px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; }
+    .cat-count { margin-left:auto; font-size:12px; opacity:.8; background:rgba(255,255,255,.2); padding:2px 8px; border-radius:20px; }
     .cat-body { padding:8px 0; }
-    .cat-item { padding:10px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f5f5f5; transition:background .15s; }
+    .cat-empty { padding:16px 20px; color:#aaa; font-size:13px; }
+    .cat-item { padding:10px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f5f5f5; transition:background .15s; cursor:pointer; }
     .cat-item:last-child { border-bottom:none; }
     .cat-item:hover { background:#f8fbff; }
-    .cat-code  { font-size:11px; font-weight:700; color:#0077b6; background:#e8f4fe; padding:2px 8px; border-radius:20px; white-space:nowrap; }
-    .cat-name  { font-size:13px; color:#222; font-weight:500; flex:1; }
-    .cat-staff { font-size:11px; color:#888; white-space:nowrap; }
+    .cat-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+    .cat-code { font-size:11px; font-weight:700; color:#0077b6; background:#e8f4fe; padding:2px 8px; border-radius:20px; white-space:nowrap; }
+    .cat-name { font-size:13px; color:#222; font-weight:500; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .cat-staff { font-size:11px; color:#888; white-space:nowrap; flex-shrink:0; }
+
+    /* STATS ROW */
+    .stats-row { display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
+    .stat-box { background:#fff; border-radius:12px; padding:14px 20px; box-shadow:0 2px 8px rgba(0,0,0,.06); text-align:center; flex:1; min-width:120px; }
+    .stat-num { font-size:24px; font-weight:800; }
+    .stat-label { font-size:11px; color:#888; margin-top:3px; }
   </style>
 </head>
 <body>
-TOPBAR_PLACEHOLDER
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">B</div>
+    <span class="topbar-title">BIM Hub</span>
+  </div>
+  <div class="topbar-right">
+    <div class="avatar" id="topAvatar">?</div>
+    <span class="user-name" id="topName">...</span>
+    <span class="role-badge" id="topRole"></span>
+    <a class="btn-top" href="my-tasks.html">📋 Lich cua toi</a>
+    <a class="btn-top admin-only" href="admin.html" style="display:none;">👥 Thanh vien</a>
+    <button class="btn-top" onclick="logout()">Dang xuat</button>
+  </div>
+</nav>
+
+<!-- NAV TABS -->
+<div class="nav-tabs">
+  <a class="nav-tab" href="view-list.html">📋 Danh sach du an</a>
+  <a class="nav-tab active" href="view-category.html">🗂️ Theo the loai</a>
+  <a class="nav-tab" href="view-schedule.html">📅 Schedule du an</a>
+  <a class="nav-tab" href="view-staff.html">👥 Lich nhan vien</a>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="tooltip" id="tooltip"></div>
+
+<!-- MAIN -->
 <div class="main">
   <div class="section-header">
     <div class="section-title">🗂️ Phan loai theo the loai cong viec</div>
   </div>
+
+  <!-- STATS -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-box"><div class="stat-num" style="color:#0077b6;" id="statTotal">-</div><div class="stat-label">Tong du an</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:#52b788;" id="statActive">-</div><div class="stat-label">Dang hoat dong</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:#f4a261;" id="statTasks">-</div><div class="stat-label">Tong task</div></div>
+    <div class="stat-box"><div class="stat-num" style="color:#9b5de5;" id="statUsers">-</div><div class="stat-label">Nhan vien</div></div>
+  </div>
+
+  <!-- CATEGORY GRID -->
   <div class="cat-grid" id="catGrid">
     <div style="color:#aaa;padding:32px;">Dang tai...</div>
   </div>
 </div>
-SCRIPT_PLACEHOLDER
+
+<script src="js/config.js"></script>
 <script>
 window.onload = async () => {
   initTopbar();
-  try { await loadAllData(); renderCategory(); }
-  catch(e) { showToast('❌ Loi tai du lieu','error'); }
+  try {
+    await loadAllData();
+    renderStats();
+    renderCategory();
+  } catch(e) {
+    showToast('❌ Loi tai du lieu: ' + e.message, 'error');
+  }
 };
+
+function renderStats() {
+  document.getElementById('statTotal').textContent  = allProjects.length;
+  document.getElementById('statActive').textContent = allProjects.filter(p=>p.status==='active').length;
+  document.getElementById('statTasks').textContent  = allTasks.length;
+  document.getElementById('statUsers').textContent  = allUsers.length;
+}
 
 function renderCategory() {
   const CFG = {
-    'パース・動画':  {icon:'🎨', bg:'#f4a261'},
-    '意匠モデル':    {icon:'🏛️', bg:'#4cc9f0'},
-    '構造モデル':    {icon:'🏗️', bg:'#52b788'},
-    '清算モデル':    {icon:'💰', bg:'#9b5de5'},
-    '図面':          {icon:'📐', bg:'#e63946'},
-    '施工ステップ':  {icon:'🔨', bg:'#ffd166'}
+    'パース・動画':  { icon:'🎨', bg:'#f4a261' },
+    '意匠モデル':    { icon:'🏛️', bg:'#4cc9f0' },
+    '構造モデル':    { icon:'🏗️', bg:'#52b788' },
+    '清算モデル':    { icon:'💰', bg:'#9b5de5' },
+    '図面':          { icon:'📐', bg:'#e63946' },
+    '施工ステップ':  { icon:'🔨', bg:'#ffd166' }
   };
+
   const grid = document.getElementById('catGrid');
   grid.innerHTML = TASK_TYPES.map(type => {
-    const tasks   = allTasks.filter(t => t.task_type===type && t.project_id);
+    const tasks   = allTasks.filter(t => t.task_type === type && t.project_id);
     const projIds = [...new Set(tasks.map(t => t.project_id))];
-    const projs   = projIds.map(id => allProjects.find(p => p.id===id)).filter(Boolean);
-    const cfg     = CFG[type] || {icon:'📋', bg:'#888'};
-    const items   = projs.length
+    const projs   = projIds.map(id => allProjects.find(p => p.id === id)).filter(Boolean);
+    const cfg     = CFG[type] || { icon:'📋', bg:'#888' };
+
+    const items = projs.length
       ? projs.map(p => {
-          const uids  = [...new Set(tasks.filter(t=>t.project_id===p.id&&t.task_type===type).map(t=>t.assigned_to))];
-          const names = uids.map(uid => { const u=allUsers.find(u=>u.id===uid); return u?u.name:''; }).filter(Boolean).join(', ');
+          const uids  = [...new Set(
+            tasks.filter(t => t.project_id===p.id && t.task_type===type).map(t => t.assigned_to)
+          )];
+          const names = uids
+            .map(uid => { const u = allUsers.find(u => u.id===uid); return u ? u.name : ''; })
+            .filter(Boolean).join(', ');
           const color = projColorMap[p.id] || '#aaa';
+          const code  = (p.code||'').split('_')[0] || '-';
           return '<div class="cat-item">'
-            + '<div class="color-dot" style="background:'+color+';width:10px;height:10px;border-radius:50%;flex-shrink:0;"></div>'
-            + '<span class="cat-code">'+((p.code||'').split('_')[0]||'-')+'</span>'
-            + '<span class="cat-name">'+p.project_name+'</span>'
+            + '<div class="cat-dot" style="background:'+color+';"></div>'
+            + '<span class="cat-code">'+code+'</span>'
+            + '<span class="cat-name" title="'+p.project_name+'">'+p.project_name+'</span>'
             + (names ? '<span class="cat-staff">👤 '+names+'</span>' : '')
             + '</div>';
         }).join('')
-      : '<div style="padding:16px 20px;color:#aaa;font-size:13px;">Khong co du an</div>';
+      : '<div class="cat-empty">Khong co du an nao</div>';
+
     return '<div class="cat-card">'
-      + '<div class="cat-hdr" style="background:'+cfg.bg+';">'+cfg.icon+' '+type+' <span style="margin-left:auto;font-size:12px;opacity:.8;">'+projs.length+' du an</span></div>'
+      + '<div class="cat-hdr" style="background:'+cfg.bg+';">'
+      + cfg.icon + ' ' + type
+      + '<span class="cat-count">'+projs.length+' du an</span>'
+      + '</div>'
       + '<div class="cat-body">'+items+'</div>'
       + '</div>';
   }).join('');
 }
 </script>
 </body>
-</html>"""
-
-view_category = view_category.replace('CSS_PLACEHOLDER', COMMON_CSS)
-view_category = view_category.replace('TOPBAR_PLACEHOLDER', topbar('category'))
-view_category = view_category.replace('SCRIPT_PLACEHOLDER', TOPBAR_SCRIPT)
+</html>
