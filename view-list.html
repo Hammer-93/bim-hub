@@ -103,11 +103,11 @@
     .task-expand-row.open { display:table-row; }
     .task-expand-cell { padding:0 !important; border-bottom:2px solid #0096c7 !important; background:#f8fbff !important; }
     .task-expand-inner { padding:14px 20px 18px 56px; }
-    .task-expand-title { font-size:12px; font-weight:700; color:#0077b6; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; }
+    .task-expand-title { font-size:12px; font-weight:700; color:#0077b6; margin-bottom:12px; }
     .task-cards { display:flex; flex-wrap:wrap; gap:12px; align-items:flex-start; }
 
     /* TASK CARD */
-    .task-card { background:#fff; border:1.5px solid #dde2ea; border-radius:12px; padding:14px 16px; min-width:240px; max-width:290px; flex:1; transition:box-shadow .15s; position:relative; }
+    .task-card { background:#fff; border:1.5px solid #dde2ea; border-radius:12px; padding:14px 16px; min-width:230px; max-width:280px; flex:1; transition:box-shadow .15s; position:relative; }
     .task-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.1); border-color:#0096c7; }
     .task-card-type { font-size:11px; font-weight:700; color:#fff; padding:3px 12px; border-radius:20px; display:inline-block; margin-bottom:10px; }
     .task-field { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
@@ -115,25 +115,31 @@
     .task-field-icon { font-size:13px; flex-shrink:0; width:18px; text-align:center; }
     .task-field-label { font-size:11px; color:#aaa; min-width:72px; flex-shrink:0; }
     .task-field-val { font-size:12px; font-weight:600; color:#333; flex:1; }
-    .edit-input { font-size:12px; font-weight:600; color:#222; border:1.5px solid #0096c7; border-radius:6px; padding:3px 7px; background:#fff; outline:none; width:100%; box-shadow:0 0 0 2px rgba(0,150,199,.12); }
-    .edit-select { font-size:12px; font-weight:600; color:#222; border:1.5px solid #0096c7; border-radius:6px; padding:3px 7px; background:#fff; outline:none; width:100%; box-shadow:0 0 0 2px rgba(0,150,199,.12); }
-    .edit-btn-wrap { display:flex; gap:5px; margin-top:10px; }
-    .btn-save-task { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:5px 14px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
+
+    /* INLINE EDIT - dung select va input binh thuong khong dung onclick de tranh mat focus */
+    .edit-input  { font-size:12px; font-weight:600; color:#222; border:1.5px solid #0096c7; border-radius:6px; padding:4px 8px; background:#fff; outline:none; width:100%; }
+    .edit-select { font-size:12px; font-weight:600; color:#222; border:1.5px solid #0096c7; border-radius:6px; padding:4px 8px; background:#fff; outline:none; width:100%; cursor:pointer; }
+    .edit-btn-wrap { display:flex; gap:6px; margin-top:10px; }
+    .btn-save-task   { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
     .btn-save-task:hover { opacity:.9; }
-    .btn-cancel-task { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
+    .btn-cancel-task { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
     .btn-cancel-task:hover { background:#f5f5f5; }
-    .btn-edit-task { position:absolute; top:10px; right:10px; background:none; border:1.5px solid #dde2ea; color:#888; padding:3px 8px; border-radius:6px; font-size:11px; cursor:pointer; transition:all .15s; }
+    .task-card-actions { display:flex; gap:5px; position:absolute; top:10px; right:10px; }
+    .btn-edit-task { background:none; border:1.5px solid #dde2ea; color:#888; padding:3px 8px; border-radius:6px; font-size:11px; cursor:pointer; transition:all .15s; }
     .btn-edit-task:hover { border-color:#0096c7; color:#0077b6; background:#e8f4fe; }
-    .saving-mask { position:absolute; inset:0; background:rgba(255,255,255,.8); border-radius:12px; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:#0077b6; display:none; }
+    .btn-del-task { background:none; border:1.5px solid #ffb3b3; color:#e63946; padding:3px 8px; border-radius:6px; font-size:11px; cursor:pointer; transition:all .15s; }
+    .btn-del-task:hover { background:#fff0f0; }
+    .saving-mask { position:absolute; inset:0; background:rgba(255,255,255,.85); border-radius:12px; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:#0077b6; display:none; z-index:10; }
     .no-task-msg { font-size:13px; color:#aaa; padding:8px 0; }
 
     /* ADD TASK CARD */
-    .add-task-card { background:#fff; border:2px dashed #b8dff5; border-radius:12px; padding:14px 16px; min-width:240px; max-width:290px; flex:1; transition:all .15s; }
-    .add-task-card.collapsed { cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; min-height:60px; color:#0096c7; font-size:13px; font-weight:600; }
-    .add-task-card.collapsed:hover { border-color:#0096c7; background:#f0f7ff; }
-    .add-task-card.expanded { border-color:#0096c7; background:#f0f7ff; }
+    .add-task-card { background:#fff; border:2px dashed #b8dff5; border-radius:12px; padding:14px 16px; min-width:230px; max-width:280px; flex:1; }
+    .add-task-btn { display:flex; align-items:center; justify-content:center; gap:8px; min-height:50px; color:#0096c7; font-size:13px; font-weight:600; cursor:pointer; border:none; background:none; width:100%; border-radius:8px; transition:background .15s; }
+    .add-task-btn:hover { background:#f0f7ff; }
+    .add-task-form { display:none; }
+    .add-task-form.open { display:block; }
     .add-task-title { font-size:12px; font-weight:700; color:#0077b6; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; }
-    .btn-close-add { background:none; border:none; color:#aaa; cursor:pointer; font-size:16px; }
+    .btn-close-add { background:none; border:none; color:#aaa; cursor:pointer; font-size:16px; line-height:1; }
     .btn-close-add:hover { color:#e63946; }
 
     /* GROUP SELECTOR */
@@ -336,7 +342,7 @@ window.onload = function() {
     renderList(); suggestNextNum();
     renderTags('branch'); renderTags('design');
     updatePreview(); selectGroup('A');
-  }).catch(function(e) { showToast('❌ Loi tai du lieu: '+e.message,'error'); });
+  }).catch(function(e) { showToast('Loi tai du lieu: '+e.message,'error'); });
 };
 
 function initTopbar() {
@@ -348,7 +354,10 @@ function initTopbar() {
   document.getElementById('topAvatar').textContent=name.substring(0,2).toUpperCase();
   var rb=document.getElementById('topRole');
   rb.textContent=role; rb.className='role-badge '+(role==='Admin'?'role-admin':'role-staff');
-  if (role==='Admin') { var els=document.querySelectorAll('.admin-only'); for(var i=0;i<els.length;i++) els[i].style.display='flex'; }
+  if (role==='Admin') {
+    var els=document.querySelectorAll('.admin-only');
+    for (var i=0;i<els.length;i++) els[i].style.display='flex';
+  }
 }
 
 function selectGroup(g) {
@@ -376,7 +385,8 @@ function setFilter(f) {
   filterStatus=f;
   var ids=['fAll','fActive','fDone'];
   for (var i=0;i<ids.length;i++) document.getElementById(ids[i]).classList.remove('active');
-  document.getElementById({all:'fAll',active:'fActive',done:'fDone'}[f]).classList.add('active');
+  var map={all:'fAll',active:'fActive',done:'fDone'};
+  document.getElementById(map[f]).classList.add('active');
   renderList();
 }
 function calcStatus(p) {
@@ -411,24 +421,24 @@ function toggleExpand(projId) {
   if (expandedId===projId) { collapseRow(projId); expandedId=null; }
   else { if(expandedId) collapseRow(expandedId); expandRow(projId); expandedId=projId; }
 }
-function expandRow(projId) {
-  var pr=document.getElementById('proj-row-'+projId);
-  var tr=document.getElementById('task-row-'+projId);
-  var ch=document.getElementById('chev-'+projId);
+function expandRow(id) {
+  var pr=document.getElementById('proj-row-'+id);
+  var tr=document.getElementById('task-row-'+id);
+  var ch=document.getElementById('chev-'+id);
   if(pr) pr.classList.add('expanded');
   if(tr) tr.classList.add('open');
   if(ch) ch.classList.add('open');
 }
-function collapseRow(projId) {
-  var pr=document.getElementById('proj-row-'+projId);
-  var tr=document.getElementById('task-row-'+projId);
-  var ch=document.getElementById('chev-'+projId);
+function collapseRow(id) {
+  var pr=document.getElementById('proj-row-'+id);
+  var tr=document.getElementById('task-row-'+id);
+  var ch=document.getElementById('chev-'+id);
   if(pr) pr.classList.remove('expanded');
   if(tr) tr.classList.remove('open');
   if(ch) ch.classList.remove('open');
 }
 
-/* ── USER OPTIONS ── */
+/* ── USER / TYPE OPTIONS ── */
 function buildUserOptions(selectedId) {
   var html='<option value="">- Chua phan cong -</option>';
   for (var i=0;i<allUsers.length;i++) {
@@ -437,10 +447,10 @@ function buildUserOptions(selectedId) {
   }
   return html;
 }
-function buildTypeOptions(selectedType) {
+function buildTypeOptions(sel) {
   var html='';
   for (var i=0;i<TASK_TYPES.length;i++) {
-    html+='<option value="'+TASK_TYPES[i]+'"'+(TASK_TYPES[i]===selectedType?' selected':'')+'>'+TASK_TYPES[i]+'</option>';
+    html+='<option value="'+TASK_TYPES[i]+'"'+(TASK_TYPES[i]===sel?' selected':'')+'>'+TASK_TYPES[i]+'</option>';
   }
   return html;
 }
@@ -455,153 +465,198 @@ function cancelEdit(tid) {
   document.getElementById('view-'+tid).style.display='block';
 }
 async function saveTask(tid) {
-  var uid=document.getElementById('eu-'+tid).value||null;
-  var rcv=document.getElementById('er-'+tid).value||null;
-  var st=document.getElementById('es-'+tid).value||null;
-  var en=document.getElementById('ee-'+tid).value||null;
-  var snd=document.getElementById('eg-'+tid).value||null;
-  var mask=document.getElementById('mask-'+tid);
+  var uid  = document.getElementById('eu-'+tid).value||null;
+  var rcv  = document.getElementById('er-'+tid).value||null;
+  var st   = document.getElementById('es-'+tid).value||null;
+  var en   = document.getElementById('ee-'+tid).value||null;
+  var snd  = document.getElementById('eg-'+tid).value||null;
+  var mask = document.getElementById('mask-'+tid);
   if(mask) mask.style.display='flex';
   try {
     var res=await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+tid,{
       method:'PATCH',headers:HDRS,
       body:JSON.stringify({assigned_to:uid,receive_date:rcv,start_date:st,end_date:en,send_date:snd})
     });
-    if(!res.ok){showToast('❌ Loi luu task','error');if(mask)mask.style.display='none';return;}
-    for (var i=0;i<allTasks.length;i++) {
+    if(!res.ok){showToast('Loi luu task','error');if(mask)mask.style.display='none';return;}
+    for (var i=0;i<allTasks.length;i++){
       if(allTasks[i].id===tid){
-        allTasks[i].assigned_to=uid; allTasks[i].receive_date=rcv;
-        allTasks[i].start_date=st; allTasks[i].end_date=en; allTasks[i].send_date=snd; break;
+        allTasks[i].assigned_to=uid;allTasks[i].receive_date=rcv;
+        allTasks[i].start_date=st;allTasks[i].end_date=en;allTasks[i].send_date=snd;break;
       }
     }
-    showToast('✅ Da luu task','success');
-    refreshExpandArea(tid);
+    showToast('Da luu task','success');
+    var projId=null;
+    for (var j=0;j<allTasks.length;j++){if(allTasks[j].id===tid){projId=allTasks[j].project_id;break;}}
+    if(projId) refreshExpand(projId);
     renderList();
-  } catch(e) { showToast('❌ Loi: '+e.message,'error'); if(mask) mask.style.display='none'; }
+  } catch(e){showToast('Loi: '+e.message,'error');if(mask)mask.style.display='none';}
+}
+
+/* ── DELETE TASK ── */
+async function deleteTask(tid, projId) {
+  if(!confirm('Xac nhan xoa task nay?')) return;
+  try {
+    await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+tid,{method:'DELETE',headers:HDRS});
+    var nl=[];
+    for(var i=0;i<allTasks.length;i++){if(allTasks[i].id!==tid)nl.push(allTasks[i]);}
+    allTasks=nl;
+    showToast('Da xoa task','success');
+    refreshExpand(projId);
+    renderList();
+  } catch(e){showToast('Loi xoa task: '+e.message,'error');}
 }
 
 /* ── ADD NEW TASK INLINE ── */
-function showAddTaskCard(projId) {
-  var card=document.getElementById('add-card-'+projId);
-  if(!card) return;
-  card.className='add-task-card expanded';
-  card.innerHTML='<div class="add-task-title">'
-    +'<span>&#x2795; Them task moi</span>'
-    +'<button class="btn-close-add" onclick="event.stopPropagation();hideAddTaskCard(\''+projId+'\')">&#x2715;</button>'
-    +'</div>'
-    +'<div class="task-field"><span class="task-field-icon">&#x1F4CB;</span><span class="task-field-label">Loai CV:</span>'
-    +'<select class="edit-select" id="an-type-'+projId+'">'+buildTypeOptions('')+'</select></div>'
-    +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span>'
-    +'<select class="edit-select" id="an-user-'+projId+'">'+buildUserOptions('')+'</select></div>'
-    +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Nhan data:</span>'
-    +'<input type="date" class="edit-input" id="an-rcv-'+projId+'"/></div>'
-    +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Bat dau:</span>'
-    +'<input type="date" class="edit-input" id="an-st-'+projId+'"/></div>'
-    +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">Ket thuc:</span>'
-    +'<input type="date" class="edit-input" id="an-en-'+projId+'"/></div>'
-    +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Ngay gui:</span>'
-    +'<input type="date" class="edit-input" id="an-snd-'+projId+'"/></div>'
-    +'<div class="edit-btn-wrap">'
-    +'<button class="btn-save-task" onclick="event.stopPropagation();saveNewTask(\''+projId+'\')">&#x1F4BE; Luu task</button>'
-    +'<button class="btn-cancel-task" onclick="event.stopPropagation();hideAddTaskCard(\''+projId+'\')">Huy</button>'
-    +'</div>';
-}
-function hideAddTaskCard(projId) {
-  var card=document.getElementById('add-card-'+projId);
-  if(!card) return;
-  card.className='add-task-card collapsed';
-  card.innerHTML='<span>&#x2795;</span><span>Them task moi</span>';
-  card.onclick=function(e){e.stopPropagation();showAddTaskCard(projId);};
+function toggleAddTask(projId) {
+  var btn  = document.getElementById('add-btn-'+projId);
+  var form = document.getElementById('add-form-'+projId);
+  if(!btn||!form) return;
+  if(form.classList.contains('open')) {
+    form.classList.remove('open');
+    btn.style.display='flex';
+  } else {
+    form.classList.add('open');
+    btn.style.display='none';
+  }
 }
 async function saveNewTask(projId) {
-  var ttype=document.getElementById('an-type-'+projId).value;
-  var uid=document.getElementById('an-user-'+projId).value||null;
-  var rcv=document.getElementById('an-rcv-'+projId).value||null;
-  var st=document.getElementById('an-st-'+projId).value||null;
-  var en=document.getElementById('an-en-'+projId).value||null;
-  var snd=document.getElementById('an-snd-'+projId).value||null;
+  var ttype = document.getElementById('an-type-'+projId).value;
+  var uid   = document.getElementById('an-user-'+projId).value||null;
+  var rcv   = document.getElementById('an-rcv-'+projId).value||null;
+  var st    = document.getElementById('an-st-'+projId).value||null;
+  var en    = document.getElementById('an-en-'+projId).value||null;
+  var snd   = document.getElementById('an-snd-'+projId).value||null;
   try {
     var res=await fetch(SUPABASE_URL+'/rest/v1/project_tasks',{
       method:'POST',headers:HDRS,
       body:JSON.stringify({project_id:projId,task_type:ttype,assigned_to:uid,
         receive_date:rcv,start_date:st,end_date:en,send_date:snd,status:'active'})
     });
-    if(!res.ok){showToast('❌ Loi them task','error');return;}
+    if(!res.ok){showToast('Loi them task','error');return;}
     var arr=await res.json();
     if(arr&&arr[0]) allTasks.push(arr[0]);
-    showToast('✅ Da them task: '+ttype,'success');
-    hideAddTaskCard(projId);
-    refreshExpandAreaByProject(projId);
+    showToast('Da them task: '+ttype,'success');
+    refreshExpand(projId);
     renderList();
-  } catch(e){showToast('❌ Loi: '+e.message,'error');}
+  } catch(e){showToast('Loi: '+e.message,'error');}
 }
 
 /* ── REFRESH EXPAND AREA ── */
-function refreshExpandAreaByProject(projId) {
-  var color=projColorMap[projId]||'#a8dadc';
+function refreshExpand(projId) {
   var inner=document.querySelector('#task-row-'+projId+' .task-expand-inner');
   if(!inner) return;
+  var color=projColorMap[projId]||'#a8dadc';
   inner.innerHTML=buildExpandInner(projId,color);
   if(expandedId===projId) expandRow(projId);
-}
-function refreshExpandArea(tid) {
-  var projId=null;
-  for(var i=0;i<allTasks.length;i++){if(allTasks[i].id===tid){projId=allTasks[i].project_id;break;}}
-  if(projId) refreshExpandAreaByProject(projId);
 }
 
 /* ── BUILD EXPAND INNER ── */
 function buildExpandInner(projId, projColor) {
   var tasks=getActiveTasks(projId);
-  var taskCardsHtml='';
-  if(!tasks.length) {
-    taskCardsHtml='<div class="no-task-msg">&#x1F4AD; Khong co task dang hoat dong</div>';
-  } else {
-    for(var i=0;i<tasks.length;i++) {
-      var t=tasks[i];
-      var user=null;
-      for(var j=0;j<allUsers.length;j++){if(allUsers[j].id===t.assigned_to){user=allUsers[j];break;}}
-      var tc=TYPE_COLOR[t.task_type]||projColor||'#a8dadc';
-      var uname=user?(user.name||user.email):'- Chua phan cong -';
-      taskCardsHtml+='<div class="task-card" id="tc-'+t.id+'">'
-        +'<div class="saving-mask" id="mask-'+t.id+'">&#x1F4BE; Dang luu...</div>'
-        +'<button class="btn-edit-task" onclick="event.stopPropagation();editTask(\''+t.id+'\')">&#x270F;&#xFE0F; Sua</button>'
-        +'<div class="task-card-type" style="background:'+tc+';">'+(t.task_type||'Task')+'</div>'
-        +'<div id="view-'+t.id+'">'
-          +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span><span class="task-field-val">'+uname+'</span></div>'
-          +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Nhan data:</span><span class="task-field-val">'+(t.receive_date||'-')+'</span></div>'
-          +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Bat dau:</span><span class="task-field-val">'+(t.start_date||'-')+'</span></div>'
-          +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">Ket thuc:</span><span class="task-field-val">'+(t.end_date||'-')+'</span></div>'
-          +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Ngay gui:</span><span class="task-field-val">'+(t.send_date||'-')+'</span></div>'
-          +(t.note?'<div class="task-field"><span class="task-field-icon">&#x1F4DD;</span><span class="task-field-label">Ghi chu:</span><span class="task-field-val">'+t.note+'</span></div>':'')
+  var cardsHtml='';
+
+  for(var i=0;i<tasks.length;i++){
+    var t=tasks[i];
+    var user=null;
+    for(var j=0;j<allUsers.length;j++){if(allUsers[j].id===t.assigned_to){user=allUsers[j];break;}}
+    var tc=TYPE_COLOR[t.task_type]||projColor||'#a8dadc';
+    var uname=user?(user.name||user.email):'- Chua phan cong -';
+    var tid=t.id;
+    cardsHtml+='<div class="task-card" id="tc-'+tid+'">'
+      +'<div class="saving-mask" id="mask-'+tid+'">&#x1F4BE; Dang luu...</div>'
+      +'<div class="task-card-actions">'
+      +'<button class="btn-edit-task" id="editbtn-'+tid+'">&#x270F;&#xFE0F; Sua</button>'
+      +'<button class="btn-del-task"  id="delbtn-'+tid+'">&#x1F5D1;&#xFE0F;</button>'
+      +'</div>'
+      +'<div class="task-card-type" style="background:'+tc+';">'+(t.task_type||'Task')+'</div>'
+      // VIEW MODE
+      +'<div id="view-'+tid+'">'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span><span class="task-field-val">'+uname+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Nhan data:</span><span class="task-field-val">'+(t.receive_date||'-')+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Bat dau:</span><span class="task-field-val">'+(t.start_date||'-')+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">Ket thuc:</span><span class="task-field-val">'+(t.end_date||'-')+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Ngay gui:</span><span class="task-field-val">'+(t.send_date||'-')+'</span></div>'
+      +'</div>'
+      // EDIT MODE
+      +'<div id="edit-'+tid+'" style="display:none;">'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span>'
+        +'<select class="edit-select" id="eu-'+tid+'">'+buildUserOptions(t.assigned_to)+'</select></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Nhan data:</span>'
+        +'<input type="date" class="edit-input" id="er-'+tid+'" value="'+(t.receive_date||'')+'"/></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Bat dau:</span>'
+        +'<input type="date" class="edit-input" id="es-'+tid+'" value="'+(t.start_date||'')+'"/></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">Ket thuc:</span>'
+        +'<input type="date" class="edit-input" id="ee-'+tid+'" value="'+(t.end_date||'')+'"/></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Ngay gui:</span>'
+        +'<input type="date" class="edit-input" id="eg-'+tid+'" value="'+(t.send_date||'')+'"/></div>'
+        +'<div class="edit-btn-wrap">'
+        +'<button class="btn-save-task" id="savebtn-'+tid+'">&#x1F4BE; Luu</button>'
+        +'<button class="btn-cancel-task" id="cancelbtn-'+tid+'">Huy</button>'
         +'</div>'
-        +'<div id="edit-'+t.id+'" style="display:none;">'
-          +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span>'
-          +'<select class="edit-select" id="eu-'+t.id+'">'+buildUserOptions(t.assigned_to)+'</select></div>'
-          +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Nhan data:</span>'
-          +'<input type="date" class="edit-input" id="er-'+t.id+'" value="'+(t.receive_date||'')+'"/></div>'
-          +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Bat dau:</span>'
-          +'<input type="date" class="edit-input" id="es-'+t.id+'" value="'+(t.start_date||'')+'"/></div>'
-          +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">Ket thuc:</span>'
-          +'<input type="date" class="edit-input" id="ee-'+t.id+'" value="'+(t.end_date||'')+'"/></div>'
-          +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Ngay gui:</span>'
-          +'<input type="date" class="edit-input" id="eg-'+t.id+'" value="'+(t.send_date||'')+'"/></div>'
-          +'<div class="edit-btn-wrap">'
-          +'<button class="btn-save-task" onclick="event.stopPropagation();saveTask(\''+t.id+'\')">&#x1F4BE; Luu</button>'
-          +'<button class="btn-cancel-task" onclick="event.stopPropagation();cancelEdit(\''+t.id+'\')">Huy</button>'
-          +'</div>'
-        +'</div>'
-        +'</div>';
-    }
+      +'</div>'
+      +'</div>';
   }
-  // Add task card
-  var addCard='<div class="add-task-card collapsed" id="add-card-'+projId+'" onclick="event.stopPropagation();showAddTaskCard(\''+projId+'\')">'
-    +'<span>&#x2795;</span><span>Them task moi</span>'
-    +'</div>';
-  return '<div class="task-expand-title">'
-    +'<span>&#x1F4CB; Task dang hoat dong</span>'
+
+  if(!tasks.length) cardsHtml='<div class="no-task-msg">&#x1F4AD; Khong co task dang hoat dong</div>';
+
+  // Add task card — dung button HTML thuan, khong dung onclick inline de tranh mat focus dropdown
+  var addCardHtml='<div class="add-task-card" id="add-card-'+projId+'">'
+    +'<button class="add-task-btn" id="add-btn-'+projId+'">&#x2795; Them task moi</button>'
+    +'<div class="add-task-form" id="add-form-'+projId+'">'
+      +'<div class="add-task-title"><span>&#x2795; Them task moi</span>'
+      +'<button class="btn-close-add" id="add-close-'+projId+'">&#x2715;</button></div>'
+      +'<div class="task-field"><span class="task-field-icon">&#x1F4CB;</span><span class="task-field-label">Loai CV:</span>'
+      +'<select class="edit-select" id="an-type-'+projId+'">'+buildTypeOptions('')+'</select></div>'
+      +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span>'
+      +'<select class="edit-select" id="an-user-'+projId+'">'+buildUserOptions('')+'</select></div>'
+      +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Nhan data:</span>'
+      +'<input type="date" class="edit-input" id="an-rcv-'+projId+'"/></div>'
+      +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Bat dau:</span>'
+      +'<input type="date" class="edit-input" id="an-st-'+projId+'"/></div>'
+      +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">Ket thuc:</span>'
+      +'<input type="date" class="edit-input" id="an-en-'+projId+'"/></div>'
+      +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Ngay gui:</span>'
+      +'<input type="date" class="edit-input" id="an-snd-'+projId+'"/></div>'
+      +'<div class="edit-btn-wrap">'
+      +'<button class="btn-save-task" id="an-save-'+projId+'">&#x1F4BE; Luu task</button>'
+      +'<button class="btn-cancel-task" id="an-cancel-'+projId+'">Huy</button>'
+      +'</div>'
     +'</div>'
-    +'<div class="task-cards">'+taskCardsHtml+addCard+'</div>';
+    +'</div>';
+
+  return '<div class="task-expand-title">&#x1F4CB; Task dang hoat dong</div>'
+    +'<div class="task-cards">'+cardsHtml+addCardHtml+'</div>';
+}
+
+/* ── BIND EVENTS SAU KHI RENDER (tranh onclick inline lam mat focus) ── */
+function bindExpandEvents(projId) {
+  var tasks=getActiveTasks(projId);
+
+  // Bind edit/delete/save/cancel cho tung task
+  for(var i=0;i<tasks.length;i++){
+    (function(tid, pid){
+      var editBtn   = document.getElementById('editbtn-'+tid);
+      var delBtn    = document.getElementById('delbtn-'+tid);
+      var saveBtn   = document.getElementById('savebtn-'+tid);
+      var cancelBtn = document.getElementById('cancelbtn-'+tid);
+      if(editBtn)   editBtn.onclick   = function(e){e.stopPropagation();editTask(tid);};
+      if(delBtn)    delBtn.onclick    = function(e){e.stopPropagation();deleteTask(tid,pid);};
+      if(saveBtn)   saveBtn.onclick   = function(e){e.stopPropagation();saveTask(tid);};
+      if(cancelBtn) cancelBtn.onclick = function(e){e.stopPropagation();cancelEdit(tid);};
+    })(tasks[i].id, projId);
+  }
+
+  // Bind add task buttons
+  (function(pid){
+    var addBtn    = document.getElementById('add-btn-'+pid);
+    var addClose  = document.getElementById('add-close-'+pid);
+    var addSave   = document.getElementById('an-save-'+pid);
+    var addCancel = document.getElementById('an-cancel-'+pid);
+    if(addBtn)    addBtn.onclick    = function(e){e.stopPropagation();toggleAddTask(pid);};
+    if(addClose)  addClose.onclick  = function(e){e.stopPropagation();toggleAddTask(pid);};
+    if(addSave)   addSave.onclick   = function(e){e.stopPropagation();saveNewTask(pid);};
+    if(addCancel) addCancel.onclick = function(e){e.stopPropagation();toggleAddTask(pid);};
+  })(projId);
 }
 
 /* ── RENDER LIST ── */
@@ -642,8 +697,9 @@ function renderList() {
     var activeCnt=getActiveTasks(p.id).length;
     var cntBadge=activeCnt>0?'<span style="background:#e63946;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:5px;">'+activeCnt+'</span>':'';
     var delBtn=currentUserRole==='Admin'
-      ?'<button class="btn-del-proj" onclick="event.stopPropagation();deleteProject(\''+p.id+'\',\''+p.project_name.replace(/'/g,"\\'")+'\')">&#x1F5D1;&#xFE0F; Xoa</button>':'';
-    html+='<tr class="proj-row" id="proj-row-'+p.id+'" onclick="toggleExpand(\''+p.id+'\')">'
+      ?'<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Xoa</button>':'';
+    var expandInner=buildExpandInner(p.id,color);
+    html+='<tr class="proj-row" id="proj-row-'+p.id+'">'
       +'<td style="text-align:center;"><div class="stt-badge '+cfg.cls+'">'+sttTxt+'</div></td>'
       +'<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>'+projId2+'</span></td>'
       +'<td style="font-weight:600;">'+p.project_name+'<span class="chevron" id="chev-'+p.id+'">&#x25B6;</span>'+cntBadge+'</td>'
@@ -655,11 +711,36 @@ function renderList() {
       +'<td>'+delBtn+'</td>'
       +'</tr>'
       +'<tr class="task-expand-row" id="task-row-'+p.id+'">'
-      +'<td class="task-expand-cell" colspan="9">'
-      +'<div class="task-expand-inner">'+buildExpandInner(p.id,color)+'</div>'
-      +'</td></tr>';
+      +'<td class="task-expand-cell" colspan="9"><div class="task-expand-inner">'+expandInner+'</div></td>'
+      +'</tr>';
   }
   tbody.innerHTML=html;
+
+  // Bind ALL events sau khi render xong DOM
+  for(var d2=0;d2<data.length;d2++){
+    var p2=data[d2];
+    // Bind proj row click
+    (function(pid){
+      var row=document.getElementById('proj-row-'+pid);
+      if(row) row.onclick=function(e){
+        // Neu click vao button thi khong expand
+        if(e.target.tagName==='BUTTON'||e.target.closest('button')) return;
+        toggleExpand(pid);
+      };
+      // Bind del proj button
+      var dpb=document.getElementById('delprojbtn-'+pid);
+      if(dpb) dpb.onclick=function(e){
+        e.stopPropagation();
+        var proj=null;
+        for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){proj=allProjects[i];break;}}
+        if(proj) deleteProject(pid,proj.project_name);
+      };
+    })(p2.id);
+    // Bind expand area events
+    bindExpandEvents(p2.id);
+  }
+
+  // Restore expanded
   if(prevExp){expandRow(prevExp);expandedId=prevExp;}
 }
 
@@ -698,8 +779,8 @@ async function createProject(){
   var name=document.getElementById('nameInput').value.trim();
   var pStart=document.getElementById('projStart').value;
   var pEnd=document.getElementById('projEnd').value;
-  if(!branch){showToast('❌ 支店名を入力してください','error');return;}
-  if(!name){showToast('❌ 物件名を入力してください','error');return;}
+  if(!branch){showToast('支店名を入力してください','error');return;}
+  if(!name){showToast('物件名を入力してください','error');return;}
   var parts=[year+num,branch]; if(design)parts.push(design); parts.push(name);
   var code=parts.join('_');
   var color=PASTEL_COLORS[allProjects.length%PASTEL_COLORS.length];
@@ -709,7 +790,7 @@ async function createProject(){
       body:JSON.stringify({code:code,year:year,seq_number:parseInt(num),branch:branch,
         design_type:design||null,project_name:name,status:'active',color:color,
         proj_group:selectedGroup,start_date:pStart||null,end_date:pEnd||null,created_by:createdBy})});
-    if(!res.ok){var e=await res.json();showToast('❌ '+(e.message||'Error'),'error');return;}
+    if(!res.ok){var e=await res.json();showToast(e.message||'Error','error');return;}
     var arr=await res.json();var proj=arr[0];
     allProjects.unshift(proj);projColorMap[proj.id]=color;
     var taskDivs=document.querySelectorAll('#taskRows .task-row');
@@ -733,8 +814,8 @@ async function createProject(){
     document.getElementById('taskRows').innerHTML='';
     taskRowCount=0;addTaskRow();
     renderTags('branch');renderTags('design');updatePreview();suggestNextNum();
-    showToast('✅ Da tao du an: '+name,'success');
-  }catch(e){showToast('❌ Loi: '+e.message,'error');}
+    showToast('Da tao du an: '+name,'success');
+  }catch(e){showToast('Loi: '+e.message,'error');}
 }
 
 async function deleteProject(id,name){
@@ -745,8 +826,8 @@ async function deleteProject(id,name){
     var nl=[];
     for(var i=0;i<allProjects.length;i++){if(allProjects[i].id!==id)nl.push(allProjects[i]);}
     allProjects=nl;delete projColorMap[id];expandedId=null;
-    renderList();showToast('🗑️ Da xoa: '+name,'success');
-  }catch(e){showToast('❌ Loi xoa: '+e.message,'error');}
+    renderList();showToast('Da xoa: '+name,'success');
+  }catch(e){showToast('Loi xoa: '+e.message,'error');}
 }
 
 function suggestNextNum(){
@@ -781,7 +862,7 @@ function renderDD(k){
   for(var i=0;i<filt.length;i++) html+='<div class="combo-item" onmousedown="selectCombo(\''+k+'\',\''+filt[i]+'\')">'+filt[i]+'</div>';
   var found=false;
   for(var j=0;j<data.length;j++){if(data[j].toLowerCase()===val.toLowerCase()){found=true;break;}}
-  if(val&&!found) html+='<div class="combo-item combo-new" onmousedown="selectCombo(\''+k+'\',\''+val+'\')">➕ 新規: '+val+'</div>';
+  if(val&&!found) html+='<div class="combo-item combo-new" onmousedown="selectCombo(\''+k+'\',\''+val+'\')">+ 新規: '+val+'</div>';
   if(!html) html='<div class="combo-item" style="color:#aaa;cursor:default;">候補なし</div>';
   dd.innerHTML=html;dd.classList.add('open');renderTags(k);
 }
