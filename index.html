@@ -207,7 +207,7 @@ login_html = """<!DOCTYPE html>
       localStorage.setItem('user_role',  user.role);
       localStorage.setItem('user_name',  user.name);
       await updateLastLogin(email);
-      window.location.href = 'dashboard.html';
+      window.location.href = 'view-list.html';
     } catch(e) {
       errMsg.textContent = 'Lỗi kết nối. Vui lòng thử lại.';
       errBox.style.display = 'block';
