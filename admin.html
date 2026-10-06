@@ -114,6 +114,21 @@
     .btn-copy:hover { opacity:.9; }
     .btn-close-modal { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
     .btn-close-modal:hover { background:#f5f5f5; }
+    .role-opt-btn {
+  display:flex; align-items:center; gap:12px;
+  width:100%; padding:11px 16px;
+  border:1.5px solid #dde2ea; border-radius:10px;
+  background:#fff; font-size:14px; font-weight:600;
+  color:#333; cursor:pointer; transition:all .15s;
+  text-align:left;
+}
+.role-opt-btn:hover {
+  background:#e8f4fe; border-color:#0096c7; color:#0077b6;
+}
+.role-opt-btn.selected {
+  background:#e8f4fe; border-color:#0096c7;
+  color:#0077b6; box-shadow:0 0 0 3px rgba(0,150,199,.12);
+}
 
     /* TOAST */
     .toast { position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:999; transform:translateY(80px); opacity:0; transition:all .35s; }
@@ -257,7 +272,32 @@
     </div>
   </div>
 </div>
-
+<!-- MODAL DOI QUYEN -->
+<div class="modal-overlay" id="roleModal">
+  <div class="modal">
+    <div class="modal-icon">🔄</div>
+    <div class="modal-title">Doi quyen thanh vien</div>
+    <div class="modal-sub" id="roleModalEmail">email@vinadecons.vn</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+      <button class="role-opt-btn" onclick="selectRole('Staff')">
+        <span>👤</span><span>Staff</span>
+      </button>
+      <button class="role-opt-btn" onclick="selectRole('Leader')">
+        <span>🟢</span><span>Leader</span>
+      </button>
+      <button class="role-opt-btn" onclick="selectRole('Sub Manager')">
+        <span>🟡</span><span>Sub Manager</span>
+      </button>
+      <button class="role-opt-btn" onclick="selectRole('Manager')">
+        <span>🟠</span><span>Manager</span>
+      </button>
+      <button class="role-opt-btn" onclick="selectRole('Admin')">
+        <span>🔴</span><span>Admin</span>
+      </button>
+    </div>
+    <button class="btn-close-modal" onclick="closeRoleModal()">Huy</button>
+  </div>
+</div>
 <!-- MODAL XEM MAT KHAU -->
 <div class="modal-overlay" id="pwModal">
   <div class="modal">
@@ -441,21 +481,47 @@ async function deleteMember(id, email) {
   } catch(e) { showToast('❌ Loi xoa thanh vien','error'); }
 }
 
-async function changeRole(id, currentRole) {
-  const roles = ['Staff','Leader','Sub Manager','Manager','Admin'];
-  const cur   = roles.indexOf(currentRole);
-  const opts  = roles.map((r,i) => (i===cur?'* ':'')+r).join('\\n');
-  const pick  = prompt('Chon quyen moi:\\n'+opts+'\\n\\nNhap ten quyen chinh xac:');
-  if (!pick || !roles.includes(pick.trim())) { showToast('❌ Quyen khong hop le','error'); return; }
-  const newRole = pick.trim();
-  if (newRole === currentRole) return;
+let currentEditId   = null;
+let currentEditRole = null;
+
+function changeRole(id, currentRole) {
+  currentEditId   = id;
+  currentEditRole = currentRole;
+  document.querySelectorAll('.role-opt-btn').forEach(btn => {
+    btn.classList.remove('selected');
+    if (btn.querySelector('span:last-child').textContent === currentRole) {
+      btn.classList.add('selected');
+    }
+  });
+  const member = allMembers.find(m => m.id === id);
+  document.getElementById('roleModalEmail').textContent = member ? member.email : '';
+  document.getElementById('roleModal').classList.add('open');
+}
+
+async function selectRole(newRole) {
+  if (!currentEditId) return;
+  if (newRole === currentEditRole) {
+    closeRoleModal();
+    showToast('ℹ️ Quyen khong thay doi', 'success');
+    return;
+  }
   try {
-    await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+id, {
-      method:'PATCH', headers:HDRS, body:JSON.stringify({role:newRole})
+    await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+currentEditId, {
+      method:'PATCH', headers:HDRS,
+      body:JSON.stringify({ role: newRole })
     });
-    showToast('✅ Da doi quyen thanh '+newRole, 'success');
+    showToast('✅ Da doi quyen thanh ' + newRole, 'success');
+    closeRoleModal();
     await loadMembers();
-  } catch(e) { showToast('❌ Loi doi quyen','error'); }
+  } catch(e) {
+    showToast('❌ Loi doi quyen: ' + e.message, 'error');
+  }
+}
+
+function closeRoleModal() {
+  document.getElementById('roleModal').classList.remove('open');
+  currentEditId   = null;
+  currentEditRole = null;
 }
 
 function showPwModal(email, pw) {
