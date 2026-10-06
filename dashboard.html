@@ -1,0 +1,663 @@
+dashboard_html = """<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BIM Hub – Dashboard</title>
+  <style>
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f4f8; min-height:100vh; }
+
+    /* TOPBAR */
+    .topbar {
+      display:flex; align-items:center; justify-content:space-between;
+      background:#1a1a2e; padding:0 24px; height:52px;
+      position:sticky; top:0; z-index:200;
+    }
+    .topbar-left { display:flex; align-items:center; gap:10px; }
+    .topbar-logo {
+      width:30px; height:30px; background:linear-gradient(135deg,#00b4d8,#0077b6);
+      border-radius:7px; display:flex; align-items:center; justify-content:center;
+      font-weight:900; color:#fff; font-size:15px;
+    }
+    .topbar-title { color:#fff; font-size:16px; font-weight:700; }
+    .topbar-right { display:flex; align-items:center; gap:14px; }
+    .topbar-right .icon-btn { color:#ccc; font-size:18px; cursor:pointer; transition:color .2s; background:none; border:none; }
+    .topbar-right .icon-btn:hover { color:#fff; }
+    .user-info { display:flex; align-items:center; gap:8px; cursor:pointer; }
+    .avatar {
+      width:32px; height:32px; border-radius:50%;
+      background:linear-gradient(135deg,#00b4d8,#0096c7);
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-weight:700; font-size:12px;
+    }
+    .user-name { color:#ddd; font-size:13px; }
+    .role-badge {
+      font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px;
+    }
+    .role-admin { background:#e63946; color:#fff; }
+    .role-staff { background:#0096c7; color:#fff; }
+    .btn-logout {
+      background:rgba(255,255,255,.12); border:none; color:#fff;
+      padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px;
+      transition:background .2s;
+    }
+    .btn-logout:hover { background:rgba(255,255,255,.22); }
+
+    /* LAYOUT */
+    .layout { display:flex; min-height:calc(100vh - 52px); }
+
+    /* SIDEBAR */
+    .sidebar {
+      width:220px; background:#fff; border-right:1px solid #e8e8e8;
+      padding:20px 0; flex-shrink:0;
+    }
+    .sidebar-section { margin-bottom:24px; }
+    .sidebar-label {
+      font-size:10px; font-weight:700; color:#bbb; text-transform:uppercase;
+      letter-spacing:1px; padding:0 20px 8px;
+    }
+    .sidebar-item {
+      display:flex; align-items:center; gap:10px; padding:9px 20px;
+      color:#444; font-size:13.5px; cursor:pointer; text-decoration:none;
+      border-left:3px solid transparent; transition:all .15s;
+    }
+    .sidebar-item:hover { background:#f0f7ff; }
+    .sidebar-item.active {
+      background:#e8f4fe; border-left-color:#0096c7;
+      color:#0077b6; font-weight:600;
+    }
+    .sidebar-item .icon { font-size:16px; width:20px; text-align:center; }
+    .admin-only { display:none; }
+
+    /* MAIN */
+    .main { flex:1; padding:32px 36px; overflow-y:auto; }
+    .welcome-bar {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:28px; flex-wrap:wrap; gap:12px;
+    }
+    .welcome-text h2 { font-size:22px; font-weight:700; color:#1a1a2e; }
+    .welcome-text p  { font-size:13px; color:#888; margin-top:4px; }
+    .btn-create {
+      display:flex; align-items:center; gap:8px;
+      background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff;
+      border:none; padding:11px 22px; border-radius:10px; font-size:14px;
+      font-weight:600; cursor:pointer; box-shadow:0 4px 14px rgba(0,119,182,.3);
+      transition:all .2s; text-decoration:none;
+    }
+    .btn-create:hover { box-shadow:0 6px 20px rgba(0,119,182,.4); transform:translateY(-1px); }
+
+    /* STATS */
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px; }
+    .stat-card {
+      background:#fff; border-radius:14px; padding:20px 22px;
+      box-shadow:0 2px 10px rgba(0,0,0,.06); display:flex;
+      align-items:center; gap:16px; transition:transform .2s;
+    }
+    .stat-card:hover { transform:translateY(-2px); }
+    .stat-icon {
+      width:48px; height:48px; border-radius:12px;
+      display:flex; align-items:center; justify-content:center; font-size:22px;
+    }
+    .stat-num { font-size:26px; font-weight:800; color:#1a1a2e; }
+    .stat-label { font-size:12px; color:#888; margin-top:2px; }
+    .s-blue   { background:#e8f4fe; }
+    .s-green  { background:#d4edda; }
+    .s-orange { background:#fef3e2; }
+    .s-red    { background:#fde8e8; }
+
+    /* PROJECT GRID */
+    .section-header {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:16px;
+    }
+    .section-title { font-size:15px; font-weight:700; color:#1a1a2e; }
+    .view-all { font-size:13px; color:#0096c7; cursor:pointer; text-decoration:none; }
+    .project-grid {
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+      gap:16px; margin-bottom:32px;
+    }
+    .project-card {
+      background:#fff; border-radius:14px; padding:20px 22px;
+      box-shadow:0 2px 10px rgba(0,0,0,.06); cursor:pointer;
+      transition:all .2s; border:1.5px solid transparent;
+    }
+    .project-card:hover {
+      border-color:#0096c7; box-shadow:0 6px 20px rgba(0,0,0,.1);
+      transform:translateY(-2px);
+    }
+    .proj-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+    .proj-code {
+      font-size:11px; font-weight:700; color:#0077b6;
+      background:#e8f4fe; padding:3px 10px; border-radius:20px;
+    }
+    .proj-status {
+      font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px;
+    }
+    .status-active   { background:#d4edda; color:#1a7c3a; }
+    .status-pending  { background:#fff3cd; color:#856404; }
+    .status-done     { background:#f0f0f0; color:#555; }
+    .proj-name { font-size:15px; font-weight:700; color:#1a1a2e; margin-bottom:6px; }
+    .proj-branch { font-size:12px; color:#888; margin-bottom:14px; }
+    .progress-label {
+      display:flex; justify-content:space-between;
+      font-size:11.5px; color:#888; margin-bottom:6px;
+    }
+    .progress-bar { height:6px; background:#f0f0f0; border-radius:3px; overflow:hidden; }
+    .progress-fill { height:100%; border-radius:3px; transition:width .6s; }
+    .fill-blue   { background:linear-gradient(90deg,#0096c7,#48cae4); }
+    .fill-green  { background:linear-gradient(90deg,#52b788,#2d6a4f); }
+    .fill-orange { background:linear-gradient(90deg,#f4a261,#e76f51); }
+    .proj-footer {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-top:14px; padding-top:12px; border-top:1px solid #f0f0f0;
+    }
+    .members { display:flex; gap:-4px; }
+    .member-av {
+      width:26px; height:26px; border-radius:50%; border:2px solid #fff;
+      display:flex; align-items:center; justify-content:center;
+      font-size:10px; font-weight:700; color:#fff; margin-right:-6px;
+    }
+    .proj-date { font-size:11px; color:#aaa; }
+
+    /* MODAL */
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,.45);
+      z-index:500; display:none; align-items:center; justify-content:center;
+    }
+    .modal-overlay.open { display:flex; }
+    .modal {
+      background:#fff; border-radius:16px; padding:32px;
+      width:100%; max-width:640px; max-height:90vh; overflow-y:auto;
+      box-shadow:0 24px 64px rgba(0,0,0,.25);
+      animation:slideIn .3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity:0; transform:translateY(-20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .modal-title {
+      font-size:18px; font-weight:700; color:#1a1a2e;
+      margin-bottom:24px; padding-bottom:14px; border-bottom:1.5px solid #f0f0f0;
+      display:flex; align-items:center; gap:10px;
+    }
+    .modal-close {
+      margin-left:auto; background:none; border:none;
+      font-size:20px; cursor:pointer; color:#aaa; transition:color .2s;
+    }
+    .modal-close:hover { color:#e63946; }
+
+    /* FORM */
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px 24px; }
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+    .form-group.full { grid-column:1/-1; }
+    label { font-size:12px; font-weight:600; color:#555; }
+    label .req { color:#e63946; margin-left:3px; }
+    label .opt { color:#bbb; font-weight:400; font-size:11px; margin-left:4px; }
+    input[type=text], input[type=number], select, textarea {
+      width:100%; padding:9px 13px; border:1.5px solid #dde2ea;
+      border-radius:8px; font-size:13.5px; color:#222; outline:none;
+      transition:border-color .2s, box-shadow .2s; font-family:inherit;
+    }
+    input[type=text]:focus, input[type=number]:focus,
+    select:focus, textarea:focus {
+      border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.12);
+    }
+    .field-hint { font-size:11px; color:#aaa; }
+
+    /* PREVIEW */
+    .preview-box {
+      background:linear-gradient(135deg,#0077b6,#00b4d8);
+      border-radius:12px; padding:18px 22px; color:#fff; margin-top:6px;
+    }
+    .preview-label { font-size:10px; opacity:.7; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+    .preview-code  { font-size:18px; font-weight:800; word-break:break-all; }
+    .preview-code .dim { opacity:.45; }
+
+    /* COMBO */
+    .combo-wrap { position:relative; }
+    .combo-arrow { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#aaa; pointer-events:none; }
+    .combo-dropdown {
+      position:absolute; top:calc(100% + 4px); left:0; right:0;
+      background:#fff; border:1.5px solid #dde2ea; border-radius:8px;
+      box-shadow:0 8px 24px rgba(0,0,0,.12); z-index:300;
+      max-height:200px; overflow-y:auto; display:none;
+    }
+    .combo-dropdown.open { display:block; }
+    .combo-item {
+      padding:9px 13px; font-size:13.5px; cursor:pointer; transition:background .12s;
+    }
+    .combo-item:hover, .combo-item.highlighted { background:#f0f7ff; color:#0077b6; }
+    .combo-new { color:#0096c7; font-style:italic; }
+    .tag-wrap { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
+    .tag {
+      font-size:11.5px; background:#f0f4f8; border:1px solid #dde2ea;
+      color:#555; padding:3px 10px; border-radius:20px; cursor:pointer;
+      transition:all .15s;
+    }
+    .tag:hover, .tag.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
+
+    /* NUM WRAP */
+    .num-wrap { display:flex; align-items:center; gap:8px; }
+    .num-prefix {
+      font-size:13px; font-weight:700; color:#0077b6; background:#e8f4fe;
+      padding:9px 12px; border-radius:8px; border:1.5px solid #b8dff5; white-space:nowrap;
+    }
+    .auto-badge {
+      font-size:11px; background:#e8f4fe; color:#0077b6;
+      padding:3px 8px; border-radius:20px; font-weight:600;
+    }
+
+    /* MODAL ACTIONS */
+    .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:24px; }
+    .btn { padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; border:none; display:flex; align-items:center; gap:6px; transition:all .2s; }
+    .btn-primary { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; box-shadow:0 3px 10px rgba(0,119,182,.25); }
+    .btn-primary:hover { box-shadow:0 6px 18px rgba(0,119,182,.4); transform:translateY(-1px); }
+    .btn-secondary { background:#fff; color:#555; border:1.5px solid #dde2ea; }
+    .btn-secondary:hover { background:#f5f5f5; }
+
+    /* TOAST */
+    .toast {
+      position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff;
+      padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500;
+      box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:999;
+      transform:translateY(80px); opacity:0; transition:all .35s;
+    }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .toast.success { border-left:4px solid #52b788; }
+    .toast.error   { border-left:4px solid #e63946; }
+
+    @media(max-width:900px) {
+      .stats { grid-template-columns:1fr 1fr; }
+    }
+    @media(max-width:640px) {
+      .sidebar { display:none; }
+      .main { padding:20px 16px; }
+      .form-grid { grid-template-columns:1fr; }
+      .form-group.full { grid-column:1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">B</div>
+    <span class="topbar-title">BIM Hub</span>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn" title="Thông báo">🔔</button>
+    <div class="user-info" id="userInfo">
+      <div class="avatar" id="topAvatar">?</div>
+      <span class="user-name" id="topName">Đang tải...</span>
+      <span class="role-badge" id="topRole"></span>
+    </div>
+    <button class="btn-logout" onclick="logout()">Đăng xuất</button>
+  </div>
+</nav>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Điều hướng</div>
+      <a class="sidebar-item active" href="dashboard.html"><span class="icon">🏠</span>Trang chủ</a>
+      <a class="sidebar-item" href="#"><span class="icon">📁</span>Dự án của tôi</a>
+      <a class="sidebar-item" href="#"><span class="icon">⭐</span>Yêu thích</a>
+      <a class="sidebar-item" href="#"><span class="icon">🕐</span>Gần đây</a>
+    </div>
+    <div class="sidebar-section admin-only" id="adminMenu">
+      <div class="sidebar-label">Quản trị</div>
+      <a class="sidebar-item" href="admin.html"><span class="icon">👥</span>Quản lý thành viên</a>
+      <a class="sidebar-item" href="#"><span class="icon">📊</span>Báo cáo</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Hệ thống</div>
+      <a class="sidebar-item" href="#"><span class="icon">⚙️</span>Cài đặt</a>
+      <a class="sidebar-item" href="#"><span class="icon">❓</span>Trợ giúp</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="welcome-bar">
+      <div class="welcome-text">
+        <h2 id="welcomeMsg">Xin chào! 👋</h2>
+        <p id="welcomeSub">Đây là tổng quan các dự án BIM của bạn</p>
+      </div>
+      <button class="btn-create admin-only" id="createBtn" onclick="openModal()">
+        ➕ Tạo dự án mới
+      </button>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-icon s-blue">📁</div>
+        <div><div class="stat-num">8</div><div class="stat-label">Tổng dự án</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon s-green">🔨</div>
+        <div><div class="stat-num">5</div><div class="stat-label">Đang thực hiện</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon s-orange">✅</div>
+        <div><div class="stat-num">2</div><div class="stat-label">Hoàn thành</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon s-red">⚠️</div>
+        <div><div class="stat-num">1</div><div class="stat-label">Quá hạn</div></div>
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="section-header">
+      <div class="section-title">🏗️ Dự án gần đây</div>
+      <a class="view-all" href="#">Xem tất cả →</a>
+    </div>
+    <div class="project-grid" id="projectGrid">
+      <!-- Projects injected by JS -->
+    </div>
+  </main>
+</div>
+
+<!-- MODAL TẠO DỰ ÁN -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title">
+      🏗️ Tạo dự án mới
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview-box" style="margin-bottom:20px;">
+      <div class="preview-label">👁️ Preview – Project Code</div>
+      <div class="preview-code" id="previewCode">
+        <span id="pYear">26</span><span id="pNum">001</span>
+        <span class="dim">_</span><span id="pBranch" class="dim">支店名</span>
+        <span class="dim">_</span><span id="pDesign" class="dim">設計区分</span>
+        <span class="dim">_</span><span id="pName"   class="dim">物件名</span>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <!-- 年度 -->
+      <div class="form-group">
+        <label>年度 <span class="req">*</span></label>
+        <div class="num-wrap">
+          <div class="num-prefix">20<b id="yearDisp">26</b></div>
+          <input type="number" id="yearInput" value="26" min="20" max="99"
+            oninput="onYearChange(this.value)" style="max-width:90px;"/>
+        </div>
+        <div class="field-hint">西暦の下2桁（2026 → 26）</div>
+      </div>
+
+      <!-- 連番 -->
+      <div class="form-group">
+        <label>連番 <span class="req">*</span> <span class="auto-badge"> 自動</span></label>
+        <div class="num-wrap">
+          <input type="number" id="numInput" value="1" min="1" max="999"
+            oninput="updatePreview()" style="max-width:100px;"/>
+          <span style="font-size:12px;color:#888;">年度ごとリセット</span>
+        </div>
+        <div class="field-hint" id="numHint">今年の次番号：<b style="color:#0096c7;">001</b></div>
+      </div>
+
+      <!-- 支店名 -->
+      <div class="form-group">
+        <label>支店名 <span class="req">*</span></label>
+        <div class="combo-wrap">
+          <input type="text" id="branchInput" placeholder="支店を選択または入力..."
+            autocomplete="off"
+            oninput="onCombo('branch')" onfocus="openDD('branch')" onblur="closeDD('branch')"/>
+          <span class="combo-arrow">▼</span>
+          <div class="combo-dropdown" id="branchDD"></div>
+        </div>
+        <div class="tag-wrap" id="branchTags"></div>
+      </div>
+
+      <!-- 設計区分 -->
+      <div class="form-group">
+        <label>設計区分 <span class="opt">（省略可）</span></label>
+        <div class="combo-wrap">
+          <input type="text" id="designInput" placeholder="設計区分を選択または入力..."
+            autocomplete="off"
+            oninput="onCombo('design')" onfocus="openDD('design')" onblur="closeDD('design')"/>
+          <span class="combo-arrow">▼</span>
+          <div class="combo-dropdown" id="designDD"></div>
+        </div>
+        <div class="tag-wrap" id="designTags"></div>
+      </div>
+
+      <!-- 物件名 -->
+      <div class="form-group full">
+        <label>物件名・工事名称 <span class="req">*</span></label>
+        <input type="text" id="nameInput"
+          placeholder="例：NewSAMPLE、〇〇ビル新築工事..."
+          oninput="updatePreview()"/>
+        <div class="field-hint">日本語・英語・ベトナム語すべて使用可能</div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">キャンセル</button>
+      <button class="btn btn-primary" onclick="createProject()">✅ 作成する</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── DATA ──
+  const BRANCHES = ['本社','首都圏','大阪','九州','東北','名古屋','札幌','四国','静岡','広島','北陸','ベトナム営業所'];
+  const DESIGNS  = ['自','他'];
+  const existingSeq = { '26': 0 };
+
+  const SAMPLE_PROJECTS = [
+    { code:'26001_本社_自_NewSAMPLE',    name:'NewSAMPLE',      branch:'本社',   progress:72, status:'active',  color:'#0096c7', members:['本','田','山'] },
+    { code:'26002_大阪_他_〇〇ビル改修', name:'〇〇ビル改修工事', branch:'大阪',   progress:45, status:'active',  color:'#52b788', members:['大','中']      },
+    { code:'26003_九州_自_港湾施設',     name:'港湾施設新築',    branch:'九州',   progress:90, status:'done',   color:'#9b5de5', members:['九','佐','田']  },
+    { code:'25012_名古屋_他_工場棟',     name:'工場棟増築工事',  branch:'名古屋', progress:20, status:'pending', color:'#f4a261', members:['名']           },
+    { code:'26004_首都圏_自_オフィス',   name:'オフィスリノベ',  branch:'首都圏', progress:60, status:'active',  color:'#e63946', members:['首','田','渡']  },
+  ];
+
+  // ── INIT ──
+  window.onload = () => {
+    const role  = localStorage.getItem('user_role')  || 'Staff';
+    const name  = localStorage.getItem('user_name')  || 'User';
+    const email = localStorage.getItem('user_email') || '';
+
+    // Topbar
+    document.getElementById('topName').textContent = name;
+    document.getElementById('topAvatar').textContent = name.substring(0,2).toUpperCase();
+    const rb = document.getElementById('topRole');
+    rb.textContent = role;
+    rb.className = 'role-badge ' + (role === 'Admin' ? 'role-admin' : 'role-staff');
+
+    // Welcome
+    document.getElementById('welcomeMsg').textContent = 'Xin chào, ' + name + '! 👋';
+    document.getElementById('welcomeSub').textContent =
+      role === 'Admin'
+        ? 'Bạn có quyền Admin – Tạo dự án và quản lý thành viên'
+        : 'Đây là các dự án BIM bạn đang tham gia';
+
+    // Show/hide admin elements
+    if (role === 'Admin') {
+      document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
+      document.getElementById('createBtn').style.display = 'flex';
+    }
+
+    renderProjects(SAMPLE_PROJECTS);
+    renderTags('branch'); renderTags('design');
+    updatePreview();
+    onYearChange(26);
+  };
+
+  // ── PROJECTS ──
+  function renderProjects(projects) {
+    const grid = document.getElementById('projectGrid');
+    const statusLabel = { active:'🔨 Đang thực hiện', done:'✅ Hoàn thành', pending:'⏳ Chờ bắt đầu' };
+    const statusClass = { active:'status-active', done:'status-done', pending:'status-pending' };
+    const fillClass   = { active:'fill-blue', done:'fill-green', pending:'fill-orange' };
+    grid.innerHTML = projects.map(p => `
+      <div class="project-card" onclick="showToast('📂 Mở dự án: ' + '${p.name}','success')">
+        <div class="proj-header">
+          <span class="proj-code">${p.code.split('_')[0]}_${p.code.split('_')[1]}</span>
+          <span class="proj-status ${statusClass[p.status]}">${statusLabel[p.status]}</span>
+        </div>
+        <div class="proj-name">${p.name}</div>
+        <div class="proj-branch">📍 ${p.branch}</div>
+        <div class="progress-label"><span>Tiến độ</span><span>${p.progress}%</span></div>
+        <div class="progress-bar">
+          <div class="progress-fill ${fillClass[p.status]}" style="width:${p.progress}%"></div>
+        </div>
+        <div class="proj-footer">
+          <div class="members">
+            ${p.members.map((m,i) => `
+              <div class="member-av"
+                style="background:hsl(${i*60+180},60%,45%);z-index:${p.members.length-i};">
+                ${m}
+              </div>`).join('')}
+          </div>
+          <span class="proj-date">📅 2026</span>
+        </div>
+      </div>`).join('');
+  }
+
+  // ── MODAL ──
+  function openModal()  { document.getElementById('modalOverlay').classList.add('open'); }
+  function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+  function closeModalOutside(e) { if(e.target.id==='modalOverlay') closeModal(); }
+
+  // ── COMBO ──
+  function onCombo(key) { renderDD(key); updatePreview(); }
+  function openDD(key)  { renderDD(key); }
+  function closeDD(key) { setTimeout(()=>{ document.getElementById(key+'DD').classList.remove('open'); },200); }
+
+  function renderDD(key) {
+    const data = key==='branch' ? BRANCHES : DESIGNS;
+    const val  = document.getElementById(key+'Input').value.trim();
+    const dd   = document.getElementById(key+'DD');
+    const filtered = val ? data.filter(d=>d.toLowerCase().includes(val.toLowerCase())) : data;
+    let html = filtered.map(item =>
+      `<div class="combo-item" onmousedown="selectCombo('${key}','${item}')">${item}</div>`
+    ).join('');
+    if(val && !data.map(d=>d.toLowerCase()).includes(val.toLowerCase())) {
+      html += `<div class="combo-item combo-new" onmousedown="selectCombo('${key}','${val}')">➕ 新規：「${val}」</div>`;
+    }
+    if(!html) html = `<div class="combo-item" style="color:#aaa;cursor:default;">候補なし</div>`;
+    dd.innerHTML = html;
+    dd.classList.add('open');
+    renderTags(key);
+  }
+
+  function selectCombo(key, value) {
+    document.getElementById(key+'Input').value = value;
+    document.getElementById(key+'DD').classList.remove('open');
+    renderTags(key);
+    updatePreview();
+  }
+
+  function renderTags(key) {
+    const data = key==='branch' ? BRANCHES : DESIGNS;
+    const cur  = document.getElementById(key+'Input').value.trim();
+    document.getElementById(key+'Tags').innerHTML = data.map(item =>
+      `<span class="tag ${cur===item?'active':''}" onclick="selectCombo('${key}','${item}')">${item}</span>`
+    ).join('');
+  }
+
+  // ── YEAR / NUM ──
+  function onYearChange(v) {
+    const y = String(v).padStart(2,'0');
+    document.getElementById('yearDisp').textContent = y;
+    const next = (existingSeq[y]||0) + 1;
+    document.getElementById('numInput').value = next;
+    document.getElementById('numHint').innerHTML =
+      `今年の次番号：<b style="color:#0096c7;">${String(next).padStart(3,'0')}</b>`;
+    updatePreview();
+  }
+
+  // ── PREVIEW ──
+  function updatePreview() {
+    const year   = String(document.getElementById('yearInput').value||'26').padStart(2,'0');
+    const num    = String(document.getElementById('numInput').value||'1').padStart(3,'0');
+    const branch = document.getElementById('branchInput').value.trim();
+    const design = document.getElementById('designInput').value.trim();
+    const name   = document.getElementById('nameInput').value.trim();
+    const setEl  = (id, val, ph) => {
+      const el = document.getElementById(id);
+      el.textContent = val||ph;
+      el.className   = val ? '' : 'dim';
+    };
+    document.getElementById('pYear').textContent = year;
+    document.getElementById('pNum').textContent  = num;
+    setEl('pBranch', branch, '支店名');
+    setEl('pDesign', design, '設計区分');
+    setEl('pName',   name,   '物件名');
+  }
+
+  // ── CREATE PROJECT ──
+  function createProject() {
+    const year   = String(document.getElementById('yearInput').value||'26').padStart(2,'0');
+    const num    = String(document.getElementById('numInput').value||'1').padStart(3,'0');
+    const branch = document.getElementById('branchInput').value.trim();
+    const design = document.getElementById('designInput').value.trim();
+    const name   = document.getElementById('nameInput').value.trim();
+    if(!branch) { showToast('❌ 支店名を入力してください','error'); return; }
+    if(!name)   { showToast('❌ 物件名を入力してください','error'); return; }
+    const parts = [year+num, branch];
+    if(design) parts.push(design);
+    parts.push(name);
+    const code = parts.join('_');
+    const newProj = {
+      code, name, branch,
+      progress:0, status:'pending',
+      color:'#4361ee', members:['新']
+    };
+    const grid = document.getElementById('projectGrid');
+    const temp = document.createElement('div');
+    temp.className = 'project-card';
+    temp.style.borderColor = '#0096c7';
+    temp.innerHTML = `
+      <div class="proj-header">
+        <span class="proj-code">${year}${num}_${branch}</span>
+        <span class="proj-status status-pending">⏳ Chờ bắt đầu</span>
+      </div>
+      <div class="proj-name">${name}</div>
+      <div class="proj-branch">📍 ${branch}</div>
+      <div class="progress-label"><span>Tiến độ</span><span>0%</span></div>
+      <div class="progress-bar"><div class="progress-fill fill-orange" style="width:0%"></div></div>
+      <div class="proj-footer">
+        <div class="members"><div class="member-av" style="background:#4361ee;">新</div></div>
+        <span class="proj-date">📅 20${year}</span>
+      </div>`;
+    grid.prepend(temp);
+    closeModal();
+    showToast('✅ プロジェクト「' + name + '」を作成しました！','success');
+    // Reset form
+    document.getElementById('nameInput').value='';
+    document.getElementById('branchInput').value='';
+    document.getElementById('designInput').value='';
+    renderTags('branch'); renderTags('design'); updatePreview();
+  }
+
+  // ── LOGOUT ──
+  function logout() {
+    if(confirm('Bạn có muốn đăng xuất không?')) {
+      localStorage.clear();
+      window.location.href = 'index.html';
+    }
+  }
+
+  // ── TOAST ──
+  function showToast(msg, type='success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type + ' show';
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+</script>
+</body>
+</html>"""

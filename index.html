@@ -1,0 +1,199 @@
+login_html = """<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BIM Hub – Đăng nhập</title>
+  <style>
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body {
+      font-family:'Segoe UI',Arial,sans-serif;
+      background:linear-gradient(135deg,#0077b6 0%,#1a1a2e 100%);
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+    }
+    .card {
+      background:#fff; border-radius:20px; padding:48px 44px;
+      width:100%; max-width:440px;
+      box-shadow:0 24px 64px rgba(0,0,0,0.3); text-align:center;
+      animation:fadeUp .5s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .logo-icon {
+      width:72px; height:72px; border-radius:20px;
+      background:linear-gradient(135deg,#00b4d8,#0077b6);
+      display:inline-flex; align-items:center; justify-content:center;
+      font-size:36px; box-shadow:0 8px 24px rgba(0,119,182,.35);
+      margin-bottom:12px;
+    }
+    .app-name { font-size:28px; font-weight:800; color:#1a1a2e; margin-bottom:4px; }
+    .app-sub  { font-size:13px; color:#888; margin-bottom:32px; }
+    .form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; text-align:left; }
+    label { font-size:12.5px; font-weight:600; color:#555; }
+    .input-wrap { position:relative; }
+    .input-wrap input {
+      width:100%; padding:11px 40px 11px 14px;
+      border:1.5px solid #dde2ea; border-radius:10px;
+      font-size:14px; color:#222; outline:none;
+      transition:border-color .2s, box-shadow .2s;
+      font-family:inherit;
+    }
+    .input-wrap input:focus {
+      border-color:#0096c7;
+      box-shadow:0 0 0 3px rgba(0,150,199,.12);
+    }
+    .input-wrap input.error { border-color:#e63946; }
+    .input-icon {
+      position:absolute; right:13px; top:50%; transform:translateY(-50%);
+      color:#aaa; font-size:16px; cursor:pointer; user-select:none;
+    }
+    .error-box {
+      background:#fff0f0; border:1.5px solid #ffb3b3; border-radius:10px;
+      padding:11px 14px; font-size:12.5px; color:#e63946;
+      margin-bottom:16px; display:none; text-align:left;
+    }
+    .info-box {
+      background:#f0f7ff; border:1.5px solid #b8dff5; border-radius:10px;
+      padding:11px 14px; font-size:12.5px; color:#0077b6;
+      margin-bottom:20px; text-align:left; line-height:1.6;
+    }
+    .btn-login {
+      width:100%; padding:13px; background:linear-gradient(135deg,#0096c7,#0077b6);
+      color:#fff; border:none; border-radius:10px; font-size:15px;
+      font-weight:700; cursor:pointer; transition:all .2s;
+      box-shadow:0 4px 14px rgba(0,119,182,.3); margin-top:4px;
+    }
+    .btn-login:hover {
+      box-shadow:0 8px 24px rgba(0,119,182,.4); transform:translateY(-1px);
+    }
+    .divider { height:1px; background:#eee; margin:20px 0; position:relative; }
+    .divider span {
+      position:absolute; top:-9px; left:50%; transform:translateX(-50%);
+      background:#fff; padding:0 12px; font-size:12px; color:#bbb;
+    }
+    .hint { font-size:12px; color:#aaa; line-height:1.7; }
+    .footer { margin-top:28px; font-size:11px; color:#ccc; }
+    .forgot { font-size:12px; color:#0096c7; text-align:right; margin-top:4px; cursor:pointer; }
+    .forgot:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo-icon">🏗️</div>
+  <div class="app-name">BIM Hub</div>
+  <div class="app-sub">VINADECONS – Quản lý dự án BIM</div>
+
+  <div class="info-box">
+    🔒 Chỉ tài khoản <b>@vinadecons.vn</b> được phép đăng nhập.<br/>
+    Liên hệ Admin nếu bạn chưa được cấp tài khoản.
+  </div>
+
+  <div class="error-box" id="errorBox">
+    ❌ <span id="errorMsg">Email hoặc mật khẩu không đúng.</span>
+  </div>
+
+  <div class="form-group">
+    <label>Email</label>
+    <div class="input-wrap">
+      <input type="email" id="emailInput" placeholder="email@vinadecons.vn"
+        onkeydown="if(event.key==='Enter') doLogin()"/>
+      <span class="input-icon">✉️</span>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Mật khẩu</label>
+    <div class="input-wrap">
+      <input type="password" id="pwInput" placeholder="Nhập mật khẩu"
+        id="pwInput" onkeydown="if(event.key==='Enter') doLogin()"/>
+      <span class="input-icon" onclick="togglePw()" id="pwEye">👁️</span>
+    </div>
+    <div class="forgot" onclick="showForgot()">Quên mật khẩu? Liên hệ Admin</div>
+  </div>
+
+  <button class="btn-login" onclick="doLogin()">🔐 Đăng nhập</button>
+
+  <div class="divider"><span>vinadecons.vn</span></div>
+  <p class="hint">
+    Tài khoản do Admin cung cấp.<br/>
+    Liên hệ <b>admin@vinadecons.vn</b> nếu cần hỗ trợ.
+  </p>
+  <div class="footer">BIM Hub v1.0 · VINADECONS © 2026</div>
+</div>
+
+<script>
+  // ── Danh sách users nội bộ (sau này lấy từ Supabase DB) ──
+  const USERS = [
+    { email:'admin@vinadecons.vn',        password:'Admin@2026', role:'Admin', name:'Admin' },
+    { email:'lqhuy@vinadecons.vn',         password:'Staff@2026', role:'Staff', name:'Lê Quang Huy' },
+    { email:'nguyen.van.a@vinadecons.vn',  password:'Staff@2026', role:'Staff', name:'Nguyễn Văn A' },
+    { email:'tran.thi.b@vinadecons.vn',    password:'Staff@2026', role:'Staff', name:'Trần Thị B' },
+  ];
+
+  function doLogin() {
+    const email = document.getElementById('emailInput').value.trim().toLowerCase();
+    const pw    = document.getElementById('pwInput').value;
+    const errBox = document.getElementById('errorBox');
+    const errMsg = document.getElementById('errorMsg');
+
+    // Reset
+    errBox.style.display = 'none';
+    document.getElementById('emailInput').classList.remove('error');
+    document.getElementById('pwInput').classList.remove('error');
+
+    // Validate empty
+    if (!email) {
+      errMsg.textContent = 'Vui lòng nhập email.';
+      errBox.style.display = 'block';
+      document.getElementById('emailInput').classList.add('error');
+      return;
+    }
+    if (!pw) {
+      errMsg.textContent = 'Vui lòng nhập mật khẩu.';
+      errBox.style.display = 'block';
+      document.getElementById('pwInput').classList.add('error');
+      return;
+    }
+
+    // Validate domain
+    if (!email.endsWith('@vinadecons.vn')) {
+      errMsg.textContent = 'Chỉ chấp nhận email @vinadecons.vn.';
+      errBox.style.display = 'block';
+      document.getElementById('emailInput').classList.add('error');
+      return;
+    }
+
+    // Check user
+    const user = USERS.find(u => u.email === email && u.password === pw);
+    if (!user) {
+      errMsg.textContent = 'Email hoặc mật khẩu không đúng. Liên hệ Admin để được hỗ trợ.';
+      errBox.style.display = 'block';
+      document.getElementById('emailInput').classList.add('error');
+      document.getElementById('pwInput').classList.add('error');
+      return;
+    }
+
+    // Save session
+    localStorage.setItem('user_email', user.email);
+    localStorage.setItem('user_role',  user.role);
+    localStorage.setItem('user_name',  user.name);
+
+    // Redirect
+    window.location.href = 'dashboard.html';
+  }
+
+  function togglePw() {
+    const inp = document.getElementById('pwInput');
+    const eye = document.getElementById('pwEye');
+    if (inp.type === 'password') { inp.type = 'text';     eye.textContent = '🙈'; }
+    else                         { inp.type = 'password'; eye.textContent = '👁️'; }
+  }
+
+  function showForgot() {
+    alert('Vui lòng liên hệ Admin để được cấp lại mật khẩu:\\nadmin@vinadecons.vn');
+  }
+</script>
+</body>
+</html>"""
