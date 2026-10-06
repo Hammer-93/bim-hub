@@ -410,7 +410,35 @@ function renderList() {
     const grp     = p.proj_group || 'A';
     const cfg     = GROUP_CFG[grp] || GROUP_CFG['A'];
     const sttText = sttMap[p.id] || grp+'?';
-    const st      = p.status==='active'
+    const today     = new Date();
+today.setHours(0,0,0,0);
+const projTasks = allTasks.filter(t => t.project_id === p.id);
+
+let statusBadge = '';
+if (projTasks.length === 0) {
+  // Chua co task → dang hoat dong
+  statusBadge = '<span class="status-badge status-active">🟢 Dang hoat dong</span>';
+} else {
+  const tasksWithSend    = projTasks.filter(t => t.send_date);
+  const tasksWithoutSend = projTasks.filter(t => !t.send_date);
+
+  if (tasksWithoutSend.length > 0) {
+    // Con task chua co ngay gui → dang hoat dong
+    statusBadge = '<span class="status-badge status-active">🟢 Dang hoat dong</span>';
+  } else {
+    // Tat ca task deu co send_date
+    const allDone = tasksWithSend.every(t => {
+      const sd = new Date(t.send_date);
+      sd.setHours(0,0,0,0);
+      return sd < today;
+    });
+    if (allDone) {
+      statusBadge = '<span class="status-badge status-done">⬜ Da ket thuc</span>';
+    } else {
+      statusBadge = '<span class="status-badge status-active">🟢 Dang hoat dong</span>';
+    }
+  }
+}
       ? '<span class="status-badge status-active">🟢 Dang hoat dong</span>'
       : '<span class="status-badge status-done">⬜ Da ket thuc</span>';
     const date = p.created_at ? new Date(p.created_at).toLocaleDateString('vi-VN') : '-';
@@ -421,7 +449,7 @@ function renderList() {
       + '<td>'+(p.branch||'-')+'</td>'
       + '<td>'+(p.design_type||'-')+'</td>'
       + '<td><span style="font-size:12px;">'+cfg.icon+' '+cfg.label+'</span></td>'
-      + '<td>'+st+'</td>'
+      + '<td>'+statusBadge+'</td>'
       + '<td style="color:#888;">'+date+'</td>'
       + '<td>'
       + (role==='Admin'
