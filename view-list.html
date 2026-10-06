@@ -51,11 +51,11 @@
     .toast { position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:9999; transform:translateY(80px); opacity:0; transition:all .35s; }
     .toast.show { transform:translateY(0); opacity:1; }
     .toast.success { border-left:4px solid #52b788; }
-    .toast.error { border-left:4px solid #e63946; }
+    .toast.error   { border-left:4px solid #e63946; }
     .tooltip { position:fixed; background:#1a1a2e; color:#fff; padding:8px 12px; border-radius:8px; font-size:12px; z-index:9999; pointer-events:none; display:none; max-width:260px; line-height:1.6; }
     .status-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
     .status-active { background:#d4edda; color:#1a7c3a; }
-    .status-done { background:#f0f0f0; color:#666; }
+    .status-done   { background:#f0f0f0; color:#666; }
     .color-dot { width:11px; height:11px; border-radius:50%; display:inline-block; margin-right:5px; vertical-align:middle; }
     .combo-wrap { position:relative; }
     .combo-arrow { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#aaa; pointer-events:none; font-size:12px; }
@@ -83,25 +83,25 @@
     .btn-remove-task { position:absolute; top:8px; right:10px; background:none; border:none; color:#e63946; cursor:pointer; font-size:16px; }
     .proj-table { width:100%; border-collapse:collapse; background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.07); }
     .proj-table thead th { padding:12px 16px; text-align:left; font-size:12px; font-weight:700; color:#fff; background:#0077b6; }
-    .proj-table tbody td { padding:13px 16px; font-size:13px; color:#333; border-bottom:1px solid #f0f0f0; }
+    .proj-table tbody td { padding:13px 16px; font-size:13px; color:#333; border-bottom:1px solid #f0f0f0; vertical-align:middle; }
     .proj-table tbody tr:hover td { background:#f8fbff; }
     .proj-table tbody tr:last-child td { border-bottom:none; }
-    .proj-code { font-weight:700; color:#0077b6; font-size:12px; }
-    /* STT BADGE */
-    .stt-badge { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; font-size:13px; font-weight:800; }
+    .proj-code { font-weight:700; color:#0077b6; font-size:13px; }
+    .stt-badge { display:inline-flex; align-items:center; justify-content:center; min-width:36px; height:36px; border-radius:10px; font-size:13px; font-weight:800; padding:0 6px; }
     .stt-a { background:#e8f4fe; color:#0077b6; }
     .stt-b { background:#d4edda; color:#1a7c3a; }
     .stt-c { background:#fff3cd; color:#856404; }
     .stt-d { background:#f3e8ff; color:#7b2d8b; }
-    /* GROUP SELECTOR */
-    .group-selector { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:4px; }
+    .group-selector { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:6px; }
     .group-opt { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:12px 8px; border:2px solid #dde2ea; border-radius:10px; cursor:pointer; transition:all .15s; background:#fff; }
     .group-opt:hover { border-color:#0096c7; background:#f0f7ff; }
     .group-opt.active { border-color:#0096c7; background:#e8f4fe; }
-    .group-opt .g-icon { font-size:20px; }
-    .group-opt .g-key { font-size:18px; font-weight:800; }
-    .group-opt .g-label { font-size:10px; color:#666; text-align:center; font-weight:600; }
+    .g-key { font-size:18px; font-weight:800; }
+    .g-icon { font-size:20px; }
+    .g-label { font-size:10px; color:#666; text-align:center; font-weight:600; }
     .stt-preview { display:inline-flex; align-items:center; gap:6px; background:#f0f4f8; border-radius:8px; padding:6px 12px; font-size:13px; font-weight:700; color:#555; margin-top:6px; }
+    .btn-del-proj { border:1.5px solid #ffb3b3; color:#e63946; background:#fff; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:600; transition:all .15s; }
+    .btn-del-proj:hover { background:#fff0f0; }
   </style>
 </head>
 <body>
@@ -143,10 +143,10 @@
     <button class="filter-btn"        id="fDone"   onclick="setFilter('done')">⬜ Da ket thuc</button>
     <select class="filter-select" id="fGroup" onchange="renderList()">
       <option value="">Tat ca nhom</option>
-      <option value="A">A – 設計BIM</option>
-      <option value="B">B – 施工BIM</option>
-      <option value="C">C – 清算</option>
-      <option value="D">D – M&amp;F</option>
+      <option value="A">A - 設計BIM</option>
+      <option value="B">B - 施工BIM</option>
+      <option value="C">C - 清算</option>
+      <option value="D">D - M&amp;F</option>
     </select>
   </div>
   <table class="proj-table">
@@ -160,11 +160,11 @@
         <th>Nhom</th>
         <th>Trang thai</th>
         <th>Ngay tao</th>
-<th></th>
+        <th></th>
       </tr>
     </thead>
     <tbody id="listBody">
-      <tr><td colspan="8" style="text-align:center;padding:32px;color:#aaa;">Dang tai...</td></tr>
+      <tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">Dang tai...</td></tr>
     </tbody>
   </table>
 </div>
@@ -174,46 +174,44 @@
   <div class="modal">
     <div class="modal-title">
       🏗️ Tao du an moi
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeModal()">&#x2715;</button>
     </div>
 
-    <!-- PREVIEW -->
     <div class="preview-box">
       <div class="preview-label">Project Code Preview</div>
       <div class="preview-code">
         <span id="pYear">26</span><span id="pNum">001</span>
-        <span class="dim">_</span><span id="pBranch" class="dim">支店</span>
-        <span class="dim">_</span><span id="pDesign" class="dim">設計区分</span>
-        <span class="dim">_</span><span id="pName" class="dim">物件名</span>
+        <span class="dim">_</span><span id="pBranch" class="dim">&#x652F;&#x5E97;</span>
+        <span class="dim">_</span><span id="pDesign" class="dim">&#x8A2D;&#x8A08;&#x533A;&#x5206;</span>
+        <span class="dim">_</span><span id="pName"   class="dim">&#x7269;&#x4EF6;&#x540D;</span>
       </div>
     </div>
 
-    <!-- NHOM DU AN -->
     <div class="form-group" style="margin-bottom:16px;">
       <label>Nhom du an <span class="req">*</span></label>
       <div class="group-selector">
         <div class="group-opt active" id="grpA" onclick="selectGroup('A')">
           <span class="g-key" style="color:#0077b6;">A</span>
-          <span class="g-icon">🏛️</span>
-          <span class="g-label">設計BIM</span>
+          <span class="g-icon">&#x1F3DB;&#xFE0F;</span>
+          <span class="g-label">&#x8A2D;&#x8A08;BIM</span>
         </div>
         <div class="group-opt" id="grpB" onclick="selectGroup('B')">
           <span class="g-key" style="color:#1a7c3a;">B</span>
-          <span class="g-icon">🏗️</span>
-          <span class="g-label">施工BIM</span>
+          <span class="g-icon">&#x1F3D7;&#xFE0F;</span>
+          <span class="g-label">&#x65BD;&#x5DE5;BIM</span>
         </div>
         <div class="group-opt" id="grpC" onclick="selectGroup('C')">
           <span class="g-key" style="color:#856404;">C</span>
-          <span class="g-icon">💰</span>
-          <span class="g-label">清算</span>
+          <span class="g-icon">&#x1F4B0;</span>
+          <span class="g-label">&#x6E05;&#x7B97;</span>
         </div>
         <div class="group-opt" id="grpD" onclick="selectGroup('D')">
           <span class="g-key" style="color:#7b2d8b;">D</span>
-          <span class="g-icon">🔧</span>
+          <span class="g-icon">&#x1F527;</span>
           <span class="g-label">M&amp;F</span>
         </div>
       </div>
-      <div class="stt-preview" id="sttPreview">
+      <div class="stt-preview">
         STT du kien: <b id="sttVal" style="color:#0077b6;">A1</b>
         <span style="color:#aaa;font-size:11px;">(reset theo nam)</span>
       </div>
@@ -221,344 +219,351 @@
 
     <div class="form-grid">
       <div class="form-group">
-        <label>年度 <span class="req">*</span></label>
+        <label>&#x5E74;&#x5EA6; <span class="req">*</span></label>
         <div class="num-wrap">
           <div class="num-prefix">20<b id="yearDisp">26</b></div>
           <input type="text" id="yearInput" value="26" maxlength="2" oninput="onYearChange(this.value)" style="max-width:80px;"/>
         </div>
       </div>
       <div class="form-group">
-        <label>連番 <span class="req">*</span></label>
+        <label>&#x9023;&#x756A; <span class="req">*</span></label>
         <input type="text" id="numInput" value="001" maxlength="3" oninput="updatePreview()" style="max-width:90px;"/>
-        <div class="field-hint" id="numHint">次番号: <b style="color:#0096c7;">001</b></div>
+        <div class="field-hint" id="numHint">&#x6B21;&#x756A;&#x53F7;: <b style="color:#0096c7;">001</b></div>
       </div>
       <div class="form-group">
-        <label>支店名 <span class="req">*</span></label>
+        <label>&#x652F;&#x5E97;&#x540D; <span class="req">*</span></label>
         <div class="combo-wrap">
-          <input type="text" id="branchInput" placeholder="支店を選択または入力..." autocomplete="off"
+          <input type="text" id="branchInput" placeholder="&#x652F;&#x5E97;&#x3092;&#x9078;&#x629E;&#x307E;&#x305F;&#x306F;&#x5165;&#x529B;..." autocomplete="off"
             oninput="onCombo('branch')" onfocus="openDD('branch')" onblur="closeDD('branch')"/>
-          <span class="combo-arrow">▼</span>
+          <span class="combo-arrow">&#x25BC;</span>
           <div class="combo-dd" id="branchDD"></div>
         </div>
         <div class="tag-wrap" id="branchTags"></div>
       </div>
       <div class="form-group">
-        <label>設計区分 <span style="color:#aaa;font-weight:400;font-size:11px;">（省略可）</span></label>
+        <label>&#x8A2D;&#x8A08;&#x533A;&#x5206; <span style="color:#aaa;font-weight:400;font-size:11px;">&#xFF08;&#x7701;&#x7565;&#x53EF;&#xFF09;</span></label>
         <div class="combo-wrap">
-          <input type="text" id="designInput" placeholder="設計区分を選択または入力..." autocomplete="off"
+          <input type="text" id="designInput" placeholder="&#x8A2D;&#x8A08;&#x533A;&#x5206;&#x3092;&#x9078;&#x629E;&#x307E;&#x305F;&#x306F;&#x5165;&#x529B;..." autocomplete="off"
             oninput="onCombo('design')" onfocus="openDD('design')" onblur="closeDD('design')"/>
-          <span class="combo-arrow">▼</span>
+          <span class="combo-arrow">&#x25BC;</span>
           <div class="combo-dd" id="designDD"></div>
         </div>
         <div class="tag-wrap" id="designTags"></div>
       </div>
       <div class="form-group full">
-        <label>物件名・工事名称 <span class="req">*</span></label>
-        <input type="text" id="nameInput" placeholder="例: NewSAMPLE、〇〇ビル新築工事..." oninput="updatePreview()"/>
+        <label>&#x7269;&#x4EF6;&#x540D;&#x30FB;&#x5DE5;&#x4E8B;&#x540D;&#x79F0; <span class="req">*</span></label>
+        <input type="text" id="nameInput" placeholder="&#x4F8B;: NewSAMPLE&#x3001;&#x3007;&#x3007;&#x30D3;&#x30EB;&#x65B0;&#x7BC9;&#x5DE5;&#x4E8B;..." oninput="updatePreview()"/>
       </div>
       <div class="form-group">
-        <label>開始日</label>
+        <label>&#x958B;&#x59CB;&#x65E5;</label>
         <input type="date" id="projStart"/>
       </div>
       <div class="form-group">
-        <label>終了予定日</label>
+        <label>&#x7D42;&#x4E86;&#x4E88;&#x5B9A;&#x65E5;</label>
         <input type="date" id="projEnd"/>
       </div>
     </div>
 
     <div class="tasks-section">
-      <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:10px;">📋 工程・タスク入力</div>
+      <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:10px;">&#x1F4CB; &#x5DE5;&#x7A0B;&#x30FB;&#x30BF;&#x30B9;&#x30AF;&#x5165;&#x529B;</div>
       <div id="taskRows"></div>
-      <button class="btn-add-task" onclick="addTaskRow()">➕ タスクを追加</button>
+      <button class="btn-add-task" onclick="addTaskRow()">&#x2795; &#x30BF;&#x30B9;&#x30AF;&#x3092;&#x8FFD;&#x52A0;</button>
     </div>
 
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
-      <button class="btn-primary"   onclick="createProject()">✅ 作成する</button>
+      <button class="btn-secondary" onclick="closeModal()">&#x30AD;&#x30E3;&#x30F3;&#x30BB;&#x30EB;</button>
+      <button class="btn-primary"   onclick="createProject()">&#x2705; &#x4F5C;&#x6210;&#x3059;&#x308B;</button>
     </div>
   </div>
 </div>
 
 <script src="js/config.js"></script>
 <script>
-let filterStatus  = 'all';
-let taskRowCount  = 0;
-let selectedGroup = 'A';
+var filterStatus  = 'all';
+var taskRowCount  = 0;
+var selectedGroup = 'A';
+var currentUserRole = 'Staff';
 
-const GROUP_CFG = {
+var GROUP_CFG = {
   A: { label:'設計BIM', icon:'🏛️', cls:'stt-a' },
   B: { label:'施工BIM', icon:'🏗️', cls:'stt-b' },
   C: { label:'清算',    icon:'💰', cls:'stt-c' },
-  D: { label:'M&F',    icon:'🔧', cls:'stt-d' },
+  D: { label:'M&F',    icon:'🔧', cls:'stt-d' }
 };
 
-window.onload = async () => {
+window.onload = function() {
   initTopbar();
-  try {
-    await loadAllData();
+  loadAllData().then(function() {
     renderList();
     suggestNextNum();
     renderTags('branch');
     renderTags('design');
     updatePreview();
     selectGroup('A');
-  } catch(e) {
+  }).catch(function(e) {
     showToast('❌ Loi tai du lieu: ' + e.message, 'error');
-  }
+  });
 };
 
 function initTopbar() {
-  const role = localStorage.getItem('user_role') || 'Staff';
-  const name = localStorage.getItem('user_name') || 'User';
-  if (!localStorage.getItem('user_email')) { window.location.href='index.html'; return; }
+  var role = localStorage.getItem('user_role') || 'Staff';
+  var name = localStorage.getItem('user_name') || 'User';
+  currentUserRole = role;
+  if (!localStorage.getItem('user_email')) { window.location.href = 'index.html'; return; }
   document.getElementById('topName').textContent   = name;
   document.getElementById('topAvatar').textContent = name.substring(0,2).toUpperCase();
-  const rb = document.getElementById('topRole');
+  var rb = document.getElementById('topRole');
   rb.textContent = role;
-  rb.className = 'role-badge '+(role==='Admin'?'role-admin':'role-staff');
-  if (role==='Admin') document.querySelectorAll('.admin-only').forEach(el=>el.style.display='flex');
-}
-async function deleteProject(id, name) {
-  if (!confirm('Xac nhan xoa du an:\\n' + name + '?')) return;
-  try {
-    // Xoa tasks truoc
-    await fetch(SUPABASE_URL+'/rest/v1/project_tasks?project_id=eq.'+id, {
-      method:'DELETE', headers:HDRS
-    });
-    // Xoa project
-    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+id, {
-      method:'DELETE', headers:HDRS
-    });
-    allProjects = allProjects.filter(p => p.id !== id);
-    delete projColorMap[id];
-    renderList();
-    showToast('🗑️ Da xoa du an: ' + name, 'success');
-  } catch(e) {
-    showToast('❌ Loi xoa du an: ' + e.message, 'error');
+  rb.className = 'role-badge ' + (role === 'Admin' ? 'role-admin' : 'role-staff');
+  if (role === 'Admin') {
+    var els = document.querySelectorAll('.admin-only');
+    for (var i=0; i<els.length; i++) els[i].style.display = 'flex';
   }
 }
-function logout() {
-  if(confirm('Dang xuat?')){ localStorage.clear(); window.location.href='index.html'; }
-}
 
-// ── GROUP SELECTOR ────────────────────────────────────────
 function selectGroup(g) {
   selectedGroup = g;
-  ['A','B','C','D'].forEach(k => {
-    document.getElementById('grp'+k).classList.toggle('active', k===g);
-  });
+  var keys = ['A','B','C','D'];
+  for (var i=0; i<keys.length; i++) {
+    var el = document.getElementById('grp'+keys[i]);
+    if (keys[i] === g) el.classList.add('active');
+    else el.classList.remove('active');
+  }
   updateSttPreview();
 }
 
 function updateSttPreview() {
-  const year = document.getElementById('yearInput').value || '26';
-  const sameGroup = allProjects.filter(p =>
-    p.proj_group === selectedGroup &&
-    (p.year === year || (p.code||'').startsWith(year))
-  );
-  const nextNum = sameGroup.length + 1;
-  const sttText = selectedGroup + nextNum;
-  document.getElementById('sttVal').textContent = sttText;
-  const cfg = GROUP_CFG[selectedGroup];
-  document.getElementById('sttVal').style.color =
-    selectedGroup==='A'?'#0077b6':
-    selectedGroup==='B'?'#1a7c3a':
-    selectedGroup==='C'?'#856404':'#7b2d8b';
+  var year = document.getElementById('yearInput').value || '26';
+  var count = 0;
+  for (var i=0; i<allProjects.length; i++) {
+    var p = allProjects[i];
+    if (p.proj_group === selectedGroup && (p.year === year || (p.code||'').startsWith(year))) {
+      count++;
+    }
+  }
+  var sttText = selectedGroup + (count + 1);
+  var sttEl = document.getElementById('sttVal');
+  sttEl.textContent = sttText;
+  var colorMap = {A:'#0077b6', B:'#1a7c3a', C:'#856404', D:'#7b2d8b'};
+  sttEl.style.color = colorMap[selectedGroup] || '#0077b6';
 }
 
-// ── FILTER ────────────────────────────────────────────────
 function setFilter(f) {
   filterStatus = f;
-  ['fAll','fActive','fDone'].forEach(id=>document.getElementById(id).classList.remove('active'));
-  const map = {all:'fAll',active:'fActive',done:'fDone'};
+  var ids = ['fAll','fActive','fDone'];
+  for (var i=0; i<ids.length; i++) document.getElementById(ids[i]).classList.remove('active');
+  var map = {all:'fAll', active:'fActive', done:'fDone'};
   document.getElementById(map[f]).classList.add('active');
   renderList();
 }
 
-// ── RENDER LIST ───────────────────────────────────────────
+function calcStatus(p) {
+  var today = new Date();
+  today.setHours(0,0,0,0);
+  var projTasks = [];
+  for (var i=0; i<allTasks.length; i++) {
+    if (allTasks[i].project_id === p.id) projTasks.push(allTasks[i]);
+  }
+  if (projTasks.length === 0) return 'active';
+  var hasNoSend = false;
+  var allPast   = true;
+  for (var j=0; j<projTasks.length; j++) {
+    var t = projTasks[j];
+    if (!t.send_date) { hasNoSend = true; allPast = false; break; }
+    var sd = new Date(t.send_date);
+    sd.setHours(0,0,0,0);
+    if (sd >= today) { allPast = false; }
+  }
+  if (hasNoSend) return 'active';
+  return allPast ? 'done' : 'active';
+}
+
 function renderList() {
-  const role = localStorage.getItem('user_role') || 'Staff';
-  const q    = (document.getElementById('searchProj').value||'').toLowerCase();
-  const grpF = document.getElementById('fGroup').value;
+  var q    = (document.getElementById('searchProj').value || '').toLowerCase();
+  var grpF = document.getElementById('fGroup').value;
 
-  // Group counters for STT per year
-  const counters = {};
-  const sorted   = [...allProjects].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
-  const sttMap   = {};
-  sorted.forEach(p => {
-    const yr  = (p.year||'26');
-    const grp = p.proj_group || 'A';
-    const key = yr + '_' + grp;
-    counters[key] = (counters[key]||0) + 1;
-    sttMap[p.id]  = grp + counters[key];
-  });
+  // Build STT map: reset per year per group
+  var counters = {};
+  var sorted   = allProjects.slice().sort(function(a,b){ return new Date(a.created_at) - new Date(b.created_at); });
+  var sttMap   = {};
+  for (var s=0; s<sorted.length; s++) {
+    var sp  = sorted[s];
+    var yr  = sp.year || '26';
+    var grp = sp.proj_group || 'A';
+    var key = yr + '_' + grp;
+    counters[key] = (counters[key] || 0) + 1;
+    sttMap[sp.id] = grp + counters[key];
+  }
 
-  const data = allProjects.filter(p => {
-    const mQ = !q    || p.project_name.toLowerCase().includes(q) || (p.code||'').toLowerCase().includes(q);
-    const mS = filterStatus==='all' || p.status===filterStatus;
-    const mG = !grpF || p.proj_group===grpF;
-    return mQ && mS && mG;
-  });
+  var data = [];
+  for (var i=0; i<allProjects.length; i++) {
+    var p = allProjects[i];
+    var autoStatus = calcStatus(p);
+    var mQ = !q || p.project_name.toLowerCase().indexOf(q) >= 0 || (p.code||'').toLowerCase().indexOf(q) >= 0;
+    var mS = true;
+    if (filterStatus === 'active') mS = (autoStatus === 'active');
+    if (filterStatus === 'done')   mS = (autoStatus === 'done');
+    var mG = !grpF || p.proj_group === grpF;
+    if (mQ && mS && mG) data.push(p);
+  }
 
-  const tbody = document.getElementById('listBody');
+  var tbody = document.getElementById('listBody');
   if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:#aaa;">Khong co du an nao</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">Khong co du an nao</td></tr>';
     return;
   }
-  tbody.innerHTML = data.map(p => {
-    const color   = projColorMap[p.id] || '#a8dadc';
-    const grp     = p.proj_group || 'A';
-    const cfg     = GROUP_CFG[grp] || GROUP_CFG['A'];
-    const sttText = sttMap[p.id] || grp+'?';
-    const today2 = new Date();
-today2.setHours(0,0,0,0);
-const projTasks = allTasks.filter(function(t){ return t.project_id === p.id; });
-const tasksNoSend = projTasks.filter(function(t){ return !t.send_date; });
-const tasksPast = projTasks.filter(function(t){
-  if (!t.send_date) return false;
-  var sd = new Date(t.send_date);
-  sd.setHours(0,0,0,0);
-  return sd < today2;
-});
 
-var statusBadge = '';
-if (projTasks.length === 0) {
-  statusBadge = '<span class="status-badge status-active">🟢 Dang hoat dong</span>';
-} else if (tasksNoSend.length > 0) {
-  statusBadge = '<span class="status-badge status-active">🟢 Dang hoat dong</span>';
-} else if (tasksPast.length === projTasks.length) {
-  statusBadge = '<span class="status-badge status-done">⬜ Da ket thuc</span>';
-} else {
-  statusBadge = '<span class="status-badge status-active">🟢 Dang hoat dong</span>';
-}
-       '<span class="status-badge status-active">🟢 Dang hoat dong</span>'
-       '<span class="status-badge status-done">⬜ Da ket thuc</span>';
-    const date = p.created_at ? new Date(p.created_at).toLocaleDateString('vi-VN') : '-';
-    return '<tr>'
-      + '<td style="text-align:center;"><div class="stt-badge '+cfg.cls+'">'+sttText+'</div></td>'
-      + '<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>'+(p.year && p.seq_number ? p.year + String(p.seq_number).padStart(3,'0') : (p.code||'-').split('_')[0])+'</span></td>'
-      + '<td style="font-weight:600;">'+p.project_name+'</td>'
-      + '<td>'+(p.branch||'-')+'</td>'
-      + '<td>'+(p.design_type||'-')+'</td>'
-      + '<td><span style="font-size:12px;">'+cfg.icon+' '+cfg.label+'</span></td>'
-      + '<td>'+statusBadge+'</td>'
-      + '<td style="color:#888;">'+date+'</td>'
-      + '<td>'
-      + (role==='Admin'
-        ? '<button onclick="deleteProject(\''+p.id+'\',\''+p.project_name+'\')" '
-          + 'style="border:1.5px solid #ffb3b3;color:#e63946;background:#fff;padding:4px 10px;'
-          + 'border-radius:6px;cursor:pointer;font-size:11.5px;font-weight:600;">'
-          + '🗑️ Xoa</button>'
-        : '')
-      + '</td>'
+  var html = '';
+  for (var d=0; d<data.length; d++) {
+    var p      = data[d];
+    var color  = projColorMap[p.id] || '#a8dadc';
+    var grp    = p.proj_group || 'A';
+    var cfg    = GROUP_CFG[grp] || GROUP_CFG['A'];
+    var sttTxt = sttMap[p.id] || (grp + '?');
+    var autoSt = calcStatus(p);
+    var stBadge = autoSt === 'done'
+      ? '<span class="status-badge status-done">&#x2B1C; Da ket thuc</span>'
+      : '<span class="status-badge status-active">&#x1F7E2; Dang hoat dong</span>';
+    var date   = p.created_at ? new Date(p.created_at).toLocaleDateString('vi-VN') : '-';
+    var projId = p.year && p.seq_number
+      ? p.year + String(p.seq_number).padStart(3,'0')
+      : (p.code || '-').split('_')[0];
+    var delBtn = currentUserRole === 'Admin'
+      ? '<button class="btn-del-proj" onclick="deleteProject(\'' + p.id + '\',\'' + p.project_name.replace(/'/g,"\\'") + '\')">&#x1F5D1;&#xFE0F; Xoa</button>'
+      : '';
+    html += '<tr>'
+      + '<td style="text-align:center;"><div class="stt-badge ' + cfg.cls + '">' + sttTxt + '</div></td>'
+      + '<td><span class="proj-code"><span class="color-dot" style="background:' + color + ';"></span>' + projId + '</span></td>'
+      + '<td style="font-weight:600;">' + p.project_name + '</td>'
+      + '<td>' + (p.branch || '-') + '</td>'
+      + '<td>' + (p.design_type || '-') + '</td>'
+      + '<td><span style="font-size:12px;">' + cfg.icon + ' ' + cfg.label + '</span></td>'
+      + '<td>' + stBadge + '</td>'
+      + '<td style="color:#888;">' + date + '</td>'
+      + '<td>' + delBtn + '</td>'
       + '</tr>';
-  }).join('');
+  }
+  tbody.innerHTML = html;
 }
 
-// ── MODAL ─────────────────────────────────────────────────
-function openModal() {
-  suggestNextNum();
-  selectGroup('A');
-  document.getElementById('createModal').classList.add('open');
-}
-function closeModal() {
-  document.getElementById('createModal').classList.remove('open');
-}
+function openModal() { suggestNextNum(); selectGroup('A'); document.getElementById('createModal').classList.add('open'); }
+function closeModal() { document.getElementById('createModal').classList.remove('open'); }
 
-// ── TASK ROWS ─────────────────────────────────────────────
 function addTaskRow() {
   taskRowCount++;
-  const id = 'task_'+taskRowCount;
-  const div = document.createElement('div');
+  var id = 'task_' + taskRowCount;
+  var div = document.createElement('div');
   div.className = 'task-row'; div.id = id;
-  const typeOpts = TASK_TYPES.map(t=>'<option value="'+t+'">'+t+'</option>').join('');
-  const userOpts = allUsers.map(u=>'<option value="'+u.id+'">'+(u.name||u.email)+'</option>').join('');
-  div.innerHTML = '<button class="btn-remove-task" onclick="document.getElementById(\''+id+'\').remove()">✕</button>'
+  var typeOpts = '';
+  for (var i=0; i<TASK_TYPES.length; i++) typeOpts += '<option value="' + TASK_TYPES[i] + '">' + TASK_TYPES[i] + '</option>';
+  var userOpts = '';
+  for (var j=0; j<allUsers.length; j++) userOpts += '<option value="' + allUsers[j].id + '">' + (allUsers[j].name || allUsers[j].email) + '</option>';
+  div.innerHTML = '<button class="btn-remove-task" onclick="document.getElementById(\'' + id + '\').remove()">&#x2715;</button>'
     + '<div class="task-grid">'
-    + '<div class="form-group"><label>工種</label><select class="task-type">'+typeOpts+'</select></div>'
-    + '<div class="form-group"><label>担当者</label><select class="task-user"><option value="">- 未定 -</option>'+userOpts+'</select></div>'
-    + '<div class="form-group"><label>メモ</label><input type="text" class="task-note" placeholder="備考..."/></div>'
+    + '<div class="form-group"><label>&#x5DE5;&#x7A2E;</label><select class="task-type">' + typeOpts + '</select></div>'
+    + '<div class="form-group"><label>&#x62C5;&#x5F53;&#x8005;</label><select class="task-user"><option value="">- &#x672A;&#x5B9A; -</option>' + userOpts + '</select></div>'
+    + '<div class="form-group"><label>&#x30E1;&#x30E2;</label><input type="text" class="task-note" placeholder="&#x5099;&#x8003;..."/></div>'
     + '</div>'
     + '<div class="task-dates">'
-    + '<div class="form-group"><label>受信日</label><input type="date" class="task-receive"/></div>'
-    + '<div class="form-group"><label>作業開始</label><input type="date" class="task-start"/></div>'
-    + '<div class="form-group"><label>作業終了</label><input type="date" class="task-end"/></div>'
-    + '<div class="form-group"><label>送信日</label><input type="date" class="task-send"/></div>'
+    + '<div class="form-group"><label>&#x53D7;&#x4FE1;&#x65E5;</label><input type="date" class="task-receive"/></div>'
+    + '<div class="form-group"><label>&#x4F5C;&#x696D;&#x958B;&#x59CB;</label><input type="date" class="task-start"/></div>'
+    + '<div class="form-group"><label>&#x4F5C;&#x696D;&#x7D42;&#x4E86;</label><input type="date" class="task-end"/></div>'
+    + '<div class="form-group"><label>&#x9001;&#x4FE1;&#x65E5;</label><input type="date" class="task-send"/></div>'
     + '</div>';
   document.getElementById('taskRows').appendChild(div);
 }
 
-// ── CREATE PROJECT ─────────────────────────────────────────
 async function createProject() {
-  const year   = (document.getElementById('yearInput').value||'26').padStart(2,'0');
-  const num    = (document.getElementById('numInput').value||'001').padStart(3,'0');
-  const branch = document.getElementById('branchInput').value.trim();
-  const design = document.getElementById('designInput').value.trim();
-  const name   = document.getElementById('nameInput').value.trim();
-  const pStart = document.getElementById('projStart').value;
-  const pEnd   = document.getElementById('projEnd').value;
-
+  var year   = (document.getElementById('yearInput').value || '26').padStart(2,'0');
+  var num    = (document.getElementById('numInput').value  || '001').padStart(3,'0');
+  var branch = document.getElementById('branchInput').value.trim();
+  var design = document.getElementById('designInput').value.trim();
+  var name   = document.getElementById('nameInput').value.trim();
+  var pStart = document.getElementById('projStart').value;
+  var pEnd   = document.getElementById('projEnd').value;
   if (!branch) { showToast('❌ 支店名を入力してください','error'); return; }
   if (!name)   { showToast('❌ 物件名を入力してください','error'); return; }
-
-  const parts = [year+num, branch];
+  var parts = [year+num, branch];
   if (design) parts.push(design);
   parts.push(name);
-  const code  = parts.join('_');
-  const color = PASTEL_COLORS[allProjects.length % PASTEL_COLORS.length];
-  const createdBy = localStorage.getItem('user_email') || 'admin';
-
+  var code  = parts.join('_');
+  var color = PASTEL_COLORS[allProjects.length % PASTEL_COLORS.length];
+  var createdBy = localStorage.getItem('user_email') || 'admin';
   try {
-    const res = await fetch(SUPABASE_URL+'/rest/v1/projects', {
+    var res = await fetch(SUPABASE_URL+'/rest/v1/projects', {
       method:'POST', headers:HDRS,
       body: JSON.stringify({
-        code, year, seq_number:parseInt(num), branch,
-        design_type: design||null, project_name: name,
-        status: 'active', color,
-        proj_group: selectedGroup,
-        start_date: pStart||null, end_date: pEnd||null,
-        created_by: createdBy
+        code: code, year: year, seq_number: parseInt(num),
+        branch: branch, design_type: design||null, project_name: name,
+        status: 'active', color: color, proj_group: selectedGroup,
+        start_date: pStart||null, end_date: pEnd||null, created_by: createdBy
       })
     });
-    if (!res.ok) { const e=await res.json(); showToast('❌ '+(e.message||'Error'),'error'); return; }
-    const [proj] = await res.json();
+    if (!res.ok) { var e=await res.json(); showToast('❌ '+(e.message||'Error'),'error'); return; }
+    var arr = await res.json();
+    var proj = arr[0];
     allProjects.unshift(proj);
     projColorMap[proj.id] = color;
-
-    const taskDivs = document.querySelectorAll('#taskRows .task-row');
-    await Promise.all([...taskDivs].map(d => fetch(SUPABASE_URL+'/rest/v1/project_tasks', {
-      method:'POST', headers:HDRS,
-      body: JSON.stringify({
-        project_id:   proj.id,
-        task_type:    d.querySelector('.task-type').value,
-        assigned_to:  d.querySelector('.task-user').value || null,
-        note:         d.querySelector('.task-note').value.trim() || null,
-        receive_date: d.querySelector('.task-receive').value || null,
-        start_date:   d.querySelector('.task-start').value  || null,
-        end_date:     d.querySelector('.task-end').value    || null,
-        send_date:    d.querySelector('.task-send').value   || null,
-        status:       'active'
-      })
-    })));
-
+    var taskDivs = document.querySelectorAll('#taskRows .task-row');
+    var promises = [];
+    for (var i=0; i<taskDivs.length; i++) {
+      var d2 = taskDivs[i];
+      promises.push(fetch(SUPABASE_URL+'/rest/v1/project_tasks', {
+        method:'POST', headers:HDRS,
+        body: JSON.stringify({
+          project_id:   proj.id,
+          task_type:    d2.querySelector('.task-type').value,
+          assigned_to:  d2.querySelector('.task-user').value || null,
+          note:         d2.querySelector('.task-note').value.trim() || null,
+          receive_date: d2.querySelector('.task-receive').value || null,
+          start_date:   d2.querySelector('.task-start').value  || null,
+          end_date:     d2.querySelector('.task-end').value    || null,
+          send_date:    d2.querySelector('.task-send').value   || null,
+          status:       'active'
+        })
+      }));
+    }
+    await Promise.all(promises);
     renderList();
     closeModal();
-    ['nameInput','branchInput','designInput','projStart','projEnd'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('taskRows').innerHTML='';
-    taskRowCount=0; addTaskRow();
+    var ids2 = ['nameInput','branchInput','designInput','projStart','projEnd'];
+    for (var k=0; k<ids2.length; k++) document.getElementById(ids2[k]).value = '';
+    document.getElementById('taskRows').innerHTML = '';
+    taskRowCount = 0; addTaskRow();
     renderTags('branch'); renderTags('design'); updatePreview(); suggestNextNum();
-    showToast('✅ Da tao du an: '+name, 'success');
+    showToast('✅ Da tao du an: ' + name, 'success');
   } catch(e) {
-    showToast('❌ Loi: '+e.message, 'error');
+    showToast('❌ Loi: ' + e.message, 'error');
   }
 }
 
-// ── SUGGEST NUM ───────────────────────────────────────────
+async function deleteProject(id, name) {
+  if (!confirm('Xac nhan xoa du an:\\n' + name + '?')) return;
+  try {
+    await fetch(SUPABASE_URL+'/rest/v1/project_tasks?project_id=eq.'+id, { method:'DELETE', headers:HDRS });
+    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+id, { method:'DELETE', headers:HDRS });
+    var newList = [];
+    for (var i=0; i<allProjects.length; i++) {
+      if (allProjects[i].id !== id) newList.push(allProjects[i]);
+    }
+    allProjects = newList;
+    delete projColorMap[id];
+    renderList();
+    showToast('🗑️ Da xoa du an: ' + name, 'success');
+  } catch(e) {
+    showToast('❌ Loi xoa: ' + e.message, 'error');
+  }
+}
+
 function suggestNextNum() {
-  const y = document.getElementById('yearInput').value || '26';
-  const n = String(allProjects.filter(p=>(p.code||'').startsWith(y)).length+1).padStart(3,'0');
+  var y = document.getElementById('yearInput').value || '26';
+  var count = 0;
+  for (var i=0; i<allProjects.length; i++) {
+    if ((allProjects[i].code||'').startsWith(y)) count++;
+  }
+  var n = String(count + 1).padStart(3,'0');
   document.getElementById('numInput').value = n;
-  document.getElementById('numHint').innerHTML = '次番号: <b style="color:#0096c7;">'+n+'</b>';
+  document.getElementById('numHint').innerHTML = '次番号: <b style="color:#0096c7;">' + n + '</b>';
   updatePreview();
   updateSttPreview();
 }
@@ -567,43 +572,51 @@ function onYearChange(v) {
   suggestNextNum();
 }
 function updatePreview() {
-  const y  = String(document.getElementById('yearInput').value||'26').padStart(2,'0');
-  const n  = String(document.getElementById('numInput').value||'001').padStart(3,'0');
-  const b  = document.getElementById('branchInput').value.trim();
-  const d  = document.getElementById('designInput').value.trim();
-  const nm = document.getElementById('nameInput').value.trim();
-  const se = (id,v,ph) => { const el=document.getElementById(id); el.textContent=v||ph; el.className=v?'':'dim'; };
+  var y  = String(document.getElementById('yearInput').value  || '26').padStart(2,'0');
+  var n  = String(document.getElementById('numInput').value   || '001').padStart(3,'0');
+  var b  = document.getElementById('branchInput').value.trim();
+  var d  = document.getElementById('designInput').value.trim();
+  var nm = document.getElementById('nameInput').value.trim();
+  function se(id,v,ph){ var el=document.getElementById(id); el.textContent=v||ph; el.className=v?'':'dim'; }
   document.getElementById('pYear').textContent = y;
   document.getElementById('pNum').textContent  = n;
-  se('pBranch',b,'支店'); se('pDesign',d,'設計区分'); se('pName',nm,'物件名');
+  se('pBranch', b,  '支店');
+  se('pDesign', d,  '設計区分');
+  se('pName',   nm, '物件名');
 }
-
-// ── COMBO ─────────────────────────────────────────────────
 function onCombo(k)  { renderDD(k); updatePreview(); }
 function openDD(k)   { renderDD(k); }
-function closeDD(k)  { setTimeout(()=>document.getElementById(k+'DD').classList.remove('open'),200); }
+function closeDD(k)  { setTimeout(function(){ document.getElementById(k+'DD').classList.remove('open'); }, 200); }
 function renderDD(k) {
-  const data = k==='branch' ? BRANCHES : DESIGNS;
-  const val  = document.getElementById(k+'Input').value.trim();
-  const dd   = document.getElementById(k+'DD');
-  const filt = val ? data.filter(d=>d.toLowerCase().includes(val.toLowerCase())) : data;
-  let html   = filt.map(it=>'<div class="combo-item" onmousedown="selectCombo(\''+k+'\',\''+it+'\')">'+it+'</div>').join('');
-  if (val && !data.map(d=>d.toLowerCase()).includes(val.toLowerCase()))
-    html += '<div class="combo-item combo-new" onmousedown="selectCombo(\''+k+'\',\''+val+'\')">➕ 新規: '+val+'</div>';
-  if (!html) html='<div class="combo-item" style="color:#aaa;cursor:default;">候補なし</div>';
-  dd.innerHTML=html; dd.classList.add('open'); renderTags(k);
+  var data = k==='branch' ? BRANCHES : DESIGNS;
+  var val  = document.getElementById(k+'Input').value.trim();
+  var dd   = document.getElementById(k+'DD');
+  var filt = val ? data.filter(function(d){ return d.toLowerCase().indexOf(val.toLowerCase()) >= 0; }) : data;
+  var html = '';
+  for (var i=0; i<filt.length; i++) html += '<div class="combo-item" onmousedown="selectCombo(\''+k+'\',\''+filt[i]+'\')">'+filt[i]+'</div>';
+  var valLow = val.toLowerCase();
+  var found  = false;
+  for (var j=0; j<data.length; j++) { if (data[j].toLowerCase() === valLow) { found=true; break; } }
+  if (val && !found) html += '<div class="combo-item combo-new" onmousedown="selectCombo(\''+k+'\',\''+val+'\')">➕ 新規: '+val+'</div>';
+  if (!html) html = '<div class="combo-item" style="color:#aaa;cursor:default;">候補なし</div>';
+  dd.innerHTML = html; dd.classList.add('open'); renderTags(k);
 }
 function selectCombo(k,v) {
-  document.getElementById(k+'Input').value=v;
+  document.getElementById(k+'Input').value = v;
   document.getElementById(k+'DD').classList.remove('open');
   renderTags(k); updatePreview();
 }
 function renderTags(k) {
-  const data = k==='branch'?BRANCHES:DESIGNS;
-  const cur  = document.getElementById(k+'Input').value.trim();
-  document.getElementById(k+'Tags').innerHTML = data.map(it=>
-    '<span class="tag '+(cur===it?'active':'')+'" onclick="selectCombo(\''+k+'\',\''+it+'\')">'+it+'</span>'
-  ).join('');
+  var data = k==='branch' ? BRANCHES : DESIGNS;
+  var cur  = document.getElementById(k+'Input').value.trim();
+  var html = '';
+  for (var i=0; i<data.length; i++) {
+    html += '<span class="tag '+(cur===data[i]?'active':'')+'" onclick="selectCombo(\''+k+'\',\''+data[i]+'\')">'+data[i]+'</span>';
+  }
+  document.getElementById(k+'Tags').innerHTML = html;
+}
+function logout() {
+  if (confirm('Dang xuat?')) { localStorage.clear(); window.location.href='index.html'; }
 }
 </script>
 </body>
