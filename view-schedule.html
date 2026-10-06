@@ -1,0 +1,162 @@
+view_schedule = """<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>BIM Hub - Schedule</title>
+  <style>
+CSS_PLACEHOLDER
+    .gantt-wrap { overflow-x:auto; background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); margin-top:12px; }
+    .gantt-ctrl { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+    .legend { display:flex; gap:16px; flex-wrap:wrap; margin-top:10px; font-size:12px; color:#555; align-items:center; }
+    .legend-item { display:flex; align-items:center; gap:5px; }
+    .legend-bar { width:24px; height:10px; border-radius:3px; }
+    .legend-dot { width:10px; height:10px; border-radius:50%; }
+    table.gantt { width:100%; border-collapse:collapse; min-width:900px; }
+    table.gantt th { padding:8px 10px; font-size:11px; font-weight:700; color:#fff; background:#1a1a2e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.1); }
+    table.gantt td { padding:0; border-bottom:1px solid #f0f0f0; }
+    .g-left { padding:10px 14px; min-width:240px; max-width:240px; border-right:2px solid #e8e8e8; vertical-align:middle; }
+    .g-pname { font-size:13px; font-weight:700; color:#1a1a2e; display:flex; align-items:center; gap:6px; }
+    .g-psub  { font-size:11px; color:#888; margin-top:2px; }
+    .g-cell  { position:relative; height:40px; border-right:1px solid #f0f0f0; vertical-align:middle; }
+    .g-cell.we  { background:#fafafa; }
+    .g-cell.tdy { background:#fff5f5; }
+    .g-bar { position:absolute; height:22px; border-radius:4px; top:9px; display:flex; align-items:center; padding:0 6px; font-size:10px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,.15); z-index:2; }
+    .g-bar:hover { opacity:.8; }
+    .g-dot { position:absolute; width:10px; height:10px; border-radius:50%; transform:translateX(-50%); border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.3); z-index:3; }
+  </style>
+</head>
+<body>
+TOPBAR_PLACEHOLDER
+<div class="main">
+  <div class="section-header">
+    <div class="section-title">📅 Schedule du an</div>
+  </div>
+  <div class="gantt-ctrl">
+    <button class="zoom-btn active" onclick="setZoom('day',this)">Ngay</button>
+    <button class="zoom-btn" onclick="setZoom('week',this)">Tuan</button>
+    <button class="zoom-btn" onclick="setZoom('month',this)">Thang</button>
+    <input type="date" id="gStart" class="filter-input" onchange="renderGantt()"/>
+    <span style="color:#888;">→</span>
+    <input type="date" id="gEnd" class="filter-input" onchange="renderGantt()"/>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-bar" style="background:#0096c7;"></div>Khoan lam viec</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#52b788;"></div>Nhan data</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e63946;"></div>Gui</div>
+    <div class="legend-item"><div style="width:2px;height:14px;background:#e63946;"></div>Hom nay</div>
+  </div>
+  <div class="gantt-wrap"><div id="ganttCont"><div style="padding:32px;text-align:center;color:#aaa;">Dang tai...</div></div></div>
+</div>
+SCRIPT_PLACEHOLDER
+<script>
+let gZoom = 'day';
+window.onload = async () => {
+  initTopbar();
+  const t=new Date(), y=t.getFullYear(), m=t.getMonth();
+  document.getElementById('gStart').value = fmt(new Date(y,m,1));
+  document.getElementById('gEnd').value   = fmt(new Date(y,m+1,0));
+  try { await loadAllData(); renderGantt(); }
+  catch(e) { showToast('❌ Loi tai du lieu','error'); }
+};
+function setZoom(z,btn) {
+  gZoom=z;
+  document.querySelectorAll('.zoom-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const t=new Date(),y=t.getFullYear(),m=t.getMonth(),d=t.getDate();
+  if(z==='day'){document.getElementById('gStart').value=fmt(new Date(y,m,1));document.getElementById('gEnd').value=fmt(new Date(y,m+1,0));}
+  else if(z==='week'){document.getElementById('gStart').value=fmt(new Date(y,m,d-14));document.getElementById('gEnd').value=fmt(new Date(y,m,d+42));}
+  else{document.getElementById('gStart').value=fmt(new Date(y,m-1,1));document.getElementById('gEnd').value=fmt(new Date(y,m+5,0));}
+  renderGantt();
+}
+function renderGantt() {
+  const start=new Date(document.getElementById('gStart').value);
+  const end=new Date(document.getElementById('gEnd').value);
+  if(isNaN(start)||isNaN(end)||start>end) return;
+  const days=getDaysArray(fmt(start),fmt(end));
+  const today=fmt(new Date());
+  const CW=gZoom==='month'?20:gZoom==='week'?28:36;
+  const active=allProjects.filter(p=>p.status==='active');
+  let hdr='<th style="min-width:240px;text-align:left;padding:10px 14px;">Du an / Task</th>';
+  if(gZoom==='month'){
+    const mo={};
+    days.forEach(d=>{const k=d.substring(0,7);mo[k]=(mo[k]||0)+1;});
+    Object.entries(mo).forEach(([m,c])=>{ hdr+='<th colspan="'+c+'" style="min-width:'+(c*CW)+'px;">'+m+'</th>'; });
+  } else {
+    days.forEach(d=>{
+      const dt=new Date(d);
+      const dow=['日','月','火','水','木','金','土'][dt.getDay()];
+      const we=dt.getDay()===0||dt.getDay()===6;
+      const td=d===today;
+      hdr+='<th style="min-width:'+CW+'px;'+(we?'opacity:.5':'')+(td?';background:#e63946;':'')+'">'+dt.getDate()+'<br><span style="font-size:9px;">'+dow+'</span></th>';
+    });
+  }
+  let rows='';
+  if(!active.length) rows='<tr><td colspan="'+(days.length+1)+'" style="text-align:center;padding:32px;color:#aaa;">Khong co du an nao dang hoat dong</td></tr>';
+  active.forEach(p=>{
+    const color=projColorMap[p.id]||'#a8dadc';
+    const tasks=allTasks.filter(t=>t.project_id===p.id);
+    const rs=Math.max(tasks.length,1);
+    const pCell='<td class="g-left" rowspan="'+rs+'">'
+      +'<div class="g-pname"><span style="width:10px;height:10px;border-radius:50%;background:'+color+';display:inline-block;flex-shrink:0;"></span>'+p.project_name+'</div>'
+      +'<div class="g-psub">'+(p.code||'')+'</div></td>';
+    if(!tasks.length){
+      rows+='<tr>'+pCell+days.map(d=>'<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;"></td>').join('')+'</tr>';
+      return;
+    }
+    tasks.forEach((t,ti)=>{
+      const cellsHtml=days.map(d=>'<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;" data-tid="'+t.id+'"></td>').join('');
+      rows+='<tr data-tid="'+t.id+'" data-pid="'+p.id+'">'+(ti===0?pCell:'')+cellsHtml+'</tr>';
+    });
+  });
+  document.getElementById('ganttCont').innerHTML='<table class="gantt"><thead><tr>'+hdr+'</tr></thead><tbody>'+rows+'</tbody></table>';
+  active.forEach(p=>{
+    const color=projColorMap[p.id]||'#a8dadc';
+    allTasks.filter(t=>t.project_id===p.id).forEach(t=>{
+      const row=document.querySelector('tr[data-tid="'+t.id+'"]');
+      if(!row) return;
+      const cells=[...row.querySelectorAll('.g-cell')];
+      const user=allUsers.find(u=>u.id===t.assigned_to);
+      if(t.start_date&&t.end_date){
+        const si=days.indexOf(t.start_date),ei=days.indexOf(t.end_date);
+        if(si>=0&&si<cells.length){
+          const bw=(Math.min(ei<0?days.length-1:ei,days.length-1)-si+1)*CW-4;
+          const bar=document.createElement('div');
+          bar.className='g-bar';
+          bar.style.cssText='left:2px;width:'+Math.max(bw,CW-4)+'px;background:'+color+';';
+          bar.textContent=t.task_type||'';
+          bar.addEventListener('mouseenter',e=>showTooltip(e,'<b>'+(t.task_type||'')+'</b><br>担当: '+(user?user.name:'未定')+'<br>'+(t.start_date||'-')+' → '+(t.end_date||'-')));
+          bar.addEventListener('mouseleave',hideTooltip);
+          cells[si].appendChild(bar);
+        }
+      }
+      if(t.receive_date){
+        const ri=days.indexOf(t.receive_date);
+        if(ri>=0&&ri<cells.length){
+          const dot=document.createElement('div');
+          dot.className='g-dot';
+          dot.style.cssText='left:50%;top:8px;background:#52b788;';
+          dot.title='受信日: '+t.receive_date;
+          cells[ri].appendChild(dot);
+        }
+      }
+      if(t.send_date){
+        const si2=days.indexOf(t.send_date);
+        if(si2>=0&&si2<cells.length){
+          const dot2=document.createElement('div');
+          dot2.className='g-dot';
+          dot2.style.cssText='left:50%;top:22px;background:#e63946;';
+          dot2.title='送信日: '+t.send_date;
+          cells[si2].appendChild(dot2);
+        }
+      }
+    });
+  });
+}
+</script>
+</body>
+</html>"""
+
+view_schedule = view_schedule.replace('CSS_PLACEHOLDER', COMMON_CSS)
+view_schedule = view_schedule.replace('TOPBAR_PLACEHOLDER', topbar('schedule'))
+view_schedule = view_schedule.replace('SCRIPT_PLACEHOLDER', TOPBAR_SCRIPT)

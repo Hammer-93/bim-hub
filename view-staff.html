@@ -1,0 +1,154 @@
+view_staff = """<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>BIM Hub - Lich nhan vien</title>
+  <style>
+CSS_PLACEHOLDER
+    .staff-ctrl { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+    .grp-tabs { display:flex; gap:6px; }
+    .grp-tab { padding:7px 16px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; background:#fff; color:#555; transition:all .15s; }
+    .grp-tab:hover, .grp-tab.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
+    .staff-wrap { overflow-x:auto; background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); }
+    table.staff { width:100%; border-collapse:collapse; min-width:900px; }
+    table.staff th { padding:8px 10px; font-size:11px; font-weight:700; color:#fff; background:#1a1a2e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.1); }
+    table.staff td { padding:0; border-bottom:1px solid #eee; }
+    .s-name-cell { padding:10px 14px; min-width:190px; max-width:190px; border-right:2px solid #e8e8e8; vertical-align:middle; }
+    .s-name { font-size:13px; font-weight:700; color:#1a1a2e; }
+    .s-role { font-size:11px; color:#888; margin-top:2px; }
+    .s-cell { position:relative; height:34px; border-right:1px solid #f0f0f0; vertical-align:middle; }
+    .s-cell.we  { background:#fafafa; }
+    .s-cell.tdy { background:#fff5f5; }
+    .s-bar { position:absolute; height:22px; border-radius:3px; top:6px; display:flex; align-items:center; padding:0 5px; font-size:9.5px; font-weight:700; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,.15); z-index:2; }
+    .s-bar:hover { opacity:.8; }
+    .grp-hdr td { background:#f0f4f8; padding:8px 14px; font-size:12px; font-weight:700; color:#0077b6; border-bottom:1px solid #dde2ea; }
+  </style>
+</head>
+<body>
+TOPBAR_PLACEHOLDER
+<div class="main">
+  <div class="section-header">
+    <div class="section-title">👥 Lich lam viec nhan vien</div>
+  </div>
+  <div class="staff-ctrl">
+    <div class="grp-tabs">
+      <button class="grp-tab active" onclick="setGroup('all',this)">Tat ca</button>
+      <button class="grp-tab" onclick="setGroup('設計BIM',this)">設計BIM</button>
+      <button class="grp-tab" onclick="setGroup('施工BIM',this)">施工BIM</button>
+    </div>
+    <div style="display:flex;gap:6px;margin-left:auto;">
+      <button class="zoom-btn active" onclick="setZoom('day',this)">Ngay</button>
+      <button class="zoom-btn" onclick="setZoom('week',this)">Tuan</button>
+      <button class="zoom-btn" onclick="setZoom('month',this)">Thang</button>
+    </div>
+    <input type="date" id="sStart" class="filter-input" onchange="renderStaff()"/>
+    <span style="color:#888;">→</span>
+    <input type="date" id="sEnd" class="filter-input" onchange="renderStaff()"/>
+  </div>
+  <div class="staff-wrap"><div id="staffCont"><div style="padding:32px;text-align:center;color:#aaa;">Dang tai...</div></div></div>
+</div>
+SCRIPT_PLACEHOLDER
+<script>
+let sZoom='day', sGroup='all';
+window.onload = async () => {
+  initTopbar();
+  const t=new Date(),y=t.getFullYear(),m=t.getMonth();
+  document.getElementById('sStart').value=fmt(new Date(y,m,1));
+  document.getElementById('sEnd').value=fmt(new Date(y,m+1,0));
+  try { await loadAllData(); renderStaff(); }
+  catch(e) { showToast('❌ Loi tai du lieu','error'); }
+};
+function setGroup(g,btn){
+  sGroup=g;
+  document.querySelectorAll('.grp-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); renderStaff();
+}
+function setZoom(z,btn){
+  sZoom=z;
+  document.querySelectorAll('.zoom-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const t=new Date(),y=t.getFullYear(),m=t.getMonth(),d=t.getDate();
+  if(z==='day'){document.getElementById('sStart').value=fmt(new Date(y,m,1));document.getElementById('sEnd').value=fmt(new Date(y,m+1,0));}
+  else if(z==='week'){document.getElementById('sStart').value=fmt(new Date(y,m,d-7));document.getElementById('sEnd').value=fmt(new Date(y,m,d+35));}
+  else{document.getElementById('sStart').value=fmt(new Date(y,m-1,1));document.getElementById('sEnd').value=fmt(new Date(y,m+4,0));}
+  renderStaff();
+}
+function renderStaff(){
+  const start=new Date(document.getElementById('sStart').value);
+  const end=new Date(document.getElementById('sEnd').value);
+  if(isNaN(start)||isNaN(end)||start>end) return;
+  const days=getDaysArray(fmt(start),fmt(end));
+  const today=fmt(new Date());
+  const CW=sZoom==='month'?18:sZoom==='week'?26:34;
+  let users=allUsers;
+  if(sGroup==='設計BIM') users=allUsers.slice(0,12);
+  else if(sGroup==='施工BIM') users=allUsers.slice(12);
+  let hdr='<th style="min-width:190px;text-align:left;padding:10px 14px;">Nhan vien</th>';
+  if(sZoom==='month'){
+    const mo={};
+    days.forEach(d=>{const k=d.substring(0,7);mo[k]=(mo[k]||0)+1;});
+    Object.entries(mo).forEach(([m,c])=>{ hdr+='<th colspan="'+c+'" style="min-width:'+(c*CW)+'px;">'+m+'</th>'; });
+  } else {
+    days.forEach(d=>{
+      const dt=new Date(d);
+      const dow=['日','月','火','水','木','金','土'][dt.getDay()];
+      const we=dt.getDay()===0||dt.getDay()===6;
+      const td=d===today;
+      hdr+='<th style="min-width:'+CW+'px;'+(we?'opacity:.5':'')+(td?';background:#e63946;':'')+'">'+dt.getDate()+'<br><span style="font-size:9px;">'+dow+'</span></th>';
+    });
+  }
+  let rows='';
+  if(sGroup==='all'){
+    ['設計BIM','施工BIM'].forEach((grp,gi)=>{
+      const grpUsers=gi===0?allUsers.slice(0,12):allUsers.slice(12);
+      if(!grpUsers.length) return;
+      rows+='<tr class="grp-hdr"><td colspan="'+(days.length+1)+'">'+(gi===0?'🏛️':'🏗️')+' '+grp+'</td></tr>';
+      grpUsers.forEach(u=>{ rows+=buildRow(u,days,today,CW); });
+    });
+  } else {
+    if(!users.length) rows='<tr><td colspan="'+(days.length+1)+'" style="text-align:center;padding:32px;color:#aaa;">Khong co nhan vien</td></tr>';
+    users.forEach(u=>{ rows+=buildRow(u,days,today,CW); });
+  }
+  document.getElementById('staffCont').innerHTML='<table class="staff"><thead><tr>'+hdr+'</tr></thead><tbody>'+rows+'</tbody></table>';
+  (sGroup==='all'?allUsers:users).forEach(u=>drawBars(u,days,CW));
+}
+function buildRow(u,days,today,CW){
+  const init=(u.name||u.email).substring(0,2).toUpperCase();
+  const cellsHtml=days.map(d=>'<td class="s-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;" data-uid="'+u.id+'" data-date="'+d+'"></td>').join('');
+  return '<tr data-uid="'+u.id+'">'
+    +'<td class="s-name-cell">'
+    +'<div style="display:flex;align-items:center;gap:8px;">'
+    +'<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#0096c7,#0077b6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0;">'+init+'</div>'
+    +'<div><div class="s-name">'+(u.name||u.email)+'</div><div class="s-role">'+(u.role_title||u.role||'')+'</div></div>'
+    +'</div></td>'
+    +cellsHtml+'</tr>';
+}
+function drawBars(u,days,CW){
+  const row=document.querySelector('tr[data-uid="'+u.id+'"]');
+  if(!row) return;
+  const cells=[...row.querySelectorAll('.s-cell')];
+  allTasks.filter(t=>t.assigned_to===u.id).forEach(t=>{
+    const proj=allProjects.find(p=>p.id===t.project_id);
+    if(!proj||!t.start_date||!t.end_date) return;
+    const color=projColorMap[proj.id]||'#a8dadc';
+    const si=days.indexOf(t.start_date), ei=days.indexOf(t.end_date);
+    if(si>=0&&si<cells.length){
+      const bw=(Math.min(ei<0?days.length-1:ei,days.length-1)-si+1)*CW-4;
+      const bar=document.createElement('div');
+      bar.className='s-bar';
+      bar.style.cssText='left:2px;width:'+Math.max(bw,CW-4)+'px;background:'+color+';';
+      bar.textContent='['+(proj.code?proj.code.split('_')[0]:'')+'] '+proj.project_name;
+      bar.addEventListener('mouseenter',e=>showTooltip(e,'<b>'+proj.project_name+'</b><br>'+(t.task_type||'')+'<br>'+t.start_date+' → '+t.end_date));
+      bar.addEventListener('mouseleave',hideTooltip);
+      cells[si].appendChild(bar);
+    }
+  });
+}
+</script>
+</body>
+</html>"""
+
+view_staff = view_staff.replace('CSS_PLACEHOLDER', COMMON_CSS)
+view_staff = view_staff.replace('TOPBAR_PLACEHOLDER', topbar('staff'))
+view_staff = view_staff.replace('SCRIPT_PLACEHOLDER', TOPBAR_SCRIPT)
