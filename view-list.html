@@ -64,11 +64,11 @@
     .combo-arrow { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#aaa; pointer-events:none; font-size:12px; }
     .combo-dd { position:absolute; top:calc(100% + 3px); left:0; right:0; background:#fff; border:1.5px solid #dde2ea; border-radius:8px; box-shadow:0 6px 20px rgba(0,0,0,.1); z-index:300; max-height:180px; overflow-y:auto; display:none; }
     .combo-dd.open { display:block; }
-    .combo-item { padding:8px 12px; font-size:13px; cursor:pointer; transition:background .1s; }
+    .combo-item { padding:8px 12px; font-size:13px; cursor:pointer; }
     .combo-item:hover { background:#f0f7ff; color:#0077b6; }
     .combo-new { color:#0096c7; font-style:italic; }
     .tag-wrap { display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; }
-    .tag { font-size:11px; background:#f0f4f8; border:1px solid #dde2ea; color:#555; padding:2px 9px; border-radius:20px; cursor:pointer; transition:all .12s; }
+    .tag { font-size:11px; background:#f0f4f8; border:1px solid #dde2ea; color:#555; padding:2px 9px; border-radius:20px; cursor:pointer; }
     .tag:hover, .tag.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
     .num-wrap { display:flex; align-items:center; gap:8px; }
     .num-prefix { font-size:13px; font-weight:700; color:#0077b6; background:#e8f4fe; padding:9px 11px; border-radius:8px; border:1.5px solid #b8dff5; white-space:nowrap; }
@@ -81,11 +81,9 @@
     .task-row { background:#f8fbff; border:1.5px solid #e8f0f8; border-radius:10px; padding:12px 14px; margin-bottom:10px; position:relative; }
     .task-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:8px; }
     .task-dates { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; }
-    .btn-add-task { background:#fff; border:1.5px dashed #0096c7; color:#0096c7; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; width:100%; transition:all .15s; margin-top:4px; }
+    .btn-add-task { background:#fff; border:1.5px dashed #0096c7; color:#0096c7; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; width:100%; margin-top:4px; }
     .btn-add-task:hover { background:#f0f7ff; }
     .btn-remove-task { position:absolute; top:8px; right:10px; background:none; border:none; color:#e63946; cursor:pointer; font-size:16px; }
-
-    /* PROJECT TABLE */
     .proj-table { width:100%; border-collapse:collapse; background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.07); }
     .proj-table thead th { padding:12px 16px; text-align:left; font-size:12px; font-weight:700; color:#fff; background:#0077b6; }
     .proj-table tbody td { padding:13px 16px; font-size:13px; color:#333; border-bottom:1px solid #f0f0f0; vertical-align:middle; }
@@ -94,32 +92,41 @@
     .proj-row:hover td { background:#f0f7ff; }
     .proj-row.expanded td { background:#e8f4fe; }
     .proj-code { font-weight:700; color:#0077b6; font-size:13px; }
-
-    /* STT BADGE */
     .stt-badge { display:inline-flex; align-items:center; justify-content:center; min-width:36px; height:36px; border-radius:10px; font-size:13px; font-weight:800; padding:0 6px; }
     .stt-a { background:#e8f4fe; color:#0077b6; }
     .stt-b { background:#d4edda; color:#1a7c3a; }
     .stt-c { background:#fff3cd; color:#856404; }
     .stt-d { background:#f3e8ff; color:#7b2d8b; }
-
-    /* CHEVRON */
     .chevron { display:inline-block; transition:transform .25s; font-size:12px; color:#aaa; margin-left:6px; }
     .chevron.open { transform:rotate(90deg); }
-
-    /* TASK EXPAND ROW */
     .task-expand-row { display:none; }
     .task-expand-row.open { display:table-row; }
     .task-expand-cell { padding:0 !important; border-bottom:2px solid #0096c7 !important; background:#f8fbff !important; }
-    .task-expand-inner { padding:12px 20px 16px 56px; }
-    .task-expand-title { font-size:12px; font-weight:700; color:#0077b6; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
-    .task-cards { display:flex; flex-wrap:wrap; gap:10px; }
-    .task-card { background:#fff; border:1.5px solid #dde2ea; border-radius:10px; padding:12px 14px; min-width:220px; max-width:280px; flex:1; transition:box-shadow .15s; }
-    .task-card:hover { box-shadow:0 4px 12px rgba(0,0,0,.1); }
-    .task-card-type { font-size:11px; font-weight:700; color:#fff; padding:2px 10px; border-radius:20px; display:inline-block; margin-bottom:7px; }
-    .task-card-row { display:flex; align-items:center; gap:6px; font-size:12px; color:#555; margin-bottom:4px; }
-    .task-card-row:last-child { margin-bottom:0; }
-    .task-card-label { color:#aaa; font-size:11px; min-width:56px; }
-    .task-card-val { font-weight:600; color:#333; }
+    .task-expand-inner { padding:14px 20px 18px 56px; }
+    .task-expand-title { font-size:12px; font-weight:700; color:#0077b6; margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+    .task-cards { display:flex; flex-wrap:wrap; gap:12px; }
+
+    /* TASK CARD - EDITABLE */
+    .task-card { background:#fff; border:1.5px solid #dde2ea; border-radius:12px; padding:14px 16px; min-width:240px; max-width:300px; flex:1; transition:box-shadow .15s; position:relative; }
+    .task-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.1); border-color:#0096c7; }
+    .task-card-type { font-size:11px; font-weight:700; color:#fff; padding:3px 12px; border-radius:20px; display:inline-block; margin-bottom:10px; }
+    .task-field { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+    .task-field:last-child { margin-bottom:0; }
+    .task-field-icon { font-size:13px; flex-shrink:0; width:18px; text-align:center; }
+    .task-field-label { font-size:11px; color:#aaa; min-width:72px; flex-shrink:0; }
+    .task-field-val { font-size:12px; font-weight:600; color:#333; flex:1; }
+
+    /* INLINE EDIT */
+    .edit-input { font-size:12px; font-weight:600; color:#222; border:1.5px solid #0096c7; border-radius:6px; padding:3px 7px; background:#fff; outline:none; width:100%; box-shadow:0 0 0 2px rgba(0,150,199,.12); }
+    .edit-select { font-size:12px; font-weight:600; color:#222; border:1.5px solid #0096c7; border-radius:6px; padding:3px 7px; background:#fff; outline:none; width:100%; box-shadow:0 0 0 2px rgba(0,150,199,.12); }
+    .edit-btn-wrap { display:flex; gap:5px; margin-top:10px; }
+    .btn-save-task { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:5px 14px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
+    .btn-save-task:hover { opacity:.9; }
+    .btn-cancel-task { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:5px 12px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
+    .btn-cancel-task:hover { background:#f5f5f5; }
+    .btn-edit-task { position:absolute; top:10px; right:10px; background:none; border:1.5px solid #dde2ea; color:#888; padding:3px 8px; border-radius:6px; font-size:11px; cursor:pointer; transition:all .15s; }
+    .btn-edit-task:hover { border-color:#0096c7; color:#0077b6; background:#e8f4fe; }
+    .saving-mask { position:absolute; inset:0; background:rgba(255,255,255,.75); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:#0077b6; display:none; }
     .no-task-msg { font-size:13px; color:#aaa; padding:8px 0; }
 
     /* GROUP SELECTOR */
@@ -131,7 +138,7 @@
     .g-icon { font-size:20px; }
     .g-label { font-size:10px; color:#666; text-align:center; font-weight:600; }
     .stt-preview { display:inline-flex; align-items:center; gap:6px; background:#f0f4f8; border-radius:8px; padding:6px 12px; font-size:13px; font-weight:700; color:#555; margin-top:6px; }
-    .btn-del-proj { border:1.5px solid #ffb3b3; color:#e63946; background:#fff; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:600; transition:all .15s; }
+    .btn-del-proj { border:1.5px solid #ffb3b3; color:#e63946; background:#fff; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:600; }
     .btn-del-proj:hover { background:#fff0f0; }
   </style>
 </head>
@@ -180,7 +187,6 @@
       <option value="D">D - M&amp;F</option>
     </select>
   </div>
-
   <table class="proj-table">
     <thead>
       <tr>
@@ -262,7 +268,7 @@
       <div class="form-group">
         <label>&#x652F;&#x5E97;&#x540D; <span class="req">*</span></label>
         <div class="combo-wrap">
-          <input type="text" id="branchInput" placeholder="&#x652F;&#x5E97;&#x3092;&#x9078;&#x629E;&#x307E;&#x305F;&#x306F;&#x5165;&#x529B;..." autocomplete="off"
+          <input type="text" id="branchInput" placeholder="&#x652F;&#x5E97;&#x3092;&#x9078;&#x629E;..." autocomplete="off"
             oninput="onCombo('branch')" onfocus="openDD('branch')" onblur="closeDD('branch')"/>
           <span class="combo-arrow">&#x25BC;</span>
           <div class="combo-dd" id="branchDD"></div>
@@ -272,7 +278,7 @@
       <div class="form-group">
         <label>&#x8A2D;&#x8A08;&#x533A;&#x5206; <span style="color:#aaa;font-weight:400;font-size:11px;">&#xFF08;&#x7701;&#x7565;&#x53EF;&#xFF09;</span></label>
         <div class="combo-wrap">
-          <input type="text" id="designInput" placeholder="&#x8A2D;&#x8A08;&#x533A;&#x5206;&#x3092;&#x9078;&#x629E;&#x307E;&#x305F;&#x306F;&#x5165;&#x529B;..." autocomplete="off"
+          <input type="text" id="designInput" placeholder="&#x8A2D;&#x8A08;&#x533A;&#x5206;&#x3092;&#x9078;&#x629E;..." autocomplete="off"
             oninput="onCombo('design')" onfocus="openDD('design')" onblur="closeDD('design')"/>
           <span class="combo-arrow">&#x25BC;</span>
           <div class="combo-dd" id="designDD"></div>
@@ -283,14 +289,8 @@
         <label>&#x7269;&#x4EF6;&#x540D;&#x30FB;&#x5DE5;&#x4E8B;&#x540D;&#x79F0; <span class="req">*</span></label>
         <input type="text" id="nameInput" placeholder="&#x4F8B;: NewSAMPLE..." oninput="updatePreview()"/>
       </div>
-      <div class="form-group">
-        <label>&#x958B;&#x59CB;&#x65E5;</label>
-        <input type="date" id="projStart"/>
-      </div>
-      <div class="form-group">
-        <label>&#x7D42;&#x4E86;&#x4E88;&#x5B9A;&#x65E5;</label>
-        <input type="date" id="projEnd"/>
-      </div>
+      <div class="form-group"><label>&#x958B;&#x59CB;&#x65E5;</label><input type="date" id="projStart"/></div>
+      <div class="form-group"><label>&#x7D42;&#x4E86;&#x4E88;&#x5B9A;&#x65E5;</label><input type="date" id="projEnd"/></div>
     </div>
     <div class="tasks-section">
       <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:10px;">&#x1F4CB; &#x5DE5;&#x7A0B;&#x30FB;&#x30BF;&#x30B9;&#x30AF;&#x5165;&#x529B;</div>
@@ -318,14 +318,9 @@ var GROUP_CFG = {
   C: { label:'清算',    icon:'💰', cls:'stt-c' },
   D: { label:'M&F',    icon:'🔧', cls:'stt-d' }
 };
-
 var TYPE_COLOR = {
-  'パース・動画': '#f4a261',
-  '意匠モデル':   '#4cc9f0',
-  '構造モデル':   '#52b788',
-  '清算モデル':   '#9b5de5',
-  '図面':         '#e63946',
-  '施工ステップ': '#ffd166'
+  'パース・動画':'#f4a261','意匠モデル':'#4cc9f0','構造モデル':'#52b788',
+  '清算モデル':'#9b5de5','図面':'#e63946','施工ステップ':'#ffd166'
 };
 
 window.onload = function() {
@@ -338,236 +333,275 @@ window.onload = function() {
     updatePreview();
     selectGroup('A');
   }).catch(function(e) {
-    showToast('❌ Loi tai du lieu: ' + e.message, 'error');
+    showToast('❌ Loi tai du lieu: '+e.message,'error');
   });
 };
 
 function initTopbar() {
-  var role = localStorage.getItem('user_role') || 'Staff';
-  var name = localStorage.getItem('user_name') || 'User';
+  var role = localStorage.getItem('user_role')||'Staff';
+  var name = localStorage.getItem('user_name')||'User';
   currentUserRole = role;
-  if (!localStorage.getItem('user_email')) { window.location.href = 'index.html'; return; }
+  if (!localStorage.getItem('user_email')) { window.location.href='index.html'; return; }
   document.getElementById('topName').textContent   = name;
   document.getElementById('topAvatar').textContent = name.substring(0,2).toUpperCase();
   var rb = document.getElementById('topRole');
   rb.textContent = role;
-  rb.className = 'role-badge ' + (role === 'Admin' ? 'role-admin' : 'role-staff');
-  if (role === 'Admin') {
-    var els = document.querySelectorAll('.admin-only');
-    for (var i=0; i<els.length; i++) els[i].style.display = 'flex';
+  rb.className = 'role-badge '+(role==='Admin'?'role-admin':'role-staff');
+  if (role==='Admin') {
+    var els=document.querySelectorAll('.admin-only');
+    for (var i=0;i<els.length;i++) els[i].style.display='flex';
   }
 }
 
 function selectGroup(g) {
-  selectedGroup = g;
-  var keys = ['A','B','C','D'];
-  for (var i=0; i<keys.length; i++) {
-    var el = document.getElementById('grp'+keys[i]);
-    if (keys[i] === g) el.classList.add('active');
-    else el.classList.remove('active');
+  selectedGroup=g;
+  var keys=['A','B','C','D'];
+  for (var i=0;i<keys.length;i++) {
+    var el=document.getElementById('grp'+keys[i]);
+    if (keys[i]===g) el.classList.add('active'); else el.classList.remove('active');
   }
   updateSttPreview();
 }
-
 function updateSttPreview() {
-  var year = document.getElementById('yearInput').value || '26';
-  var count = 0;
-  for (var i=0; i<allProjects.length; i++) {
-    var p = allProjects[i];
-    if (p.proj_group === selectedGroup && (p.year === year || (p.code||'').startsWith(year))) count++;
+  var year=document.getElementById('yearInput').value||'26';
+  var count=0;
+  for (var i=0;i<allProjects.length;i++) {
+    var p=allProjects[i];
+    if (p.proj_group===selectedGroup&&(p.year===year||(p.code||'').startsWith(year))) count++;
   }
-  var sttEl = document.getElementById('sttVal');
-  sttEl.textContent = selectedGroup + (count + 1);
-  var colorMap = {A:'#0077b6', B:'#1a7c3a', C:'#856404', D:'#7b2d8b'};
-  sttEl.style.color = colorMap[selectedGroup] || '#0077b6';
+  var el=document.getElementById('sttVal');
+  el.textContent=selectedGroup+(count+1);
+  var cm={A:'#0077b6',B:'#1a7c3a',C:'#856404',D:'#7b2d8b'};
+  el.style.color=cm[selectedGroup]||'#0077b6';
 }
-
 function setFilter(f) {
-  filterStatus = f;
-  var ids = ['fAll','fActive','fDone'];
-  for (var i=0; i<ids.length; i++) document.getElementById(ids[i]).classList.remove('active');
-  var map = {all:'fAll', active:'fActive', done:'fDone'};
+  filterStatus=f;
+  var ids=['fAll','fActive','fDone'];
+  for (var i=0;i<ids.length;i++) document.getElementById(ids[i]).classList.remove('active');
+  var map={all:'fAll',active:'fActive',done:'fDone'};
   document.getElementById(map[f]).classList.add('active');
   renderList();
 }
-
 function calcStatus(p) {
-  var today = new Date();
-  today.setHours(0,0,0,0);
-  var projTasks = [];
-  for (var i=0; i<allTasks.length; i++) {
-    if (allTasks[i].project_id === p.id) projTasks.push(allTasks[i]);
-  }
-  if (projTasks.length === 0) return 'active';
-  var hasNoSend = false;
-  var allPast   = true;
-  for (var j=0; j<projTasks.length; j++) {
-    var t = projTasks[j];
-    if (!t.send_date) { hasNoSend = true; allPast = false; break; }
-    var sd = new Date(t.send_date);
-    sd.setHours(0,0,0,0);
-    if (sd >= today) allPast = false;
+  var today=new Date(); today.setHours(0,0,0,0);
+  var pt=[];
+  for (var i=0;i<allTasks.length;i++) { if(allTasks[i].project_id===p.id) pt.push(allTasks[i]); }
+  if (!pt.length) return 'active';
+  var hasNoSend=false, allPast=true;
+  for (var j=0;j<pt.length;j++) {
+    if (!pt[j].send_date) { hasNoSend=true; allPast=false; break; }
+    var sd=new Date(pt[j].send_date); sd.setHours(0,0,0,0);
+    if (sd>=today) allPast=false;
   }
   if (hasNoSend) return 'active';
-  return allPast ? 'done' : 'active';
+  return allPast?'done':'active';
 }
-
 function getActiveTasks(projId) {
-  var today = new Date();
-  today.setHours(0,0,0,0);
-  var result = [];
-  for (var i=0; i<allTasks.length; i++) {
-    var t = allTasks[i];
-    if (t.project_id !== projId) continue;
+  var today=new Date(); today.setHours(0,0,0,0);
+  var result=[];
+  for (var i=0;i<allTasks.length;i++) {
+    var t=allTasks[i];
+    if (t.project_id!==projId) continue;
     if (!t.send_date) { result.push(t); continue; }
-    var sd = new Date(t.send_date);
-    sd.setHours(0,0,0,0);
-    if (sd >= today) result.push(t);
+    var sd=new Date(t.send_date); sd.setHours(0,0,0,0);
+    if (sd>=today) result.push(t);
   }
   return result;
 }
 
+/* ── EXPAND / COLLAPSE ── */
 function toggleExpand(projId) {
-  if (expandedId === projId) {
-    collapseRow(projId);
-    expandedId = null;
-  } else {
-    if (expandedId) collapseRow(expandedId);
-    expandRow(projId);
-    expandedId = projId;
-  }
+  if (expandedId===projId) { collapseRow(projId); expandedId=null; }
+  else { if (expandedId) collapseRow(expandedId); expandRow(projId); expandedId=projId; }
 }
-
 function expandRow(projId) {
-  var projRow  = document.getElementById('proj-row-' + projId);
-  var taskRow  = document.getElementById('task-row-' + projId);
-  var chevron  = document.getElementById('chev-' + projId);
-  if (!projRow || !taskRow) return;
-  projRow.classList.add('expanded');
-  taskRow.classList.add('open');
-  if (chevron) chevron.classList.add('open');
+  var pr=document.getElementById('proj-row-'+projId);
+  var tr=document.getElementById('task-row-'+projId);
+  var ch=document.getElementById('chev-'+projId);
+  if (pr) pr.classList.add('expanded');
+  if (tr) tr.classList.add('open');
+  if (ch) ch.classList.add('open');
 }
-
 function collapseRow(projId) {
-  var projRow  = document.getElementById('proj-row-' + projId);
-  var taskRow  = document.getElementById('task-row-' + projId);
-  var chevron  = document.getElementById('chev-' + projId);
-  if (!projRow || !taskRow) return;
-  projRow.classList.remove('expanded');
-  taskRow.classList.remove('open');
-  if (chevron) chevron.classList.remove('open');
+  var pr=document.getElementById('proj-row-'+projId);
+  var tr=document.getElementById('task-row-'+projId);
+  var ch=document.getElementById('chev-'+projId);
+  if (pr) pr.classList.remove('expanded');
+  if (tr) tr.classList.remove('open');
+  if (ch) ch.classList.remove('open');
 }
 
-function buildTaskExpand(projId, projColor) {
-  var tasks = getActiveTasks(projId);
-  if (tasks.length === 0) {
-    return '<div class="no-task-msg">&#x1F4AD; Khong co task dang hoat dong</div>';
+/* ── BUILD TASK CARDS ── */
+function buildTaskCards(projId, projColor) {
+  var tasks=getActiveTasks(projId);
+  if (!tasks.length) return '<div class="no-task-msg">&#x1F4AD; Khong co task dang hoat dong</div>';
+  var html='<div class="task-cards">';
+  for (var i=0;i<tasks.length;i++) {
+    var t=tasks[i];
+    var user=null;
+    for (var j=0;j<allUsers.length;j++) { if(allUsers[j].id===t.assigned_to){user=allUsers[j];break;} }
+    var tc=TYPE_COLOR[t.task_type]||projColor||'#a8dadc';
+    var uname=user?(user.name||user.email):'- Chua phan cong -';
+    html+='<div class="task-card" id="tc-'+t.id+'">'
+      +'<div class="saving-mask" id="mask-'+t.id+'">&#x1F4BE; Dang luu...</div>'
+      +'<button class="btn-edit-task" onclick="event.stopPropagation();editTask(\''+t.id+'\')">&#x270F;&#xFE0F; Chinh sua</button>'
+      +'<div class="task-card-type" style="background:'+tc+';">'+(t.task_type||'Task')+'</div>'
+      +'<div id="view-'+t.id+'">'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span><span class="task-field-val">'+uname+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Nhan data:</span><span class="task-field-val">'+(t.receive_date||'-')+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Bat dau:</span><span class="task-field-val">'+(t.start_date||'-')+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">Ket thuc:</span><span class="task-field-val">'+(t.end_date||'-')+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Ngay gui:</span><span class="task-field-val">'+(t.send_date||'-')+'</span></div>'
+        +(t.note?'<div class="task-field"><span class="task-field-icon">&#x1F4DD;</span><span class="task-field-label">Ghi chu:</span><span class="task-field-val">'+t.note+'</span></div>':'')
+      +'</div>'
+      +'<div id="edit-'+t.id+'" style="display:none;">'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span>'
+        +'<select class="edit-select" id="eu-'+t.id+'">'
+        +'<option value="">- Chua phan cong -</option>'
+        +buildUserOptions(t.assigned_to)
+        +'</select></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Nhan data:</span><input type="date" class="edit-input" id="er-'+t.id+'" value="'+(t.receive_date||'')+'"/></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Bat dau:</span><input type="date" class="edit-input" id="es-'+t.id+'" value="'+(t.start_date||'')+'"/></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">Ket thuc:</span><input type="date" class="edit-input" id="ee-'+t.id+'" value="'+(t.end_date||'')+'"/></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Ngay gui:</span><input type="date" class="edit-input" id="eg-'+t.id+'" value="'+(t.send_date||'')+'"/></div>'
+        +'<div class="edit-btn-wrap">'
+        +'<button class="btn-save-task" onclick="event.stopPropagation();saveTask(\''+t.id+'\')">&#x1F4BE; Luu</button>'
+        +'<button class="btn-cancel-task" onclick="event.stopPropagation();cancelEdit(\''+t.id+'\')">Huy</button>'
+        +'</div>'
+      +'</div>'
+      +'</div>';
   }
-  var html = '<div class="task-cards">';
-  for (var i=0; i<tasks.length; i++) {
-    var t     = tasks[i];
-    var user  = null;
-    for (var j=0; j<allUsers.length; j++) { if (allUsers[j].id === t.assigned_to) { user = allUsers[j]; break; } }
-    var tc    = TYPE_COLOR[t.task_type] || projColor || '#a8dadc';
-    var rcv   = t.receive_date || '-';
-    var start = t.start_date   || '-';
-    var end   = t.end_date     || '-';
-    var send  = t.send_date    || '-';
-    var uname = user ? (user.name || user.email) : '- Chua phan cong -';
-    html += '<div class="task-card">'
-      + '<div class="task-card-type" style="background:' + tc + ';">' + (t.task_type || 'Task') + '</div>'
-      + '<div class="task-card-row"><span class="task-card-label">&#x1F464; Phu trach:</span><span class="task-card-val">' + uname + '</span></div>'
-      + '<div class="task-card-row"><span class="task-card-label">&#x1F4E5; Nhan data:</span><span class="task-card-val">' + rcv + '</span></div>'
-      + '<div class="task-card-row"><span class="task-card-label">&#x1F4C5; Bat dau:</span><span class="task-card-val">' + start + '</span></div>'
-      + '<div class="task-card-row"><span class="task-card-label">&#x1F3C1; Ket thuc:</span><span class="task-card-val">' + end + '</span></div>'
-      + '<div class="task-card-row"><span class="task-card-label">&#x1F4E4; Ngay gui:</span><span class="task-card-val">' + send + '</span></div>'
-      + (t.note ? '<div class="task-card-row"><span class="task-card-label">&#x1F4DD; Ghi chu:</span><span class="task-card-val">' + t.note + '</span></div>' : '')
-      + '</div>';
-  }
-  html += '</div>';
+  html+='</div>';
   return html;
 }
 
+function buildUserOptions(selectedId) {
+  var html='';
+  for (var i=0;i<allUsers.length;i++) {
+    var u=allUsers[i];
+    var sel=(u.id===selectedId)?'selected':'';
+    html+='<option value="'+u.id+'" '+sel+'>'+(u.name||u.email)+'</option>';
+  }
+  return html;
+}
+
+function editTask(tid) {
+  document.getElementById('view-'+tid).style.display='none';
+  document.getElementById('edit-'+tid).style.display='block';
+}
+function cancelEdit(tid) {
+  document.getElementById('edit-'+tid).style.display='none';
+  document.getElementById('view-'+tid).style.display='block';
+}
+
+async function saveTask(tid) {
+  var uid  = document.getElementById('eu-'+tid).value||null;
+  var rcv  = document.getElementById('er-'+tid).value||null;
+  var st   = document.getElementById('es-'+tid).value||null;
+  var en   = document.getElementById('ee-'+tid).value||null;
+  var snd  = document.getElementById('eg-'+tid).value||null;
+  var mask = document.getElementById('mask-'+tid);
+  if (mask) mask.style.display='flex';
+  try {
+    var res=await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+tid,{
+      method:'PATCH', headers:HDRS,
+      body:JSON.stringify({assigned_to:uid,receive_date:rcv,start_date:st,end_date:en,send_date:snd})
+    });
+    if (!res.ok) { showToast('❌ Loi luu task','error'); if(mask)mask.style.display='none'; return; }
+    // Update local data
+    for (var i=0;i<allTasks.length;i++) {
+      if (allTasks[i].id===tid) {
+        allTasks[i].assigned_to  =uid;
+        allTasks[i].receive_date =rcv;
+        allTasks[i].start_date   =st;
+        allTasks[i].end_date     =en;
+        allTasks[i].send_date    =snd;
+        break;
+      }
+    }
+    showToast('✅ Da luu task','success');
+    // Re-render expand area of this project
+    var proj=null;
+    for (var j=0;j<allProjects.length;j++) {
+      var tasks=getActiveTasks(allProjects[j].id);
+      for (var k=0;k<tasks.length;k++) { if(tasks[k].id===tid){proj=allProjects[j];break;} }
+      if (proj) break;
+    }
+    if (proj) {
+      var color=projColorMap[proj.id]||'#a8dadc';
+      var inner=document.querySelector('#task-row-'+proj.id+' .task-expand-inner');
+      if (inner) {
+        inner.innerHTML='<div class="task-expand-title">&#x1F4CB; Task dang hoat dong</div>'+buildTaskCards(proj.id,color);
+        expandedId=proj.id;
+      }
+    }
+    renderList();
+  } catch(e) {
+    showToast('❌ Loi: '+e.message,'error');
+    if (mask) mask.style.display='none';
+  }
+}
+
+/* ── RENDER LIST ── */
 function renderList() {
-  var q    = (document.getElementById('searchProj').value || '').toLowerCase();
-  var grpF = document.getElementById('fGroup').value;
-  expandedId = null;
-
-  var counters = {};
-  var sorted   = allProjects.slice().sort(function(a,b){ return new Date(a.created_at)-new Date(b.created_at); });
-  var sttMap   = {};
-  for (var s=0; s<sorted.length; s++) {
-    var sp  = sorted[s];
-    var yr  = sp.year || '26';
-    var grp = sp.proj_group || 'A';
-    var key = yr + '_' + grp;
-    counters[key] = (counters[key]||0) + 1;
-    sttMap[sp.id] = grp + counters[key];
+  var q=( document.getElementById('searchProj').value||'').toLowerCase();
+  var grpF=document.getElementById('fGroup').value;
+  var prevExp=expandedId; expandedId=null;
+  var counters={}, sorted=allProjects.slice().sort(function(a,b){return new Date(a.created_at)-new Date(b.created_at);});
+  var sttMap={};
+  for (var s=0;s<sorted.length;s++) {
+    var sp=sorted[s], yr=sp.year||'26', grp=sp.proj_group||'A', key=yr+'_'+grp;
+    counters[key]=(counters[key]||0)+1; sttMap[sp.id]=grp+counters[key];
   }
-
-  var data = [];
-  for (var i=0; i<allProjects.length; i++) {
-    var p  = allProjects[i];
-    var as = calcStatus(p);
-    var mQ = !q || p.project_name.toLowerCase().indexOf(q)>=0 || (p.code||'').toLowerCase().indexOf(q)>=0;
-    var mS = true;
-    if (filterStatus === 'active') mS = (as === 'active');
-    if (filterStatus === 'done')   mS = (as === 'done');
-    var mG = !grpF || p.proj_group === grpF;
-    if (mQ && mS && mG) data.push(p);
+  var data=[];
+  for (var i=0;i<allProjects.length;i++) {
+    var p=allProjects[i], as=calcStatus(p);
+    var mQ=!q||p.project_name.toLowerCase().indexOf(q)>=0||(p.code||'').toLowerCase().indexOf(q)>=0;
+    var mS=true;
+    if (filterStatus==='active') mS=(as==='active');
+    if (filterStatus==='done')   mS=(as==='done');
+    var mG=!grpF||p.proj_group===grpF;
+    if (mQ&&mS&&mG) data.push(p);
   }
-
-  var tbody = document.getElementById('listBody');
-  if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">Khong co du an nao</td></tr>';
-    return;
+  var tbody=document.getElementById('listBody');
+  if (!data.length) { tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">Khong co du an nao</td></tr>'; return; }
+  var html='';
+  for (var d=0;d<data.length;d++) {
+    var p=data[d], color=projColorMap[p.id]||'#a8dadc';
+    var grp2=p.proj_group||'A', cfg=GROUP_CFG[grp2]||GROUP_CFG['A'];
+    var sttTxt=sttMap[p.id]||(grp2+'?');
+    var autoSt=calcStatus(p);
+    var stBadge=autoSt==='done'
+      ?'<span class="status-badge status-done">&#x2B1C; Da ket thuc</span>'
+      :'<span class="status-badge status-active">&#x1F7E2; Dang hoat dong</span>';
+    var date=p.created_at?new Date(p.created_at).toLocaleDateString('vi-VN'):'-';
+    var projId2=p.year&&p.seq_number?p.year+String(p.seq_number).padStart(3,'0'):(p.code||'-').split('_')[0];
+    var activeCnt=getActiveTasks(p.id).length;
+    var cntBadge=activeCnt>0?'<span style="background:#e63946;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:5px;">'+activeCnt+'</span>':'';
+    var delBtn=currentUserRole==='Admin'
+      ?'<button class="btn-del-proj" onclick="event.stopPropagation();deleteProject(\''+p.id+'\',\''+p.project_name.replace(/'/g,"\\'")+'\')">&#x1F5D1;&#xFE0F; Xoa</button>':'';
+    var taskHtml=buildTaskCards(p.id,color);
+    html+='<tr class="proj-row" id="proj-row-'+p.id+'" onclick="toggleExpand(\''+p.id+'\')">'
+      +'<td style="text-align:center;"><div class="stt-badge '+cfg.cls+'">'+sttTxt+'</div></td>'
+      +'<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>'+projId2+'</span></td>'
+      +'<td style="font-weight:600;">'+p.project_name+'<span class="chevron" id="chev-'+p.id+'">&#x25B6;</span>'+cntBadge+'</td>'
+      +'<td>'+(p.branch||'-')+'</td>'
+      +'<td>'+(p.design_type||'-')+'</td>'
+      +'<td><span style="font-size:12px;">'+cfg.icon+' '+cfg.label+'</span></td>'
+      +'<td>'+stBadge+'</td>'
+      +'<td style="color:#888;">'+date+'</td>'
+      +'<td>'+delBtn+'</td>'
+      +'</tr>'
+      +'<tr class="task-expand-row" id="task-row-'+p.id+'">'
+      +'<td class="task-expand-cell" colspan="9">'
+      +'<div class="task-expand-inner">'
+      +'<div class="task-expand-title">&#x1F4CB; Task dang hoat dong</div>'
+      +taskHtml
+      +'</div></td></tr>';
   }
-
-  var html = '';
-  for (var d=0; d<data.length; d++) {
-    var p      = data[d];
-    var color  = projColorMap[p.id] || '#a8dadc';
-    var grp2   = p.proj_group || 'A';
-    var cfg    = GROUP_CFG[grp2] || GROUP_CFG['A'];
-    var sttTxt = sttMap[p.id] || (grp2+'?');
-    var autoSt = calcStatus(p);
-    var stBadge = autoSt === 'done'
-      ? '<span class="status-badge status-done">&#x2B1C; Da ket thuc</span>'
-      : '<span class="status-badge status-active">&#x1F7E2; Dang hoat dong</span>';
-    var date   = p.created_at ? new Date(p.created_at).toLocaleDateString('vi-VN') : '-';
-    var projId2 = p.year && p.seq_number
-      ? p.year + String(p.seq_number).padStart(3,'0')
-      : (p.code||'-').split('_')[0];
-    var activeCnt = getActiveTasks(p.id).length;
-    var cntBadge  = activeCnt > 0
-      ? ' <span style="background:#e63946;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px;">' + activeCnt + '</span>'
-      : '';
-    var delBtn = currentUserRole === 'Admin'
-      ? '<button class="btn-del-proj" onclick="event.stopPropagation();deleteProject(\'' + p.id + '\',\'' + p.project_name.replace(/'/g,"\\'") + '\')">&#x1F5D1;&#xFE0F; Xoa</button>'
-      : '';
-    var taskExpandHtml = buildTaskExpand(p.id, color);
-
-    html += '<tr class="proj-row" id="proj-row-' + p.id + '" onclick="toggleExpand(\'' + p.id + '\')">'
-      + '<td style="text-align:center;"><div class="stt-badge ' + cfg.cls + '">' + sttTxt + '</div></td>'
-      + '<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>' + projId2 + '</span></td>'
-      + '<td style="font-weight:600;">' + p.project_name + '<span class="chevron" id="chev-' + p.id + '">&#x25B6;</span>' + cntBadge + '</td>'
-      + '<td>' + (p.branch||'-') + '</td>'
-      + '<td>' + (p.design_type||'-') + '</td>'
-      + '<td><span style="font-size:12px;">' + cfg.icon + ' ' + cfg.label + '</span></td>'
-      + '<td>' + stBadge + '</td>'
-      + '<td style="color:#888;">' + date + '</td>'
-      + '<td>' + delBtn + '</td>'
-      + '</tr>'
-      + '<tr class="task-expand-row" id="task-row-' + p.id + '">'
-      + '<td class="task-expand-cell" colspan="9">'
-      + '<div class="task-expand-inner">'
-      + '<div class="task-expand-title">&#x1F4CB; Task dang hoat dong</div>'
-      + taskExpandHtml
-      + '</div>'
-      + '</td>'
-      + '</tr>';
-  }
-  tbody.innerHTML = html;
+  tbody.innerHTML=html;
+  // Restore expanded state
+  if (prevExp) { expandRow(prevExp); expandedId=prevExp; }
 }
 
 function openModal()  { suggestNextNum(); selectGroup('A'); document.getElementById('createModal').classList.add('open'); }
@@ -575,8 +609,8 @@ function closeModal() { document.getElementById('createModal').classList.remove(
 
 function addTaskRow() {
   taskRowCount++;
-  var id = 'task_'+taskRowCount;
-  var div = document.createElement('div');
+  var id='task_'+taskRowCount;
+  var div=document.createElement('div');
   div.className='task-row'; div.id=id;
   var typeOpts='';
   for (var i=0;i<TASK_TYPES.length;i++) typeOpts+='<option value="'+TASK_TYPES[i]+'">'+TASK_TYPES[i]+'</option>';
@@ -598,98 +632,88 @@ function addTaskRow() {
 }
 
 async function createProject() {
-  var year   = (document.getElementById('yearInput').value||'26').padStart(2,'0');
-  var num    = (document.getElementById('numInput').value||'001').padStart(3,'0');
-  var branch = document.getElementById('branchInput').value.trim();
-  var design = document.getElementById('designInput').value.trim();
-  var name   = document.getElementById('nameInput').value.trim();
-  var pStart = document.getElementById('projStart').value;
-  var pEnd   = document.getElementById('projEnd').value;
-  if (!branch) { showToast('❌ 支店名を入力してください','error'); return; }
-  if (!name)   { showToast('❌ 物件名を入力してください','error'); return; }
-  var parts = [year+num, branch];
-  if (design) parts.push(design);
-  parts.push(name);
-  var code  = parts.join('_');
-  var color = PASTEL_COLORS[allProjects.length % PASTEL_COLORS.length];
-  var createdBy = localStorage.getItem('user_email') || 'admin';
+  var year=(document.getElementById('yearInput').value||'26').padStart(2,'0');
+  var num=(document.getElementById('numInput').value||'001').padStart(3,'0');
+  var branch=document.getElementById('branchInput').value.trim();
+  var design=document.getElementById('designInput').value.trim();
+  var name=document.getElementById('nameInput').value.trim();
+  var pStart=document.getElementById('projStart').value;
+  var pEnd=document.getElementById('projEnd').value;
+  if (!branch){showToast('❌ 支店名を入力してください','error');return;}
+  if (!name)  {showToast('❌ 物件名を入力してください','error');return;}
+  var parts=[year+num,branch]; if(design)parts.push(design); parts.push(name);
+  var code=parts.join('_');
+  var color=PASTEL_COLORS[allProjects.length%PASTEL_COLORS.length];
+  var createdBy=localStorage.getItem('user_email')||'admin';
   try {
-    var res = await fetch(SUPABASE_URL+'/rest/v1/projects', {
-      method:'POST', headers:HDRS,
-      body: JSON.stringify({ code:code, year:year, seq_number:parseInt(num), branch:branch,
-        design_type:design||null, project_name:name, status:'active', color:color,
-        proj_group:selectedGroup, start_date:pStart||null, end_date:pEnd||null, created_by:createdBy })
-    });
-    if (!res.ok) { var e=await res.json(); showToast('❌ '+(e.message||'Error'),'error'); return; }
-    var arr  = await res.json();
-    var proj = arr[0];
-    allProjects.unshift(proj);
-    projColorMap[proj.id] = color;
-    var taskDivs = document.querySelectorAll('#taskRows .task-row');
-    var promises = [];
-    for (var i=0; i<taskDivs.length; i++) {
-      var d2 = taskDivs[i];
-      promises.push(fetch(SUPABASE_URL+'/rest/v1/project_tasks', {
-        method:'POST', headers:HDRS,
-        body: JSON.stringify({ project_id:proj.id, task_type:d2.querySelector('.task-type').value,
-          assigned_to:d2.querySelector('.task-user').value||null, note:d2.querySelector('.task-note').value.trim()||null,
-          receive_date:d2.querySelector('.task-receive').value||null, start_date:d2.querySelector('.task-start').value||null,
-          end_date:d2.querySelector('.task-end').value||null, send_date:d2.querySelector('.task-send').value||null, status:'active' })
-      }));
+    var res=await fetch(SUPABASE_URL+'/rest/v1/projects',{method:'POST',headers:HDRS,
+      body:JSON.stringify({code:code,year:year,seq_number:parseInt(num),branch:branch,
+        design_type:design||null,project_name:name,status:'active',color:color,
+        proj_group:selectedGroup,start_date:pStart||null,end_date:pEnd||null,created_by:createdBy})});
+    if (!res.ok){var e=await res.json();showToast('❌ '+(e.message||'Error'),'error');return;}
+    var arr=await res.json(); var proj=arr[0];
+    allProjects.unshift(proj); projColorMap[proj.id]=color;
+    var taskDivs=document.querySelectorAll('#taskRows .task-row');
+    var promises=[];
+    for (var i=0;i<taskDivs.length;i++) {
+      var d2=taskDivs[i];
+      promises.push(fetch(SUPABASE_URL+'/rest/v1/project_tasks',{method:'POST',headers:HDRS,
+        body:JSON.stringify({project_id:proj.id,task_type:d2.querySelector('.task-type').value,
+          assigned_to:d2.querySelector('.task-user').value||null,
+          note:d2.querySelector('.task-note').value.trim()||null,
+          receive_date:d2.querySelector('.task-receive').value||null,
+          start_date:d2.querySelector('.task-start').value||null,
+          end_date:d2.querySelector('.task-end').value||null,
+          send_date:d2.querySelector('.task-send').value||null,status:'active'})}));
     }
     await Promise.all(promises);
     await loadAllData();
-    renderList();
-    closeModal();
-    var ids2 = ['nameInput','branchInput','designInput','projStart','projEnd'];
-    for (var k=0; k<ids2.length; k++) document.getElementById(ids2[k]).value='';
+    renderList(); closeModal();
+    var ids2=['nameInput','branchInput','designInput','projStart','projEnd'];
+    for (var k=0;k<ids2.length;k++) document.getElementById(ids2[k]).value='';
     document.getElementById('taskRows').innerHTML='';
     taskRowCount=0; addTaskRow();
     renderTags('branch'); renderTags('design'); updatePreview(); suggestNextNum();
-    showToast('✅ Da tao du an: '+name, 'success');
-  } catch(e) { showToast('❌ Loi: '+e.message,'error'); }
+    showToast('✅ Da tao du an: '+name,'success');
+  } catch(e){showToast('❌ Loi: '+e.message,'error');}
 }
 
-async function deleteProject(id, name) {
+async function deleteProject(id,name) {
   if (!confirm('Xac nhan xoa du an:\\n'+name+'?')) return;
   try {
-    await fetch(SUPABASE_URL+'/rest/v1/project_tasks?project_id=eq.'+id, {method:'DELETE',headers:HDRS});
-    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+id, {method:'DELETE',headers:HDRS});
-    var newList=[];
-    for (var i=0;i<allProjects.length;i++) { if(allProjects[i].id!==id) newList.push(allProjects[i]); }
-    allProjects=newList;
-    delete projColorMap[id];
-    expandedId=null;
-    renderList();
-    showToast('🗑️ Da xoa du an: '+name,'success');
-  } catch(e) { showToast('❌ Loi xoa: '+e.message,'error'); }
+    await fetch(SUPABASE_URL+'/rest/v1/project_tasks?project_id=eq.'+id,{method:'DELETE',headers:HDRS});
+    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+id,{method:'DELETE',headers:HDRS});
+    var nl=[];
+    for (var i=0;i<allProjects.length;i++){if(allProjects[i].id!==id)nl.push(allProjects[i]);}
+    allProjects=nl; delete projColorMap[id]; expandedId=null;
+    renderList(); showToast('🗑️ Da xoa: '+name,'success');
+  } catch(e){showToast('❌ Loi xoa: '+e.message,'error');}
 }
 
 function suggestNextNum() {
   var y=document.getElementById('yearInput').value||'26';
   var count=0;
-  for (var i=0;i<allProjects.length;i++) { if((allProjects[i].code||'').startsWith(y)) count++; }
+  for (var i=0;i<allProjects.length;i++){if((allProjects[i].code||'').startsWith(y))count++;}
   var n=String(count+1).padStart(3,'0');
   document.getElementById('numInput').value=n;
   document.getElementById('numHint').innerHTML='次番号: <b style="color:#0096c7;">'+n+'</b>';
   updatePreview(); updateSttPreview();
 }
-function onYearChange(v) { document.getElementById('yearDisp').textContent=String(v).padStart(2,'0'); suggestNextNum(); }
-function updatePreview() {
+function onYearChange(v){document.getElementById('yearDisp').textContent=String(v).padStart(2,'0');suggestNextNum();}
+function updatePreview(){
   var y=String(document.getElementById('yearInput').value||'26').padStart(2,'0');
   var n=String(document.getElementById('numInput').value||'001').padStart(3,'0');
   var b=document.getElementById('branchInput').value.trim();
   var d=document.getElementById('designInput').value.trim();
   var nm=document.getElementById('nameInput').value.trim();
   function se(id,v,ph){var el=document.getElementById(id);el.textContent=v||ph;el.className=v?'':'dim';}
-  document.getElementById('pYear').textContent=y;
-  document.getElementById('pNum').textContent=n;
+  document.getElementById('pYear').textContent=y; document.getElementById('pNum').textContent=n;
   se('pBranch',b,'支店'); se('pDesign',d,'設計区分'); se('pName',nm,'物件名');
 }
-function onCombo(k) { renderDD(k); updatePreview(); }
-function openDD(k)  { renderDD(k); }
-function closeDD(k) { setTimeout(function(){ document.getElementById(k+'DD').classList.remove('open'); },200); }
-function renderDD(k) {
+function onCombo(k){renderDD(k);updatePreview();}
+function openDD(k){renderDD(k);}
+function closeDD(k){setTimeout(function(){document.getElementById(k+'DD').classList.remove('open');},200);}
+function renderDD(k){
   var data=k==='branch'?BRANCHES:DESIGNS;
   var val=document.getElementById(k+'Input').value.trim();
   var dd=document.getElementById(k+'DD');
@@ -702,19 +726,19 @@ function renderDD(k) {
   if (!html) html='<div class="combo-item" style="color:#aaa;cursor:default;">候補なし</div>';
   dd.innerHTML=html; dd.classList.add('open'); renderTags(k);
 }
-function selectCombo(k,v) {
+function selectCombo(k,v){
   document.getElementById(k+'Input').value=v;
   document.getElementById(k+'DD').classList.remove('open');
   renderTags(k); updatePreview();
 }
-function renderTags(k) {
+function renderTags(k){
   var data=k==='branch'?BRANCHES:DESIGNS;
   var cur=document.getElementById(k+'Input').value.trim();
   var html='';
   for (var i=0;i<data.length;i++) html+='<span class="tag '+(cur===data[i]?'active':'')+'" onclick="selectCombo(\''+k+'\',\''+data[i]+'\')">'+data[i]+'</span>';
   document.getElementById(k+'Tags').innerHTML=html;
 }
-function logout() { if(confirm('Dang xuat?')){localStorage.clear();window.location.href='index.html';} }
+function logout(){if(confirm('Dang xuat?')){localStorage.clear();window.location.href='index.html';}}
 </script>
 </body>
 </html>
