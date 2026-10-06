@@ -410,37 +410,29 @@ function renderList() {
     const grp     = p.proj_group || 'A';
     const cfg     = GROUP_CFG[grp] || GROUP_CFG['A'];
     const sttText = sttMap[p.id] || grp+'?';
-    const today     = new Date();
-today.setHours(0,0,0,0);
-const projTasks = allTasks.filter(t => t.project_id === p.id);
+    const today2 = new Date();
+today2.setHours(0,0,0,0);
+const projTasks = allTasks.filter(function(t){ return t.project_id === p.id; });
+const tasksNoSend = projTasks.filter(function(t){ return !t.send_date; });
+const tasksPast = projTasks.filter(function(t){
+  if (!t.send_date) return false;
+  var sd = new Date(t.send_date);
+  sd.setHours(0,0,0,0);
+  return sd < today2;
+});
 
-let statusBadge = '';
+var statusBadge = '';
 if (projTasks.length === 0) {
-  // Chua co task → dang hoat dong
   statusBadge = '<span class="status-badge status-active">🟢 Dang hoat dong</span>';
+} else if (tasksNoSend.length > 0) {
+  statusBadge = '<span class="status-badge status-active">🟢 Dang hoat dong</span>';
+} else if (tasksPast.length === projTasks.length) {
+  statusBadge = '<span class="status-badge status-done">⬜ Da ket thuc</span>';
 } else {
-  const tasksWithSend    = projTasks.filter(t => t.send_date);
-  const tasksWithoutSend = projTasks.filter(t => !t.send_date);
-
-  if (tasksWithoutSend.length > 0) {
-    // Con task chua co ngay gui → dang hoat dong
-    statusBadge = '<span class="status-badge status-active">🟢 Dang hoat dong</span>';
-  } else {
-    // Tat ca task deu co send_date
-    const allDone = tasksWithSend.every(t => {
-      const sd = new Date(t.send_date);
-      sd.setHours(0,0,0,0);
-      return sd < today;
-    });
-    if (allDone) {
-      statusBadge = '<span class="status-badge status-done">⬜ Da ket thuc</span>';
-    } else {
-      statusBadge = '<span class="status-badge status-active">🟢 Dang hoat dong</span>';
-    }
-  }
+  statusBadge = '<span class="status-badge status-active">🟢 Dang hoat dong</span>';
 }
-      ? '<span class="status-badge status-active">🟢 Dang hoat dong</span>'
-      : '<span class="status-badge status-done">⬜ Da ket thuc</span>';
+       '<span class="status-badge status-active">🟢 Dang hoat dong</span>'
+       '<span class="status-badge status-done">⬜ Da ket thuc</span>';
     const date = p.created_at ? new Date(p.created_at).toLocaleDateString('vi-VN') : '-';
     return '<tr>'
       + '<td style="text-align:center;"><div class="stt-badge '+cfg.cls+'">'+sttText+'</div></td>'
