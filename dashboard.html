@@ -21,10 +21,7 @@ dashboard_html = """<!DOCTYPE html>
       font-weight:900; color:#fff; font-size:15px;
     }
     .topbar-title { color:#fff; font-size:16px; font-weight:700; }
-    .topbar-right { display:flex; align-items:center; gap:14px; }
-    .topbar-right .icon-btn { color:#ccc; font-size:18px; cursor:pointer; transition:color .2s; background:none; border:none; }
-    .topbar-right .icon-btn:hover { color:#fff; }
-    .user-info { display:flex; align-items:center; gap:8px; cursor:pointer; }
+    .topbar-right { display:flex; align-items:center; gap:12px; }
     .avatar {
       width:32px; height:32px; border-radius:50%;
       background:linear-gradient(135deg,#00b4d8,#0096c7);
@@ -32,249 +29,221 @@ dashboard_html = """<!DOCTYPE html>
       color:#fff; font-weight:700; font-size:12px;
     }
     .user-name { color:#ddd; font-size:13px; }
-    .role-badge {
-      font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px;
-    }
+    .role-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; }
     .role-admin { background:#e63946; color:#fff; }
     .role-staff { background:#0096c7; color:#fff; }
-    .btn-logout {
+    .btn-top {
       background:rgba(255,255,255,.12); border:none; color:#fff;
       padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px;
-      transition:background .2s;
+      text-decoration:none; transition:background .2s; font-family:inherit;
     }
-    .btn-logout:hover { background:rgba(255,255,255,.22); }
+    .btn-top:hover { background:rgba(255,255,255,.22); }
 
-    /* LAYOUT */
-    .layout { display:flex; min-height:calc(100vh - 52px); }
-
-    /* SIDEBAR */
-    .sidebar {
-      width:220px; background:#fff; border-right:1px solid #e8e8e8;
-      padding:20px 0; flex-shrink:0;
+    /* TABS */
+    .tabs-bar {
+      background:#fff; border-bottom:2px solid #e8e8e8;
+      display:flex; align-items:center; padding:0 24px; gap:4px;
+      position:sticky; top:52px; z-index:100;
     }
-    .sidebar-section { margin-bottom:24px; }
-    .sidebar-label {
-      font-size:10px; font-weight:700; color:#bbb; text-transform:uppercase;
-      letter-spacing:1px; padding:0 20px 8px;
+    .tab {
+      padding:14px 20px; font-size:13.5px; font-weight:600; color:#888;
+      cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px;
+      transition:all .2s; white-space:nowrap; display:flex; align-items:center; gap:7px;
     }
-    .sidebar-item {
-      display:flex; align-items:center; gap:10px; padding:9px 20px;
-      color:#444; font-size:13.5px; cursor:pointer; text-decoration:none;
-      border-left:3px solid transparent; transition:all .15s;
-    }
-    .sidebar-item:hover { background:#f0f7ff; }
-    .sidebar-item.active {
-      background:#e8f4fe; border-left-color:#0096c7;
-      color:#0077b6; font-weight:600;
-    }
-    .sidebar-item .icon { font-size:16px; width:20px; text-align:center; }
-    .admin-only { display:none; }
+    .tab:hover { color:#0096c7; }
+    .tab.active { color:#0077b6; border-bottom-color:#0077b6; }
 
     /* MAIN */
-    .main { flex:1; padding:32px 36px; overflow-y:auto; }
-    .welcome-bar {
-      display:flex; align-items:center; justify-content:space-between;
-      margin-bottom:28px; flex-wrap:wrap; gap:12px;
-    }
-    .welcome-text h2 { font-size:22px; font-weight:700; color:#1a1a2e; }
-    .welcome-text p  { font-size:13px; color:#888; margin-top:4px; }
-    .btn-create {
-      display:flex; align-items:center; gap:8px;
-      background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff;
-      border:none; padding:11px 22px; border-radius:10px; font-size:14px;
-      font-weight:600; cursor:pointer; box-shadow:0 4px 14px rgba(0,119,182,.3);
-      transition:all .2s; text-decoration:none;
-    }
-    .btn-create:hover { box-shadow:0 6px 20px rgba(0,119,182,.4); transform:translateY(-1px); }
+    .main { padding:28px 32px; }
+    .view { display:none; }
+    .view.active { display:block; }
 
-    /* STATS */
-    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px; }
-    .stat-card {
-      background:#fff; border-radius:14px; padding:20px 22px;
-      box-shadow:0 2px 10px rgba(0,0,0,.06); display:flex;
-      align-items:center; gap:16px; transition:transform .2s;
-    }
-    .stat-card:hover { transform:translateY(-2px); }
-    .stat-icon {
-      width:48px; height:48px; border-radius:12px;
-      display:flex; align-items:center; justify-content:center; font-size:22px;
-    }
-    .stat-num { font-size:26px; font-weight:800; color:#1a1a2e; }
-    .stat-label { font-size:12px; color:#888; margin-top:2px; }
-    .s-blue   { background:#e8f4fe; }
-    .s-green  { background:#d4edda; }
-    .s-orange { background:#fef3e2; }
-    .s-red    { background:#fde8e8; }
-
-    /* PROJECT GRID */
+    /* SECTION HEADER */
     .section-header {
       display:flex; align-items:center; justify-content:space-between;
-      margin-bottom:16px;
+      margin-bottom:20px; flex-wrap:wrap; gap:12px;
     }
-    .section-title { font-size:15px; font-weight:700; color:#1a1a2e; }
-    .view-all { font-size:13px; color:#0096c7; cursor:pointer; text-decoration:none; }
-    .project-grid {
-      display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-      gap:16px; margin-bottom:32px;
+    .section-title { font-size:18px; font-weight:700; color:#1a1a2e; }
+    .btn-primary {
+      display:flex; align-items:center; gap:7px;
+      background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff;
+      border:none; padding:10px 20px; border-radius:9px; font-size:13.5px;
+      font-weight:600; cursor:pointer; box-shadow:0 3px 10px rgba(0,119,182,.25);
+      transition:all .2s;
     }
-    .project-card {
-      background:#fff; border-radius:14px; padding:20px 22px;
-      box-shadow:0 2px 10px rgba(0,0,0,.06); cursor:pointer;
-      transition:all .2s; border:1.5px solid transparent;
+    .btn-primary:hover { box-shadow:0 6px 18px rgba(0,119,182,.35); transform:translateY(-1px); }
+
+    /* FILTERS */
+    .filters {
+      display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap;
     }
-    .project-card:hover {
-      border-color:#0096c7; box-shadow:0 6px 20px rgba(0,0,0,.1);
-      transform:translateY(-2px);
+    .filter-input {
+      padding:8px 14px; border:1.5px solid #dde2ea; border-radius:8px;
+      font-size:13px; outline:none; transition:border-color .2s; font-family:inherit;
     }
-    .proj-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
-    .proj-code {
-      font-size:11px; font-weight:700; color:#0077b6;
-      background:#e8f4fe; padding:3px 10px; border-radius:20px;
+    .filter-input:focus { border-color:#0096c7; }
+    .filter-btn {
+      padding:8px 16px; border:1.5px solid #dde2ea; border-radius:8px;
+      font-size:13px; cursor:pointer; background:#fff; font-weight:600;
+      color:#555; transition:all .15s; font-family:inherit;
     }
-    .proj-status {
-      font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px;
+    .filter-btn:hover, .filter-btn.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
+
+    /* LIST VIEW */
+    .project-table { width:100%; border-collapse:collapse; background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.07); }
+    .project-table thead th { padding:12px 16px; text-align:left; font-size:12px; font-weight:700; color:#fff; background:#0077b6; }
+    .project-table tbody td { padding:13px 16px; font-size:13px; color:#333; border-bottom:1px solid #f0f0f0; }
+    .project-table tbody tr:hover td { background:#f8fbff; }
+    .project-table tbody tr:last-child td { border-bottom:none; }
+    .proj-code { font-weight:700; color:#0077b6; font-size:12px; }
+    .status-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+    .status-active { background:#d4edda; color:#1a7c3a; }
+    .status-done   { background:#f0f0f0; color:#666; }
+    .color-dot { width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:6px; vertical-align:middle; }
+
+    /* CATEGORY VIEW */
+    .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
+    .category-card { background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); overflow:hidden; }
+    .category-header { padding:14px 20px; font-size:14px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; }
+    .category-body { padding:12px 0; }
+    .category-item { padding:10px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f5f5f5; }
+    .category-item:last-child { border-bottom:none; }
+    .category-item:hover { background:#f8fbff; }
+    .cat-code { font-size:11px; font-weight:700; color:#0077b6; background:#e8f4fe; padding:2px 8px; border-radius:20px; white-space:nowrap; }
+    .cat-name { font-size:13px; color:#222; font-weight:500; flex:1; }
+    .cat-staff { font-size:11px; color:#888; }
+
+    /* GANTT VIEW 3 */
+    .gantt-wrap { overflow-x:auto; background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); }
+    .gantt-controls { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+    .zoom-btn { padding:7px 14px; border:1.5px solid #dde2ea; border-radius:7px; font-size:12.5px; font-weight:600; cursor:pointer; background:#fff; color:#555; transition:all .15s; }
+    .zoom-btn:hover, .zoom-btn.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
+    .gantt-table { width:100%; border-collapse:collapse; min-width:900px; }
+    .gantt-table th { padding:8px 12px; font-size:11px; font-weight:700; color:#fff; background:#1a1a2e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.1); }
+    .gantt-table td { padding:0; border-bottom:1px solid #f0f0f0; vertical-align:middle; }
+    .gantt-left { padding:10px 14px; min-width:280px; max-width:280px; border-right:2px solid #e8e8e8; }
+    .gantt-proj-name { font-size:13px; font-weight:700; color:#1a1a2e; display:flex; align-items:center; gap:6px; }
+    .gantt-proj-sub { font-size:11px; color:#888; margin-top:2px; }
+    .gantt-cell { position:relative; height:38px; border-right:1px solid #f0f0f0; }
+    .gantt-cell.weekend { background:#fafafa; }
+    .gantt-cell.today-col { background:#fff3f3; }
+    .gantt-bar {
+      position:absolute; height:22px; border-radius:4px; top:8px;
+      display:flex; align-items:center; padding:0 6px;
+      font-size:10px; font-weight:700; color:#fff; white-space:nowrap;
+      overflow:hidden; text-overflow:ellipsis; cursor:pointer;
+      box-shadow:0 2px 4px rgba(0,0,0,.15); transition:opacity .2s;
     }
-    .status-active   { background:#d4edda; color:#1a7c3a; }
-    .status-pending  { background:#fff3cd; color:#856404; }
-    .status-done     { background:#f0f0f0; color:#555; }
-    .proj-name { font-size:15px; font-weight:700; color:#1a1a2e; margin-bottom:6px; }
-    .proj-branch { font-size:12px; color:#888; margin-bottom:14px; }
-    .progress-label {
-      display:flex; justify-content:space-between;
-      font-size:11.5px; color:#888; margin-bottom:6px;
+    .gantt-bar:hover { opacity:.85; }
+    .gantt-point {
+      position:absolute; width:10px; height:10px; border-radius:50%;
+      top:14px; transform:translateX(-50%); border:2px solid #fff;
+      box-shadow:0 1px 3px rgba(0,0,0,.3); cursor:pointer; z-index:2;
     }
-    .progress-bar { height:6px; background:#f0f0f0; border-radius:3px; overflow:hidden; }
-    .progress-fill { height:100%; border-radius:3px; transition:width .6s; }
-    .fill-blue   { background:linear-gradient(90deg,#0096c7,#48cae4); }
-    .fill-green  { background:linear-gradient(90deg,#52b788,#2d6a4f); }
-    .fill-orange { background:linear-gradient(90deg,#f4a261,#e76f51); }
-    .proj-footer {
-      display:flex; align-items:center; justify-content:space-between;
-      margin-top:14px; padding-top:12px; border-top:1px solid #f0f0f0;
+    .today-line {
+      position:absolute; top:0; bottom:0; width:2px;
+      background:#e63946; z-index:10; pointer-events:none;
     }
-    .members { display:flex; gap:-4px; }
-    .member-av {
-      width:26px; height:26px; border-radius:50%; border:2px solid #fff;
-      display:flex; align-items:center; justify-content:center;
-      font-size:10px; font-weight:700; color:#fff; margin-right:-6px;
+    .gantt-legend { display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; font-size:12px; color:#555; align-items:center; }
+    .legend-item { display:flex; align-items:center; gap:5px; }
+    .legend-dot { width:10px; height:10px; border-radius:50%; }
+    .legend-bar { width:24px; height:10px; border-radius:3px; }
+
+    /* STAFF VIEW 4 */
+    .staff-controls { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+    .group-tabs { display:flex; gap:6px; }
+    .group-tab { padding:7px 16px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; background:#fff; color:#555; transition:all .15s; }
+    .group-tab:hover, .group-tab.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
+    .staff-wrap { overflow-x:auto; background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); }
+    .staff-table { width:100%; border-collapse:collapse; min-width:900px; }
+    .staff-table th { padding:8px 12px; font-size:11px; font-weight:700; color:#fff; background:#1a1a2e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.1); }
+    .staff-table td { padding:0; border-bottom:1px solid #eee; vertical-align:middle; }
+    .staff-name-cell { padding:10px 14px; min-width:200px; max-width:200px; border-right:2px solid #e8e8e8; }
+    .staff-name { font-size:13px; font-weight:700; color:#1a1a2e; }
+    .staff-role { font-size:11px; color:#888; margin-top:2px; }
+    .staff-group-label { font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; margin-top:3px; display:inline-block; }
+    .staff-cell { position:relative; height:32px; border-right:1px solid #f0f0f0; }
+    .staff-cell.weekend { background:#fafafa; }
+    .staff-cell.today-col { background:#fff3f3; }
+    .staff-bar {
+      position:absolute; height:20px; border-radius:3px; top:6px;
+      display:flex; align-items:center; padding:0 5px;
+      font-size:9.5px; font-weight:700; color:#fff; white-space:nowrap;
+      overflow:hidden; text-overflow:ellipsis; cursor:pointer;
+      box-shadow:0 1px 3px rgba(0,0,0,.15); transition:opacity .2s;
     }
-    .proj-date { font-size:11px; color:#aaa; }
+    .staff-bar:hover { opacity:.8; }
+    .group-header-row td { background:#f0f4f8; padding:8px 14px; font-size:12px; font-weight:700; color:#0077b6; border-bottom:1px solid #dde2ea; }
 
     /* MODAL */
-    .modal-overlay {
-      position:fixed; inset:0; background:rgba(0,0,0,.45);
-      z-index:500; display:none; align-items:center; justify-content:center;
-    }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:500; display:none; align-items:center; justify-content:center; padding:20px; }
     .modal-overlay.open { display:flex; }
-    .modal {
-      background:#fff; border-radius:16px; padding:32px;
-      width:100%; max-width:640px; max-height:90vh; overflow-y:auto;
-      box-shadow:0 24px 64px rgba(0,0,0,.25);
-      animation:slideIn .3s ease;
-    }
-    @keyframes slideIn {
-      from { opacity:0; transform:translateY(-20px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
-    .modal-title {
-      font-size:18px; font-weight:700; color:#1a1a2e;
-      margin-bottom:24px; padding-bottom:14px; border-bottom:1.5px solid #f0f0f0;
-      display:flex; align-items:center; gap:10px;
-    }
-    .modal-close {
-      margin-left:auto; background:none; border:none;
-      font-size:20px; cursor:pointer; color:#aaa; transition:color .2s;
-    }
+    .modal { background:#fff; border-radius:16px; padding:28px 32px; width:100%; max-width:680px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:slideIn .3s ease; }
+    @keyframes slideIn { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+    .modal-title { font-size:18px; font-weight:700; color:#1a1a2e; margin-bottom:20px; padding-bottom:12px; border-bottom:1.5px solid #f0f0f0; display:flex; align-items:center; gap:10px; }
+    .modal-close { margin-left:auto; background:none; border:none; font-size:20px; cursor:pointer; color:#aaa; }
     .modal-close:hover { color:#e63946; }
-
-    /* FORM */
-    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px 24px; }
-    .form-group { display:flex; flex-direction:column; gap:6px; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px 20px; }
+    .form-group { display:flex; flex-direction:column; gap:5px; }
     .form-group.full { grid-column:1/-1; }
     label { font-size:12px; font-weight:600; color:#555; }
-    label .req { color:#e63946; margin-left:3px; }
-    label .opt { color:#bbb; font-weight:400; font-size:11px; margin-left:4px; }
-    input[type=text], input[type=number], select, textarea {
-      width:100%; padding:9px 13px; border:1.5px solid #dde2ea;
-      border-radius:8px; font-size:13.5px; color:#222; outline:none;
-      transition:border-color .2s, box-shadow .2s; font-family:inherit;
+    label .req { color:#e63946; }
+    input[type=text], input[type=date], select, textarea {
+      width:100%; padding:9px 12px; border:1.5px solid #dde2ea; border-radius:8px;
+      font-size:13px; outline:none; transition:border-color .2s; font-family:inherit; color:#222;
     }
-    input[type=text]:focus, input[type=number]:focus,
-    select:focus, textarea:focus {
-      border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.12);
-    }
+    input:focus, select:focus, textarea:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.1); }
     .field-hint { font-size:11px; color:#aaa; }
 
-    /* PREVIEW */
-    .preview-box {
-      background:linear-gradient(135deg,#0077b6,#00b4d8);
-      border-radius:12px; padding:18px 22px; color:#fff; margin-top:6px;
-    }
-    .preview-label { font-size:10px; opacity:.7; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
-    .preview-code  { font-size:18px; font-weight:800; word-break:break-all; }
-    .preview-code .dim { opacity:.45; }
+    /* PREVIEW CODE */
+    .preview-box { background:linear-gradient(135deg,#0077b6,#00b4d8); border-radius:10px; padding:14px 18px; color:#fff; margin-bottom:16px; }
+    .preview-label { font-size:10px; opacity:.7; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+    .preview-code { font-size:17px; font-weight:800; word-break:break-all; }
+    .preview-code .dim { opacity:.4; }
 
     /* COMBO */
     .combo-wrap { position:relative; }
-    .combo-arrow { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#aaa; pointer-events:none; }
-    .combo-dropdown {
-      position:absolute; top:calc(100% + 4px); left:0; right:0;
-      background:#fff; border:1.5px solid #dde2ea; border-radius:8px;
-      box-shadow:0 8px 24px rgba(0,0,0,.12); z-index:300;
-      max-height:200px; overflow-y:auto; display:none;
-    }
-    .combo-dropdown.open { display:block; }
-    .combo-item {
-      padding:9px 13px; font-size:13.5px; cursor:pointer; transition:background .12s;
-    }
-    .combo-item:hover, .combo-item.highlighted { background:#f0f7ff; color:#0077b6; }
+    .combo-arrow { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#aaa; pointer-events:none; font-size:12px; }
+    .combo-dd { position:absolute; top:calc(100% + 3px); left:0; right:0; background:#fff; border:1.5px solid #dde2ea; border-radius:8px; box-shadow:0 6px 20px rgba(0,0,0,.1); z-index:300; max-height:180px; overflow-y:auto; display:none; }
+    .combo-dd.open { display:block; }
+    .combo-item { padding:8px 12px; font-size:13px; cursor:pointer; transition:background .1s; }
+    .combo-item:hover { background:#f0f7ff; color:#0077b6; }
     .combo-new { color:#0096c7; font-style:italic; }
-    .tag-wrap { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
-    .tag {
-      font-size:11.5px; background:#f0f4f8; border:1px solid #dde2ea;
-      color:#555; padding:3px 10px; border-radius:20px; cursor:pointer;
-      transition:all .15s;
-    }
+    .tag-wrap { display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; }
+    .tag { font-size:11px; background:#f0f4f8; border:1px solid #dde2ea; color:#555; padding:2px 9px; border-radius:20px; cursor:pointer; transition:all .12s; }
     .tag:hover, .tag.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
-
-    /* NUM WRAP */
     .num-wrap { display:flex; align-items:center; gap:8px; }
-    .num-prefix {
-      font-size:13px; font-weight:700; color:#0077b6; background:#e8f4fe;
-      padding:9px 12px; border-radius:8px; border:1.5px solid #b8dff5; white-space:nowrap;
-    }
-    .auto-badge {
-      font-size:11px; background:#e8f4fe; color:#0077b6;
-      padding:3px 8px; border-radius:20px; font-weight:600;
-    }
+    .num-prefix { font-size:13px; font-weight:700; color:#0077b6; background:#e8f4fe; padding:9px 11px; border-radius:8px; border:1.5px solid #b8dff5; white-space:nowrap; }
+
+    /* TASKS SECTION */
+    .tasks-section { margin-top:20px; border-top:1.5px solid #f0f0f0; padding-top:16px; }
+    .tasks-title { font-size:13px; font-weight:700; color:#1a1a2e; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; }
+    .task-row { background:#f8fbff; border:1.5px solid #e8f0f8; border-radius:10px; padding:12px 14px; margin-bottom:10px; }
+    .task-row-header { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:8px; }
+    .task-row-dates { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+    .btn-add-task { background:#fff; border:1.5px dashed #0096c7; color:#0096c7; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; width:100%; transition:all .15s; margin-top:4px; }
+    .btn-add-task:hover { background:#f0f7ff; }
+    .btn-remove-task { background:none; border:none; color:#e63946; cursor:pointer; font-size:16px; float:right; }
 
     /* MODAL ACTIONS */
-    .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:24px; }
-    .btn { padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; border:none; display:flex; align-items:center; gap:6px; transition:all .2s; }
-    .btn-primary { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; box-shadow:0 3px 10px rgba(0,119,182,.25); }
-    .btn-primary:hover { box-shadow:0 6px 18px rgba(0,119,182,.4); transform:translateY(-1px); }
-    .btn-secondary { background:#fff; color:#555; border:1.5px solid #dde2ea; }
+    .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
+    .btn-secondary { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:9px 20px; border-radius:8px; font-size:13.5px; font-weight:600; cursor:pointer; }
     .btn-secondary:hover { background:#f5f5f5; }
 
+    /* TOOLTIP */
+    .tooltip { position:fixed; background:#1a1a2e; color:#fff; padding:8px 12px; border-radius:8px; font-size:12px; z-index:999; pointer-events:none; display:none; max-width:260px; line-height:1.6; box-shadow:0 4px 12px rgba(0,0,0,.2); }
+
     /* TOAST */
-    .toast {
-      position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff;
-      padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500;
-      box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:999;
-      transform:translateY(80px); opacity:0; transition:all .35s;
-    }
+    .toast { position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:9999; transform:translateY(80px); opacity:0; transition:all .35s; }
     .toast.show { transform:translateY(0); opacity:1; }
     .toast.success { border-left:4px solid #52b788; }
     .toast.error   { border-left:4px solid #e63946; }
 
-    @media(max-width:900px) {
-      .stats { grid-template-columns:1fr 1fr; }
-    }
-    @media(max-width:640px) {
-      .sidebar { display:none; }
-      .main { padding:20px 16px; }
+    @media(max-width:768px) {
+      .main { padding:16px; }
       .form-grid { grid-template-columns:1fr; }
       .form-group.full { grid-column:1; }
+      .task-row-header, .task-row-dates { grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -287,97 +256,147 @@ dashboard_html = """<!DOCTYPE html>
     <span class="topbar-title">BIM Hub</span>
   </div>
   <div class="topbar-right">
-    <button class="icon-btn" title="Thông báo">🔔</button>
-    <div class="user-info" id="userInfo">
-      <div class="avatar" id="topAvatar">?</div>
-      <span class="user-name" id="topName">Đang tải...</span>
-      <span class="role-badge" id="topRole"></span>
-    </div>
-    <button class="btn-logout" onclick="logout()">Đăng xuất</button>
+    <div class="avatar" id="topAvatar">?</div>
+    <span class="user-name" id="topName">...</span>
+    <span class="role-badge" id="topRole"></span>
+    <a class="btn-top" href="my-tasks.html">📋 Lịch của tôi</a>
+    <a class="btn-top admin-only" href="admin.html" style="display:none;">👥 Thành viên</a>
+    <button class="btn-top" onclick="logout()">Đăng xuất</button>
   </div>
 </nav>
 
-<div class="layout">
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-label">Điều hướng</div>
-      <a class="sidebar-item active" href="dashboard.html"><span class="icon">🏠</span>Trang chủ</a>
-      <a class="sidebar-item" href="#"><span class="icon">📁</span>Dự án của tôi</a>
-      <a class="sidebar-item" href="#"><span class="icon">⭐</span>Yêu thích</a>
-      <a class="sidebar-item" href="#"><span class="icon">🕐</span>Gần đây</a>
-    </div>
-    <div class="sidebar-section admin-only" id="adminMenu">
-      <div class="sidebar-label">Quản trị</div>
-      <a class="sidebar-item" href="admin.html"><span class="icon">👥</span>Quản lý thành viên</a>
-      <a class="sidebar-item" href="#"><span class="icon">📊</span>Báo cáo</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Hệ thống</div>
-      <a class="sidebar-item" href="#"><span class="icon">⚙️</span>Cài đặt</a>
-      <a class="sidebar-item" href="#"><span class="icon">❓</span>Trợ giúp</a>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main">
-    <div class="welcome-bar">
-      <div class="welcome-text">
-        <h2 id="welcomeMsg">Xin chào! 👋</h2>
-        <p id="welcomeSub">Đây là tổng quan các dự án BIM của bạn</p>
-      </div>
-      <button class="btn-create admin-only" id="createBtn" onclick="openModal()">
-        ➕ Tạo dự án mới
-      </button>
-    </div>
-
-    <!-- STATS -->
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-icon s-blue">📁</div>
-        <div><div class="stat-num">8</div><div class="stat-label">Tổng dự án</div></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon s-green">🔨</div>
-        <div><div class="stat-num">5</div><div class="stat-label">Đang thực hiện</div></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon s-orange">✅</div>
-        <div><div class="stat-num">2</div><div class="stat-label">Hoàn thành</div></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon s-red">⚠️</div>
-        <div><div class="stat-num">1</div><div class="stat-label">Quá hạn</div></div>
-      </div>
-    </div>
-
-    <!-- PROJECTS -->
-    <div class="section-header">
-      <div class="section-title">🏗️ Dự án gần đây</div>
-      <a class="view-all" href="#">Xem tất cả →</a>
-    </div>
-    <div class="project-grid" id="projectGrid">
-      <!-- Projects injected by JS -->
-    </div>
-  </main>
+<!-- TABS -->
+<div class="tabs-bar">
+  <div class="tab active" onclick="switchTab('list')">📋 Danh sách dự án</div>
+  <div class="tab" onclick="switchTab('category')">🗂️ Theo thể loại</div>
+  <div class="tab" onclick="switchTab('schedule')">📅 Schedule dự án</div>
+  <div class="tab" onclick="switchTab('staff')">👥 Lịch nhân viên</div>
 </div>
 
-<!-- MODAL TẠO DỰ ÁN -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ═══════════════════════════════════════
+       VIEW 1 — LIST
+  ════════════════════════════════════════ -->
+  <div class="view active" id="view-list">
+    <div class="section-header">
+      <div class="section-title">🏗️ Danh sách dự án</div>
+      <button class="btn-primary admin-only" id="createBtn" onclick="openCreateModal()" style="display:none;">➕ Tạo dự án mới</button>
+    </div>
+    <div class="filters">
+      <input class="filter-input" id="searchProj" placeholder="🔍 Tìm tên dự án..." oninput="renderList()" style="min-width:220px;"/>
+      <button class="filter-btn active" id="filterAll"    onclick="setFilter('all')">Tất cả</button>
+      <button class="filter-btn"        id="filterActive" onclick="setFilter('active')">🟢 Đang hoạt động</button>
+      <button class="filter-btn"        id="filterDone"   onclick="setFilter('done')">⬜ Đã kết thúc</button>
+    </div>
+    <table class="project-table">
+      <thead>
+        <tr>
+          <th style="width:40px;">STT</th>
+          <th>Mã dự án</th>
+          <th>Tên dự án</th>
+          <th>Chi nhánh</th>
+          <th>設計区分</th>
+          <th>Trạng thái</th>
+          <th>Ngày tạo</th>
+        </tr>
+      </thead>
+      <tbody id="listBody">
+        <tr><td colspan="7" style="text-align:center;padding:32px;color:#aaa;">Đang tải...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       VIEW 2 — CATEGORY
+  ════════════════════════════════════════ -->
+  <div class="view" id="view-category">
+    <div class="section-header">
+      <div class="section-title">🗂️ Phân loại theo thể loại công việc</div>
+    </div>
+    <div class="category-grid" id="categoryGrid">
+      <div style="color:#aaa;padding:32px;">Đang tải...</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       VIEW 3 — SCHEDULE (GANTT)
+  ════════════════════════════════════════ -->
+  <div class="view" id="view-schedule">
+    <div class="section-header">
+      <div class="section-title">📅 Schedule dự án</div>
+    </div>
+    <div class="gantt-controls">
+      <button class="zoom-btn active" onclick="setZoom('day',this)">Ngày</button>
+      <button class="zoom-btn" onclick="setZoom('week',this)">Tuần</button>
+      <button class="zoom-btn" onclick="setZoom('month',this)">Tháng</button>
+      <input type="date" id="ganttStart" class="filter-input" onchange="renderGantt()"/>
+      <span style="font-size:13px;color:#888;">→</span>
+      <input type="date" id="ganttEnd" class="filter-input" onchange="renderGantt()"/>
+    </div>
+    <div class="gantt-legend">
+      <div class="legend-item"><div class="legend-bar" style="background:#0096c7;"></div><span>Khoảng làm việc</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#52b788;"></div><span>Ngày nhận data</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#e63946;"></div><span>Ngày gửi</span></div>
+      <div class="legend-item"><div style="width:2px;height:14px;background:#e63946;"></div><span>Hôm nay</span></div>
+    </div>
+    <div class="gantt-wrap" style="margin-top:12px;">
+      <div id="ganttContainer">
+        <div style="padding:32px;text-align:center;color:#aaa;">Đang tải...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       VIEW 4 — STAFF SCHEDULE
+  ════════════════════════════════════════ -->
+  <div class="view" id="view-staff">
+    <div class="section-header">
+      <div class="section-title">👥 Lịch làm việc nhân viên</div>
+    </div>
+    <div class="staff-controls">
+      <div class="group-tabs">
+        <button class="group-tab active" onclick="setGroup('all',this)">Tất cả</button>
+        <button class="group-tab" onclick="setGroup('設計BIM',this)">設計BIM (12)</button>
+        <button class="group-tab" onclick="setGroup('施工BIM',this)">施工BIM (16)</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-left:auto;">
+        <button class="zoom-btn active" onclick="setStaffZoom('day',this)">Ngày</button>
+        <button class="zoom-btn" onclick="setStaffZoom('week',this)">Tuần</button>
+        <button class="zoom-btn" onclick="setStaffZoom('month',this)">Tháng</button>
+      </div>
+      <input type="date" id="staffStart" class="filter-input" onchange="renderStaff()"/>
+      <span style="font-size:13px;color:#888;">→</span>
+      <input type="date" id="staffEnd" class="filter-input" onchange="renderStaff()"/>
+    </div>
+    <div class="staff-wrap">
+      <div id="staffContainer">
+        <div style="padding:32px;text-align:center;color:#aaa;">Đang tải...</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ═══════════════════════════════════════
+     MODAL TẠO DỰ ÁN
+════════════════════════════════════════ -->
+<div class="modal-overlay" id="createModal" onclick="closeModalOutside(event,'createModal')">
   <div class="modal">
     <div class="modal-title">
       🏗️ Tạo dự án mới
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeModal('createModal')">✕</button>
     </div>
 
     <!-- PREVIEW -->
-    <div class="preview-box" style="margin-bottom:20px;">
-      <div class="preview-label">👁️ Preview – Project Code</div>
-      <div class="preview-code" id="previewCode">
+    <div class="preview-box" style="margin-bottom:16px;">
+      <div class="preview-label">👁️ Project Code Preview</div>
+      <div class="preview-code">
         <span id="pYear">26</span><span id="pNum">001</span>
-        <span class="dim">_</span><span id="pBranch" class="dim">支店名</span>
+        <span class="dim">_</span><span id="pBranch" class="dim">支店</span>
         <span class="dim">_</span><span id="pDesign" class="dim">設計区分</span>
-        <span class="dim">_</span><span id="pName"   class="dim">物件名</span>
+        <span class="dim">_</span><span id="pName" class="dim">物件名</span>
       </div>
     </div>
 
@@ -387,277 +406,744 @@ dashboard_html = """<!DOCTYPE html>
         <label>年度 <span class="req">*</span></label>
         <div class="num-wrap">
           <div class="num-prefix">20<b id="yearDisp">26</b></div>
-          <input type="number" id="yearInput" value="26" min="20" max="99"
-            oninput="onYearChange(this.value)" style="max-width:90px;"/>
+          <input type="text" id="yearInput" value="26" maxlength="2" oninput="onYearChange(this.value)" style="max-width:80px;"/>
         </div>
-        <div class="field-hint">西暦の下2桁（2026 → 26）</div>
       </div>
-
       <!-- 連番 -->
       <div class="form-group">
-        <label>連番 <span class="req">*</span> <span class="auto-badge"> 自動</span></label>
-        <div class="num-wrap">
-          <input type="number" id="numInput" value="1" min="1" max="999"
-            oninput="updatePreview()" style="max-width:100px;"/>
-          <span style="font-size:12px;color:#888;">年度ごとリセット</span>
-        </div>
-        <div class="field-hint" id="numHint">今年の次番号：<b style="color:#0096c7;">001</b></div>
+        <label>連番 <span class="req">*</span></label>
+        <input type="text" id="numInput" value="001" maxlength="3" oninput="updatePreview()" style="max-width:90px;"/>
+        <div class="field-hint" id="numHint">次番号：<b style="color:#0096c7;">001</b></div>
       </div>
-
       <!-- 支店名 -->
       <div class="form-group">
         <label>支店名 <span class="req">*</span></label>
         <div class="combo-wrap">
-          <input type="text" id="branchInput" placeholder="支店を選択または入力..."
-            autocomplete="off"
+          <input type="text" id="branchInput" placeholder="支店を選択または入力..." autocomplete="off"
             oninput="onCombo('branch')" onfocus="openDD('branch')" onblur="closeDD('branch')"/>
           <span class="combo-arrow">▼</span>
-          <div class="combo-dropdown" id="branchDD"></div>
+          <div class="combo-dd" id="branchDD"></div>
         </div>
         <div class="tag-wrap" id="branchTags"></div>
       </div>
-
       <!-- 設計区分 -->
       <div class="form-group">
-        <label>設計区分 <span class="opt">（省略可）</span></label>
+        <label>設計区分 <span style="color:#aaa;font-weight:400;font-size:11px;">（省略可）</span></label>
         <div class="combo-wrap">
-          <input type="text" id="designInput" placeholder="設計区分を選択または入力..."
-            autocomplete="off"
+          <input type="text" id="designInput" placeholder="設計区分を選択または入力..." autocomplete="off"
             oninput="onCombo('design')" onfocus="openDD('design')" onblur="closeDD('design')"/>
           <span class="combo-arrow">▼</span>
-          <div class="combo-dropdown" id="designDD"></div>
+          <div class="combo-dd" id="designDD"></div>
         </div>
         <div class="tag-wrap" id="designTags"></div>
       </div>
-
       <!-- 物件名 -->
       <div class="form-group full">
         <label>物件名・工事名称 <span class="req">*</span></label>
-        <input type="text" id="nameInput"
-          placeholder="例：NewSAMPLE、〇〇ビル新築工事..."
-          oninput="updatePreview()"/>
-        <div class="field-hint">日本語・英語・ベトナム語すべて使用可能</div>
+        <input type="text" id="nameInput" placeholder="例：NewSAMPLE、〇〇ビル新築工事..." oninput="updatePreview()"/>
+      </div>
+      <!-- 期間 -->
+      <div class="form-group">
+        <label>開始日</label>
+        <input type="date" id="projStart"/>
+      </div>
+      <div class="form-group">
+        <label>終了予定日</label>
+        <input type="date" id="projEnd"/>
       </div>
     </div>
 
+    <!-- TASKS -->
+    <div class="tasks-section">
+      <div class="tasks-title">
+        <span>📋 工程・タスク入力</span>
+      </div>
+      <div id="taskRows"></div>
+      <button class="btn-add-task" onclick="addTaskRow()">➕ タスクを追加</button>
+    </div>
+
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal()">キャンセル</button>
-      <button class="btn btn-primary" onclick="createProject()">✅ 作成する</button>
+      <button class="btn-secondary" onclick="closeModal('createModal')">キャンセル</button>
+      <button class="btn-primary" onclick="createProject()">✅ 作成する</button>
     </div>
   </div>
 </div>
 
+<!-- TOOLTIP -->
+<div class="tooltip" id="tooltip"></div>
 <div class="toast" id="toast"></div>
 
 <script>
-  // ── DATA ──
-  const BRANCHES = ['本社','首都圏','大阪','九州','東北','名古屋','札幌','四国','静岡','広島','北陸','ベトナム営業所'];
-  const DESIGNS  = ['自','他'];
-  const existingSeq = { '26': 0 };
+const SUPABASE_URL = 'https://oyvwattigkqnimlmrqnj.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_kcQtVjFP0m4ecWySEiwdEQ_rKFz1nn6';
+const HDRS = {
+  'apikey': SUPABASE_KEY,
+  'Authorization': 'Bearer ' + SUPABASE_KEY,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
 
-  const SAMPLE_PROJECTS = [
-    { code:'26001_本社_自_NewSAMPLE',    name:'NewSAMPLE',      branch:'本社',   progress:72, status:'active',  color:'#0096c7', members:['本','田','山'] },
-    { code:'26002_大阪_他_〇〇ビル改修', name:'〇〇ビル改修工事', branch:'大阪',   progress:45, status:'active',  color:'#52b788', members:['大','中']      },
-    { code:'26003_九州_自_港湾施設',     name:'港湾施設新築',    branch:'九州',   progress:90, status:'done',   color:'#9b5de5', members:['九','佐','田']  },
-    { code:'25012_名古屋_他_工場棟',     name:'工場棟増築工事',  branch:'名古屋', progress:20, status:'pending', color:'#f4a261', members:['名']           },
-    { code:'26004_首都圏_自_オフィス',   name:'オフィスリノベ',  branch:'首都圏', progress:60, status:'active',  color:'#e63946', members:['首','田','渡']  },
-  ];
+const BRANCHES = ['本社','首都圏','大阪','九州','東北','名古屋','札幌','四国','静岡','広島','北陸','ベトナム営業所'];
+const DESIGNS  = ['自','他'];
+const TASK_TYPES = ['パース・動画','意匠モデル','構造モデル','清算モデル','図面','施工ステップ'];
+const CAT_COLORS = {
+  'パース・動画': '#f4a261',
+  '意匠モデル':   '#4cc9f0',
+  '構造モデル':   '#52b788',
+  '清算モデル':   '#9b5de5',
+  '図面':         '#e63946',
+  '施工ステップ': '#ffd166'
+};
+const PASTEL_COLORS = [
+  '#a8dadc','#b5ead7','#ffdac1','#c7ceea','#ffb7b2','#e2f0cb',
+  '#bee5eb','#d4b8e0','#f7c59f','#a0c4ff','#bde0fe','#ffcfd2',
+  '#cdb4db','#ffc8dd','#d0f4de','#e9c46a','#8ecae6','#95d5b2'
+];
 
-  // ── INIT ──
-  window.onload = () => {
-    const role  = localStorage.getItem('user_role')  || 'Staff';
-    const name  = localStorage.getItem('user_name')  || 'User';
-    const email = localStorage.getItem('user_email') || '';
+let allProjects = [];
+let allTasks    = [];
+let allUsers    = [];
+let filterStatus = 'all';
+let ganttZoom    = 'day';
+let staffZoom    = 'day';
+let staffGroup   = 'all';
+let taskRowCount = 0;
+let projColorMap = {};
 
-    // Topbar
-    document.getElementById('topName').textContent = name;
-    document.getElementById('topAvatar').textContent = name.substring(0,2).toUpperCase();
-    const rb = document.getElementById('topRole');
-    rb.textContent = role;
-    rb.className = 'role-badge ' + (role === 'Admin' ? 'role-admin' : 'role-staff');
+// ── INIT ─────────────────────────────────────────────────
+window.onload = async () => {
+  const role  = localStorage.getItem('user_role')  || 'Staff';
+  const name  = localStorage.getItem('user_name')  || 'User';
+  document.getElementById('topName').textContent   = name;
+  document.getElementById('topAvatar').textContent = name.substring(0,2).toUpperCase();
+  const rb = document.getElementById('topRole');
+  rb.textContent = role;
+  rb.className   = 'role-badge ' + (role==='Admin' ? 'role-admin' : 'role-staff');
+  if (role === 'Admin') {
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'flex');
+  }
 
-    // Welcome
-    document.getElementById('welcomeMsg').textContent = 'Xin chào, ' + name + '! 👋';
-    document.getElementById('welcomeSub').textContent =
-      role === 'Admin'
-        ? 'Bạn có quyền Admin – Tạo dự án và quản lý thành viên'
-        : 'Đây là các dự án BIM bạn đang tham gia';
+  // Default date ranges
+  const today = new Date();
+  const y = today.getFullYear(), m = today.getMonth();
+  const d1 = new Date(y, m, 1);
+  const d2 = new Date(y, m+2, 0);
+  document.getElementById('ganttStart').value = fmt(d1);
+  document.getElementById('ganttEnd').value   = fmt(d2);
+  document.getElementById('staffStart').value = fmt(d1);
+  document.getElementById('staffEnd').value   = fmt(d2);
 
-    // Show/hide admin elements
-    if (role === 'Admin') {
-      document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
-      document.getElementById('createBtn').style.display = 'flex';
-    }
+  renderTags('branch'); renderTags('design');
+  updatePreview(); onYearChange('26');
+  addTaskRow();
 
-    renderProjects(SAMPLE_PROJECTS);
-    renderTags('branch'); renderTags('design');
-    updatePreview();
-    onYearChange(26);
+  await loadData();
+};
+
+async function loadData() {
+  try {
+    const [pRes, tRes, uRes] = await Promise.all([
+      fetch(SUPABASE_URL+'/rest/v1/projects?select=*&order=created_at.desc', {headers:HDRS}),
+      fetch(SUPABASE_URL+'/rest/v1/project_tasks?select=*', {headers:HDRS}),
+      fetch(SUPABASE_URL+'/rest/v1/users?select=*&order=name.asc', {headers:HDRS}),
+    ]);
+    allProjects = await pRes.json();
+    allTasks    = await tRes.json();
+    allUsers    = await uRes.json();
+    // Assign colors to projects
+    allProjects.forEach((p,i) => {
+      projColorMap[p.id] = p.color || PASTEL_COLORS[i % PASTEL_COLORS.length];
+    });
+    renderList();
+    renderCategory();
+    renderGantt();
+    renderStaff();
+    // Suggest next seq number
+    suggestNextNum();
+  } catch(e) {
+    showToast('❌ Lỗi tải dữ liệu: ' + e.message, 'error');
+  }
+}
+
+// ── TABS ─────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const views = ['list','category','schedule','staff'];
+    t.classList.toggle('active', views[i]===name);
+  });
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+}
+
+// ── VIEW 1: LIST ─────────────────────────────────────────
+function setFilter(f) {
+  filterStatus = f;
+  ['filterAll','filterActive','filterDone'].forEach(id => document.getElementById(id).classList.remove('active'));
+  const map = {all:'filterAll',active:'filterActive',done:'filterDone'};
+  document.getElementById(map[f]).classList.add('active');
+  renderList();
+}
+
+function renderList() {
+  const q = (document.getElementById('searchProj').value||'').toLowerCase();
+  let data = allProjects.filter(p => {
+    const matchQ = !q || p.project_name.toLowerCase().includes(q) || (p.code||'').toLowerCase().includes(q);
+    const matchS = filterStatus==='all' || p.status===filterStatus;
+    return matchQ && matchS;
+  });
+  const tbody = document.getElementById('listBody');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:#aaa;">Không có dự án nào</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map((p,i) => {
+    const color  = projColorMap[p.id] || '#a8dadc';
+    const stBadge = p.status==='active'
+      ? '<span class="status-badge status-active">🟢 Đang hoạt động</span>'
+      : '<span class="status-badge status-done">⬜ Đã kết thúc</span>';
+    const date = p.created_at ? new Date(p.created_at).toLocaleDateString('vi-VN') : '–';
+    return `<tr>
+      <td style="text-align:center;color:#888;">${i+1}</td>
+      <td><span class="proj-code"><span class="color-dot" style="background:${color};"></span>${p.code||'–'}</span></td>
+      <td style="font-weight:600;">${p.project_name}</td>
+      <td>${p.branch||'–'}</td>
+      <td>${p.design_type||'–'}</td>
+      <td>${stBadge}</td>
+      <td style="color:#888;">${date}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── VIEW 2: CATEGORY ─────────────────────────────────────
+function renderCategory() {
+  const grid = document.getElementById('categoryGrid');
+  const catHdr = {
+    'パース・動画': {icon:'🎨', bg:'#f4a261'},
+    '意匠モデル':   {icon:'🏛️', bg:'#4cc9f0'},
+    '構造モデル':   {icon:'🏗️', bg:'#52b788'},
+    '清算モデル':   {icon:'💰', bg:'#9b5de5'},
+    '図面':         {icon:'📐', bg:'#e63946'},
+    '施工ステップ': {icon:'🔨', bg:'#ffd166'}
   };
+  grid.innerHTML = TASK_TYPES.map(type => {
+    const tasks = allTasks.filter(t => t.task_type === type && t.project_id);
+    const projIds = [...new Set(tasks.map(t => t.project_id))];
+    const projs = projIds.map(id => allProjects.find(p => p.id===id)).filter(Boolean);
+    const cfg = catHdr[type] || {icon:'📋', bg:'#888'};
+    const items = projs.length
+      ? projs.map(p => {
+          const userIds = [...new Set(tasks.filter(t=>t.project_id===p.id&&t.task_type===type).map(t=>t.assigned_to))];
+          const staffNames = userIds.map(uid => { const u=allUsers.find(u=>u.id===uid); return u?u.name:''; }).filter(Boolean).join(', ');
+          return `<div class="category-item">
+            <div class="color-dot" style="background:${projColorMap[p.id]||'#aaa'};width:10px;height:10px;border-radius:50%;flex-shrink:0;"></div>
+            <span class="cat-code">${(p.code||'').split('_')[0]||'–'}</span>
+            <span class="cat-name">${p.project_name}</span>
+            ${staffNames ? '<span class="cat-staff">👤 '+staffNames+'</span>' : ''}
+          </div>`;
+        }).join('')
+      : '<div style="padding:16px 20px;color:#aaa;font-size:13px;">該当なし</div>';
+    return `<div class="category-card">
+      <div class="category-header" style="background:${cfg.bg};">${cfg.icon} ${type} <span style="margin-left:auto;font-size:12px;opacity:.8;">${projs.length} dự án</span></div>
+      <div class="category-body">${items}</div>
+    </div>`;
+  }).join('');
+}
 
-  // ── PROJECTS ──
-  function renderProjects(projects) {
-    const grid = document.getElementById('projectGrid');
-    const statusLabel = { active:'🔨 Đang thực hiện', done:'✅ Hoàn thành', pending:'⏳ Chờ bắt đầu' };
-    const statusClass = { active:'status-active', done:'status-done', pending:'status-pending' };
-    const fillClass   = { active:'fill-blue', done:'fill-green', pending:'fill-orange' };
-    grid.innerHTML = projects.map(p => `
-      <div class="project-card" onclick="showToast('📂 Mở dự án: ' + '${p.name}','success')">
-        <div class="proj-header">
-          <span class="proj-code">${p.code.split('_')[0]}_${p.code.split('_')[1]}</span>
-          <span class="proj-status ${statusClass[p.status]}">${statusLabel[p.status]}</span>
-        </div>
-        <div class="proj-name">${p.name}</div>
-        <div class="proj-branch">📍 ${p.branch}</div>
-        <div class="progress-label"><span>Tiến độ</span><span>${p.progress}%</span></div>
-        <div class="progress-bar">
-          <div class="progress-fill ${fillClass[p.status]}" style="width:${p.progress}%"></div>
-        </div>
-        <div class="proj-footer">
-          <div class="members">
-            ${p.members.map((m,i) => `
-              <div class="member-av"
-                style="background:hsl(${i*60+180},60%,45%);z-index:${p.members.length-i};">
-                ${m}
-              </div>`).join('')}
-          </div>
-          <span class="proj-date">📅 2026</span>
-        </div>
-      </div>`).join('');
+// ── VIEW 3: GANTT ─────────────────────────────────────────
+function setZoom(z, btn) {
+  ganttZoom = z;
+  document.querySelectorAll('#view-schedule .zoom-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const today = new Date();
+  const y = today.getFullYear(), m = today.getMonth(), d = today.getDate();
+  if (z==='day') {
+    document.getElementById('ganttStart').value = fmt(new Date(y,m,1));
+    document.getElementById('ganttEnd').value   = fmt(new Date(y,m+1,0));
+  } else if (z==='week') {
+    document.getElementById('ganttStart').value = fmt(new Date(y,m,d-14));
+    document.getElementById('ganttEnd').value   = fmt(new Date(y,m,d+42));
+  } else {
+    document.getElementById('ganttStart').value = fmt(new Date(y,m-1,1));
+    document.getElementById('ganttEnd').value   = fmt(new Date(y,m+5,0));
+  }
+  renderGantt();
+}
+
+function renderGantt() {
+  const start = new Date(document.getElementById('ganttStart').value);
+  const end   = new Date(document.getElementById('ganttEnd').value);
+  if (isNaN(start)||isNaN(end)||start>end) return;
+  const days   = getDaysArray(start, end);
+  const active = allProjects.filter(p => p.status==='active');
+  const today  = fmt(new Date());
+  const CELL_W = ganttZoom==='month' ? 20 : ganttZoom==='week' ? 28 : 36;
+
+  // Build header
+  let hdrHTML = '<th style="min-width:280px;text-align:left;padding:10px 14px;">プロジェクト</th>';
+  if (ganttZoom==='month') {
+    // Group by month
+    const months = {};
+    days.forEach(d => {
+      const k = d.substring(0,7);
+      months[k] = (months[k]||0)+1;
+    });
+    Object.entries(months).forEach(([m,cnt]) => {
+      hdrHTML += `<th colspan="${cnt}" style="min-width:${cnt*CELL_W}px;">${m}</th>`;
+    });
+  } else {
+    days.forEach(d => {
+      const dt = new Date(d);
+      const dow = ['日','月','火','水','木','金','土'][dt.getDay()];
+      const isWE = dt.getDay()===0||dt.getDay()===6;
+      const isToday = d===today;
+      hdrHTML += `<th style="min-width:${CELL_W}px;${isWE?'opacity:.5':''}${isToday?';background:#e63946;':''}">${ganttZoom==='week'?dt.getDate()+'/'+dow:dt.getDate()+'<br>'+dow}</th>`;
+    });
   }
 
-  // ── MODAL ──
-  function openModal()  { document.getElementById('modalOverlay').classList.add('open'); }
-  function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
-  function closeModalOutside(e) { if(e.target.id==='modalOverlay') closeModal(); }
+  // Build rows
+  let rowsHTML = '';
+  if (!active.length) {
+    rowsHTML = `<tr><td colspan="${days.length+1}" style="text-align:center;padding:32px;color:#aaa;">アクティブなプロジェクトなし</td></tr>`;
+  }
+  active.forEach(p => {
+    const color   = projColorMap[p.id] || '#a8dadc';
+    const tasks   = allTasks.filter(t => t.project_id===p.id);
+    const rowspan = Math.max(tasks.length,1);
+    const projCell = `<td class="gantt-left" rowspan="${rowspan}">
+      <div class="gantt-proj-name"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};flex-shrink:0;"></span>${p.project_name}</div>
+      <div class="gantt-proj-sub">${p.code||''}</div>
+    </td>`;
 
-  // ── COMBO ──
-  function onCombo(key) { renderDD(key); updatePreview(); }
-  function openDD(key)  { renderDD(key); }
-  function closeDD(key) { setTimeout(()=>{ document.getElementById(key+'DD').classList.remove('open'); },200); }
-
-  function renderDD(key) {
-    const data = key==='branch' ? BRANCHES : DESIGNS;
-    const val  = document.getElementById(key+'Input').value.trim();
-    const dd   = document.getElementById(key+'DD');
-    const filtered = val ? data.filter(d=>d.toLowerCase().includes(val.toLowerCase())) : data;
-    let html = filtered.map(item =>
-      `<div class="combo-item" onmousedown="selectCombo('${key}','${item}')">${item}</div>`
-    ).join('');
-    if(val && !data.map(d=>d.toLowerCase()).includes(val.toLowerCase())) {
-      html += `<div class="combo-item combo-new" onmousedown="selectCombo('${key}','${val}')">➕ 新規：「${val}」</div>`;
+    if (!tasks.length) {
+      rowsHTML += `<tr>${projCell}${days.map(d=>`<td class="gantt-cell ${isWeekend(d)?'weekend':''} ${d===today?'today-col':''}"></td>`).join('')}</tr>`;
+      return;
     }
-    if(!html) html = `<div class="combo-item" style="color:#aaa;cursor:default;">候補なし</div>`;
-    dd.innerHTML = html;
-    dd.classList.add('open');
-    renderTags(key);
+
+    tasks.forEach((t,ti) => {
+      const user = allUsers.find(u=>u.id===t.assigned_to);
+      let cells = '';
+      const dayMap = {};
+      days.forEach((d,di) => {
+        const isWE = isWeekend(d);
+        const isTd = d===today;
+        dayMap[d] = di;
+        cells += `<td class="gantt-cell ${isWE?'weekend':''} ${isTd?'today-col':''}" style="min-width:${CELL_W}px;position:relative;"></td>`;
+      });
+      const barCells = buildGanttBars(t, days, color, CELL_W, user);
+      rowsHTML += `<tr>${ti===0?projCell:''}${cells}</tr>`;
+      // Overlay bars using absolute positioning via JS
+      rowsHTML = rowsHTML.replace('</tr>', `<!--BARS:${p.id}:${t.id}--></tr>`);
+      // We'll handle bars via JS after render
+    });
+  });
+
+  const tableHTML = `<table class="gantt-table"><thead><tr>${hdrHTML}</tr></thead><tbody>${rowsHTML}</tbody></table>`;
+  document.getElementById('ganttContainer').innerHTML = tableHTML;
+
+  // Draw bars via JS after table is in DOM
+  active.forEach(p => {
+    const tasks = allTasks.filter(t => t.project_id===p.id);
+    const color = projColorMap[p.id]||'#a8dadc';
+    tasks.forEach(t => {
+      drawGanttBar(t, days, color, CELL_W, p);
+    });
+  });
+
+  // Draw today line
+  const todayIdx = days.indexOf(today);
+  if (todayIdx>=0) {
+    const cells = document.querySelectorAll('.gantt-cell.today-col');
+    cells.forEach(c => { c.style.position='relative'; });
+  }
+}
+
+function drawGanttBar(t, days, color, cellW, proj) {
+  const tbody = document.querySelector('.gantt-table tbody');
+  if (!tbody) return;
+  const rows  = tbody.querySelectorAll('tr');
+  // Find row for this task
+  let targetRow = null;
+  rows.forEach(row => {
+    const comment = row.innerHTML;
+    if (comment.includes('BARS:'+proj.id+':'+t.id)) targetRow = row;
+  });
+  if (!targetRow) return;
+  const cells = targetRow.querySelectorAll('.gantt-cell');
+  if (!cells.length) return;
+
+  // Draw work bar
+  if (t.start_date && t.end_date) {
+    const si = days.indexOf(t.start_date);
+    const ei = days.indexOf(t.end_date);
+    if (si>=0 && ei>=0 && si<cells.length) {
+      const startCell = cells[si];
+      const barW = (Math.min(ei,days.length-1)-si+1)*cellW - 4;
+      const bar = document.createElement('div');
+      bar.className = 'gantt-bar';
+      bar.style.cssText = `left:2px;width:${barW}px;background:${color};opacity:.85;`;
+      bar.textContent = t.task_type||'';
+      const user = allUsers.find(u=>u.id===t.assigned_to);
+      bar.title = `${t.task_type||''}\n担当: ${user?user.name:'未定'}\n${t.start_date} → ${t.end_date}`;
+      bar.addEventListener('mouseenter', e => showTooltip(e, `<b>${t.task_type||''}</b><br>担当: ${user?user.name:'未定'}<br>${t.start_date||'–'} → ${t.end_date||'–'}`));
+      bar.addEventListener('mouseleave', hideTooltip);
+      startCell.style.position = 'relative';
+      startCell.appendChild(bar);
+    }
+  }
+  // Draw receive point
+  if (t.receive_date) {
+    const ri = days.indexOf(t.receive_date);
+    if (ri>=0 && ri<cells.length) {
+      const pt = document.createElement('div');
+      pt.className = 'gantt-point';
+      pt.style.cssText = 'left:50%;background:#52b788;';
+      pt.title = '受信日: '+t.receive_date;
+      cells[ri].style.position='relative';
+      cells[ri].appendChild(pt);
+    }
+  }
+  // Draw send point
+  if (t.send_date) {
+    const si2 = days.indexOf(t.send_date);
+    if (si2>=0 && si2<cells.length) {
+      const pt2 = document.createElement('div');
+      pt2.className = 'gantt-point';
+      pt2.style.cssText = 'left:50%;background:#e63946;top:18px;';
+      pt2.title = '送信日: '+t.send_date;
+      cells[si2].style.position='relative';
+      cells[si2].appendChild(pt2);
+    }
+  }
+}
+
+// ── VIEW 4: STAFF ─────────────────────────────────────────
+function setGroup(g, btn) {
+  staffGroup = g;
+  document.querySelectorAll('.group-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderStaff();
+}
+
+function setStaffZoom(z, btn) {
+  staffZoom = z;
+  document.querySelectorAll('#view-staff .zoom-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const today = new Date();
+  const y=today.getFullYear(),m=today.getMonth(),d=today.getDate();
+  if (z==='day') {
+    document.getElementById('staffStart').value=fmt(new Date(y,m,1));
+    document.getElementById('staffEnd').value=fmt(new Date(y,m+1,0));
+  } else if (z==='week') {
+    document.getElementById('staffStart').value=fmt(new Date(y,m,d-7));
+    document.getElementById('staffEnd').value=fmt(new Date(y,m,d+35));
+  } else {
+    document.getElementById('staffStart').value=fmt(new Date(y,m-1,1));
+    document.getElementById('staffEnd').value=fmt(new Date(y,m+4,0));
+  }
+  renderStaff();
+}
+
+function renderStaff() {
+  const start = new Date(document.getElementById('staffStart').value);
+  const end   = new Date(document.getElementById('staffEnd').value);
+  if (isNaN(start)||isNaN(end)||start>end) return;
+  const days   = getDaysArray(fmt(start), fmt(end));
+  const today  = fmt(new Date());
+  const CELL_W = staffZoom==='month'?18:staffZoom==='week'?26:34;
+  const role   = localStorage.getItem('user_role')||'Staff';
+
+  let users = allUsers.filter(u => u.role!=='');
+  if (staffGroup==='設計BIM') users = users.filter(u=>u.group_name==='設計BIM'||!u.group_name).slice(0,12);
+  else if (staffGroup==='施工BIM') users = users.filter(u=>u.group_name==='施工BIM').slice(0,16);
+
+  // Build header
+  let hdrHTML = '<th style="min-width:200px;text-align:left;padding:10px 14px;">スタッフ</th>';
+  if (staffZoom==='month') {
+    const months = {};
+    days.forEach(d => { const k=d.substring(0,7); months[k]=(months[k]||0)+1; });
+    Object.entries(months).forEach(([m,cnt])=>{
+      hdrHTML+=`<th colspan="${cnt}" style="min-width:${cnt*CELL_W}px;">${m}</th>`;
+    });
+  } else {
+    days.forEach(d=>{
+      const dt=new Date(d);
+      const dow=['日','月','火','水','木','金','土'][dt.getDay()];
+      const isWE=dt.getDay()===0||dt.getDay()===6;
+      const isT=d===today;
+      hdrHTML+=`<th style="min-width:${CELL_W}px;${isWE?'opacity:.5':''}${isT?';background:#e63946;':''}">${dt.getDate()}<br><span style="font-size:9px;">${dow}</span></th>`;
+    });
   }
 
-  function selectCombo(key, value) {
-    document.getElementById(key+'Input').value = value;
-    document.getElementById(key+'DD').classList.remove('open');
-    renderTags(key);
-    updatePreview();
+  // Build rows grouped
+  const groups = ['設計BIM','施工BIM'];
+  let rowsHTML = '';
+
+  if (staffGroup==='all') {
+    groups.forEach(grp => {
+      const grpUsers = users.slice(0, grp==='設計BIM'?12:users.length);
+      if (!grpUsers.length) return;
+      rowsHTML += `<tr class="group-header-row"><td colspan="${days.length+1}">${grp==='設計BIM'?'🏛️':'🏗️'} ${grp}</td></tr>`;
+      grpUsers.forEach(u => rowsHTML += buildStaffRow(u, days, today, CELL_W, role));
+    });
+  } else {
+    users.forEach(u => { rowsHTML += buildStaffRow(u, days, today, CELL_W, role); });
   }
 
-  function renderTags(key) {
-    const data = key==='branch' ? BRANCHES : DESIGNS;
-    const cur  = document.getElementById(key+'Input').value.trim();
-    document.getElementById(key+'Tags').innerHTML = data.map(item =>
-      `<span class="tag ${cur===item?'active':''}" onclick="selectCombo('${key}','${item}')">${item}</span>`
-    ).join('');
-  }
+  if (!users.length) rowsHTML = `<tr><td colspan="${days.length+1}" style="text-align:center;padding:32px;color:#aaa;">スタッフなし</td></tr>`;
 
-  // ── YEAR / NUM ──
-  function onYearChange(v) {
-    const y = String(v).padStart(2,'0');
-    document.getElementById('yearDisp').textContent = y;
-    const next = (existingSeq[y]||0) + 1;
-    document.getElementById('numInput').value = next;
-    document.getElementById('numHint').innerHTML =
-      `今年の次番号：<b style="color:#0096c7;">${String(next).padStart(3,'0')}</b>`;
-    updatePreview();
-  }
+  document.getElementById('staffContainer').innerHTML =
+    `<table class="staff-table"><thead><tr>${hdrHTML}</tr></thead><tbody>${rowsHTML}</tbody></table>`;
 
-  // ── PREVIEW ──
-  function updatePreview() {
-    const year   = String(document.getElementById('yearInput').value||'26').padStart(2,'0');
-    const num    = String(document.getElementById('numInput').value||'1').padStart(3,'0');
-    const branch = document.getElementById('branchInput').value.trim();
-    const design = document.getElementById('designInput').value.trim();
-    const name   = document.getElementById('nameInput').value.trim();
-    const setEl  = (id, val, ph) => {
-      const el = document.getElementById(id);
-      el.textContent = val||ph;
-      el.className   = val ? '' : 'dim';
-    };
-    document.getElementById('pYear').textContent = year;
-    document.getElementById('pNum').textContent  = num;
-    setEl('pBranch', branch, '支店名');
-    setEl('pDesign', design, '設計区分');
-    setEl('pName',   name,   '物件名');
-  }
+  // Draw bars
+  users.forEach(u => drawStaffBars(u, days, CELL_W));
+}
 
-  // ── CREATE PROJECT ──
-  function createProject() {
-    const year   = String(document.getElementById('yearInput').value||'26').padStart(2,'0');
-    const num    = String(document.getElementById('numInput').value||'1').padStart(3,'0');
-    const branch = document.getElementById('branchInput').value.trim();
-    const design = document.getElementById('designInput').value.trim();
-    const name   = document.getElementById('nameInput').value.trim();
-    if(!branch) { showToast('❌ 支店名を入力してください','error'); return; }
-    if(!name)   { showToast('❌ 物件名を入力してください','error'); return; }
-    const parts = [year+num, branch];
-    if(design) parts.push(design);
-    parts.push(name);
-    const code = parts.join('_');
-    const newProj = {
-      code, name, branch,
-      progress:0, status:'pending',
-      color:'#4361ee', members:['新']
-    };
-    const grid = document.getElementById('projectGrid');
-    const temp = document.createElement('div');
-    temp.className = 'project-card';
-    temp.style.borderColor = '#0096c7';
-    temp.innerHTML = `
-      <div class="proj-header">
-        <span class="proj-code">${year}${num}_${branch}</span>
-        <span class="proj-status status-pending">⏳ Chờ bắt đầu</span>
+function buildStaffRow(u, days, today, CELL_W, role) {
+  const initials = (u.name||u.email).substring(0,2).toUpperCase();
+  const userTasks = allTasks.filter(t=>t.assigned_to===u.id);
+  const canEdit   = role==='Admin';
+  return `<tr data-uid="${u.id}">
+    <td class="staff-name-cell">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#0096c7,#0077b6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0;">${initials}</div>
+        <div>
+          <div class="staff-name">${u.name||u.email}</div>
+          <div class="staff-role">${u.role_title||u.role||''}</div>
+        </div>
       </div>
-      <div class="proj-name">${name}</div>
-      <div class="proj-branch">📍 ${branch}</div>
-      <div class="progress-label"><span>Tiến độ</span><span>0%</span></div>
-      <div class="progress-bar"><div class="progress-fill fill-orange" style="width:0%"></div></div>
-      <div class="proj-footer">
-        <div class="members"><div class="member-av" style="background:#4361ee;">新</div></div>
-        <span class="proj-date">📅 20${year}</span>
-      </div>`;
-    grid.prepend(temp);
-    closeModal();
-    showToast('✅ プロジェクト「' + name + '」を作成しました！','success');
+    </td>
+    ${days.map(d=>{
+      const isWE=isWeekend(d);
+      const isTd=d===today;
+      return `<td class="staff-cell ${isWE?'weekend':''} ${isTd?'today-col':''}" style="min-width:${CELL_W}px;position:relative;" data-date="${d}" data-uid="${u.id}" ${canEdit?'ondblclick="adminAddTask(\''+u.id+'\',\''+d+'\')"':''}></td>`;
+    }).join('')}
+  </tr>`;
+}
+
+function drawStaffBars(u, days, CELL_W) {
+  const row = document.querySelector(`tr[data-uid="${u.id}"]`);
+  if (!row) return;
+  const cells = row.querySelectorAll('.staff-cell');
+  const tasks  = allTasks.filter(t=>t.assigned_to===u.id);
+  tasks.forEach(t => {
+    const proj  = allProjects.find(p=>p.id===t.project_id);
+    if (!proj) return;
+    const color = projColorMap[proj.id]||'#a8dadc';
+    if (t.start_date && t.end_date) {
+      const si = days.indexOf(t.start_date);
+      const ei = days.indexOf(t.end_date);
+      if (si>=0 && ei>=0 && si<cells.length) {
+        const barW = (Math.min(ei,days.length-1)-si+1)*CELL_W-4;
+        const bar  = document.createElement('div');
+        bar.className = 'staff-bar';
+        bar.style.cssText = `left:2px;width:${barW}px;background:${color};`;
+        bar.textContent  = `[${proj.code?proj.code.split('_')[0]:''}]${proj.project_name}`;
+        bar.addEventListener('mouseenter',e=>showTooltip(e,`<b>${proj.project_name}</b><br>${t.task_type||''}<br>${t.start_date}→${t.end_date}`));
+        bar.addEventListener('mouseleave',hideTooltip);
+        cells[si].appendChild(bar);
+      }
+    }
+  });
+}
+
+function adminAddTask(uid, date) {
+  if (localStorage.getItem('user_role')!=='Admin') return;
+  const u = allUsers.find(x=>x.id===uid);
+  showToast('📋 Tính năng thêm task từ lịch — coming soon!','success');
+}
+
+// ── CREATE PROJECT ────────────────────────────────────────
+function openCreateModal() {
+  suggestNextNum();
+  document.getElementById('createModal').classList.add('open');
+}
+function closeModal(id)        { document.getElementById(id).classList.remove('open'); }
+function closeModalOutside(e,id){ if(e.target.id===id) closeModal(id); }
+
+let taskRowCount = 0;
+function addTaskRow() {
+  taskRowCount++;
+  const id = 'task_'+taskRowCount;
+  const div = document.createElement('div');
+  div.className = 'task-row';
+  div.id = id;
+  div.innerHTML = `
+    <button class="btn-remove-task" onclick="document.getElementById('${id}').remove()">✕</button>
+    <div class="task-row-header">
+      <div class="form-group">
+        <label>工種</label>
+        <select class="task-type">
+          ${TASK_TYPES.map(t=>`<option value="${t}">${t}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>担当者</label>
+        <select class="task-user">
+          <option value="">– 未定 –</option>
+          ${allUsers.map(u=>`<option value="${u.id}">${u.name||u.email}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>メモ</label>
+        <input type="text" class="task-note" placeholder="備考..."/>
+      </div>
+    </div>
+    <div class="task-row-dates">
+      <div class="form-group"><label>受信日（データ受領）</label><input type="date" class="task-receive"/></div>
+      <div class="form-group"><label>作業期間 開始</label><input type="date" class="task-start"/></div>
+      <div class="form-group"><label>作業期間 終了</label><input type="date" class="task-end"/></div>
+    </div>
+    <div class="form-group" style="margin-top:8px;"><label>送信日</label><input type="date" class="task-send" style="max-width:180px;"/></div>`;
+  document.getElementById('taskRows').appendChild(div);
+}
+
+async function createProject() {
+  const year   = (document.getElementById('yearInput').value||'26').padStart(2,'0');
+  const num    = (document.getElementById('numInput').value||'001').padStart(3,'0');
+  const branch = document.getElementById('branchInput').value.trim();
+  const design = document.getElementById('designInput').value.trim();
+  const name   = document.getElementById('nameInput').value.trim();
+  const pStart = document.getElementById('projStart').value;
+  const pEnd   = document.getElementById('projEnd').value;
+  if (!branch) { showToast('❌ 支店名を入力してください','error'); return; }
+  if (!name)   { showToast('❌ 物件名を入力してください','error'); return; }
+  const parts = [year+num, branch];
+  if (design) parts.push(design);
+  parts.push(name);
+  const code  = parts.join('_');
+  const color = PASTEL_COLORS[allProjects.length % PASTEL_COLORS.length];
+  const createdBy = localStorage.getItem('user_email')||'admin';
+  try {
+    const res = await fetch(SUPABASE_URL+'/rest/v1/projects', {
+      method:'POST', headers:HDRS,
+      body: JSON.stringify({ code, year, seq_number:parseInt(num), branch, design_type:design||null, project_name:name, status:'active', color, start_date:pStart||null, end_date:pEnd||null, created_by:createdBy })
+    });
+    if (!res.ok) { const e=await res.json(); showToast('❌ '+(e.message||'Error'),'error'); return; }
+    const [proj] = await res.json();
+    allProjects.unshift(proj);
+    projColorMap[proj.id] = color;
+    // Save tasks
+    const taskDivs = document.querySelectorAll('#taskRows .task-row');
+    const taskPromises = [];
+    taskDivs.forEach(div => {
+      const taskType = div.querySelector('.task-type').value;
+      const uid      = div.querySelector('.task-user').value||null;
+      const note     = div.querySelector('.task-note').value.trim()||null;
+      const rcv      = div.querySelector('.task-receive').value||null;
+      const ts       = div.querySelector('.task-start').value||null;
+      const te       = div.querySelector('.task-end').value||null;
+      const snd      = div.querySelector('.task-send').value||null;
+      taskPromises.push(fetch(SUPABASE_URL+'/rest/v1/project_tasks', {
+        method:'POST', headers:HDRS,
+        body: JSON.stringify({ project_id:proj.id, task_type:taskType, assigned_to:uid, note, receive_date:rcv, start_date:ts, end_date:te, send_date:snd, status:'active' })
+      }));
+    });
+    await Promise.all(taskPromises);
+    await loadData();
+    closeModal('createModal');
     // Reset form
     document.getElementById('nameInput').value='';
     document.getElementById('branchInput').value='';
     document.getElementById('designInput').value='';
+    document.getElementById('projStart').value='';
+    document.getElementById('projEnd').value='';
+    document.getElementById('taskRows').innerHTML='';
+    taskRowCount=0; addTaskRow();
     renderTags('branch'); renderTags('design'); updatePreview();
-  }
+    showToast('✅ プロジェクト「'+name+'」を作成しました！','success');
+  } catch(e) { showToast('❌ エラー: '+e.message,'error'); }
+}
 
-  // ── LOGOUT ──
-  function logout() {
-    if(confirm('Bạn có muốn đăng xuất không?')) {
-      localStorage.clear();
-      window.location.href = 'index.html';
-    }
-  }
+// ── COMBO ─────────────────────────────────────────────────
+function onCombo(key)  { renderDD(key); updatePreview(); }
+function openDD(key)   { renderDD(key); }
+function closeDD(key)  { setTimeout(()=>document.getElementById(key+'DD').classList.remove('open'),200); }
+function renderDD(key) {
+  const data = key==='branch'?BRANCHES:DESIGNS;
+  const val  = document.getElementById(key+'Input').value.trim();
+  const dd   = document.getElementById(key+'DD');
+  const filtered = val ? data.filter(d=>d.toLowerCase().includes(val.toLowerCase())) : data;
+  let html = filtered.map(item=>`<div class="combo-item" onmousedown="selectCombo('${key}','${item}')">${item}</div>`).join('');
+  if (val && !data.map(d=>d.toLowerCase()).includes(val.toLowerCase()))
+    html += `<div class="combo-item combo-new" onmousedown="selectCombo('${key}','${val}')">➕ 新規：「${val}」</div>`;
+  if (!html) html='<div class="combo-item" style="color:#aaa;cursor:default;">候補なし</div>';
+  dd.innerHTML=html; dd.classList.add('open');
+  renderTags(key);
+}
+function selectCombo(key,value) {
+  document.getElementById(key+'Input').value=value;
+  document.getElementById(key+'DD').classList.remove('open');
+  renderTags(key); updatePreview();
+}
+function renderTags(key) {
+  const data=key==='branch'?BRANCHES:DESIGNS;
+  const cur=document.getElementById(key+'Input').value.trim();
+  document.getElementById(key+'Tags').innerHTML=data.map(item=>`<span class="tag ${cur===item?'active':''}" onclick="selectCombo('${key}','${item}')">${item}</span>`).join('');
+}
 
-  // ── TOAST ──
-  function showToast(msg, type='success') {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'toast ' + type + ' show';
-    setTimeout(() => t.classList.remove('show'), 3200);
-  }
+// ── YEAR / NUM ─────────────────────────────────────────────
+function onYearChange(v) {
+  const y=String(v).padStart(2,'0');
+  document.getElementById('yearDisp').textContent=y;
+  suggestNextNum(); updatePreview();
+}
+function suggestNextNum() {
+  const y=document.getElementById('yearInput').value||'26';
+  const existing=allProjects.filter(p=>(p.year||'')===''+y||((p.code||'').startsWith(y)));
+  const next=existing.length+1;
+  const nextStr=String(next).padStart(3,'0');
+  document.getElementById('numInput').value=nextStr;
+  document.getElementById('numHint').innerHTML='次番号：<b style="color:#0096c7;">'+nextStr+'</b>';
+  updatePreview();
+}
+function updatePreview() {
+  const year=String(document.getElementById('yearInput').value||'26').padStart(2,'0');
+  const num=String(document.getElementById('numInput').value||'001').padStart(3,'0');
+  const branch=document.getElementById('branchInput').value.trim();
+  const design=document.getElementById('designInput').value.trim();
+  const name=document.getElementById('nameInput').value.trim();
+  const setEl=(id,val,ph)=>{const el=document.getElementById(id);el.textContent=val||ph;el.className=val?'':'dim';};
+  document.getElementById('pYear').textContent=year;
+  document.getElementById('pNum').textContent=num;
+  setEl('pBranch',branch,'支店');
+  setEl('pDesign',design,'設計区分');
+  setEl('pName',name,'物件名');
+}
+
+// ── HELPERS ───────────────────────────────────────────────
+function fmt(d) {
+  if (!d) return '';
+  const dt = d instanceof Date ? d : new Date(d);
+  if (isNaN(dt)) return '';
+  return dt.toISOString().split('T')[0];
+}
+function getDaysArray(start, end) {
+  const days=[]; let cur=new Date(start);
+  const endD=new Date(end);
+  while(cur<=endD) { days.push(fmt(cur)); cur.setDate(cur.getDate()+1); }
+  return days;
+}
+function isWeekend(d) { const dt=new Date(d); return dt.getDay()===0||dt.getDay()===6; }
+
+function showTooltip(e,html) {
+  const t=document.getElementById('tooltip');
+  t.innerHTML=html; t.style.display='block';
+  t.style.left=(e.clientX+12)+'px'; t.style.top=(e.clientY-10)+'px';
+}
+function hideTooltip() { document.getElementById('tooltip').style.display='none'; }
+document.addEventListener('mousemove',e=>{
+  const t=document.getElementById('tooltip');
+  if(t.style.display==='block'){t.style.left=(e.clientX+12)+'px';t.style.top=(e.clientY-10)+'px';}
+});
+
+function logout() {
+  if(confirm('Đăng xuất?')){ localStorage.clear(); window.location.href='index.html'; }
+}
+function showToast(msg,type='success') {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type+' show';
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
 </script>
 </body>
 </html>"""
