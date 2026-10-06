@@ -1,38 +1,21 @@
-admin_html = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BIM Hub – Admin Panel</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>BIM Hub – Quan ly thanh vien</title>
   <style>
     * { box-sizing:border-box; margin:0; padding:0; }
     body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f4f8; min-height:100vh; }
-    .topbar {
-      display:flex; align-items:center; justify-content:space-between;
-      background:#1a1a2e; padding:0 24px; height:52px;
-      position:sticky; top:0; z-index:200;
-    }
+    .topbar { display:flex; align-items:center; justify-content:space-between; background:#1a1a2e; padding:0 24px; height:52px; position:sticky; top:0; z-index:200; }
     .topbar-left { display:flex; align-items:center; gap:10px; }
-    .topbar-logo {
-      width:30px; height:30px; background:linear-gradient(135deg,#00b4d8,#0077b6);
-      border-radius:7px; display:flex; align-items:center; justify-content:center;
-      font-weight:900; color:#fff; font-size:15px;
-    }
+    .topbar-logo { width:30px; height:30px; background:linear-gradient(135deg,#00b4d8,#0077b6); border-radius:7px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:15px; }
     .topbar-title { color:#fff; font-size:16px; font-weight:700; }
     .admin-badge { background:#e63946; color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; }
     .topbar-right { display:flex; align-items:center; gap:12px; }
-    .avatar {
-      width:32px; height:32px; border-radius:50%;
-      background:linear-gradient(135deg,#00b4d8,#0077b6);
-      display:flex; align-items:center; justify-content:center;
-      color:#fff; font-weight:700; font-size:12px;
-    }
     .user-name { color:#ddd; font-size:13px; }
-    .btn-top {
-      background:rgba(255,255,255,.12); border:none; color:#fff;
-      padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px;
-      text-decoration:none; transition:background .2s; font-family:inherit;
-    }
+    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#00b4d8,#0077b6); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:12px; }
+    .btn-top { background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; text-decoration:none; transition:background .2s; font-family:inherit; }
     .btn-top:hover { background:rgba(255,255,255,.22); }
     .main { max-width:980px; margin:32px auto; padding:0 24px; }
     .page-title { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
@@ -41,52 +24,38 @@ admin_html = """<!DOCTYPE html>
     .stat-card { background:#fff; border-radius:13px; padding:18px 20px; box-shadow:0 2px 10px rgba(0,0,0,.06); text-align:center; }
     .stat-num   { font-size:28px; font-weight:800; }
     .stat-label { font-size:12px; color:#888; margin-top:4px; }
-    .c-blue { color:#0077b6; } .c-green { color:#52b788; }
-    .c-orange { color:#f4a261; } .c-red { color:#e63946; }
+    .c-blue   { color:#0077b6; }
+    .c-green  { color:#52b788; }
+    .c-orange { color:#f4a261; }
+    .c-red    { color:#e63946; }
     .card { background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); padding:24px 28px; margin-bottom:24px; }
     .card-title { font-size:14px; font-weight:700; color:#1a1a2e; margin-bottom:18px; padding-bottom:12px; border-bottom:1.5px solid #f0f0f0; display:flex; align-items:center; gap:8px; }
-    .invite-grid { display:grid; grid-template-columns:1fr 170px 170px 160px; gap:12px; align-items:end; }
+    .form-row { display:grid; grid-template-columns:1fr 180px 180px 140px; gap:12px; align-items:end; }
     .field { display:flex; flex-direction:column; gap:6px; }
     .field label { font-size:12px; font-weight:600; color:#555; }
+    .req { color:#e63946; }
     input[type=email], input[type=text], input[type=password], select {
       width:100%; padding:10px 14px; border:1.5px solid #dde2ea;
       border-radius:8px; font-size:13.5px; outline:none;
       transition:border-color .2s, box-shadow .2s; font-family:inherit; color:#222;
     }
     input:focus, select:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.12); }
+    input.err { border-color:#e63946; }
     .pw-wrap { position:relative; }
-    .pw-wrap input { padding-right:38px; }
-    .pw-eye { position:absolute; right:11px; top:50%; transform:translateY(-50%); cursor:pointer; color:#aaa; font-size:15px; user-select:none; }
-    .pw-gen { font-size:11px; color:#0096c7; cursor:pointer; margin-top:4px; display:inline-block; }
-    .pw-gen:hover { text-decoration:underline; }
-    .btn-invite {
-      background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff;
-      border:none; padding:10px 20px; border-radius:8px; font-size:13.5px;
-      font-weight:600; cursor:pointer; white-space:nowrap; transition:all .2s;
-      box-shadow:0 3px 10px rgba(0,119,182,.25); height:42px;
-    }
-    .btn-invite:hover { box-shadow:0 6px 18px rgba(0,119,182,.4); transform:translateY(-1px); }
-    .btn-invite:disabled { opacity:.6; cursor:not-allowed; transform:none; }
-    .domain-hint { font-size:11px; color:#aaa; margin-top:10px; }
-    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:500; display:none; align-items:center; justify-content:center; }
-    .modal-overlay.open { display:flex; }
-    .modal { background:#fff; border-radius:16px; padding:32px; width:100%; max-width:420px; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:slideIn .3s ease; text-align:center; }
-    @keyframes slideIn { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
-    .modal-icon { font-size:48px; margin-bottom:12px; }
-    .modal-title { font-size:18px; font-weight:700; color:#1a1a2e; margin-bottom:8px; }
-    .modal-sub { font-size:13px; color:#888; margin-bottom:20px; }
-    .pw-display { background:#f0f7ff; border:1.5px solid #b8dff5; border-radius:10px; padding:16px; font-size:22px; font-weight:800; color:#0077b6; letter-spacing:2px; margin-bottom:8px; font-family:'Courier New',monospace; }
-    .pw-hint { font-size:11.5px; color:#aaa; margin-bottom:20px; line-height:1.6; }
-    .btn-copy { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:10px 24px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; margin-right:8px; transition:all .2s; }
-    .btn-copy:hover { opacity:.9; }
-    .btn-close-modal { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:10px 24px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
-    .btn-close-modal:hover { background:#f5f5f5; }
-    .search-bar { display:flex; align-items:center; gap:10px; background:#f8f8f8; border:1.5px solid #e8e8e8; border-radius:8px; padding:8px 14px; margin-bottom:16px; max-width:320px; }
-    .search-bar input { border:none; background:transparent; outline:none; font-size:13.5px; flex:1; font-family:inherit; width:100%; }
+    .pw-wrap input { padding-right:40px; }
+    .pw-eye { position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#aaa; font-size:15px; user-select:none; transition:color .2s; }
+    .pw-eye:hover { color:#0096c7; }
+    .btn-add { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:10px 20px; border-radius:8px; font-size:13.5px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all .2s; box-shadow:0 3px 10px rgba(0,119,182,.25); height:42px; }
+    .btn-add:hover { box-shadow:0 6px 18px rgba(0,119,182,.4); transform:translateY(-1px); }
+    .btn-add:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+    .info-box { background:#f0f7ff; border:1.5px solid #b8dff5; border-radius:10px; padding:12px 16px; font-size:12.5px; color:#0077b6; margin-top:14px; line-height:1.7; }
+    .search-bar { display:flex; align-items:center; gap:10px; background:#f8f8f8; border:1.5px solid #e8e8e8; border-radius:8px; padding:8px 14px; margin-bottom:16px; max-width:340px; }
+    .search-bar input { border:none; background:transparent; outline:none; font-size:13.5px; flex:1; font-family:inherit; }
     .table-wrap { overflow-x:auto; }
     table { width:100%; border-collapse:collapse; min-width:680px; }
     thead th { text-align:left; padding:11px 14px; font-size:11.5px; font-weight:700; color:#fff; background:#0077b6; }
-    thead th:first-child { border-radius:8px 0 0 0; } thead th:last-child { border-radius:0 8px 0 0; }
+    thead th:first-child { border-radius:8px 0 0 0; }
+    thead th:last-child  { border-radius:0 8px 0 0; }
     tbody td { padding:12px 14px; font-size:13px; color:#333; border-bottom:1px solid #f0f0f0; }
     tbody tr:hover td { background:#f8fbff; }
     .member-cell { display:flex; align-items:center; gap:10px; }
@@ -100,17 +69,39 @@ admin_html = """<!DOCTYPE html>
     .rb-staff { background:#e8f4fe; color:#0077b6; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
     .action-btns { display:flex; gap:6px; flex-wrap:wrap; }
     .btn-sm { border:1.5px solid; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:600; background:#fff; transition:all .15s; white-space:nowrap; }
-    .btn-del  { border-color:#ffb3b3; color:#e63946; } .btn-del:hover  { background:#fff0f0; }
-    .btn-pw   { border-color:#b8dff5; color:#0077b6; } .btn-pw:hover   { background:#e8f4fe; }
-    .btn-role { border-color:#d4edda; color:#1a7c3a; } .btn-role:hover { background:#f0fff4; }
+    .btn-del  { border-color:#ffb3b3; color:#e63946; }
+    .btn-del:hover  { background:#fff0f0; }
+    .btn-role { border-color:#d4edda; color:#1a7c3a; }
+    .btn-role:hover { background:#f0fff4; }
+    .btn-pw   { border-color:#b8dff5; color:#0077b6; }
+    .btn-pw:hover   { background:#e8f4fe; }
+    /* MODAL */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:500; display:none; align-items:center; justify-content:center; }
+    .modal-overlay.open { display:flex; }
+    .modal { background:#fff; border-radius:16px; padding:32px; width:100%; max-width:400px; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:slideIn .3s ease; text-align:center; }
+    @keyframes slideIn { from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);} }
+    .modal-icon { font-size:44px; margin-bottom:10px; }
+    .modal-title { font-size:17px; font-weight:700; color:#1a1a2e; margin-bottom:6px; }
+    .modal-sub   { font-size:13px; color:#888; margin-bottom:18px; }
+    .pw-display { background:#f0f7ff; border:1.5px solid #b8dff5; border-radius:10px; padding:16px; font-size:20px; font-weight:800; color:#0077b6; letter-spacing:2px; margin-bottom:8px; font-family:'Courier New',monospace; word-break:break-all; }
+    .pw-note { font-size:12px; color:#aaa; margin-bottom:20px; line-height:1.6; }
+    .btn-copy { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; margin-right:8px; transition:all .2s; }
+    .btn-copy:hover { opacity:.9; }
+    .btn-close-modal { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
+    .btn-close-modal:hover { background:#f5f5f5; }
+    /* TOAST */
     .toast { position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:999; transform:translateY(80px); opacity:0; transition:all .35s; }
     .toast.show { transform:translateY(0); opacity:1; }
     .toast.success { border-left:4px solid #52b788; }
     .toast.error   { border-left:4px solid #e63946; }
-    @media(max-width:768px) { .stats { grid-template-columns:1fr 1fr; } .invite-grid { grid-template-columns:1fr; } }
+    @media(max-width:768px) {
+      .stats { grid-template-columns:1fr 1fr; }
+      .form-row { grid-template-columns:1fr; }
+    }
   </style>
 </head>
 <body>
+
 <nav class="topbar">
   <div class="topbar-left">
     <div class="topbar-logo">B</div>
@@ -120,253 +111,292 @@ admin_html = """<!DOCTYPE html>
   <div class="topbar-right">
     <div class="avatar" id="topAvatar">AD</div>
     <span class="user-name" id="topName">Admin</span>
-    <a class="btn-top" href="dashboard.html">🏠 Dashboard</a>
-    <button class="btn-top" onclick="logout()">Đăng xuất</button>
+    <a class="btn-top" href="view-list.html">🏠 Dashboard</a>
+    <button class="btn-top" onclick="logout()">Dang xuat</button>
   </div>
 </nav>
 
 <div class="main">
-  <div class="page-title">👥 Quản lý thành viên</div>
-  <div class="page-sub">Thêm và phân quyền nhân viên VINADECONS (@vinadecons.vn)</div>
+  <div class="page-title">👥 Quan ly thanh vien</div>
+  <div class="page-sub">Them va phan quyen nhan vien VINADECONS (@vinadecons.vn)</div>
+
+  <!-- STATS -->
   <div class="stats">
-    <div class="stat-card"><div class="stat-num c-blue"   id="statTotal">0</div><div class="stat-label">Tổng thành viên</div></div>
-    <div class="stat-card"><div class="stat-num c-green"  id="statActive">0</div><div class="stat-label">Đã kích hoạt</div></div>
-    <div class="stat-card"><div class="stat-num c-orange" id="statPending">0</div><div class="stat-label">Chờ đăng nhập</div></div>
+    <div class="stat-card"><div class="stat-num c-blue"   id="statTotal">0</div><div class="stat-label">Tong thanh vien</div></div>
+    <div class="stat-card"><div class="stat-num c-green"  id="statActive">0</div><div class="stat-label">Da kich hoat</div></div>
+    <div class="stat-card"><div class="stat-num c-orange" id="statPending">0</div><div class="stat-label">Cho dang nhap</div></div>
     <div class="stat-card"><div class="stat-num c-red"    id="statAdmin">0</div><div class="stat-label">Admin</div></div>
   </div>
 
+  <!-- FORM THEM THANH VIEN -->
   <div class="card">
-    <div class="card-title">➕ Thêm thành viên mới</div>
-    <div class="invite-grid">
-      <div class="field"><label>Email nhân viên</label><input type="email" id="inviteEmail" placeholder="email@vinadecons.vn"/></div>
-      <div class="field"><label>Họ tên</label><input type="text" id="inviteName" placeholder="Nguyễn Văn A"/></div>
+    <div class="card-title">➕ Them thanh vien moi</div>
+    <div class="form-row">
       <div class="field">
-        <label>Mật khẩu</label>
-        <div class="pw-wrap">
-          <input type="text" id="invitePw" placeholder="Nhập mật khẩu..."/>
-          <span class="pw-eye" onclick="genPw()">🎲</span>
-        </div>
-        <span class="pw-gen" onclick="genPw()">🎲 Tạo tự động</span>
+        <label>Email <span class="req">*</span></label>
+        <input type="email" id="inviteEmail" placeholder="email@vinadecons.vn"/>
       </div>
       <div class="field">
-        <label>Phân quyền</label>
+        <label>Ho ten <span class="req">*</span></label>
+        <input type="text" id="inviteName" placeholder="Nguyen Van A"/>
+      </div>
+      <div class="field">
+        <label>Mat khau <span class="req">*</span></label>
+        <div class="pw-wrap">
+          <input type="password" id="invitePw" placeholder="Nhap mat khau..."/>
+          <span class="pw-eye" id="pwEyeBtn" onclick="togglePwVisible()">👁️</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Phan quyen</label>
         <select id="inviteRole">
-          <option value="Staff">👤 Staff – Xem</option>
-          <option value="Admin">🔴 Admin – Toàn quyền</option>
+          <option value="Staff">👤 Staff</option>
+          <option value="Admin">🔴 Admin</option>
         </select>
       </div>
     </div>
     <div style="margin-top:14px;">
-      <button class="btn-invite" id="addBtn" onclick="addMember()">✅ Thêm thành viên</button>
+      <button class="btn-add" id="addBtn" onclick="addMember()">✅ Them thanh vien</button>
     </div>
-    <div class="domain-hint">⚠️ Chỉ chấp nhận email <b>@vinadecons.vn</b>. Admin cung cấp mật khẩu trực tiếp cho nhân viên.</div>
+    <div class="info-box">
+      ℹ️ Chi chap nhan email <b>@vinadecons.vn</b>.<br/>
+      Admin cung cap <b>email + mat khau</b> truc tiep cho nhan vien.<br/>
+      Nhan vien truy cap <b>{{ APP_URL }}</b> va dang nhap ngay.
+    </div>
   </div>
 
+  <!-- DANH SACH -->
   <div class="card">
-    <div class="card-title">📋 Danh sách thành viên</div>
+    <div class="card-title">📋 Danh sach thanh vien</div>
     <div class="search-bar">
       <span>🔍</span>
-      <input type="text" id="searchInput" placeholder="Tìm theo email hoặc tên..." oninput="filterTable()"/>
+      <input type="text" id="searchInput" placeholder="Tim theo email hoac ten..." oninput="filterTable()"/>
     </div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Thành viên</th><th>Role</th><th>Trạng thái</th><th>Ngày thêm</th><th>Hành động</th></tr></thead>
-        <tbody id="memberTable"><tr><td colspan="5" style="text-align:center;padding:32px;color:#aaa;">Đang tải...</td></tr></tbody>
+        <thead>
+          <tr>
+            <th>Thanh vien</th>
+            <th>Role</th>
+            <th>Trang thai</th>
+            <th>Ngay them</th>
+            <th>Hanh dong</th>
+          </tr>
+        </thead>
+        <tbody id="memberTable">
+          <tr><td colspan="5" style="text-align:center;padding:32px;color:#aaa;">Dang tai...</td></tr>
+        </tbody>
       </table>
     </div>
   </div>
 </div>
 
+<!-- MODAL XEM MAT KHAU -->
 <div class="modal-overlay" id="pwModal">
   <div class="modal">
     <div class="modal-icon">🔐</div>
-    <div class="modal-title">Thông tin tài khoản</div>
+    <div class="modal-title">Thong tin tai khoan</div>
     <div class="modal-sub" id="modalEmail">email@vinadecons.vn</div>
-    <div class="pw-display" id="modalPw">Abc@12345</div>
-    <div class="pw-hint">Cung cấp mật khẩu này trực tiếp cho nhân viên.<br/>Nhân viên dùng mật khẩu này để đăng nhập.</div>
-    <button class="btn-copy" onclick="copyPw()">📋 Copy mật khẩu</button>
-    <button class="btn-close-modal" onclick="closePwModal()">Đóng</button>
+    <div class="pw-display" id="modalPw">–</div>
+    <div class="pw-note">
+      Cung cap thong tin nay truc tiep cho nhan vien.<br/>
+      Ho dung email + mat khau nay de dang nhap.
+    </div>
+    <button class="btn-copy" onclick="copyPw()">📋 Copy mat khau</button>
+    <button class="btn-close-modal" onclick="closePwModal()">Dong</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<script src="js/config.js"></script>
 <script>
-  const SUPABASE_URL = 'https://oyvwattigkqnimlmrqnj.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_kcQtVjFP0m4ecWySEiwdEQ_rKFz1nn6';
-  const COLORS = [
-    'linear-gradient(135deg,#0096c7,#0077b6)',
-    'linear-gradient(135deg,#52b788,#2d6a4f)',
-    'linear-gradient(135deg,#9b5de5,#7b2d8b)',
-    'linear-gradient(135deg,#f4a261,#e76f51)',
-    'linear-gradient(135deg,#4361ee,#3a0ca3)',
-    'linear-gradient(135deg,#f72585,#b5179e)',
-    'linear-gradient(135deg,#06d6a0,#028a6a)',
-    'linear-gradient(135deg,#e63946,#b5000f)',
-  ];
+const COLORS = [
+  'linear-gradient(135deg,#0096c7,#0077b6)',
+  'linear-gradient(135deg,#52b788,#2d6a4f)',
+  'linear-gradient(135deg,#9b5de5,#7b2d8b)',
+  'linear-gradient(135deg,#f4a261,#e76f51)',
+  'linear-gradient(135deg,#4361ee,#3a0ca3)',
+  'linear-gradient(135deg,#f72585,#b5179e)',
+  'linear-gradient(135deg,#06d6a0,#028a6a)',
+  'linear-gradient(135deg,#e63946,#b5000f)',
+];
 
-  let allMembers = [];
+let allMembers = [];
 
-  const headers = {
-    'apikey': SUPABASE_KEY,
-    'Authorization': 'Bearer ' + SUPABASE_KEY,
-    'Content-Type': 'application/json',
-    'Prefer': 'return=representation'
-  };
+window.onload = async () => {
+  const role = localStorage.getItem('user_role') || 'Staff';
+  const name = localStorage.getItem('user_name') || 'Admin';
+  if (role !== 'Admin') { window.location.href = 'view-list.html'; return; }
+  document.getElementById('topName').textContent   = name;
+  document.getElementById('topAvatar').textContent = name.substring(0,2).toUpperCase();
+  await loadMembers();
+};
 
-  window.onload = () => {
-    const role = localStorage.getItem('user_role') || 'Admin';
-    const name = localStorage.getItem('user_name') || 'Admin';
-    if (role !== 'Admin') { window.location.href = 'dashboard.html'; return; }
-    document.getElementById('topName').textContent   = name;
-    document.getElementById('topAvatar').textContent = name.substring(0,2).toUpperCase();
-    loadMembers();
-    genPw();
-  };
-
-  async function loadMembers() {
-    try {
-      const res = await fetch(SUPABASE_URL + '/rest/v1/users?select=*&order=created_at.asc', { headers });
-      allMembers = await res.json();
-      renderTable(allMembers);
-      updateStats(allMembers);
-    } catch(e) {
-      showToast('❌ Lỗi tải danh sách','error');
-    }
+// ── LOAD ──────────────────────────────────────────────────
+async function loadMembers() {
+  try {
+    const res = await fetch(SUPABASE_URL+'/rest/v1/users?select=*&order=created_at.asc', {headers:HDRS});
+    allMembers = await res.json();
+    renderTable(allMembers);
+    updateStats(allMembers);
+  } catch(e) {
+    showToast('❌ Loi tai danh sach','error');
   }
+}
 
-  function renderTable(data) {
-    const tbody = document.getElementById('memberTable');
-    const me = localStorage.getItem('user_email') || '';
-    if (!data.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:32px;color:#aaa;">Chưa có thành viên nào</td></tr>';
+// ── ADD MEMBER ────────────────────────────────────────────
+async function addMember() {
+  const email = document.getElementById('inviteEmail').value.trim().toLowerCase();
+  const name  = document.getElementById('inviteName').value.trim();
+  const pw    = document.getElementById('invitePw').value;
+  const role  = document.getElementById('inviteRole').value;
+
+  // Validate
+  if (!email) { showToast('❌ Vui long nhap email','error'); return; }
+  if (!email.endsWith('@vinadecons.vn')) { showToast('❌ Chi chap nhan @vinadecons.vn','error'); return; }
+  if (!name)  { showToast('❌ Vui long nhap ho ten','error'); return; }
+  if (!pw)    { showToast('❌ Vui long nhap mat khau','error'); return; }
+  if (pw.length < 6) { showToast('❌ Mat khau toi thieu 6 ky tu','error'); return; }
+
+  const btn = document.getElementById('addBtn');
+  btn.disabled = true;
+  btn.textContent = 'Dang them...';
+
+  try {
+    const res = await fetch(SUPABASE_URL+'/rest/v1/users', {
+      method: 'POST',
+      headers: HDRS,
+      body: JSON.stringify({ email, name, password:pw, role, status:'active' })
+    });
+    if (!res.ok) {
+      const e = await res.json();
+      const msg = (e.code === '23505') ? 'Email nay da ton tai' : (e.message || 'Loi khong xac dinh');
+      showToast('❌ ' + msg, 'error');
+      btn.disabled = false; btn.textContent = '✅ Them thanh vien';
       return;
     }
-    tbody.innerHTML = data.map((m, i) => {
-      const initials = (m.name||m.email).substring(0,2).toUpperCase();
-      const color = COLORS[i % COLORS.length];
-      const rb = m.role==='Admin' ? '<span class="rb-admin">🔴 Admin</span>' : '<span class="rb-staff">👤 Staff</span>';
-      const st = m.status==='active'
-        ? '<span class="badge badge-active">✅ Active</span>'
-        : '<span class="badge badge-pending">⏳ Pending</span>';
-      const date = m.created_at ? new Date(m.created_at).toLocaleDateString('vi-VN') : '–';
-      const isMe = m.email === me;
-      const actions = isMe
-        ? '<span style="color:#aaa;font-size:12px;">（Tài khoản của bạn）</span>'
-        : `<div class="action-btns">
-             <button class="btn-sm btn-pw"   onclick="showPwModal('${m.email}','${m.password}')">🔑 Xem MK</button>
-             <button class="btn-sm btn-role" onclick="toggleRole('${m.id}','${m.role}')">🔄 Đổi role</button>
-             <button class="btn-sm btn-del"  onclick="deleteMember('${m.id}','${m.email}')">🗑️ Xóa</button>
-           </div>`;
-      return `<tr>
-        <td><div class="member-cell">
-          <div class="av-sm" style="background:${color}">${initials}</div>
-          <div><div class="email-text">${m.email}</div><div class="name-text">${m.name||''}</div></div>
-        </div></td>
-        <td>${rb}</td><td>${st}</td><td>${date}</td><td>${actions}</td>
-      </tr>`;
-    }).join('');
+    // Show password modal
+    showPwModal(email, pw);
+    // Reset form
+    document.getElementById('inviteEmail').value = '';
+    document.getElementById('inviteName').value  = '';
+    document.getElementById('invitePw').value    = '';
+    showToast('✅ Da them thanh vien: ' + name, 'success');
+    await loadMembers();
+  } catch(e) {
+    showToast('❌ Loi ket noi: ' + e.message, 'error');
   }
+  btn.disabled = false;
+  btn.textContent = '✅ Them thanh vien';
+}
 
-  function updateStats(data) {
-    document.getElementById('statTotal').textContent   = data.length;
-    document.getElementById('statActive').textContent  = data.filter(m=>m.status==='active').length;
-    document.getElementById('statPending').textContent = data.filter(m=>m.status==='pending').length;
-    document.getElementById('statAdmin').textContent   = data.filter(m=>m.role==='Admin').length;
+// ── RENDER TABLE ──────────────────────────────────────────
+function renderTable(data) {
+  const tbody = document.getElementById('memberTable');
+  const me    = localStorage.getItem('user_email') || '';
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:32px;color:#aaa;">Chua co thanh vien nao</td></tr>';
+    return;
   }
+  tbody.innerHTML = data.map((m, i) => {
+    const initials = (m.name || m.email).substring(0,2).toUpperCase();
+    const color    = COLORS[i % COLORS.length];
+    const rb       = m.role === 'Admin'
+      ? '<span class="rb-admin">🔴 Admin</span>'
+      : '<span class="rb-staff">👤 Staff</span>';
+    const st       = m.status === 'active'
+      ? '<span class="badge badge-active">✅ Active</span>'
+      : '<span class="badge badge-pending">⏳ Pending</span>';
+    const date     = m.created_at ? new Date(m.created_at).toLocaleDateString('vi-VN') : '-';
+    const isMe     = m.email === me;
+    const actions  = isMe
+      ? '<span style="color:#aaa;font-size:12px;">（Tai khoan cua ban）</span>'
+      : '<div class="action-btns">'
+        + '<button class="btn-sm btn-pw"   onclick="showPwModal(\''+m.email+'\',\''+m.password+'\')">🔑 Xem MK</button>'
+        + '<button class="btn-sm btn-role" onclick="toggleRole(\''+m.id+'\',\''+m.role+'\')">🔄 Doi role</button>'
+        + '<button class="btn-sm btn-del"  onclick="deleteMember(\''+m.id+'\',\''+m.email+'\')">🗑️ Xoa</button>'
+        + '</div>';
+    return '<tr>'
+      + '<td><div class="member-cell">'
+      + '<div class="av-sm" style="background:'+color+'">'+initials+'</div>'
+      + '<div><div class="email-text">'+m.email+'</div><div class="name-text">'+(m.name||'')+'</div></div>'
+      + '</div></td>'
+      + '<td>'+rb+'</td>'
+      + '<td>'+st+'</td>'
+      + '<td>'+date+'</td>'
+      + '<td>'+actions+'</td>'
+      + '</tr>';
+  }).join('');
+}
 
-  async function addMember() {
-    const email = document.getElementById('inviteEmail').value.trim().toLowerCase();
-    const name  = document.getElementById('inviteName').value.trim();
-    const pw    = document.getElementById('invitePw').value.trim();
-    const role  = document.getElementById('inviteRole').value;
-    if (!email) { showToast('❌ Vui lòng nhập email','error'); return; }
-    if (!email.endsWith('@vinadecons.vn')) { showToast('❌ Chỉ chấp nhận @vinadecons.vn','error'); return; }
-    if (!name)  { showToast('❌ Vui lòng nhập họ tên','error'); return; }
-    if (!pw)    { showToast('❌ Vui lòng nhập mật khẩu','error'); return; }
-    const btn = document.getElementById('addBtn');
-    btn.disabled = true; btn.textContent = 'Đang thêm...';
-    try {
-      const res = await fetch(SUPABASE_URL + '/rest/v1/users', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ email, name, password: pw, role, status: 'pending' })
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        if (err.code === '23505') { showToast('⚠️ Email này đã tồn tại','error'); }
-        else { showToast('❌ Lỗi: ' + (err.message||'Không xác định'),'error'); }
-        btn.disabled = false; btn.textContent = '✅ Thêm thành viên';
-        return;
-      }
-      showPwModal(email, pw);
-      document.getElementById('inviteEmail').value = '';
-      document.getElementById('inviteName').value  = '';
-      genPw();
-      showToast('✅ Đã thêm thành viên: ' + name,'success');
-      loadMembers();
-    } catch(e) {
-      showToast('❌ Lỗi kết nối','error');
-    }
-    btn.disabled = false; btn.textContent = '✅ Thêm thành viên';
-  }
+// ── ACTIONS ───────────────────────────────────────────────
+async function deleteMember(id, email) {
+  if (!confirm('Xac nhan xoa: ' + email + '?')) return;
+  try {
+    await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+id, { method:'DELETE', headers:HDRS });
+    showToast('🗑️ Da xoa: ' + email, 'success');
+    await loadMembers();
+  } catch(e) { showToast('❌ Loi xoa thanh vien','error'); }
+}
 
-  async function deleteMember(id, email) {
-    if (!confirm('Xác nhận xóa: ' + email + '?')) return;
-    try {
-      await fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + id, { method:'DELETE', headers });
-      showToast('🗑️ Đã xóa: ' + email,'success');
-      loadMembers();
-    } catch(e) { showToast('❌ Lỗi xóa thành viên','error'); }
-  }
+async function toggleRole(id, currentRole) {
+  const newRole = currentRole === 'Admin' ? 'Staff' : 'Admin';
+  if (!confirm('Doi role thanh ' + newRole + '?')) return;
+  try {
+    await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+id, {
+      method:'PATCH', headers:HDRS, body:JSON.stringify({ role:newRole })
+    });
+    showToast('🔄 Da doi role thanh ' + newRole, 'success');
+    await loadMembers();
+  } catch(e) { showToast('❌ Loi doi role','error'); }
+}
 
-  async function toggleRole(id, currentRole) {
-    const newRole = currentRole === 'Admin' ? 'Staff' : 'Admin';
-    try {
-      await fetch(SUPABASE_URL + '/rest/v1/users?id=eq.' + id, {
-        method: 'PATCH', headers,
-        body: JSON.stringify({ role: newRole })
-      });
-      showToast('🔄 Đã đổi role thành ' + newRole,'success');
-      loadMembers();
-    } catch(e) { showToast('❌ Lỗi đổi role','error'); }
-  }
+// ── SEARCH ───────────────────────────────────────────────
+function filterTable() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const filtered = q
+    ? allMembers.filter(m => m.email.includes(q) || (m.name||'').toLowerCase().includes(q))
+    : allMembers;
+  renderTable(filtered);
+}
 
-  function filterTable() {
-    const q = document.getElementById('searchInput').value.trim().toLowerCase();
-    const filtered = q ? allMembers.filter(m => m.email.includes(q) || (m.name||'').toLowerCase().includes(q)) : allMembers;
-    renderTable(filtered);
-  }
+// ── STATS ─────────────────────────────────────────────────
+function updateStats(data) {
+  document.getElementById('statTotal').textContent   = data.length;
+  document.getElementById('statActive').textContent  = data.filter(m => m.status==='active').length;
+  document.getElementById('statPending').textContent = data.filter(m => m.status==='pending').length;
+  document.getElementById('statAdmin').textContent   = data.filter(m => m.role==='Admin').length;
+}
 
-  function genPw() {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789@#!';
-    let pw = '';
-    for (let i=0; i<10; i++) pw += chars[Math.floor(Math.random()*chars.length)];
-    document.getElementById('invitePw').value = pw;
-  }
+// ── PASSWORD MODAL ────────────────────────────────────────
+function showPwModal(email, pw) {
+  document.getElementById('modalEmail').textContent = email;
+  document.getElementById('modalPw').textContent    = pw || '(khong co)';
+  document.getElementById('pwModal').classList.add('open');
+}
+function closePwModal() {
+  document.getElementById('pwModal').classList.remove('open');
+}
+function copyPw() {
+  const pw = document.getElementById('modalPw').textContent;
+  navigator.clipboard.writeText(pw)
+    .then(() => showToast('📋 Da copy mat khau', 'success'))
+    .catch(() => showToast('❌ Khong the copy', 'error'));
+}
 
-  function showPwModal(email, pw) {
-    document.getElementById('modalEmail').textContent = email;
-    document.getElementById('modalPw').textContent    = pw;
-    document.getElementById('pwModal').classList.add('open');
-  }
-  function closePwModal() { document.getElementById('pwModal').classList.remove('open'); }
-  function copyPw() {
-    const pw = document.getElementById('modalPw').textContent;
-    navigator.clipboard.writeText(pw).then(()=>showToast('📋 Đã copy mật khẩu','success'));
-  }
+// ── TOGGLE PW VISIBLE ─────────────────────────────────────
+function togglePwVisible() {
+  const inp = document.getElementById('invitePw');
+  const eye = document.getElementById('pwEyeBtn');
+  if (inp.type === 'password') { inp.type='text';     eye.textContent='🙈'; }
+  else                         { inp.type='password'; eye.textContent='👁️'; }
+}
 
-  function logout() {
-    if (confirm('Bạn có muốn đăng xuất không?')) {
-      localStorage.clear(); window.location.href = 'index.html';
-    }
-  }
-
-  function showToast(msg, type='success') {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.className = 'toast ' + type + ' show';
-    setTimeout(()=>t.classList.remove('show'), 3200);
-  }
+// ── LOGOUT ────────────────────────────────────────────────
+function logout() {
+  if (confirm('Dang xuat?')) { localStorage.clear(); window.location.href='index.html'; }
+}
 </script>
 </body>
-</html>"""
+</html>
