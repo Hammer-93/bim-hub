@@ -1,0 +1,284 @@
+my_tasks_html = """<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BIM Hub – Lịch của tôi</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;min-height:100vh;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;background:#1a1a2e;padding:0 24px;height:52px;position:sticky;top:0;z-index:200;}
+    .topbar-left{display:flex;align-items:center;gap:10px;}
+    .topbar-logo{width:30px;height:30px;background:linear-gradient(135deg,#00b4d8,#0077b6);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:15px;}
+    .topbar-title{color:#fff;font-size:16px;font-weight:700;}
+    .topbar-right{display:flex;align-items:center;gap:12px;}
+    .btn-top{background:rgba(255,255,255,.12);border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;text-decoration:none;transition:background .2s;font-family:inherit;}
+    .btn-top:hover{background:rgba(255,255,255,.22);}
+    .main{max-width:1100px;margin:28px auto;padding:0 24px;}
+    .page-title{font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:4px;}
+    .page-sub{font-size:13px;color:#888;margin-bottom:24px;}
+    .card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:24px 28px;margin-bottom:24px;}
+    .card-title{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:16px;padding-bottom:12px;border-bottom:1.5px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    table{width:100%;border-collapse:collapse;}
+    thead th{padding:11px 14px;text-align:left;font-size:11.5px;font-weight:700;color:#fff;background:#0077b6;}
+    thead th:first-child{border-radius:8px 0 0 0;}thead th:last-child{border-radius:0 8px 0 0;}
+    tbody td{padding:12px 14px;font-size:13px;color:#333;border-bottom:1px solid #f0f0f0;}
+    tbody tr:hover td{background:#f8fbff;}
+    .type-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;}
+    .status-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+    .st-active{background:#d4edda;color:#1a7c3a;}
+    .st-done{background:#f0f0f0;color:#666;}
+    .btn-primary{display:flex;align-items:center;gap:7px;background:linear-gradient(135deg,#0096c7,#0077b6);color:#fff;border:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 3px 10px rgba(0,119,182,.2);transition:all .2s;}
+    .btn-primary:hover{box-shadow:0 6px 18px rgba(0,119,182,.35);transform:translateY(-1px);}
+    .btn-sm{border:1.5px solid;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11.5px;font-weight:600;background:#fff;transition:all .15s;white-space:nowrap;}
+    .btn-edit{border-color:#b8dff5;color:#0077b6;}.btn-edit:hover{background:#e8f4fe;}
+    .btn-done{border-color:#d4edda;color:#1a7c3a;}.btn-done:hover{background:#f0fff4;}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:#fff;border-radius:16px;padding:28px 32px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.25);animation:slideIn .3s ease;}
+    @keyframes slideIn{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+    .modal-title{font-size:17px;font-weight:700;color:#1a1a2e;margin-bottom:18px;padding-bottom:12px;border-bottom:1.5px solid #f0f0f0;display:flex;align-items:center;gap:10px;}
+    .modal-close{margin-left:auto;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;}
+    .modal-close:hover{color:#e63946;}
+    .form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+    label{font-size:12px;font-weight:600;color:#555;}
+    input[type=text],input[type=date],select,textarea{width:100%;padding:9px 12px;border:1.5px solid #dde2ea;border-radius:8px;font-size:13px;outline:none;transition:border-color .2s;font-family:inherit;color:#222;}
+    input:focus,select:focus,textarea:focus{border-color:#0096c7;box-shadow:0 0 0 3px rgba(0,150,199,.1);}
+    .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
+    .btn-secondary{background:#fff;color:#555;border:1.5px solid #dde2ea;padding:9px 20px;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;}
+    .btn-secondary:hover{background:#f5f5f5;}
+    .toast{position:fixed;bottom:24px;right:24px;background:#1a1a2e;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:9999;transform:translateY(80px);opacity:0;transition:all .35s;}
+    .toast.show{transform:translateY(0);opacity:1;}
+    .toast.success{border-left:4px solid #52b788;}
+    .toast.error{border-left:4px solid #e63946;}
+    .empty-msg{text-align:center;padding:32px;color:#aaa;font-size:14px;}
+    .proj-chip{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;margin-right:4px;}
+  </style>
+</head>
+<body>
+<nav class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">B</div>
+    <span class="topbar-title">BIM Hub</span>
+  </div>
+  <div class="topbar-right">
+    <a class="btn-top" href="dashboard.html">🏠 Dashboard</a>
+    <button class="btn-top" onclick="logout()">Đăng xuất</button>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="page-title">📋 Lịch công việc của tôi</div>
+  <div class="page-sub" id="mySubTitle">Xem và cập nhật tiến độ công việc</div>
+
+  <div class="card">
+    <div class="card-title">
+      <span>🗂️ Danh sách task được phân công</span>
+      <button class="btn-primary" onclick="openAddModal()">➕ Thêm task</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Dự án</th>
+          <th>Loại công việc</th>
+          <th>Nhận data</th>
+          <th>Bắt đầu</th>
+          <th>Kết thúc</th>
+          <th>Ngày gửi</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody id="myTaskTable">
+        <tr><td colspan="8" class="empty-msg">Đang tải...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL THÊM/SỬA TASK -->
+<div class="modal-overlay" id="taskModal" onclick="closeModalOutside(event,'taskModal')">
+  <div class="modal">
+    <div class="modal-title">
+      📋 <span id="modalTaskTitle">Thêm task mới</span>
+      <button class="modal-close" onclick="closeModal('taskModal')">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Dự án</label>
+      <select id="taskProjSel"></select>
+    </div>
+    <div class="form-group">
+      <label>Loại công việc</label>
+      <select id="taskTypeSel">
+        <option>パース・動画</option><option>意匠モデル</option>
+        <option>構造モデル</option><option>清算モデル</option>
+        <option>図面</option><option>施工ステップ</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Ngày nhận data</label><input type="date" id="taskRcv"/></div>
+    <div class="form-group"><label>Ngày bắt đầu</label><input type="date" id="taskStart"/></div>
+    <div class="form-group"><label>Ngày kết thúc</label><input type="date" id="taskEnd"/></div>
+    <div class="form-group"><label>Ngày gửi</label><input type="date" id="taskSend"/></div>
+    <div class="form-group"><label>Ghi chú</label><textarea id="taskNote" rows="2" placeholder="Ghi chú thêm..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('taskModal')">Hủy</button>
+      <button class="btn-primary" onclick="saveTask()">💾 Lưu</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const SUPABASE_URL = 'https://oyvwattigkqnimlmrqnj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_kcQtVjFP0m4ecWySEiwdEQ_rKFz1nn6';
+  const HDRS = {
+    'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,
+    'Content-Type':'application/json','Prefer':'return=representation'
+  };
+  const PASTEL = ['#a8dadc','#b5ead7','#ffdac1','#c7ceea','#ffb7b2','#e2f0cb','#bee5eb','#d4b8e0','#f7c59f','#a0c4ff'];
+  const TASK_TYPES = ['パース・動画','意匠モデル','構造モデル','清算モデル','図面','施工ステップ'];
+  const TYPE_COLORS = {'パース・動画':'#f4a261','意匠モデル':'#4cc9f0','構造モデル':'#52b788','清算モデル':'#9b5de5','図面':'#e63946','施工ステップ':'#ffd166'};
+
+  let myUserId   = null;
+  let allProjects= [];
+  let myTasks    = [];
+  let editTaskId = null;
+
+  window.onload = async () => {
+    const name  = localStorage.getItem('user_name')||'User';
+    const email = localStorage.getItem('user_email')||'';
+    document.getElementById('mySubTitle').textContent = name + ' – ' + email;
+    await loadMyUserId(email);
+    await loadData();
+  };
+
+  async function loadMyUserId(email) {
+    if (!email) return;
+    const res = await fetch(SUPABASE_URL+'/rest/v1/users?email=eq.'+encodeURIComponent(email)+'&select=id',{headers:HDRS});
+    const data = await res.json();
+    if (data.length) myUserId = data[0].id;
+  }
+
+  async function loadData() {
+    try {
+      const [pRes, tRes] = await Promise.all([
+        fetch(SUPABASE_URL+'/rest/v1/projects?select=*&order=created_at.desc',{headers:HDRS}),
+        myUserId
+          ? fetch(SUPABASE_URL+'/rest/v1/project_tasks?assigned_to=eq.'+myUserId+'&select=*&order=start_date.asc',{headers:HDRS})
+          : Promise.resolve({json:()=>[]}),
+      ]);
+      allProjects = await pRes.json();
+      myTasks     = await tRes.json();
+      renderMyTasks();
+      populateProjSelect();
+    } catch(e) { showToast('❌ Lỗi tải dữ liệu','error'); }
+  }
+
+  function renderMyTasks() {
+    const tbody = document.getElementById('myTaskTable');
+    if (!myTasks.length) {
+      tbody.innerHTML='<tr><td colspan="8" class="empty-msg">Chưa có task nào được phân công</td></tr>';
+      return;
+    }
+    tbody.innerHTML = myTasks.map(t=>{
+      const proj  = allProjects.find(p=>p.id===t.project_id);
+      const color = proj ? (PASTEL[allProjects.indexOf(proj)%PASTEL.length]) : '#aaa';
+      const tc    = TYPE_COLORS[t.task_type]||'#888';
+      const stBadge = t.status==='done'
+        ? '<span class="status-badge st-done">✅ Hoàn thành</span>'
+        : '<span class="status-badge st-active">🔨 Đang làm</span>';
+      return `<tr>
+        <td>${proj?`<span class="proj-chip" style="background:${color};color:#333;">${proj.code?proj.code.split('_')[0]:''}</span>${proj.project_name}`:'–'}</td>
+        <td><span class="type-badge" style="background:${tc};">${t.task_type||'–'}</span></td>
+        <td>${t.receive_date||'–'}</td>
+        <td>${t.start_date||'–'}</td>
+        <td>${t.end_date||'–'}</td>
+        <td>${t.send_date||'–'}</td>
+        <td>${stBadge}</td>
+        <td>
+          <div style="display:flex;gap:6px;">
+            <button class="btn-sm btn-edit" onclick="openEditModal('${t.id}')">✏️ Sửa</button>
+            ${t.status!=='done'?`<button class="btn-sm btn-done" onclick="markDone('${t.id}')">✅ Xong</button>`:''}
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  function populateProjSelect() {
+    const sel = document.getElementById('taskProjSel');
+    sel.innerHTML = allProjects.map(p=>`<option value="${p.id}">${p.project_name} (${p.code||''})</option>`).join('');
+  }
+
+  function openAddModal() {
+    editTaskId = null;
+    document.getElementById('modalTaskTitle').textContent='Thêm task mới';
+    ['taskRcv','taskStart','taskEnd','taskSend'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('taskNote').value='';
+    document.getElementById('taskModal').classList.add('open');
+  }
+
+  function openEditModal(id) {
+    const t = myTasks.find(x=>x.id===id);
+    if (!t) return;
+    editTaskId = id;
+    document.getElementById('modalTaskTitle').textContent='Cập nhật task';
+    document.getElementById('taskProjSel').value = t.project_id||'';
+    document.getElementById('taskTypeSel').value = t.task_type||TASK_TYPES[0];
+    document.getElementById('taskRcv').value   = t.receive_date||'';
+    document.getElementById('taskStart').value = t.start_date||'';
+    document.getElementById('taskEnd').value   = t.end_date||'';
+    document.getElementById('taskSend').value  = t.send_date||'';
+    document.getElementById('taskNote').value  = t.note||'';
+    document.getElementById('taskModal').classList.add('open');
+  }
+
+  async function saveTask() {
+    const projId   = document.getElementById('taskProjSel').value;
+    const taskType = document.getElementById('taskTypeSel').value;
+    const rcv      = document.getElementById('taskRcv').value||null;
+    const ts       = document.getElementById('taskStart').value||null;
+    const te       = document.getElementById('taskEnd').value||null;
+    const snd      = document.getElementById('taskSend').value||null;
+    const note     = document.getElementById('taskNote').value.trim()||null;
+    if (!projId) { showToast('❌ Vui lòng chọn dự án','error'); return; }
+    try {
+      if (editTaskId) {
+        await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+editTaskId,{
+          method:'PATCH',headers:HDRS,
+          body:JSON.stringify({task_type:taskType,receive_date:rcv,start_date:ts,end_date:te,send_date:snd,note})
+        });
+        showToast('✅ Đã cập nhật task','success');
+      } else {
+        await fetch(SUPABASE_URL+'/rest/v1/project_tasks',{
+          method:'POST',headers:HDRS,
+          body:JSON.stringify({project_id:projId,task_type:taskType,assigned_to:myUserId,receive_date:rcv,start_date:ts,end_date:te,send_date:snd,note,status:'active'})
+        });
+        showToast('✅ Đã thêm task mới','success');
+      }
+      closeModal('taskModal');
+      await loadData();
+    } catch(e) { showToast('❌ Lỗi lưu task','error'); }
+  }
+
+  async function markDone(id) {
+    if (!confirm('Đánh dấu task này là hoàn thành?')) return;
+    await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+id,{
+      method:'PATCH',headers:HDRS,body:JSON.stringify({status:'done'})
+    });
+    showToast('✅ Đã hoàn thành!','success');
+    await loadData();
+  }
+
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  function closeModalOutside(e,id) { if(e.target.id===id) closeModal(id); }
+  function logout() { if(confirm('Đăng xuất?')){ localStorage.clear(); window.location.href='index.html'; } }
+  function showToast(msg,type='success') {
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.className='toast '+type+' show';
+    setTimeout(()=>t.classList.remove('show'),3200);
+  }
+</script>
+</body>
+</html>"""
