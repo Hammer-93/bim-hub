@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8"/>
+<meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>BIM Hub - Danh sach du an</title>
   <style>
@@ -35,6 +32,7 @@
     .filter-input:focus { border-color:#0096c7; }
     .filter-btn { padding:8px 16px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; cursor:pointer; background:#fff; font-weight:600; color:#555; transition:all .15s; font-family:inherit; }
     .filter-btn:hover, .filter-btn.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
+    .filter-select { padding:8px 12px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; font-family:inherit; color:#333; cursor:pointer; }
     input[type=text], input[type=date], select, textarea { width:100%; padding:9px 12px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; transition:border-color .2s; font-family:inherit; color:#222; }
     input:focus, select:focus, textarea:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.1); }
     .form-group { display:flex; flex-direction:column; gap:5px; margin-bottom:12px; }
@@ -44,7 +42,7 @@
     .req { color:#e63946; }
     .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:500; display:none; align-items:center; justify-content:center; padding:20px; }
     .modal-overlay.open { display:flex; }
-    .modal { background:#fff; border-radius:16px; padding:28px 32px; width:100%; max-width:680px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:slideIn .3s ease; }
+    .modal { background:#fff; border-radius:16px; padding:28px 32px; width:100%; max-width:700px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:slideIn .3s ease; }
     @keyframes slideIn { from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);} }
     .modal-title { font-size:17px; font-weight:700; color:#1a1a2e; margin-bottom:18px; padding-bottom:12px; border-bottom:1.5px solid #f0f0f0; display:flex; align-items:center; gap:10px; }
     .modal-close { margin-left:auto; background:none; border:none; font-size:20px; cursor:pointer; color:#aaa; }
@@ -89,11 +87,25 @@
     .proj-table tbody tr:hover td { background:#f8fbff; }
     .proj-table tbody tr:last-child td { border-bottom:none; }
     .proj-code { font-weight:700; color:#0077b6; font-size:12px; }
+    /* STT BADGE */
+    .stt-badge { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; font-size:13px; font-weight:800; }
+    .stt-a { background:#e8f4fe; color:#0077b6; }
+    .stt-b { background:#d4edda; color:#1a7c3a; }
+    .stt-c { background:#fff3cd; color:#856404; }
+    .stt-d { background:#f3e8ff; color:#7b2d8b; }
+    /* GROUP SELECTOR */
+    .group-selector { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:4px; }
+    .group-opt { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:12px 8px; border:2px solid #dde2ea; border-radius:10px; cursor:pointer; transition:all .15s; background:#fff; }
+    .group-opt:hover { border-color:#0096c7; background:#f0f7ff; }
+    .group-opt.active { border-color:#0096c7; background:#e8f4fe; }
+    .group-opt .g-icon { font-size:20px; }
+    .group-opt .g-key { font-size:18px; font-weight:800; }
+    .group-opt .g-label { font-size:10px; color:#666; text-align:center; font-weight:600; }
+    .stt-preview { display:inline-flex; align-items:center; gap:6px; background:#f0f4f8; border-radius:8px; padding:6px 12px; font-size:13px; font-weight:700; color:#555; margin-top:6px; }
   </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
 <nav class="topbar">
   <div class="topbar-left">
     <div class="topbar-logo">B</div>
@@ -109,7 +121,6 @@
   </div>
 </nav>
 
-<!-- NAV TABS -->
 <div class="nav-tabs">
   <a class="nav-tab active" href="view-list.html">📋 Danh sach du an</a>
   <a class="nav-tab" href="view-category.html">🗂️ Theo the loai</a>
@@ -120,7 +131,6 @@
 <div class="toast" id="toast"></div>
 <div class="tooltip" id="tooltip"></div>
 
-<!-- MAIN -->
 <div class="main">
   <div class="section-header">
     <div class="section-title">🏗️ Danh sach du an</div>
@@ -131,21 +141,29 @@
     <button class="filter-btn active" id="fAll"    onclick="setFilter('all')">Tat ca</button>
     <button class="filter-btn"        id="fActive" onclick="setFilter('active')">🟢 Dang hoat dong</button>
     <button class="filter-btn"        id="fDone"   onclick="setFilter('done')">⬜ Da ket thuc</button>
+    <select class="filter-select" id="fGroup" onchange="renderList()">
+      <option value="">Tat ca nhom</option>
+      <option value="A">A – 設計BIM</option>
+      <option value="B">B – 施工BIM</option>
+      <option value="C">C – 清算</option>
+      <option value="D">D – M&amp;F</option>
+    </select>
   </div>
   <table class="proj-table">
     <thead>
       <tr>
-        <th style="width:44px;">STT</th>
+        <th style="width:60px;text-align:center;">STT</th>
         <th>Ma du an</th>
         <th>Ten du an</th>
         <th>Chi nhanh</th>
         <th>設計区分</th>
+        <th>Nhom</th>
         <th>Trang thai</th>
         <th>Ngay tao</th>
       </tr>
     </thead>
     <tbody id="listBody">
-      <tr><td colspan="7" style="text-align:center;padding:32px;color:#aaa;">Dang tai...</td></tr>
+      <tr><td colspan="8" style="text-align:center;padding:32px;color:#aaa;">Dang tai...</td></tr>
     </tbody>
   </table>
 </div>
@@ -157,6 +175,8 @@
       🏗️ Tao du an moi
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
+
+    <!-- PREVIEW -->
     <div class="preview-box">
       <div class="preview-label">Project Code Preview</div>
       <div class="preview-code">
@@ -166,6 +186,38 @@
         <span class="dim">_</span><span id="pName" class="dim">物件名</span>
       </div>
     </div>
+
+    <!-- NHOM DU AN -->
+    <div class="form-group" style="margin-bottom:16px;">
+      <label>Nhom du an <span class="req">*</span></label>
+      <div class="group-selector">
+        <div class="group-opt active" id="grpA" onclick="selectGroup('A')">
+          <span class="g-key" style="color:#0077b6;">A</span>
+          <span class="g-icon">🏛️</span>
+          <span class="g-label">設計BIM</span>
+        </div>
+        <div class="group-opt" id="grpB" onclick="selectGroup('B')">
+          <span class="g-key" style="color:#1a7c3a;">B</span>
+          <span class="g-icon">🏗️</span>
+          <span class="g-label">施工BIM</span>
+        </div>
+        <div class="group-opt" id="grpC" onclick="selectGroup('C')">
+          <span class="g-key" style="color:#856404;">C</span>
+          <span class="g-icon">💰</span>
+          <span class="g-label">清算</span>
+        </div>
+        <div class="group-opt" id="grpD" onclick="selectGroup('D')">
+          <span class="g-key" style="color:#7b2d8b;">D</span>
+          <span class="g-icon">🔧</span>
+          <span class="g-label">M&amp;F</span>
+        </div>
+      </div>
+      <div class="stt-preview" id="sttPreview">
+        STT du kien: <b id="sttVal" style="color:#0077b6;">A1</b>
+        <span style="color:#aaa;font-size:11px;">(reset theo nam)</span>
+      </div>
+    </div>
+
     <div class="form-grid">
       <div class="form-group">
         <label>年度 <span class="req">*</span></label>
@@ -212,11 +264,13 @@
         <input type="date" id="projEnd"/>
       </div>
     </div>
+
     <div class="tasks-section">
       <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:10px;">📋 工程・タスク入力</div>
       <div id="taskRows"></div>
       <button class="btn-add-task" onclick="addTaskRow()">➕ タスクを追加</button>
     </div>
+
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
       <button class="btn-primary"   onclick="createProject()">✅ 作成する</button>
@@ -226,8 +280,16 @@
 
 <script src="js/config.js"></script>
 <script>
-let filterStatus = 'all';
-let taskRowCount = 0;
+let filterStatus  = 'all';
+let taskRowCount  = 0;
+let selectedGroup = 'A';
+
+const GROUP_CFG = {
+  A: { label:'設計BIM', icon:'🏛️', cls:'stt-a' },
+  B: { label:'施工BIM', icon:'🏗️', cls:'stt-b' },
+  C: { label:'清算',    icon:'💰', cls:'stt-c' },
+  D: { label:'M&F',    icon:'🔧', cls:'stt-d' },
+};
 
 window.onload = async () => {
   initTopbar();
@@ -238,65 +300,130 @@ window.onload = async () => {
     renderTags('branch');
     renderTags('design');
     updatePreview();
+    selectGroup('A');
   } catch(e) {
     showToast('❌ Loi tai du lieu: ' + e.message, 'error');
   }
 };
 
+function initTopbar() {
+  const role = localStorage.getItem('user_role') || 'Staff';
+  const name = localStorage.getItem('user_name') || 'User';
+  if (!localStorage.getItem('user_email')) { window.location.href='index.html'; return; }
+  document.getElementById('topName').textContent   = name;
+  document.getElementById('topAvatar').textContent = name.substring(0,2).toUpperCase();
+  const rb = document.getElementById('topRole');
+  rb.textContent = role;
+  rb.className = 'role-badge '+(role==='Admin'?'role-admin':'role-staff');
+  if (role==='Admin') document.querySelectorAll('.admin-only').forEach(el=>el.style.display='flex');
+}
+function logout() {
+  if(confirm('Dang xuat?')){ localStorage.clear(); window.location.href='index.html'; }
+}
+
+// ── GROUP SELECTOR ────────────────────────────────────────
+function selectGroup(g) {
+  selectedGroup = g;
+  ['A','B','C','D'].forEach(k => {
+    document.getElementById('grp'+k).classList.toggle('active', k===g);
+  });
+  updateSttPreview();
+}
+
+function updateSttPreview() {
+  const year = document.getElementById('yearInput').value || '26';
+  const sameGroup = allProjects.filter(p =>
+    p.proj_group === selectedGroup &&
+    (p.year === year || (p.code||'').startsWith(year))
+  );
+  const nextNum = sameGroup.length + 1;
+  const sttText = selectedGroup + nextNum;
+  document.getElementById('sttVal').textContent = sttText;
+  const cfg = GROUP_CFG[selectedGroup];
+  document.getElementById('sttVal').style.color =
+    selectedGroup==='A'?'#0077b6':
+    selectedGroup==='B'?'#1a7c3a':
+    selectedGroup==='C'?'#856404':'#7b2d8b';
+}
+
+// ── FILTER ────────────────────────────────────────────────
 function setFilter(f) {
   filterStatus = f;
-  ['fAll','fActive','fDone'].forEach(id => document.getElementById(id).classList.remove('active'));
-  const map = {all:'fAll', active:'fActive', done:'fDone'};
+  ['fAll','fActive','fDone'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  const map = {all:'fAll',active:'fActive',done:'fDone'};
   document.getElementById(map[f]).classList.add('active');
   renderList();
 }
 
+// ── RENDER LIST ───────────────────────────────────────────
 function renderList() {
-  const q = (document.getElementById('searchProj').value || '').toLowerCase();
-  const data = allProjects.filter(p => {
-    const mQ = !q || p.project_name.toLowerCase().includes(q) || (p.code||'').toLowerCase().includes(q);
-    const mS = filterStatus === 'all' || p.status === filterStatus;
-    return mQ && mS;
+  const q    = (document.getElementById('searchProj').value||'').toLowerCase();
+  const grpF = document.getElementById('fGroup').value;
+
+  // Group counters for STT per year
+  const counters = {};
+  const sorted   = [...allProjects].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+  const sttMap   = {};
+  sorted.forEach(p => {
+    const yr  = (p.year||'26');
+    const grp = p.proj_group || 'A';
+    const key = yr + '_' + grp;
+    counters[key] = (counters[key]||0) + 1;
+    sttMap[p.id]  = grp + counters[key];
   });
+
+  const data = allProjects.filter(p => {
+    const mQ = !q    || p.project_name.toLowerCase().includes(q) || (p.code||'').toLowerCase().includes(q);
+    const mS = filterStatus==='all' || p.status===filterStatus;
+    const mG = !grpF || p.proj_group===grpF;
+    return mQ && mS && mG;
+  });
+
   const tbody = document.getElementById('listBody');
   if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:#aaa;">Khong co du an nao</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:#aaa;">Khong co du an nao</td></tr>';
     return;
   }
-  tbody.innerHTML = data.map((p, i) => {
-    const color = projColorMap[p.id] || '#a8dadc';
-    const st = p.status === 'active'
+  tbody.innerHTML = data.map(p => {
+    const color   = projColorMap[p.id] || '#a8dadc';
+    const grp     = p.proj_group || 'A';
+    const cfg     = GROUP_CFG[grp] || GROUP_CFG['A'];
+    const sttText = sttMap[p.id] || grp+'?';
+    const st      = p.status==='active'
       ? '<span class="status-badge status-active">🟢 Dang hoat dong</span>'
       : '<span class="status-badge status-done">⬜ Da ket thuc</span>';
     const date = p.created_at ? new Date(p.created_at).toLocaleDateString('vi-VN') : '-';
     return '<tr>'
-      + '<td style="text-align:center;color:#888;">' + (i+1) + '</td>'
-      + '<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>' + (p.code||'-') + '</span></td>'
-      + '<td style="font-weight:600;">' + p.project_name + '</td>'
-      + '<td>' + (p.branch||'-') + '</td>'
-      + '<td>' + (p.design_type||'-') + '</td>'
-      + '<td>' + st + '</td>'
-      + '<td style="color:#888;">' + date + '</td>'
+      + '<td style="text-align:center;"><div class="stt-badge '+cfg.cls+'">'+sttText+'</div></td>'
+      + '<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>'+(p.code||'-')+'</span></td>'
+      + '<td style="font-weight:600;">'+p.project_name+'</td>'
+      + '<td>'+(p.branch||'-')+'</td>'
+      + '<td>'+(p.design_type||'-')+'</td>'
+      + '<td><span style="font-size:12px;">'+cfg.icon+' '+cfg.label+'</span></td>'
+      + '<td>'+st+'</td>'
+      + '<td style="color:#888;">'+date+'</td>'
       + '</tr>';
   }).join('');
 }
 
+// ── MODAL ─────────────────────────────────────────────────
 function openModal() {
   suggestNextNum();
+  selectGroup('A');
   document.getElementById('createModal').classList.add('open');
 }
 function closeModal() {
   document.getElementById('createModal').classList.remove('open');
 }
 
+// ── TASK ROWS ─────────────────────────────────────────────
 function addTaskRow() {
   taskRowCount++;
-  const id = 'task_' + taskRowCount;
+  const id = 'task_'+taskRowCount;
   const div = document.createElement('div');
-  div.className = 'task-row';
-  div.id = id;
-  const typeOpts = TASK_TYPES.map(t => '<option value="'+t+'">'+t+'</option>').join('');
-  const userOpts = allUsers.map(u => '<option value="'+u.id+'">'+(u.name||u.email)+'</option>').join('');
+  div.className = 'task-row'; div.id = id;
+  const typeOpts = TASK_TYPES.map(t=>'<option value="'+t+'">'+t+'</option>').join('');
+  const userOpts = allUsers.map(u=>'<option value="'+u.id+'">'+(u.name||u.email)+'</option>').join('');
   div.innerHTML = '<button class="btn-remove-task" onclick="document.getElementById(\''+id+'\').remove()">✕</button>'
     + '<div class="task-grid">'
     + '<div class="form-group"><label>工種</label><select class="task-type">'+typeOpts+'</select></div>'
@@ -312,40 +439,46 @@ function addTaskRow() {
   document.getElementById('taskRows').appendChild(div);
 }
 
+// ── CREATE PROJECT ─────────────────────────────────────────
 async function createProject() {
-  const year   = (document.getElementById('yearInput').value || '26').padStart(2,'0');
-  const num    = (document.getElementById('numInput').value  || '001').padStart(3,'0');
+  const year   = (document.getElementById('yearInput').value||'26').padStart(2,'0');
+  const num    = (document.getElementById('numInput').value||'001').padStart(3,'0');
   const branch = document.getElementById('branchInput').value.trim();
   const design = document.getElementById('designInput').value.trim();
   const name   = document.getElementById('nameInput').value.trim();
   const pStart = document.getElementById('projStart').value;
   const pEnd   = document.getElementById('projEnd').value;
+
   if (!branch) { showToast('❌ 支店名を入力してください','error'); return; }
   if (!name)   { showToast('❌ 物件名を入力してください','error'); return; }
+
   const parts = [year+num, branch];
   if (design) parts.push(design);
   parts.push(name);
   const code  = parts.join('_');
   const color = PASTEL_COLORS[allProjects.length % PASTEL_COLORS.length];
   const createdBy = localStorage.getItem('user_email') || 'admin';
+
   try {
     const res = await fetch(SUPABASE_URL+'/rest/v1/projects', {
-      method: 'POST', headers: HDRS,
+      method:'POST', headers:HDRS,
       body: JSON.stringify({
-        code, year, seq_number: parseInt(num), branch,
+        code, year, seq_number:parseInt(num), branch,
         design_type: design||null, project_name: name,
         status: 'active', color,
+        proj_group: selectedGroup,
         start_date: pStart||null, end_date: pEnd||null,
         created_by: createdBy
       })
     });
-    if (!res.ok) { const e = await res.json(); showToast('❌ '+(e.message||'Error'),'error'); return; }
+    if (!res.ok) { const e=await res.json(); showToast('❌ '+(e.message||'Error'),'error'); return; }
     const [proj] = await res.json();
     allProjects.unshift(proj);
     projColorMap[proj.id] = color;
+
     const taskDivs = document.querySelectorAll('#taskRows .task-row');
     await Promise.all([...taskDivs].map(d => fetch(SUPABASE_URL+'/rest/v1/project_tasks', {
-      method: 'POST', headers: HDRS,
+      method:'POST', headers:HDRS,
       body: JSON.stringify({
         project_id:   proj.id,
         task_type:    d.querySelector('.task-type').value,
@@ -358,44 +491,48 @@ async function createProject() {
         status:       'active'
       })
     })));
+
     renderList();
     closeModal();
-    ['nameInput','branchInput','designInput','projStart','projEnd'].forEach(id => document.getElementById(id).value='');
-    document.getElementById('taskRows').innerHTML = '';
-    taskRowCount = 0;
-    addTaskRow();
+    ['nameInput','branchInput','designInput','projStart','projEnd'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('taskRows').innerHTML='';
+    taskRowCount=0; addTaskRow();
     renderTags('branch'); renderTags('design'); updatePreview(); suggestNextNum();
-    showToast('✅ Da tao du an: ' + name, 'success');
-  } catch(e) { showToast('❌ Loi: ' + e.message, 'error'); }
+    showToast('✅ Da tao du an: '+name, 'success');
+  } catch(e) {
+    showToast('❌ Loi: '+e.message, 'error');
+  }
 }
 
+// ── SUGGEST NUM ───────────────────────────────────────────
 function suggestNextNum() {
   const y = document.getElementById('yearInput').value || '26';
-  const n = String(allProjects.filter(p => (p.code||'').startsWith(y)).length + 1).padStart(3,'0');
+  const n = String(allProjects.filter(p=>(p.code||'').startsWith(y)).length+1).padStart(3,'0');
   document.getElementById('numInput').value = n;
   document.getElementById('numHint').innerHTML = '次番号: <b style="color:#0096c7;">'+n+'</b>';
   updatePreview();
+  updateSttPreview();
 }
 function onYearChange(v) {
   document.getElementById('yearDisp').textContent = String(v).padStart(2,'0');
   suggestNextNum();
 }
 function updatePreview() {
-  const y  = String(document.getElementById('yearInput').value  || '26').padStart(2,'0');
-  const n  = String(document.getElementById('numInput').value   || '001').padStart(3,'0');
+  const y  = String(document.getElementById('yearInput').value||'26').padStart(2,'0');
+  const n  = String(document.getElementById('numInput').value||'001').padStart(3,'0');
   const b  = document.getElementById('branchInput').value.trim();
   const d  = document.getElementById('designInput').value.trim();
   const nm = document.getElementById('nameInput').value.trim();
   const se = (id,v,ph) => { const el=document.getElementById(id); el.textContent=v||ph; el.className=v?'':'dim'; };
   document.getElementById('pYear').textContent = y;
   document.getElementById('pNum').textContent  = n;
-  se('pBranch', b,  '支店');
-  se('pDesign', d,  '設計区分');
-  se('pName',   nm, '物件名');
+  se('pBranch',b,'支店'); se('pDesign',d,'設計区分'); se('pName',nm,'物件名');
 }
-function onCombo(k) { renderDD(k); updatePreview(); }
-function openDD(k)  { renderDD(k); }
-function closeDD(k) { setTimeout(()=>document.getElementById(k+'DD').classList.remove('open'), 200); }
+
+// ── COMBO ─────────────────────────────────────────────────
+function onCombo(k)  { renderDD(k); updatePreview(); }
+function openDD(k)   { renderDD(k); }
+function closeDD(k)  { setTimeout(()=>document.getElementById(k+'DD').classList.remove('open'),200); }
 function renderDD(k) {
   const data = k==='branch' ? BRANCHES : DESIGNS;
   const val  = document.getElementById(k+'Input').value.trim();
@@ -404,20 +541,18 @@ function renderDD(k) {
   let html   = filt.map(it=>'<div class="combo-item" onmousedown="selectCombo(\''+k+'\',\''+it+'\')">'+it+'</div>').join('');
   if (val && !data.map(d=>d.toLowerCase()).includes(val.toLowerCase()))
     html += '<div class="combo-item combo-new" onmousedown="selectCombo(\''+k+'\',\''+val+'\')">➕ 新規: '+val+'</div>';
-  if (!html) html = '<div class="combo-item" style="color:#aaa;cursor:default;">候補なし</div>';
-  dd.innerHTML = html;
-  dd.classList.add('open');
-  renderTags(k);
+  if (!html) html='<div class="combo-item" style="color:#aaa;cursor:default;">候補なし</div>';
+  dd.innerHTML=html; dd.classList.add('open'); renderTags(k);
 }
-function selectCombo(k, v) {
-  document.getElementById(k+'Input').value = v;
+function selectCombo(k,v) {
+  document.getElementById(k+'Input').value=v;
   document.getElementById(k+'DD').classList.remove('open');
   renderTags(k); updatePreview();
 }
 function renderTags(k) {
-  const data = k==='branch' ? BRANCHES : DESIGNS;
+  const data = k==='branch'?BRANCHES:DESIGNS;
   const cur  = document.getElementById(k+'Input').value.trim();
-  document.getElementById(k+'Tags').innerHTML = data.map(it =>
+  document.getElementById(k+'Tags').innerHTML = data.map(it=>
     '<span class="tag '+(cur===it?'active':'')+'" onclick="selectCombo(\''+k+'\',\''+it+'\')">'+it+'</span>'
   ).join('');
 }
