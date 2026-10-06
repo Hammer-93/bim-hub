@@ -160,6 +160,7 @@
         <th>Nhom</th>
         <th>Trang thai</th>
         <th>Ngay tao</th>
+<th></th>
       </tr>
     </thead>
     <tbody id="listBody">
@@ -317,6 +318,25 @@ function initTopbar() {
   rb.className = 'role-badge '+(role==='Admin'?'role-admin':'role-staff');
   if (role==='Admin') document.querySelectorAll('.admin-only').forEach(el=>el.style.display='flex');
 }
+async function deleteProject(id, name) {
+  if (!confirm('Xac nhan xoa du an:\\n' + name + '?')) return;
+  try {
+    // Xoa tasks truoc
+    await fetch(SUPABASE_URL+'/rest/v1/project_tasks?project_id=eq.'+id, {
+      method:'DELETE', headers:HDRS
+    });
+    // Xoa project
+    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+id, {
+      method:'DELETE', headers:HDRS
+    });
+    allProjects = allProjects.filter(p => p.id !== id);
+    delete projColorMap[id];
+    renderList();
+    showToast('🗑️ Da xoa du an: ' + name, 'success');
+  } catch(e) {
+    showToast('❌ Loi xoa du an: ' + e.message, 'error');
+  }
+}
 function logout() {
   if(confirm('Dang xuat?')){ localStorage.clear(); window.location.href='index.html'; }
 }
@@ -357,6 +377,7 @@ function setFilter(f) {
 
 // ── RENDER LIST ───────────────────────────────────────────
 function renderList() {
+  const role = localStorage.getItem('user_role') || 'Staff';
   const q    = (document.getElementById('searchProj').value||'').toLowerCase();
   const grpF = document.getElementById('fGroup').value;
 
@@ -395,13 +416,21 @@ function renderList() {
     const date = p.created_at ? new Date(p.created_at).toLocaleDateString('vi-VN') : '-';
     return '<tr>'
       + '<td style="text-align:center;"><div class="stt-badge '+cfg.cls+'">'+sttText+'</div></td>'
-      + '<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>'+(p.code||'-')+'</span></td>'
+      + '<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>'+(p.year && p.seq_number ? p.year + String(p.seq_number).padStart(3,'0') : (p.code||'-').split('_')[0])+'</span></td>'
       + '<td style="font-weight:600;">'+p.project_name+'</td>'
       + '<td>'+(p.branch||'-')+'</td>'
       + '<td>'+(p.design_type||'-')+'</td>'
       + '<td><span style="font-size:12px;">'+cfg.icon+' '+cfg.label+'</span></td>'
       + '<td>'+st+'</td>'
       + '<td style="color:#888;">'+date+'</td>'
+      + '<td>'
+      + (role==='Admin'
+        ? '<button onclick="deleteProject(\''+p.id+'\',\''+p.project_name+'\')" '
+          + 'style="border:1.5px solid #ffb3b3;color:#e63946;background:#fff;padding:4px 10px;'
+          + 'border-radius:6px;cursor:pointer;font-size:11.5px;font-weight:600;">'
+          + '🗑️ Xoa</button>'
+        : '')
+      + '</td>'
       + '</tr>';
   }).join('');
 }
