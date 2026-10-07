@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang=\"vi\">
+<html lang="vi">
 <head>
-<meta charset=\"UTF-8\"/>
-<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>BIM Hub — Theo thể loại</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
 
-  /* NAV */
   .navbar { background: #1a1a2e; padding: 0 24px; display: flex; align-items: center; gap: 8px; height: 56px; }
   .navbar .brand { color: #fff; font-weight: 700; font-size: 18px; margin-right: 24px; }
   .nav-tab { color: #aaa; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 14px; transition: all .2s; }
@@ -20,7 +19,6 @@
   .logout-btn { background: #e74c3c22; color: #e74c3c; border: 1px solid #e74c3c44; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
   .logout-btn:hover { background: #e74c3c44; }
 
-  /* STATS */
   .stats-bar { display: flex; gap: 16px; padding: 20px 24px 0; }
   .stat-card { background: #fff; border-radius: 12px; padding: 16px 28px; text-align: center; flex: 1; box-shadow: 0 1px 6px #0001; }
   .stat-card .num { font-size: 28px; font-weight: 700; }
@@ -29,7 +27,6 @@
   .stat-card.green .num { color: #4caf50; }
   .stat-card.orange .num { color: #ff9800; }
 
-  /* FILTER */
   .filter-bar { display: flex; gap: 12px; padding: 18px 24px 0; align-items: center; flex-wrap: wrap; }
   .filter-bar input, .filter-bar select {
     padding: 8px 14px; border: 1px solid #ddd; border-radius: 8px;
@@ -38,7 +35,6 @@
   .filter-bar input { flex: 1; min-width: 200px; }
   .filter-bar select { min-width: 160px; }
 
-  /* CATEGORIES */
   .categories { padding: 20px 24px 40px; display: flex; flex-direction: column; gap: 24px; }
   .category-section { background: #fff; border-radius: 14px; box-shadow: 0 1px 8px #0001; overflow: hidden; }
   .category-header {
@@ -60,8 +56,7 @@
   .project-list { padding: 0 16px 12px; }
   .project-row {
     display: flex; align-items: center; gap: 12px;
-    padding: 11px 12px; border-radius: 8px; cursor: pointer;
-    transition: background .15s;
+    padding: 11px 12px; border-radius: 8px; cursor: pointer; transition: background .15s;
   }
   .project-row:hover { background: #f5f7ff; }
   .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: #4caf50; }
@@ -72,7 +67,6 @@
   .empty-msg { text-align: center; color: #bbb; padding: 24px; font-size: 14px; }
   .loading { text-align: center; padding: 60px; color: #999; font-size: 15px; }
 
-  /* MODAL */
   .modal-overlay {
     display: none; position: fixed; inset: 0;
     background: #0005; z-index: 1000; align-items: center; justify-content: center;
@@ -98,12 +92,9 @@
     padding: 10px 14px; border-radius: 8px; background: #f8f9ff; margin-bottom: 8px;
   }
   .task-type-badge { font-size: 11px; background: #e8eaf6; color: #3949ab; border-radius: 4px; padding: 2px 8px; font-weight: 600; }
-  .task-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
-  .task-status.active { background: #e8f5e9; color: #388e3c; }
-  .task-status.pending { background: #fff3e0; color: #f57c00; }
+  .task-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; background: #e8f5e9; color: #388e3c; }
   .task-date { font-size: 11px; color: #999; margin-left: auto; }
 
-  /* TOAST */
   .toast { position:fixed; bottom:24px; right:24px; padding:12px 22px; border-radius:10px; font-size:14px; color:#fff; opacity:0; transition:opacity .3s; z-index:9999; pointer-events:none; }
   .toast.show { opacity:1; }
   .toast.success { background:#4caf50; }
@@ -126,7 +117,6 @@
   </div>
 </nav>
 
-<!-- STATS: only 3 cards -->
 <div class="stats-bar">
   <div class="stat-card blue">
     <div class="num" id="statTotal">—</div>
@@ -142,7 +132,6 @@
   </div>
 </div>
 
-<!-- FILTER -->
 <div class="filter-bar">
   <input id="searchInput" type="text" placeholder="🔍 Tìm kiếm dự án..."/>
   <select id="groupFilter">
@@ -154,12 +143,10 @@
   </select>
 </div>
 
-<!-- CATEGORIES -->
 <div class="categories" id="categoriesContainer">
   <div class="loading">⏳ Đang tải dữ liệu...</div>
 </div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-header">
@@ -172,26 +159,40 @@
 
 <script src="js/config.js"></script>
 <script>
-// ── constants ──────────────────────────────────────────────
+// ── Constants ──────────────────────────────────────────────
 const TASK_TYPES_LOCAL = ['パース・動画','意匠モデル','構造モデル','清算モデル','図面','施工ステップ'];
 const GROUP_LABELS = { A:'設計BIM', B:'施工BIM', C:'清算', D:'M&F' };
 const ACTIVE_STATUSES = ['active','in_progress','doing','進行中','アクティブ','running','ongoing'];
 
-// ── helpers ────────────────────────────────────────────────
+// ── Helpers ────────────────────────────────────────────────
 function isActiveTask(t) {
   const s = (t.status || '').toLowerCase().trim();
   return ACTIVE_STATUSES.some(a => s === a.toLowerCase());
 }
 
+// Đọc đúng field proj_group từ Supabase
+function getGroup(p) {
+  return (p.proj_group || p.project_group || p.group || '').toString().toUpperCase().trim();
+}
 function getCode(p)  { return p.project_code || p.code || p.id || ''; }
 function getName(p)  { return p.project_name || p.name || '(no name)'; }
-function getGroup(p) { return (p.project_group || p.group || '').toUpperCase(); }
 
-// ── init ───────────────────────────────────────────────────
+// ── Init ───────────────────────────────────────────────────
 async function init() {
   initTopbar();
   try {
     await loadAllData();
+
+    // Debug: log field names của record đầu tiên để kiểm tra
+    if (allProjects.length > 0) {
+      console.log('[DEBUG] Project fields:', Object.keys(allProjects[0]));
+      console.log('[DEBUG] Sample project:', allProjects[0]);
+    }
+    if (allTasks.length > 0) {
+      console.log('[DEBUG] Task fields:', Object.keys(allTasks[0]));
+      console.log('[DEBUG] Sample task:', allTasks[0]);
+    }
+
     render();
   } catch(e) {
     console.error('Load error:', e);
@@ -200,32 +201,42 @@ async function init() {
   }
 }
 
-// ── render ─────────────────────────────────────────────────
+// ── Render ─────────────────────────────────────────────────
 function render() {
   const search = document.getElementById('searchInput').value.toLowerCase().trim();
-  const group  = document.getElementById('groupFilter').value;
+  const group  = document.getElementById('groupFilter').value.toUpperCase().trim();
 
-  // IDs of projects that have at least 1 active task
+  // Bước 1: lấy project_id có ít nhất 1 active task
   const activeProjectIds = new Set(
     allTasks.filter(isActiveTask).map(t => t.project_id)
   );
 
-  // filter projects: must have active task + optional group/search
-  let projects = allProjects.filter(p => {
+  // Bước 2: lọc projects
+  let projects = allProjects.filter(function(p) {
+    // Chỉ lấy project có active task
     if (!activeProjectIds.has(p.id)) return false;
-    if (group && getGroup(p) !== group) return false;
+
+    // Lọc theo nhóm — dùng đúng field proj_group
+    if (group) {
+      const g = getGroup(p);
+      if (g !== group) return false;
+    }
+
+    // Lọc theo search
     if (search) {
       const c = getCode(p).toLowerCase();
       const n = getName(p).toLowerCase();
       if (!c.includes(search) && !n.includes(search)) return false;
     }
+
     return true;
   });
 
-  // active tasks for filtered projects only
-  const activeTasks = allTasks.filter(t => isActiveTask(t) && projects.some(p => p.id === t.project_id));
+  // Bước 3: active tasks thuộc projects đã lọc
+  const filteredIds = new Set(projects.map(p => p.id));
+  const activeTasks = allTasks.filter(t => isActiveTask(t) && filteredIds.has(t.project_id));
 
-  // update stats
+  // Stats
   document.getElementById('statTotal').textContent  = projects.length;
   document.getElementById('statActive').textContent = projects.length;
   document.getElementById('statTasks').textContent  = activeTasks.length;
@@ -234,12 +245,10 @@ function render() {
   container.innerHTML = '';
   let hasAny = false;
 
-  TASK_TYPES_LOCAL.forEach((type, idx) => {
-    // tasks of this type that are active, belonging to filtered projects
+  TASK_TYPES_LOCAL.forEach(function(type, idx) {
     const typeTasks = activeTasks.filter(t => (t.task_type || t.type || '') === type);
     const typeProjectIds = new Set(typeTasks.map(t => t.project_id));
     const typeProjects = projects.filter(p => typeProjectIds.has(p.id));
-
     if (typeProjects.length === 0) return;
     hasAny = true;
 
@@ -254,15 +263,16 @@ function render() {
         '<span class="badge">' + typeProjects.length + ' du an</span>' +
         '<span class="toggle-icon">▼</span>' +
       '</span>';
+
+    const list = document.createElement('div');
+    list.className = 'project-list';
+
     header.onclick = function() {
       header.classList.toggle('collapsed');
       list.style.display = header.classList.contains('collapsed') ? 'none' : 'block';
     };
 
-    const list = document.createElement('div');
-    list.className = 'project-list';
-
-    typeProjects.forEach(p => {
+    typeProjects.forEach(function(p) {
       const grp = getGroup(p);
       const row = document.createElement('div');
       row.className = 'project-row';
@@ -285,7 +295,7 @@ function render() {
   }
 }
 
-// ── modal ──────────────────────────────────────────────────
+// ── Modal ──────────────────────────────────────────────────
 function openModal(p) {
   const code  = getCode(p);
   const name  = getName(p);
@@ -307,10 +317,10 @@ function openModal(p) {
     active.forEach(function(t) {
       const sd = t.start_date ? t.start_date.substring(0,10) : '';
       const ed = t.end_date   ? t.end_date.substring(0,10)   : '';
-      const dateStr = sd || ed ? (sd + (ed ? ' → ' + ed : '')) : '';
+      const dateStr = (sd || ed) ? (sd + (ed ? ' → ' + ed : '')) : '';
       body += '<div class="task-item">' +
         '<span class="task-type-badge">' + (t.task_type || t.type || '—') + '</span>' +
-        '<span class="task-status active">' + (t.status || '—') + '</span>' +
+        '<span class="task-status">' + (t.status || '—') + '</span>' +
         (dateStr ? '<span class="task-date">' + dateStr + '</span>' : '') +
         '</div>';
     });
@@ -327,7 +337,6 @@ function closeModalDirect() {
   document.getElementById('modalOverlay').classList.remove('open');
 }
 
-// ── events ─────────────────────────────────────────────────
 document.getElementById('searchInput').addEventListener('input', render);
 document.getElementById('groupFilter').addEventListener('change', render);
 
