@@ -19,7 +19,7 @@
     .role-staff { background:#0096c7; color:#fff; }
     .btn-top { background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; text-decoration:none; transition:background .2s; font-family:inherit; }
     .btn-top:hover { background:rgba(255,255,255,.22); }
-    .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; }
+    .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; position:sticky; top:52px; z-index:190; }
     .nav-tab { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; text-decoration:none; display:flex; align-items:center; gap:7px; }
     .nav-tab:hover { color:#0096c7; }
     .nav-tab.active { color:#0077b6; border-bottom-color:#0077b6; }
@@ -32,6 +32,7 @@
     .toast.error   { border-left:4px solid #e63946; }
     .tooltip { position:fixed; background:#1a1a2e; color:#fff; padding:8px 12px; border-radius:8px; font-size:12px; z-index:9999; pointer-events:none; display:none; max-width:260px; line-height:1.6; box-shadow:0 4px 12px rgba(0,0,0,.2); }
 
+    /* CONTROLS */
     .controls { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
     .grp-tabs { display:flex; gap:6px; }
     .grp-tab { padding:7px 16px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; background:#fff; color:#555; transition:all .15s; }
@@ -41,39 +42,76 @@
     .filter-input { padding:8px 14px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; font-family:inherit; }
     .filter-input:focus { border-color:#0096c7; }
 
+    /* LEGEND */
     .legend { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:14px; font-size:12px; color:#555; align-items:center; }
     .legend-item { display:flex; align-items:center; gap:6px; }
     .legend-bar { width:28px; height:11px; border-radius:3px; }
     .legend-line { width:3px; height:16px; border-radius:2px; }
 
+    /* STAFF TABLE */
     .staff-wrap { overflow-x:auto; background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); }
     table.staff { width:100%; border-collapse:collapse; min-width:800px; }
-    table.staff thead th { padding:8px 10px; font-size:11px; font-weight:700; color:#fff; background:#1a1a2e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.1); position:sticky; top:52px; z-index:10; }
+
+    /* Sticky thead — sticks below topbar+navtabs (52+50=102px) */
+    table.staff thead tr { position:sticky; top:102px; z-index:30; }
+    table.staff thead th {
+      padding:8px 10px; font-size:11px; font-weight:700; color:#fff;
+      background:#1a1a2e; text-align:center; white-space:nowrap;
+      border-right:1px solid rgba(255,255,255,.1);
+    }
     table.staff thead th.today-hdr { background:#e63946; }
+
+    /* Sticky first column header */
+    table.staff thead th:first-child {
+      position:sticky; left:0; z-index:40;
+      background:#1a1a2e;
+      text-align:left; padding:10px 14px;
+      border-right:2px solid rgba(255,255,255,.2);
+    }
+
     table.staff tbody td { padding:0; border-bottom:1px solid #eee; }
 
-    .s-name-cell { padding:10px 14px; min-width:200px; max-width:200px; border-right:2px solid #e8e8e8; vertical-align:middle; background:#fff; }
+    /* NAME CELL — sticky left */
+    .s-name-cell {
+      padding:10px 14px;
+      min-width:200px; max-width:200px; width:200px;
+      border-right:2px solid #e8e8e8;
+      vertical-align:middle;
+      background:#fff;
+      position:sticky; left:0; z-index:9;
+      box-shadow:2px 0 6px rgba(0,0,0,.06);
+    }
     .s-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#0096c7,#0077b6); display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; flex-shrink:0; }
     .s-name { font-size:13px; font-weight:700; color:#1a1a2e; }
 
+    /* ROLE PILL */
     .role-pill { display:inline-block; font-size:10px; font-weight:700; padding:1px 7px; border-radius:20px; margin-top:3px; }
     .role-pill.Manager    { background:#e63946; color:#fff; }
     .role-pill.SubManager { background:#f4a261; color:#fff; }
     .role-pill.Leader     { background:#2a9d8f; color:#fff; }
     .role-pill.Staff      { background:#adb5bd; color:#fff; }
 
+    /* SCHEDULE CELLS */
     .s-cell { position:relative; height:36px; border-right:1px solid #f0f0f0; vertical-align:middle; }
     .s-cell.we  { background:#f8f8f8; }
     .s-cell.tdy { background:#fff5f5; }
     .s-cell.tdy::before { content:""; position:absolute; top:0; bottom:0; left:50%; width:2px; background:#e63946; z-index:5; transform:translateX(-50%); }
 
+    /* LANE BORDERS */
     .lane-first td { border-top:2px solid #dde2ea; }
     .lane-last  td { border-bottom:2px solid #dde2ea !important; }
 
+    /* BARS */
     .s-bar { position:absolute; height:22px; border-radius:3px; top:7px; display:flex; align-items:center; padding:0 6px; font-size:9.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.15); z-index:2; transition:opacity .2s,transform .15s; }
     .s-bar:hover { opacity:.82; transform:scaleY(1.08); }
 
-    .grp-hdr td { background:linear-gradient(90deg,#f0f4f8,#f8fbff); padding:8px 16px; font-size:12px; font-weight:700; color:#0077b6; border-bottom:1.5px solid #dde2ea; border-top:1.5px solid #dde2ea; }
+    /* GROUP HEADER */
+    .grp-hdr td {
+      background:linear-gradient(90deg,#f0f4f8,#f8fbff);
+      padding:8px 16px; font-size:12px; font-weight:700; color:#0077b6;
+      border-bottom:1.5px solid #dde2ea; border-top:1.5px solid #dde2ea;
+      position:sticky; left:0;
+    }
     .grp-hdr-icon { margin-right:6px; }
   </style>
 </head>
@@ -140,19 +178,14 @@
 
 <script src="js/config.js"></script>
 <script>
-// ── Constants ──────────────────────────────────────────────────────────────
 const ROLE_ORDER = { 'Manager':0, 'Sub Manager':1, 'Leader':2, 'Staff':3 };
 const ROLE_PILL_CLASS = {
-  'Manager':     'Manager',
-  'Sub Manager': 'SubManager',
-  'Leader':      'Leader',
-  'Staff':       'Staff'
+  'Manager':'Manager', 'Sub Manager':'SubManager', 'Leader':'Leader', 'Staff':'Staff'
 };
 
 let sZoom  = 'day';
 let sGroup = 'all';
 
-// ── Init ───────────────────────────────────────────────────────────────────
 window.onload = async () => {
   initTopbar();
   const t = new Date(), y = t.getFullYear(), m = t.getMonth();
@@ -166,8 +199,6 @@ window.onload = async () => {
   }
 };
 
-// ── Helpers ────────────────────────────────────────────────────────────────
-// Exclude Admin role from all views
 function visibleUsers(users) {
   return users.filter(u => u.role !== 'Admin');
 }
@@ -181,14 +212,6 @@ function sortUsers(users) {
   });
 }
 
-function getGroupUsers(group) {
-  let base = visibleUsers(allUsers);
-  if (group === 'sekkei') base = base.filter(u => u.group_name === '設計BIM');
-  else if (group === 'sekou') base = base.filter(u => u.group_name === '施工BIM');
-  return sortUsers(base);
-}
-
-// ── Controls ───────────────────────────────────────────────────────────────
 function setGroup(g, btn) {
   sGroup = g;
   document.querySelectorAll('.grp-tab').forEach(b => b.classList.remove('active'));
@@ -214,7 +237,6 @@ function setZoom(z, btn) {
   renderStaff();
 }
 
-// ── Main render ────────────────────────────────────────────────────────────
 function renderStaff() {
   const start = new Date(document.getElementById('sStart').value);
   const end   = new Date(document.getElementById('sEnd').value);
@@ -227,18 +249,18 @@ function renderStaff() {
   const sekkeiUsers = sortUsers(visibleUsers(allUsers.filter(u => u.group_name === '設計BIM')));
   const sekouUsers  = sortUsers(visibleUsers(allUsers.filter(u => u.group_name === '施工BIM')));
 
-  // ── Header ────────────────────────────────────────────────────────────
-  let hdr = '<th style="min-width:200px;text-align:left;padding:10px 14px;border-right:2px solid rgba(255,255,255,.2);">Nhan vien</th>';
+  // ── Header ──────────────────────────────────────────────────────────
+  let hdr = '<th style="min-width:200px;text-align:left;">Nhan vien</th>';
 
   if (sZoom === 'month') {
     const months = {};
-    days.forEach(d => { const k = d.substring(0,7); months[k] = (months[k]||0)+1; });
+    days.forEach(d => { const k = d.substring(0,7); months[k]=(months[k]||0)+1; });
     Object.entries(months).forEach(([mo, cnt]) => {
       hdr += '<th colspan="'+cnt+'" style="min-width:'+(cnt*CW)+'px;">'+mo+'</th>';
     });
   } else {
     days.forEach(d => {
-      const dt  = new Date(d + 'T00:00:00');
+      const dt  = new Date(d+'T00:00:00');
       const dow = ['日','月','火','水','木','金','土'][dt.getDay()];
       const we  = isWeekend(d);
       const td  = d === today;
@@ -247,16 +269,15 @@ function renderStaff() {
     });
   }
 
-  // ── Rows ──────────────────────────────────────────────────────────────
+  // ── Rows ────────────────────────────────────────────────────────────
   let rows = '';
-
   if (sGroup === 'all') {
     if (sekkeiUsers.length) {
-      rows += buildGroupHeader('🏛️', '設計BIM', sekkeiUsers.length, days.length);
+      rows += buildGroupHeader('🏛️','設計BIM', sekkeiUsers.length, days.length);
       sekkeiUsers.forEach(u => { rows += buildUserRows(u, days, today, CW); });
     }
     if (sekouUsers.length) {
-      rows += buildGroupHeader('🏗️', '施工BIM', sekouUsers.length, days.length);
+      rows += buildGroupHeader('🏗️','施工BIM', sekouUsers.length, days.length);
       sekouUsers.forEach(u => { rows += buildUserRows(u, days, today, CW); });
     }
   } else {
@@ -268,30 +289,24 @@ function renderStaff() {
     }
   }
 
-  // ── Render ────────────────────────────────────────────────────────────
   document.getElementById('staffCont').innerHTML =
     '<table class="staff"><thead><tr>'+hdr+'</tr></thead><tbody>'+rows+'</tbody></table>';
 
-  // ── Draw bars ─────────────────────────────────────────────────────────
   const renderUsers = sGroup === 'all'
     ? [...sekkeiUsers, ...sekouUsers]
     : (sGroup === 'sekkei' ? sekkeiUsers : sekouUsers);
-
   renderUsers.forEach(u => drawBarsMultiLane(u, days, CW));
 }
 
-// ── Group header row ───────────────────────────────────────────────────────
 function buildGroupHeader(icon, label, count, dayCount) {
   return '<tr class="grp-hdr"><td colspan="'+(dayCount+1)+'">'+
-    '<span class="grp-hdr-icon">'+icon+'</span>'+
-    label+'（'+count+' nhan vien）</td></tr>';
+    '<span class="grp-hdr-icon">'+icon+'</span>'+label+'（'+count+' nhan vien）</td></tr>';
 }
 
-// ── Build multi-lane rows for one user ────────────────────────────────────
 function buildUserRows(u, days, today, CW) {
   const tasks     = allTasks.filter(t => t.assigned_to === u.id && t.start_date && t.end_date);
   const laneCount = Math.max(1, tasks.length);
-  const initials  = (u.name || u.email).substring(0, 2).toUpperCase();
+  const initials  = (u.name || u.email).substring(0,2).toUpperCase();
   const pillClass = ROLE_PILL_CLASS[u.role] || 'Staff';
   let html = '';
 
@@ -300,16 +315,10 @@ function buildUserRows(u, days, today, CW) {
     const isLast   = lane === laneCount - 1;
     const rowClass = (isFirst ? 'lane-first ' : '') + (isLast ? 'lane-last' : '');
 
-    // Name cell — only first lane, rowspan covers all lanes
     const nameCell = isFirst
       ? '<td class="s-name-cell" rowspan="'+laneCount+'">' +
-          '<div style="display:flex;align-items:center;gap:8px;">' +
-            '<div class="s-avatar">'+initials+'</div>' +
-            '<div>' +
-              '<div class="s-name">'+(u.name || u.email)+'</div>' +
-              '<span class="role-pill '+pillClass+'">'+(u.role || 'Staff')+'</span>' +
-            '</div>' +
-          '</div>' +
+          '<div class="s-name">'+(u.name||u.email)+'</div>' +
+'<span class="role-pill '+pillClass+'">'+(u.role||'Staff')+'</span>' +
         '</td>'
       : '';
 
@@ -319,13 +328,11 @@ function buildUserRows(u, days, today, CW) {
       'data-uid="'+u.id+'" data-lane="'+lane+'" data-date="'+d+'"></td>'
     ).join('');
 
-    html += '<tr class="'+rowClass+'" data-uid="'+u.id+'" data-lane="'+lane+'">'+
-      nameCell + cells + '</tr>';
+    html += '<tr class="'+rowClass+'" data-uid="'+u.id+'" data-lane="'+lane+'">'+nameCell+cells+'</tr>';
   }
   return html;
 }
 
-// ── Draw bars into correct lane ────────────────────────────────────────────
 function drawBarsMultiLane(u, days, CW) {
   const tasks = allTasks.filter(t => t.assigned_to === u.id && t.start_date && t.end_date);
   if (!tasks.length) return;
@@ -341,38 +348,36 @@ function drawBarsMultiLane(u, days, CW) {
 
     const row = document.querySelector('tr[data-uid="'+u.id+'"][data-lane="'+lane+'"]');
     if (!row) return;
-
-    const cells  = [...row.querySelectorAll('.s-cell')];
+    const cells = [...row.querySelectorAll('.s-cell')];
     if (!cells[si]) return;
 
-    const realEi = ei < 0 ? days.length - 1 : Math.min(ei, days.length - 1);
-    const barW   = Math.max((realEi - si + 1) * CW - 4, CW - 4);
+    const realEi = ei < 0 ? days.length-1 : Math.min(ei, days.length-1);
+    const barW   = Math.max((realEi-si+1)*CW-4, CW-4);
 
     const bar = document.createElement('div');
     bar.className = 's-bar';
     bar.style.cssText = 'left:2px;width:'+barW+'px;background:'+color+';color:'+(isLight(color)?'#333':'#fff')+';';
-    const codeShort = (proj.project_code || '').split('_')[0];
-    bar.textContent  = (codeShort ? '['+codeShort+'] ' : '') + proj.project_name;
+    const codeShort = (proj.project_code||'').split('_')[0];
+    bar.textContent  = (codeShort?'['+codeShort+'] ':'')+proj.project_name;
 
     bar.addEventListener('mouseenter', e => showTooltip(e,
       '<b>'+proj.project_name+'</b>'+
-      '<br>'+(task.task_type || '')+
+      '<br>'+(task.task_type||'')+
       '<br>'+task.start_date+' → '+task.end_date+
-      (task.note ? '<br>📝 '+task.note : '')
+      (task.note?'<br>📝 '+task.note:'')
     ));
     bar.addEventListener('mouseleave', hideTooltip);
     cells[si].appendChild(bar);
   });
 }
 
-// ── Luminance check ────────────────────────────────────────────────────────
 function isLight(hex) {
-  const c = (hex || '').replace('#','');
+  const c = (hex||'').replace('#','');
   if (c.length !== 6) return true;
   const r = parseInt(c.substring(0,2),16);
   const g = parseInt(c.substring(2,4),16);
   const b = parseInt(c.substring(4,6),16);
-  return (r*299 + g*587 + b*114) / 1000 > 160;
+  return (r*299+g*587+b*114)/1000 > 160;
 }
 </script>
 </body>
