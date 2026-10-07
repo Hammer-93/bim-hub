@@ -8,7 +8,6 @@
     * { box-sizing:border-box; margin:0; padding:0; }
     body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f4f8; min-height:100vh; }
 
-    /* TOPBAR */
     .topbar { display:flex; align-items:center; justify-content:space-between; background:#1a1a2e; padding:0 24px; height:52px; position:sticky; top:0; z-index:200; }
     .topbar-left { display:flex; align-items:center; gap:10px; }
     .topbar-logo { width:30px; height:30px; background:linear-gradient(135deg,#00b4d8,#0077b6); border-radius:7px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:15px; }
@@ -22,7 +21,6 @@
     .btn-top { background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; text-decoration:none; transition:background .2s; font-family:inherit; }
     .btn-top:hover { background:rgba(255,255,255,.22); }
 
-    /* NAV */
     .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; position:sticky; top:52px; z-index:150; }
     .nav-tab { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; text-decoration:none; display:flex; align-items:center; gap:7px; }
     .nav-tab:hover { color:#0096c7; }
@@ -37,7 +35,6 @@
     .toast.error   { border-left:4px solid #e63946; }
     .tooltip { position:fixed; background:#1a1a2e; color:#fff; padding:8px 12px; border-radius:8px; font-size:12px; z-index:9999; pointer-events:none; display:none; max-width:260px; line-height:1.6; box-shadow:0 4px 12px rgba(0,0,0,.2); }
 
-    /* CONTROLS */
     .controls { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
     .grp-tabs { display:flex; gap:6px; }
     .grp-tab { padding:7px 16px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; background:#fff; color:#555; transition:all .15s; }
@@ -47,29 +44,32 @@
     .filter-input { padding:8px 14px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; font-family:inherit; }
     .filter-input:focus { border-color:#0096c7; }
 
-    /* LEGEND */
     .legend { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:14px; font-size:12px; color:#555; align-items:center; }
     .legend-item { display:flex; align-items:center; gap:6px; }
     .legend-bar { width:28px; height:11px; border-radius:3px; }
     .legend-line { width:3px; height:16px; border-radius:2px; }
 
-    /* STAFF WRAP — scroll cả 2 chiều, sticky thead bên trong */
+    /* STAFF WRAP */
     .staff-wrap {
       overflow:auto;
-      max-height: calc(100vh - 230px);
+      max-height:calc(100vh - 230px);
       background:#fff;
       border-radius:14px;
       box-shadow:0 2px 12px rgba(0,0,0,.07);
     }
 
-    table.staff { border-collapse:collapse; min-width:800px; }
+    /* TABLE — width:100%, table-layout:fixed để fill hết */
+    table.staff {
+      border-collapse:collapse;
+      width:100%;
+      table-layout:fixed;
+    }
 
-    /* Sticky thead bên trong scroll container */
     table.staff thead th {
       position:sticky;
       top:0;
       z-index:20;
-      padding:8px 10px;
+      padding:8px 4px;
       font-size:11px;
       font-weight:700;
       color:#fff;
@@ -77,10 +77,9 @@
       text-align:center;
       white-space:nowrap;
       border-right:1px solid rgba(255,255,255,.1);
+      overflow:hidden;
     }
     table.staff thead th.today-hdr { background:#e63946; }
-
-    /* Sticky first-col header (góc trái trên) */
     table.staff thead th:first-child {
       position:sticky;
       top:0;
@@ -88,18 +87,20 @@
       z-index:30;
       text-align:left;
       padding:10px 14px;
+      width:200px;
       min-width:200px;
+      max-width:200px;
       border-right:2px solid rgba(255,255,255,.2);
     }
 
     table.staff tbody td { padding:0; border-bottom:1px solid #eee; }
 
-    /* NAME CELL — sticky left */
+    /* NAME CELL */
     .s-name-cell {
       padding:10px 14px;
+      width:200px;
       min-width:200px;
       max-width:200px;
-      width:200px;
       border-right:2px solid #e8e8e8;
       vertical-align:top;
       background:#fff;
@@ -110,29 +111,47 @@
     }
     .s-name { font-size:13px; font-weight:700; color:#1a1a2e; margin-bottom:3px; }
 
-    /* ROLE PILL */
     .role-pill { display:inline-block; font-size:10px; font-weight:700; padding:1px 7px; border-radius:20px; }
     .role-pill.Manager    { background:#e63946; color:#fff; }
     .role-pill.SubManager { background:#f4a261; color:#fff; }
     .role-pill.Leader     { background:#2a9d8f; color:#fff; }
     .role-pill.Staff      { background:#adb5bd; color:#fff; }
 
-    /* SCHEDULE CELLS */
-    .s-cell { position:relative; height:36px; border-right:1px solid #f0f0f0; vertical-align:middle; }
+    .s-cell {
+      position:relative;
+      height:36px;
+      border-right:1px solid #f0f0f0;
+      vertical-align:middle;
+      overflow:visible;
+    }
     .s-cell.we  { background:#f8f8f8; }
     .s-cell.tdy { background:#fff5f5; }
     .s-cell.tdy::before { content:""; position:absolute; top:0; bottom:0; left:50%; width:2px; background:#e63946; z-index:5; transform:translateX(-50%); }
 
-    /* LANE BORDERS */
     .lane-first .s-cell,
     .lane-first .s-name-cell { border-top:2px solid #dde2ea; }
     .lane-last  .s-cell      { border-bottom:2px solid #dde2ea !important; }
 
-    /* BARS */
-    .s-bar { position:absolute; height:22px; border-radius:3px; top:7px; display:flex; align-items:center; padding:0 6px; font-size:9.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.15); z-index:2; transition:opacity .2s,transform .15s; }
+    .s-bar {
+      position:absolute;
+      height:22px;
+      border-radius:3px;
+      top:7px;
+      display:flex;
+      align-items:center;
+      padding:0 6px;
+      font-size:9.5px;
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      cursor:pointer;
+      box-shadow:0 1px 4px rgba(0,0,0,.15);
+      z-index:2;
+      transition:opacity .2s,transform .15s;
+    }
     .s-bar:hover { opacity:.82; transform:scaleY(1.08); }
 
-    /* GROUP HEADER */
     .grp-hdr td {
       background:linear-gradient(90deg,#f0f4f8,#f8fbff);
       padding:8px 16px;
@@ -198,7 +217,7 @@
     <span style="color:#aaa;font-size:11px;">💡 Mau giong nhau = cung du an | Moi task = 1 dong rieng</span>
   </div>
 
-  <div class="staff-wrap">
+  <div class="staff-wrap" id="staffWrap">
     <div id="staffCont">
       <div style="padding:40px;text-align:center;color:#aaa;">Dang tai...</div>
     </div>
@@ -211,6 +230,7 @@ const ROLE_ORDER = { 'Manager':0, 'Sub Manager':1, 'Leader':2, 'Staff':3 };
 const ROLE_PILL_CLASS = {
   'Manager':'Manager','Sub Manager':'SubManager','Leader':'Leader','Staff':'Staff'
 };
+const NAME_COL_W = 200; // px, phải khớp CSS
 
 let sZoom  = 'day';
 let sGroup = 'all';
@@ -228,9 +248,10 @@ window.onload = async () => {
   }
 };
 
-function visibleUsers(list) {
-  return list.filter(u => u.role !== 'Admin');
-}
+// Re-render on window resize to recalculate CW
+window.addEventListener('resize', () => renderStaff());
+
+function visibleUsers(list) { return list.filter(u => u.role !== 'Admin'); }
 
 function sortUsers(list) {
   return [...list].sort((a,b) => {
@@ -239,6 +260,14 @@ function sortUsers(list) {
     if (ra !== rb) return ra - rb;
     return (a.name||a.email).localeCompare(b.name||b.email,'vi');
   });
+}
+
+function calcCW(dayCount) {
+  const wrapW = document.getElementById('staffWrap').clientWidth || window.innerWidth - 64;
+  const avail = wrapW - NAME_COL_W - 2; // 2px border
+  const cw    = Math.floor(avail / dayCount);
+  // clamp: min 18px (month), max 60px
+  return Math.min(60, Math.max(18, cw));
 }
 
 function setGroup(g, btn) {
@@ -273,19 +302,20 @@ function renderStaff() {
 
   const days  = getDaysArray(fmt(start), fmt(end));
   const today = fmt(new Date());
-  const CW    = sZoom==='month' ? 18 : sZoom==='week' ? 26 : 34;
+  // CW tính động theo chiều rộng thực tế của wrap
+  const CW = calcCW(days.length);
 
   const sekkeiUsers = sortUsers(visibleUsers(allUsers.filter(u => u.group_name==='設計BIM')));
   const sekouUsers  = sortUsers(visibleUsers(allUsers.filter(u => u.group_name==='施工BIM')));
 
-  // ── Header ──────────────────────────────────────────────────────────
-  let hdr = '<th style="min-width:200px;">Nhan vien</th>';
+  // ── Header ────────────────────────────────────────────────────────
+  let hdr = '<th style="width:200px;min-width:200px;">Nhan vien</th>';
 
   if (sZoom === 'month') {
     const months = {};
     days.forEach(d => { const k=d.substring(0,7); months[k]=(months[k]||0)+1; });
     Object.entries(months).forEach(([mo,cnt]) => {
-      hdr += '<th colspan="'+cnt+'" style="min-width:'+(cnt*CW)+'px;">'+mo+'</th>';
+      hdr += '<th colspan="'+cnt+'">'+mo+'</th>';
     });
   } else {
     days.forEach(d => {
@@ -293,12 +323,12 @@ function renderStaff() {
       const dow = ['日','月','火','水','木','金','土'][dt.getDay()];
       const we  = isWeekend(d);
       const td  = d===today;
-      hdr += '<th style="min-width:'+CW+'px;'+(we?'opacity:.45;':'')+(td?'background:#e63946;':'')+'"'+(td?' class="today-hdr"':'')+'>'+
+      hdr += '<th style="'+(we?'opacity:.45;':'')+(td?'background:#e63946;':'')+'"'+(td?' class="today-hdr"':'')+'>'+
         dt.getDate()+'<br><span style="font-size:9px;opacity:.8;">'+dow+'</span></th>';
     });
   }
 
-  // ── Rows ────────────────────────────────────────────────────────────
+  // ── Rows ──────────────────────────────────────────────────────────
   let rows = '';
   if (sGroup==='all') {
     if (sekkeiUsers.length) {
@@ -342,7 +372,6 @@ function buildUserRows(u, days, today, CW) {
     const isLast  = lane===laneCount-1;
     const rowClass= (isFirst?'lane-first ':'')+(isLast?'lane-last':'');
 
-    // Name cell chỉ ở lane đầu, rowspan bao hết
     const nameCell = isFirst
       ? '<td class="s-name-cell" rowspan="'+laneCount+'">'
           +'<div class="s-name">'+(u.name||u.email)+'</div>'
@@ -350,9 +379,9 @@ function buildUserRows(u, days, today, CW) {
         +'</td>'
       : '';
 
+    // Không set min-width vì dùng table-layout:fixed, CW được set qua colgroup
     const cells = days.map(d =>
       '<td class="s-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" '+
-      'style="min-width:'+CW+'px;" '+
       'data-uid="'+u.id+'" data-lane="'+lane+'" data-date="'+d+'"></td>'
     ).join('');
 
