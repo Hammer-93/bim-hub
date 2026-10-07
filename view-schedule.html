@@ -42,19 +42,15 @@
     .legend-dot { width:11px; height:11px; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.2); }
     .gantt-wrap { overflow-x:auto; background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); }
     table.gantt { border-collapse:collapse; min-width:800px; }
-    /* STT column */
-    .col-stt { width:52px; min-width:52px; max-width:52px; }
-    /* Project column resizable */
-    .col-proj { min-width:180px; width:200px; resize:horizontal; overflow:hidden; }
-    table.gantt thead tr:first-child th { padding:6px 8px; font-size:11px; font-weight:700; color:#fff; background:#1a1a2e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.1); }
+    .col-stt  { width:52px; min-width:52px; }
+    .col-proj { min-width:160px; }  /* width set by JS */
+    table.gantt thead tr:first-child th { padding:6px 8px; font-size:11px; font-weight:700; color:#fff; background:#1a1a2e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.1); position:relative; }
     table.gantt thead tr:last-child th { padding:5px 4px; font-size:10px; font-weight:600; color:#fff; background:#2a2a3e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.08); }
     table.gantt thead th.today-hdr { background:#e63946 !important; }
     table.gantt tbody td { padding:0; border-bottom:1px solid #f0f0f0; }
-    /* STT cell */
-    .g-stt { width:52px; min-width:52px; max-width:52px; border-right:1px solid #e8e8e8; vertical-align:middle; background:#f8fbff; text-align:center; padding:6px 4px; }
+    .g-stt { width:52px; min-width:52px; border-right:1px solid #e8e8e8; vertical-align:middle; background:#f8fbff; text-align:center; padding:6px 4px; }
     .stt-badge { display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; padding:3px 6px; border-radius:6px; background:#e8f4fe; color:#0077b6; white-space:nowrap; }
-    /* Project cell */
-    .g-left { padding:8px 14px; border-right:1px solid #e8e8e8; vertical-align:top; background:#fff; cursor:pointer; transition:background .15s; }
+    .g-left { padding:8px 14px; border-right:1px solid #e8e8e8; vertical-align:top; background:#fff; cursor:pointer; transition:background .15s; overflow:hidden; }
     .g-left:hover { background:#e8f4fe; }
     .g-pname { font-size:13px; font-weight:700; color:#1a1a2e; line-height:1.4; word-break:break-word; white-space:normal; }
     .g-pcode { font-size:10px; color:#aaa; margin-top:2px; }
@@ -70,10 +66,15 @@
     .g-bar:hover { opacity:.85; }
     .g-dot { position:absolute; width:12px; height:12px; border-radius:50%; transform:translateX(-50%); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3); z-index:7; cursor:pointer; transition:transform .15s; }
     .g-dot:hover { transform:translateX(-50%) scale(1.4); }
-    .g-dot-rcv      { background:#52b788; top:4px; }
-    .g-dot-send     { background:#e63946; top:26px; }
-    .g-dot-ms-rcv   { background:#52b788; opacity:.5; top:4px; }
-    .g-dot-ms-send  { background:#e63946; opacity:.5; top:26px; }
+    .g-dot-rcv     { background:#52b788; top:4px; }
+    .g-dot-send    { background:#e63946; top:26px; }
+    .g-dot-ms-rcv  { background:#52b788; opacity:.5; top:4px; }
+    .g-dot-ms-send { background:#e63946; opacity:.5; top:26px; }
+
+    /* resize handle on Project th */
+    .th-proj-inner { display:flex; align-items:center; justify-content:space-between; user-select:none; }
+    .col-resize-handle { width:6px; cursor:col-resize; height:100%; position:absolute; right:0; top:0; background:rgba(255,255,255,.15); border-radius:2px; }
+    .col-resize-handle:hover { background:rgba(255,255,255,.4); }
 
     /* TASK QUICK EDIT POPUP */
     .tq-popup { position:fixed; background:#fff; border-radius:14px; box-shadow:0 8px 32px rgba(0,0,0,.22); z-index:9500; padding:0; min-width:280px; display:none; overflow:hidden; }
@@ -81,7 +82,6 @@
     .tq-head { background:#1a1a2e; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
     .tq-head-label { color:#fff; font-size:12px; font-weight:700; }
     .tq-head-x { background:none; border:none; color:#fff; font-size:18px; cursor:pointer; opacity:.7; padding:0; line-height:1; }
-    .tq-head-x:hover { opacity:1; }
     .tq-body { padding:14px 16px; }
     .tq-field { margin-bottom:10px; }
     .tq-field label { display:block; font-size:11px; font-weight:600; color:#666; margin-bottom:4px; }
@@ -91,7 +91,7 @@
     .tq-save { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:7px 18px; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; flex:1; }
     .tq-cancel { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:7px 12px; border-radius:7px; font-size:12px; cursor:pointer; }
     .tq-divider { border:none; border-top:1px solid #eee; margin:10px 0; }
-    .tq-ms-btn { background:#fff3cd; color:#856404; border:1.5px solid #ffd166; padding:7px 12px; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; width:100%; margin-top:2px; }
+    .tq-ms-btn { background:#fff3cd; color:#856404; border:1.5px solid #ffd166; padding:7px 12px; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; width:100%; }
     .tq-ms-btn:hover { background:#ffe69c; }
 
     /* MILESTONE PANEL */
@@ -104,11 +104,9 @@
     .ms-head-sub { color:#00b4d8; font-size:11px; font-weight:700; margin-bottom:3px; }
     .ms-head-title { color:#fff; font-size:14px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .ms-x { background:none; border:none; color:#fff; font-size:22px; cursor:pointer; opacity:.7; padding:0; flex-shrink:0; line-height:1; }
-    .ms-x:hover { opacity:1; }
     .ms-body { flex:1; overflow-y:auto; padding:20px; }
     .ms-foot { padding:14px 20px; border-top:1px solid #eee; display:flex; gap:10px; justify-content:space-between; flex-shrink:0; }
     .ms-add-btn { background:#e8f4fe; color:#0077b6; border:1.5px solid #b8dff5; padding:8px 18px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
-    .ms-add-btn:hover { background:#d0ecfe; }
     .ms-close-btn { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:8px 18px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
     .ms-item { background:#f8fbff; border:1.5px solid #dde2ea; border-radius:10px; padding:14px 16px; margin-bottom:12px; }
     .ms-item-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
@@ -176,18 +174,12 @@
 <!-- TASK QUICK EDIT POPUP -->
 <div class="tq-popup" id="tqPopup">
   <div class="tq-head">
-    <span class="tq-head-label" id="tqLabel">📥 Nhan data / Ngay gui</span>
+    <span class="tq-head-label" id="tqLabel">Nhan data / Ngay gui</span>
     <button class="tq-head-x" id="tqClose">✕</button>
   </div>
   <div class="tq-body">
-    <div class="tq-field">
-      <label>📥 Ngay nhan data</label>
-      <input type="date" id="tqRcv"/>
-    </div>
-    <div class="tq-field">
-      <label>📤 Ngay gui</label>
-      <input type="date" id="tqSnd"/>
-    </div>
+    <div class="tq-field"><label>📥 Ngay nhan data</label><input type="date" id="tqRcv"/></div>
+    <div class="tq-field"><label>📤 Ngay gui</label><input type="date" id="tqSnd"/></div>
     <div class="tq-actions">
       <button class="tq-cancel" id="tqCancel">Huy</button>
       <button class="tq-save" id="tqSave">💾 Luu</button>
@@ -262,7 +254,7 @@
     <div class="legend-item"><div class="legend-bar" style="background:#a8dadc;"></div><span>Khoan lam viec</span></div>
     <div class="legend-item"><div class="legend-dot" style="background:#52b788;"></div><span>Nhan data (click de sua)</span></div>
     <div class="legend-item"><div class="legend-dot" style="background:#e63946;"></div><span>Ngay gui (click de sua)</span></div>
-    <span style="margin-left:auto;font-size:11px;color:#0077b6;font-style:italic;">✏ Click ten du an de nhap ghi chu</span>
+    <span style="margin-left:auto;font-size:11px;color:#0077b6;font-style:italic;">✏ Click ten du an de nhap ghi chu | ↔ Keo cot Project de rong hon</span>
   </div>
   <div class="gantt-wrap">
     <div id="ganttCont"><div style="padding:40px;text-align:center;color:#aaa;">Dang tai...</div></div>
@@ -271,11 +263,16 @@
 
 <script src="js/config.js"></script>
 <script>
-var gZoom="day", currentProjId=null, currentTqTask=null;
-var allMilestones=[];
-var LS_KEY="bimhub_proj_meta";
-var GROUP_ORDER={A:0,B:1,C:2,D:3};
-var TASK_TYPE_ORDER={"意匠モデル":0,"構造モデル":1,"図面":2,"パース・動画":3,"動画・パース":3,"施工ステップ":4,"清算モデル":5};
+var gZoom = "day";
+var currentProjId = null;
+var currentTqTask = null;
+var allMilestones = [];
+var LS_KEY = "bimhub_proj_meta";
+var GROUP_ORDER = {A:0,B:1,C:2,D:3};
+var TASK_TYPE_ORDER = {"意匠モデル":0,"構造モデル":1,"図面":2,"パース・動画":3,"動画・パース":3,"施工ステップ":4,"清算モデル":5};
+
+/* ── Column width state — persists across zoom changes ── */
+var projColWidth = 200; /* default px */
 
 function getMeta(id){ try{ return JSON.parse(localStorage.getItem(LS_KEY)||"{}")[id]||{}; }catch(e){ return {}; } }
 function setMeta(id,data){ try{ var a=JSON.parse(localStorage.getItem(LS_KEY)||"{}"); a[id]=Object.assign(a[id]||{},data); localStorage.setItem(LS_KEY,JSON.stringify(a)); }catch(e){} }
@@ -283,11 +280,53 @@ function setMeta(id,data){ try{ var a=JSON.parse(localStorage.getItem(LS_KEY)||"
 async function loadMilestones(){
   try{
     var r=await fetch(SUPABASE_URL+"/rest/v1/task_milestones?select=*&order=created_at.asc",{headers:HDRS});
-    var d=await r.json();
-    allMilestones=Array.isArray(d)?d:[];
+    var d=await r.json(); allMilestones=Array.isArray(d)?d:[];
   }catch(e){ allMilestones=[]; }
 }
 function getMsForTask(tid){ return allMilestones.filter(function(m){return m.task_id===tid;}); }
+
+/* ── Column resize via JS drag ──
+   We attach a mousedown on the resize handle inside the Project <th>.
+   On drag we update projColWidth and apply to all .g-left / th.col-proj cells.
+*/
+function initColResize(){
+  var handle = document.getElementById("projResizeHandle");
+  if(!handle) return;
+  var startX, startW;
+  handle.addEventListener("mousedown", function(e){
+    e.preventDefault();
+    startX = e.clientX;
+    startW = projColWidth;
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+
+    function onMove(ev){
+      var delta = ev.clientX - startX;
+      projColWidth = Math.max(120, startW + delta);
+      applyProjColWidth();
+    }
+    function onUp(){
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+    }
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  });
+}
+
+function applyProjColWidth(){
+  /* apply to header th */
+  var thProj = document.getElementById("thProj");
+  if(thProj) thProj.style.width = projColWidth + "px";
+  /* apply to all body .g-left cells */
+  document.querySelectorAll(".g-left").forEach(function(td){
+    td.style.width = projColWidth + "px";
+    td.style.minWidth = projColWidth + "px";
+    td.style.maxWidth = projColWidth + "px";
+  });
+}
 
 /* ── TASK QUICK EDIT POPUP ── */
 function openTqPopup(e,task){
@@ -297,16 +336,14 @@ function openTqPopup(e,task){
   document.getElementById("tqLabel").textContent=(task.task_type||"Task")+(p?" · "+getCode(p):"");
   document.getElementById("tqRcv").value=task.receive_date||"";
   document.getElementById("tqSnd").value=task.send_date||"";
-  var popup=document.getElementById("tqPopup");
-  popup.classList.add("open");
-  var x=e.clientX,y=e.clientY,pw=280,ph=230;
-  if(x+pw>window.innerWidth) x=window.innerWidth-pw-8;
-  if(y+ph>window.innerHeight) y=window.innerHeight-ph-8;
+  var popup=document.getElementById("tqPopup"); popup.classList.add("open");
+  var x=e.clientX,y=e.clientY;
+  if(x+290>window.innerWidth) x=window.innerWidth-295;
+  if(y+240>window.innerHeight) y=window.innerHeight-245;
   popup.style.left=x+"px"; popup.style.top=y+"px";
 }
 function closeTqPopup(){
-  document.getElementById("tqPopup").classList.remove("open");
-  currentTqTask=null;
+  document.getElementById("tqPopup").classList.remove("open"); currentTqTask=null;
 }
 async function saveTqPopup(){
   if(!currentTqTask) return;
@@ -324,8 +361,7 @@ async function saveTqPopup(){
 
 /* ── MILESTONE PANEL ── */
 function openMsPanel(task){
-  closeTqPopup();
-  window._msPanelTask=task;
+  closeTqPopup(); window._msPanelTask=task;
   var p=allProjects.find(function(x){return x.id===task.project_id;});
   document.getElementById("msPanelSub").textContent=task.task_type||"Task";
   document.getElementById("msPanelTitle").textContent=p?(p.project_name||p.name||""):"";
@@ -340,8 +376,7 @@ function closeMsPanel(){
 }
 function renderMsBody(task){
   var t=task||window._msPanelTask; if(!t) return;
-  var ms=getMsForTask(t.id);
-  var body=document.getElementById("msBody");
+  var ms=getMsForTask(t.id); var body=document.getElementById("msBody");
   if(!ms.length){ body.innerHTML='<div class="ms-empty">Chua co giai doan nao.<br>Bam "Them giai doan" de them moi.</div>'; return; }
   var html="";
   ms.forEach(function(m,i){
@@ -356,8 +391,8 @@ function renderMsBody(task){
       +'<div class="ms-save-row"><button class="ms-item-save" data-id="'+m.id+'">💾 Luu</button></div></div>';
   });
   body.innerHTML=html;
-  body.querySelectorAll(".ms-item-save").forEach(function(btn){ btn.addEventListener("click",function(){ saveMilestone(btn.getAttribute("data-id")); }); });
-  body.querySelectorAll(".ms-item-del").forEach(function(btn){ btn.addEventListener("click",function(){ deleteMilestone(btn.getAttribute("data-id")); }); });
+  body.querySelectorAll(".ms-item-save").forEach(function(b){ b.addEventListener("click",function(){ saveMilestone(b.getAttribute("data-id")); }); });
+  body.querySelectorAll(".ms-item-del").forEach(function(b){ b.addEventListener("click",function(){ deleteMilestone(b.getAttribute("data-id")); }); });
 }
 async function addMilestone(){
   var task=window._msPanelTask; if(!task) return;
@@ -411,8 +446,7 @@ function openPanel(pid){
 }
 function closePanel(){
   document.getElementById("epOverlay").classList.remove("open");
-  document.getElementById("epPanel").classList.remove("open");
-  currentProjId=null;
+  document.getElementById("epPanel").classList.remove("open"); currentProjId=null;
 }
 function savePanel(){
   if(!currentProjId) return;
@@ -511,10 +545,14 @@ function renderGantt(){
   var projects=sortProjects(raw);
   var sttMap=buildSttMap(projects);
 
-  /* ── HEADER: STT | Project | 備考 | Staff担当 | dates ── */
+  /* ── HEADER ── */
+  var pw = projColWidth;
   var hdr1=
     '<th class="col-stt" rowspan="2" style="text-align:center;padding:10px 6px;border-right:1px solid rgba(255,255,255,.2);">STT</th>'
-   +'<th class="col-proj" rowspan="2" style="text-align:left;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">Project</th>'
+   +'<th id="thProj" class="col-proj" rowspan="2" style="width:'+pw+'px;min-width:'+pw+'px;text-align:left;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);position:relative;">'
+   +'<div class="th-proj-inner">Project</div>'
+   +'<div class="col-resize-handle" id="projResizeHandle" title="Keo de chinh do rong"></div>'
+   +'</th>'
    +'<th rowspan="2" style="min-width:160px;text-align:right;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">備考</th>'
    +'<th rowspan="2" style="min-width:110px;text-align:right;padding:10px 14px;border-right:2px solid rgba(255,255,255,.3);">Staff担当</th>';
   var hdr2="";
@@ -537,8 +575,9 @@ function renderGantt(){
     });
   }
 
+  /* ── ROWS ── */
   var rows="";
-  var totalCols=days.length+4; /* STT + Project + Bico + Staff + dates */
+  var totalCols=days.length+4;
   if(!projects.length) rows='<tr><td colspan="'+totalCols+'" style="text-align:center;padding:40px;color:#aaa;">Khong co du an</td></tr>';
 
   projects.forEach(function(p){
@@ -556,15 +595,12 @@ function renderGantt(){
       return '<td class="g-cell '+(isWeekend(d)?"we":"")+" "+(d===today?"tdy":"")+'" style="min-width:'+CW+'px;"></td>';
     }).join("");
 
-    /* STT cell — rieng biet */
     var sttCell='<td class="g-stt" rowspan="'+rs+'"><span class="stt-badge">'+stt+'</span></td>';
-
-    /* Project cell — khong con stt badge ben trong */
-    var pCell='<td class="g-left" rowspan="'+rs+'" data-pid="'+p.id+'">'
+    /* apply current projColWidth to body cells */
+    var pCell='<td class="g-left" rowspan="'+rs+'" data-pid="'+p.id+'" style="width:'+pw+'px;min-width:'+pw+'px;max-width:'+pw+'px;">'
       +'<div class="g-pname">'+(p.project_name||p.name||"")+'</div>'
       +'<div class="g-pcode">'+getCode(p)+'</div>'
       +swHtml+'</td>';
-
     var bicoCell='<td class="g-bico" rowspan="'+rs+'">'+noteVal+'</td>';
     var staffCell='<td class="g-staff" rowspan="'+rs+'">'+staffVal+'</td>';
 
@@ -577,6 +613,10 @@ function renderGantt(){
   var thead=gZoom==="month"?"<thead><tr>"+hdr1+"</tr><tr>"+hdr2+"</tr></thead>":"<thead><tr>"+hdr1+"</tr></thead>";
   document.getElementById("ganttCont").innerHTML='<table class="gantt">'+thead+"<tbody>"+rows+"</tbody></table>";
 
+  /* bind resize handle after render */
+  initColResize();
+
+  /* bind g-left click */
   document.querySelectorAll(".g-left[data-pid]").forEach(function(td){
     td.addEventListener("click",function(e){ e.stopPropagation(); openPanel(td.getAttribute("data-pid")); });
   });
@@ -590,7 +630,6 @@ function renderGantt(){
       var cells=Array.from(row.querySelectorAll(".g-cell"));
       var user=allUsers.find(function(u){return u.id===t.assigned_to;});
 
-      /* work bar */
       if(t.start_date&&t.end_date){
         var si=days.indexOf(t.start_date),ei=days.indexOf(t.end_date);
         if(si>=0&&si<cells.length){
@@ -605,7 +644,6 @@ function renderGantt(){
         }
       }
 
-      /* dot xanh — receive_date */
       if(t.receive_date){
         var ri=days.indexOf(t.receive_date);
         if(ri>=0&&ri<cells.length){
@@ -620,7 +658,6 @@ function renderGantt(){
         }
       }
 
-      /* dot do — send_date */
       if(t.send_date){
         var si2=days.indexOf(t.send_date);
         if(si2>=0&&si2<cells.length){
@@ -635,7 +672,6 @@ function renderGantt(){
         }
       }
 
-      /* milestone dots */
       getMsForTask(t.id).forEach(function(m,mi){
         if(m.receive_date){
           var mri=days.indexOf(m.receive_date);
