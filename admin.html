@@ -115,6 +115,15 @@
     .btn-copy:hover { opacity:.9; }
     .btn-close-modal { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
     .btn-close-modal:hover { background:#f5f5f5; }
+    .chpw-field { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.chpw-field label { font-size:12px; font-weight:600; color:#555; }
+.chpw-input-wrap { position:relative; }
+.chpw-input-wrap input { width:100%; padding:10px 40px 10px 14px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13.5px; outline:none; font-family:inherit; }
+.chpw-input-wrap input:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.12); }
+.chpw-eye { position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#aaa; font-size:15px; user-select:none; }
+.chpw-eye:hover { color:#0096c7; }
+.btn-save-pw { background:linear-gradient(135deg,#9b5de5,#7b2d8b); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
+.btn-save-pw:hover { opacity:.9; }
 
     /* CHANGE PW MODAL */
     .chpw-field { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
@@ -275,17 +284,37 @@
   </div>
 </div>
 
-<!-- MODAL XEM MAT KHAU -->
+<!-- MODAL XEM / DOI MAT KHAU -->
 <div class="modal-overlay" id="pwModal">
   <div class="modal">
-    <div class="modal-icon">&#x1F510;</div>
+    <div class="modal-icon">🔐</div>
     <div class="modal-title">Thong tin tai khoan</div>
     <div class="modal-sub" id="modalEmail">email@vinadecons.vn</div>
-    <div class="pw-display" id="modalPw">-</div>
-    <div class="pw-note">Cung cap email + mat khau nay truc tiep cho nhan vien de dang nhap.</div>
-    <div class="modal-actions">
-      <button class="btn-copy" onclick="copyPw()">&#x1F4CB; Copy mat khau</button>
-      <button class="btn-close-modal" onclick="closeModal('pwModal')">Dong</button>
+
+    <!-- CHE DO XEM -->
+    <div id="pwViewMode">
+      <div class="pw-display" id="modalPw">-</div>
+      <div class="pw-note">Mat khau hien tai cua tai khoan nay.</div>
+      <div class="modal-actions">
+        <button class="btn-copy"         onclick="copyPw()">📋 Copy</button>
+        <button class="btn-save-pw"      onclick="switchToEdit()">✏️ Chinh sua MK</button>
+        <button class="btn-close-modal"  onclick="closeModal('pwModal')">Dong</button>
+      </div>
+    </div>
+
+    <!-- CHE DO CHINH SUA -->
+    <div id="pwEditMode" style="display:none;">
+      <div class="chpw-field">
+        <label>Mat khau moi <span class="req">*</span></label>
+        <div class="chpw-input-wrap">
+          <input type="password" id="chpwInput" placeholder="Toi thieu 6 ky tu..."/>
+          <span class="chpw-eye" onclick="togglePwVisible('chpwInput','chpwEye')" id="chpwEye">👁️</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-save-pw"     onclick="saveNewPassword()">💾 Luu mat khau</button>
+        <button class="btn-close-modal" onclick="switchToView()">Huy</button>
+      </div>
     </div>
   </div>
 </div>
@@ -473,16 +502,57 @@ function updateStats(data) {
 }
 
 /* ── XEM MAT KHAU ── */
-function showPwModal(email,pw) {
-  document.getElementById('modalEmail').textContent=email;
-  document.getElementById('modalPw').textContent=pw||'(khong co)';
+function showPwModal(email, pw) {
+  currentChpwId = null;
+  for (var i=0; i<allMembers.length; i++) {
+    if (allMembers[i].email === email) { currentChpwId = allMembers[i].id; break; }
+  }
+  document.getElementById('modalEmail').textContent = email;
+  document.getElementById('modalPw').textContent    = pw || '(khong co)';
+  switchToView();
   document.getElementById('pwModal').classList.add('open');
 }
 function copyPw() {
-  var pw=document.getElementById('modalPw').textContent;
+  var pw = document.getElementById('modalPw').textContent;
   navigator.clipboard.writeText(pw)
-    .then(function(){showToast('Da copy mat khau','success');})
-    .catch(function(){showToast('Khong the copy','error');});
+    .then(function(){ showToast('Da copy mat khau','success'); })
+    .catch(function(){ showToast('Khong the copy','error'); });
+}
+function switchToEdit() {
+  document.getElementById('pwViewMode').style.display = 'none';
+  document.getElementById('pwEditMode').style.display = 'block';
+  document.getElementById('chpwInput').value = '';
+  document.getElementById('chpwInput').type  = 'password';
+  document.getElementById('chpwEye').textContent = '👁️';
+  document.getElementById('chpwInput').focus();
+}
+function switchToView() {
+  document.getElementById('pwEditMode').style.display = 'none';
+  document.getElementById('pwViewMode').style.display = 'block';
+}
+async function saveNewPassword() {
+  var pw = document.getElementById('chpwInput').value;
+  if (!pw)       { showToast('Vui long nhap mat khau moi','error'); return; }
+  if (pw.length < 6) { showToast('Mat khau toi thieu 6 ky tu','error'); return; }
+  try {
+    var res = await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+currentChpwId, {
+      method:'PATCH', headers:HDRS, body:JSON.stringify({password:pw})
+    });
+    if (!res.ok) { showToast('Loi luu mat khau','error'); return; }
+    for (var i=0;i<allMembers.length;i++) {
+      if (allMembers[i].id===currentChpwId) { allMembers[i].password=pw; break; }
+    }
+    document.getElementById('modalPw').textContent = pw;
+    showToast('Da doi mat khau thanh cong!','success');
+    switchToView();
+  } catch(e) { showToast('Loi: '+e.message,'error'); }
+}
+function togglePwVisible(inputId, eyeId) {
+  var inp = document.getElementById(inputId);
+  var eye = document.getElementById(eyeId);
+  if (!inp) return;
+  if (inp.type==='password') { inp.type='text'; if(eye) eye.textContent='🙈'; }
+  else { inp.type='password'; if(eye) eye.textContent='👁️'; }
 }
 
 /* ── DOI MAT KHAU ── */
