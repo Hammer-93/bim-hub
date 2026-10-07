@@ -58,7 +58,7 @@
     .g-bico { min-width:160px; max-width:220px; border-right:1px solid #e8e8e8; vertical-align:top; background:#fff; padding:8px 10px; font-size:11px; color:#444; white-space:pre-wrap; word-break:break-word; text-align:right; }
     .g-staff { min-width:110px; max-width:150px; border-right:2px solid #e8e8e8; vertical-align:top; background:#fff; padding:8px 10px; font-size:11px; color:#333; text-align:right; }
     .g-cell { position:relative; height:44px; border-right:1px solid #f0f0f0; vertical-align:middle; overflow:visible; }
-    .g-cell.we  { background:#f8f8f8; }
+    .g-cell.we { background:#f8f8f8; }
     .g-cell.tdy { background:#fff5f5; }
     .g-cell.tdy::before { content:""; position:absolute; top:0; bottom:0; left:50%; width:2px; background:#e63946; z-index:5; transform:translateX(-50%); }
     .g-bar { position:absolute; height:18px; border-radius:4px; top:4px; display:flex; align-items:center; padding:0 7px; font-size:10px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,.18); z-index:2; }
@@ -67,9 +67,29 @@
     .g-dot:hover { transform:translateX(-50%) scale(1.4); }
     .g-dot-rcv  { background:#52b788; top:4px; }
     .g-dot-send { background:#e63946; top:26px; }
-    .g-dot-ms-rcv  { background:#52b788; opacity:.6; top:4px; }
-    .g-dot-ms-send { background:#e63946; opacity:.6; top:26px; }
-    .g-dot-add  { background:#ffd166; top:15px; width:10px; height:10px; z-index:8; }
+    .g-dot-ms-rcv  { background:#52b788; opacity:.5; top:4px; }
+    .g-dot-ms-send { background:#e63946; opacity:.5; top:26px; }
+
+    /* TASK QUICK EDIT POPUP */
+    .tq-popup { position:fixed; background:#fff; border-radius:14px; box-shadow:0 8px 32px rgba(0,0,0,.22); z-index:9500; padding:0; min-width:280px; display:none; overflow:hidden; }
+    .tq-popup.open { display:block; }
+    .tq-head { background:#1a1a2e; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
+    .tq-head-label { color:#fff; font-size:12px; font-weight:700; }
+    .tq-head-x { background:none; border:none; color:#fff; font-size:18px; cursor:pointer; opacity:.7; padding:0; line-height:1; }
+    .tq-head-x:hover { opacity:1; }
+    .tq-body { padding:14px 16px; }
+    .tq-field { margin-bottom:10px; }
+    .tq-field label { display:block; font-size:11px; font-weight:600; color:#666; margin-bottom:4px; }
+    .tq-field input { width:100%; padding:7px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; }
+    .tq-field input:focus { border-color:#0096c7; }
+    .tq-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:4px; }
+    .tq-save { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:7px 18px; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; flex:1; }
+    .tq-save:hover { opacity:.9; }
+    .tq-cancel { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:7px 12px; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; }
+    .tq-cancel:hover { background:#f5f5f5; }
+    .tq-ms-btn { background:#fff3cd; color:#856404; border:1.5px solid #ffd166; padding:7px 12px; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; width:100%; margin-top:8px; text-align:center; }
+    .tq-ms-btn:hover { background:#ffe69c; }
+    .tq-divider { border:none; border-top:1px solid #eee; margin:10px 0; }
 
     /* MILESTONE PANEL */
     .ms-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:1000; }
@@ -152,6 +172,30 @@
 <div class="toast" id="toast"></div>
 <div class="tooltip" id="tooltip"></div>
 
+<!-- TASK QUICK EDIT POPUP -->
+<div class="tq-popup" id="tqPopup">
+  <div class="tq-head">
+    <span class="tq-head-label" id="tqLabel">📥 Nhan data</span>
+    <button class="tq-head-x" id="tqClose">✕</button>
+  </div>
+  <div class="tq-body">
+    <div class="tq-field">
+      <label id="tqRcvLabel">📥 Ngay nhan data</label>
+      <input type="date" id="tqRcv"/>
+    </div>
+    <div class="tq-field">
+      <label>📤 Ngay gui</label>
+      <input type="date" id="tqSnd"/>
+    </div>
+    <div class="tq-actions">
+      <button class="tq-cancel" id="tqCancel">Huy</button>
+      <button class="tq-save" id="tqSave">💾 Luu</button>
+    </div>
+    <hr class="tq-divider"/>
+    <button class="tq-ms-btn" id="tqMsBtn">🟡 Quan ly giai doan bo sung</button>
+  </div>
+</div>
+
 <!-- MILESTONE PANEL -->
 <div class="ms-overlay" id="msOverlay"></div>
 <div class="ms-panel" id="msPanel">
@@ -215,9 +259,8 @@
   </div>
   <div class="legend">
     <div class="legend-item"><div class="legend-bar" style="background:#a8dadc;"></div><span>Khoan lam viec</span></div>
-    <div class="legend-item"><div class="legend-dot" style="background:#52b788;"></div><span>Nhan data (task)</span></div>
-    <div class="legend-item"><div class="legend-dot" style="background:#e63946;"></div><span>Ngay gui (task)</span></div>
-    <div class="legend-item"><div class="legend-dot" style="background:#ffd166;"></div><span>Quan ly giai doan</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#52b788;"></div><span>Nhan data (click de sua)</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e63946;"></div><span>Ngay gui (click de sua)</span></div>
     <span style="margin-left:auto;font-size:11px;color:#0077b6;font-style:italic;">✏ Click ten du an de nhap ghi chu</span>
   </div>
   <div class="gantt-wrap">
@@ -227,143 +270,177 @@
 
 <script src="js/config.js"></script>
 <script>
-var gZoom = "day";
-var currentProjId = null;
-var currentMsTask = null;
-var allMilestones = [];
-var LS_KEY = "bimhub_proj_meta";
-var GROUP_ORDER = {A:0,B:1,C:2,D:3};
-var TASK_TYPE_ORDER = {"意匠モデル":0,"構造モデル":1,"図面":2,"パース・動画":3,"動画・パース":3,"施工ステップ":4,"清算モデル":5};
+var gZoom="day", currentProjId=null, currentTqTask=null;
+var allMilestones=[];
+var LS_KEY="bimhub_proj_meta";
+var GROUP_ORDER={A:0,B:1,C:2,D:3};
+var TASK_TYPE_ORDER={"意匠モデル":0,"構造モデル":1,"図面":2,"パース・動画":3,"動画・パース":3,"施工ステップ":4,"清算モデル":5};
 
 function getMeta(id){ try{ return JSON.parse(localStorage.getItem(LS_KEY)||"{}")[id]||{}; }catch(e){ return {}; } }
 function setMeta(id,data){ try{ var a=JSON.parse(localStorage.getItem(LS_KEY)||"{}"); a[id]=Object.assign(a[id]||{},data); localStorage.setItem(LS_KEY,JSON.stringify(a)); }catch(e){} }
 
-/* ── Load milestones from Supabase ── */
-async function loadMilestones() {
-  try {
-    var res = await fetch(SUPABASE_URL+"/rest/v1/task_milestones?select=*&order=created_at.asc", {headers:HDRS});
-    var data = await res.json();
-    allMilestones = Array.isArray(data) ? data : [];
-  } catch(e) { allMilestones = []; }
+async function loadMilestones(){
+  try{
+    var r=await fetch(SUPABASE_URL+"/rest/v1/task_milestones?select=*&order=created_at.asc",{headers:HDRS});
+    var d=await r.json();
+    allMilestones=Array.isArray(d)?d:[];
+  }catch(e){ allMilestones=[]; }
 }
+function getMsForTask(tid){ return allMilestones.filter(function(m){return m.task_id===tid;}); }
 
-function getMsForTask(taskId) {
-  return allMilestones.filter(function(m){ return m.task_id === taskId; });
+/* ── TASK QUICK EDIT POPUP ── */
+function openTqPopup(e, task){
+  e.stopPropagation();
+  hideTooltip();
+  currentTqTask=task;
+  var p=allProjects.find(function(x){return x.id===task.project_id;});
+  var label=(task.task_type||"Task")+(p?" · "+getCode(p):"");
+  document.getElementById("tqLabel").textContent=label;
+  document.getElementById("tqRcv").value=task.receive_date||"";
+  document.getElementById("tqSnd").value=task.send_date||"";
+  var popup=document.getElementById("tqPopup");
+  popup.classList.add("open");
+  /* position */
+  var x=e.clientX, y=e.clientY, pw=280, ph=220;
+  if(x+pw>window.innerWidth) x=window.innerWidth-pw-8;
+  if(y+ph>window.innerHeight) y=window.innerHeight-ph-8;
+  popup.style.left=x+"px";
+  popup.style.top=y+"px";
+}
+function closeTqPopup(){
+  document.getElementById("tqPopup").classList.remove("open");
+  currentTqTask=null;
+}
+async function saveTqPopup(){
+  if(!currentTqTask) return;
+  var rcv=document.getElementById("tqRcv").value||null;
+  var snd=document.getElementById("tqSnd").value||null;
+  try{
+    var res=await fetch(SUPABASE_URL+"/rest/v1/project_tasks?id=eq."+currentTqTask.id,{
+      method:"PATCH", headers:HDRS,
+      body:JSON.stringify({receive_date:rcv, send_date:snd})
+    });
+    if(!res.ok){ showToast("Loi luu","error"); return; }
+    currentTqTask.receive_date=rcv;
+    currentTqTask.send_date=snd;
+    showToast("Da luu!","success");
+    closeTqPopup();
+    renderGantt();
+  }catch(e){ showToast("Loi: "+e.message,"error"); }
 }
 
 /* ── MILESTONE PANEL ── */
-function openMsPanel(task) {
-  currentMsTask = task;
-  var p = allProjects.find(function(x){ return x.id === task.project_id; });
-  document.getElementById("msPanelSub").textContent = (task.task_type||"Task") + (p?" — "+getCode(p):"");
-  document.getElementById("msPanelTitle").textContent = p ? (p.project_name||p.name||"") : "";
-  renderMsBody();
+function openMsPanel(task){
+  closeTqPopup();
+  document.getElementById("msPanelSub").textContent=(task.task_type||"Task");
+  var p=allProjects.find(function(x){return x.id===task.project_id;});
+  document.getElementById("msPanelTitle").textContent=p?(p.project_name||p.name||""):"";
+  window._msPanelTask=task;
+  renderMsBody(task);
   document.getElementById("msOverlay").classList.add("open");
   document.getElementById("msPanel").classList.add("open");
 }
-function closeMsPanel() {
+function closeMsPanel(){
   document.getElementById("msOverlay").classList.remove("open");
   document.getElementById("msPanel").classList.remove("open");
-  currentMsTask = null;
+  window._msPanelTask=null;
 }
-function renderMsBody() {
-  if(!currentMsTask) return;
-  var ms = getMsForTask(currentMsTask.id);
-  var body = document.getElementById("msBody");
-  if(!ms.length) {
-    body.innerHTML = '<div class="ms-empty">Chua co giai doan nao.<br>Bam "Them giai doan" de them moi.</div>';
+function renderMsBody(task){
+  var t=task||window._msPanelTask;
+  if(!t) return;
+  var ms=getMsForTask(t.id);
+  var body=document.getElementById("msBody");
+  if(!ms.length){
+    body.innerHTML='<div class="ms-empty">Chua co giai doan nao.<br>Bam "Them giai doan" de them moi.</div>';
     return;
   }
-  var html = "";
-  ms.forEach(function(m, i) {
-    html += '<div class="ms-item">'
+  var html="";
+  ms.forEach(function(m,i){
+    html+='<div class="ms-item">'
       +'<div class="ms-item-head"><span class="ms-item-num">Giai doan '+(i+1)+'</span>'
       +'<button class="ms-item-del" data-id="'+m.id+'">🗑 Xoa</button></div>'
       +'<div class="ms-row2">'
-        +'<div class="ms-field"><label>📥 Ngay nhan data</label><input type="date" id="ms-rcv-'+m.id+'" value="'+(m.receive_date||"")+'"/></div>'
+        +'<div class="ms-field"><label>📥 Nhan data</label><input type="date" id="ms-rcv-'+m.id+'" value="'+(m.receive_date||"")+'"/></div>'
         +'<div class="ms-field"><label>📤 Ngay gui</label><input type="date" id="ms-snd-'+m.id+'" value="'+(m.send_date||"")+'"/></div>'
       +'</div>'
       +'<div class="ms-field"><label>📝 Ghi chu</label><input type="text" id="ms-note-'+m.id+'" value="'+(m.note||"").replace(/"/g,"&quot;")+'"/></div>'
       +'<div class="ms-save-row"><button class="ms-item-save" data-id="'+m.id+'">💾 Luu</button></div>'
       +'</div>';
   });
-  body.innerHTML = html;
+  body.innerHTML=html;
   body.querySelectorAll(".ms-item-save").forEach(function(btn){
-    btn.addEventListener("click", function(){ saveMilestone(btn.getAttribute("data-id")); });
+    btn.addEventListener("click",function(){ saveMilestone(btn.getAttribute("data-id")); });
   });
   body.querySelectorAll(".ms-item-del").forEach(function(btn){
-    btn.addEventListener("click", function(){ deleteMilestone(btn.getAttribute("data-id")); });
+    btn.addEventListener("click",function(){ deleteMilestone(btn.getAttribute("data-id")); });
   });
 }
-
-async function addMilestone() {
-  if(!currentMsTask) return;
-  try {
-    var body = JSON.stringify({task_id: currentMsTask.id});
-    var res = await fetch(SUPABASE_URL+"/rest/v1/task_milestones", {
+async function addMilestone(){
+  var task=window._msPanelTask;
+  if(!task) return;
+  try{
+    var res=await fetch(SUPABASE_URL+"/rest/v1/task_milestones",{
       method:"POST",
-      headers: Object.assign({}, HDRS, {"Prefer":"return=representation"}),
-      body: body
+      headers:Object.assign({},HDRS,{"Prefer":"return=representation"}),
+      body:JSON.stringify({task_id:task.id})
     });
     if(!res.ok){ var err=await res.text(); showToast("Loi: "+err,"error"); return; }
-    var arr = await res.json();
-    if(arr && arr.length) allMilestones.push(arr[0]);
-    renderMsBody();
+    var arr=await res.json();
+    if(arr&&arr.length) allMilestones.push(arr[0]);
+    renderMsBody(task);
     renderGantt();
-    showToast("Da them giai doan moi!","success");
-  } catch(e){ showToast("Loi: "+e.message,"error"); }
+    showToast("Da them giai doan!","success");
+  }catch(e){ showToast("Loi: "+e.message,"error"); }
 }
-
-async function saveMilestone(msId) {
-  var rcv  = document.getElementById("ms-rcv-"+msId).value||null;
-  var snd  = document.getElementById("ms-snd-"+msId).value||null;
-  var note = document.getElementById("ms-note-"+msId).value.trim()||null;
-  try {
-    var res = await fetch(SUPABASE_URL+"/rest/v1/task_milestones?id=eq."+msId, {
+async function saveMilestone(msId){
+  var rcv=document.getElementById("ms-rcv-"+msId).value||null;
+  var snd=document.getElementById("ms-snd-"+msId).value||null;
+  var note=document.getElementById("ms-note-"+msId).value.trim()||null;
+  try{
+    var res=await fetch(SUPABASE_URL+"/rest/v1/task_milestones?id=eq."+msId,{
       method:"PATCH", headers:HDRS,
-      body:JSON.stringify({receive_date:rcv, send_date:snd, note:note})
+      body:JSON.stringify({receive_date:rcv,send_date:snd,note:note})
     });
     if(!res.ok){ showToast("Loi luu","error"); return; }
-    var m = allMilestones.find(function(x){return x.id===msId;});
+    var m=allMilestones.find(function(x){return x.id===msId;});
     if(m){ m.receive_date=rcv; m.send_date=snd; m.note=note; }
-    showToast("Da luu giai doan!","success");
+    showToast("Da luu!","success");
     renderGantt();
-  } catch(e){ showToast("Loi: "+e.message,"error"); }
+  }catch(e){ showToast("Loi: "+e.message,"error"); }
 }
-
-async function deleteMilestone(msId) {
-  if(!confirm("Xac nhan xoa giai doan nay?")) return;
-  try {
-    await fetch(SUPABASE_URL+"/rest/v1/task_milestones?id=eq."+msId, {method:"DELETE", headers:HDRS});
-    allMilestones = allMilestones.filter(function(x){return x.id!==msId;});
+async function deleteMilestone(msId){
+  if(!confirm("Xac nhan xoa?")) return;
+  try{
+    await fetch(SUPABASE_URL+"/rest/v1/task_milestones?id=eq."+msId,{method:"DELETE",headers:HDRS});
+    allMilestones=allMilestones.filter(function(x){return x.id!==msId;});
     showToast("Da xoa!","success");
     renderMsBody();
     renderGantt();
-  } catch(e){ showToast("Loi: "+e.message,"error"); }
+  }catch(e){ showToast("Loi: "+e.message,"error"); }
 }
 
 /* ── PROJECT META PANEL ── */
-function openPanel(pid) {
-  var p = allProjects.find(function(x){return x.id===pid;});
+function openPanel(pid){
+  var p=allProjects.find(function(x){return x.id===pid;});
   if(!p) return;
-  currentProjId = pid;
-  var m = getMeta(pid);
-  document.getElementById("epCode").textContent = getCode(p);
-  document.getElementById("epName").textContent = p.project_name||p.name||"";
-  document.getElementById("epNote").value     = m.note||"";
-  document.getElementById("epStaff").value    = m.staff||"";
-  document.getElementById("epKoujou").value   = m.koujou||"";
-  document.getElementById("epSoftware").value = m.software||"";
-  document.getElementById("epVersion").value  = m.version||"";
+  currentProjId=pid;
+  var m=getMeta(pid);
+  document.getElementById("epCode").textContent=getCode(p);
+  document.getElementById("epName").textContent=p.project_name||p.name||"";
+  document.getElementById("epNote").value=m.note||"";
+  document.getElementById("epStaff").value=m.staff||"";
+  document.getElementById("epKoujou").value=m.koujou||"";
+  document.getElementById("epSoftware").value=m.software||"";
+  document.getElementById("epVersion").value=m.version||"";
   document.getElementById("epOverlay").classList.add("open");
   document.getElementById("epPanel").classList.add("open");
 }
-function closePanel() {
+function closePanel(){
   document.getElementById("epOverlay").classList.remove("open");
   document.getElementById("epPanel").classList.remove("open");
-  currentProjId = null;
+  currentProjId=null;
 }
-function savePanel() {
+function savePanel(){
   if(!currentProjId) return;
   setMeta(currentProjId,{
     note:document.getElementById("epNote").value.trim(),
@@ -377,15 +454,29 @@ function savePanel() {
   renderGantt();
 }
 
-document.addEventListener("DOMContentLoaded", function(){
-  document.getElementById("msClose").addEventListener("click", closeMsPanel);
-  document.getElementById("msCloseBtn").addEventListener("click", closeMsPanel);
-  document.getElementById("msAddBtn").addEventListener("click", addMilestone);
-  document.getElementById("msOverlay").addEventListener("click", function(e){ if(e.target===this) closeMsPanel(); });
-  document.getElementById("epClose").addEventListener("click", closePanel);
-  document.getElementById("epCancelBtn").addEventListener("click", closePanel);
-  document.getElementById("epSaveBtn").addEventListener("click", savePanel);
-  document.getElementById("epOverlay").addEventListener("click", function(e){ if(e.target===this) closePanel(); });
+document.addEventListener("DOMContentLoaded",function(){
+  /* tq popup */
+  document.getElementById("tqClose").addEventListener("click",closeTqPopup);
+  document.getElementById("tqCancel").addEventListener("click",closeTqPopup);
+  document.getElementById("tqSave").addEventListener("click",saveTqPopup);
+  document.getElementById("tqMsBtn").addEventListener("click",function(){
+    if(currentTqTask) openMsPanel(currentTqTask);
+  });
+  /* close tq on outside click */
+  document.addEventListener("click",function(e){
+    var popup=document.getElementById("tqPopup");
+    if(popup.classList.contains("open")&&!popup.contains(e.target)) closeTqPopup();
+  });
+  /* ms panel */
+  document.getElementById("msClose").addEventListener("click",closeMsPanel);
+  document.getElementById("msCloseBtn").addEventListener("click",closeMsPanel);
+  document.getElementById("msAddBtn").addEventListener("click",addMilestone);
+  document.getElementById("msOverlay").addEventListener("click",function(e){ if(e.target===this) closeMsPanel(); });
+  /* ep panel */
+  document.getElementById("epClose").addEventListener("click",closePanel);
+  document.getElementById("epCancelBtn").addEventListener("click",closePanel);
+  document.getElementById("epSaveBtn").addEventListener("click",savePanel);
+  document.getElementById("epOverlay").addEventListener("click",function(e){ if(e.target===this) closePanel(); });
 });
 
 /* ── HELPERS ── */
@@ -422,13 +513,12 @@ function buildSttMap(sorted){
   return m;
 }
 
-/* ── INIT ── */
-window.onload = async function(){
+window.onload=async function(){
   initTopbar();
   var t=new Date(),y=t.getFullYear(),mo=t.getMonth();
   document.getElementById("gStart").value=fmt(new Date(y,mo,1));
   document.getElementById("gEnd").value=fmt(new Date(y,mo+1,0));
-  try { await loadAllData(); await loadMilestones(); renderGantt(); }
+  try{ await loadAllData(); await loadMilestones(); renderGantt(); }
   catch(e){ showToast("Loi: "+e.message,"error"); }
 };
 
@@ -443,7 +533,6 @@ function setZoom(z,btn){
   renderGantt();
 }
 
-/* ── RENDER GANTT ── */
 function renderGantt(){
   var start=new Date(document.getElementById("gStart").value);
   var end=new Date(document.getElementById("gEnd").value);
@@ -487,8 +576,6 @@ function renderGantt(){
     var tasks=allTasks.filter(function(t){return t.project_id===p.id;});
     var rs=Math.max(tasks.length,1);
     var stt=sttMap[p.id]||"";
-    var code=getCode(p);
-    var name=p.project_name||p.name||"";
     var meta=getMeta(p.id);
     var swHtml="";
     if(meta.software) swHtml+='<div class="g-software">'+meta.software+(meta.version?" "+meta.version:"")+'</div>';
@@ -499,8 +586,8 @@ function renderGantt(){
       return '<td class="g-cell '+(isWeekend(d)?"we":"")+" "+(d===today?"tdy":"")+'" style="min-width:'+CW+'px;"></td>';
     }).join("");
     var pCell='<td class="g-left" rowspan="'+rs+'" data-pid="'+p.id+'">'
-      +'<div class="g-pname"><span class="stt-badge">'+stt+'</span><span class="pname-text">'+name+'</span></div>'
-      +'<div class="g-pcode">'+code+'</div>'+swHtml+'</td>';
+      +'<div class="g-pname"><span class="stt-badge">'+stt+'</span><span class="pname-text">'+(p.project_name||p.name||"")+'</span></div>'
+      +'<div class="g-pcode">'+getCode(p)+'</div>'+swHtml+'</td>';
     var bicoCell='<td class="g-bico" rowspan="'+rs+'">'+noteVal+'</td>';
     var staffCell='<td class="g-staff" rowspan="'+rs+'">'+staffVal+'</td>';
     if(!tasks.length){ rows+="<tr>"+pCell+bicoCell+staffCell+dc+"</tr>"; return; }
@@ -512,7 +599,6 @@ function renderGantt(){
   var thead=gZoom==="month"?"<thead><tr>"+hdr1+"</tr><tr>"+hdr2+"</tr></thead>":"<thead><tr>"+hdr1+"</tr></thead>";
   document.getElementById("ganttCont").innerHTML='<table class="gantt">'+thead+"<tbody>"+rows+"</tbody></table>";
 
-  /* bind g-left */
   document.querySelectorAll(".g-left[data-pid]").forEach(function(td){
     td.addEventListener("click",function(e){
       e.stopPropagation();
@@ -520,7 +606,6 @@ function renderGantt(){
     });
   });
 
-  /* draw bars + dots */
   projects.forEach(function(p){
     var color=projColorMap[p.id]||"#a8dadc";
     allTasks.filter(function(t){return t.project_id===p.id;}).forEach(function(t){
@@ -546,7 +631,7 @@ function renderGantt(){
         }
       }
 
-      /* DOT XANH: receive_date tu project_tasks */
+      /* DOT XANH — receive_date tu project_tasks, click → tqPopup */
       if(t.receive_date){
         var ri=days.indexOf(t.receive_date);
         if(ri>=0&&ri<cells.length){
@@ -555,15 +640,16 @@ function renderGantt(){
           dot.style.left="50%";
           (function(task){
             dot.addEventListener("mouseenter",function(ev){
-              showTooltip(ev,"📥 Nhan data: "+task.receive_date);
+              showTooltip(ev,"📥 Nhan data: "+task.receive_date+"<br>📤 Gui: "+(task.send_date||"—")+"<br><i>Click de sua / quan ly giai doan</i>");
             });
             dot.addEventListener("mouseleave",hideTooltip);
+            dot.addEventListener("click",function(ev){ openTqPopup(ev,task); });
           })(t);
           cells[ri].appendChild(dot);
         }
       }
 
-      /* DOT DO: send_date tu project_tasks */
+      /* DOT DO — send_date tu project_tasks, click → tqPopup */
       if(t.send_date){
         var si2=days.indexOf(t.send_date);
         if(si2>=0&&si2<cells.length){
@@ -572,79 +658,49 @@ function renderGantt(){
           dot2.style.left="50%";
           (function(task){
             dot2.addEventListener("mouseenter",function(ev){
-              showTooltip(ev,"📤 Ngay gui: "+task.send_date);
+              showTooltip(ev,"📤 Ngay gui: "+task.send_date+"<br>📥 Nhan: "+(task.receive_date||"—")+"<br><i>Click de sua / quan ly giai doan</i>");
             });
             dot2.addEventListener("mouseleave",hideTooltip);
+            dot2.addEventListener("click",function(ev){ openTqPopup(ev,task); });
           })(t);
           cells[si2].appendChild(dot2);
         }
       }
 
-      /* DOT VANG: milestone manager — hien thi o ngay bat dau task */
-      var anchorIdx = t.start_date ? days.indexOf(t.start_date) : 0;
-      if(anchorIdx < 0) anchorIdx = 0;
-      if(anchorIdx < cells.length){
-        var addDot=document.createElement("div");
-        addDot.className="g-dot g-dot-add";
-        addDot.style.cssText="left:80%;top:16px;";
-        var msCnt=getMsForTask(t.id).length;
-        (function(task, cnt){
-          addDot.addEventListener("mouseenter",function(ev){
-            showTooltip(ev,"🟡 "+(cnt>0?cnt+" giai doan":"Quan ly giai doan")+"<br><i>Click de mo</i>");
-          });
-          addDot.addEventListener("mouseleave",hideTooltip);
-          addDot.addEventListener("click",function(ev){
-            ev.stopPropagation();
-            hideTooltip();
-            openMsPanel(task);
-          });
-        })(t, msCnt);
-        cells[anchorIdx].appendChild(addDot);
-      }
-
-      /* MILESTONE DOTS tu task_milestones */
-      var ms=getMsForTask(t.id);
-      ms.forEach(function(m,mi){
-        var offTop  = 4  + mi*4;
-        var offBot  = 26 + mi*4;
-
+      /* MILESTONE DOTS — tu task_milestones (mo nhat hon) */
+      getMsForTask(t.id).forEach(function(m,mi){
         if(m.receive_date){
           var mri=days.indexOf(m.receive_date);
           if(mri>=0&&mri<cells.length){
-            var mdot=document.createElement("div");
-            mdot.className="g-dot g-dot-ms-rcv";
-            mdot.style.cssText="left:50%;top:"+offTop+"px;";
-            (function(milestone,idx){
-              mdot.addEventListener("mouseenter",function(ev){
-                showTooltip(ev,"📥 Giai doan "+(idx+1)+" nhan: "+milestone.receive_date+(milestone.note?"<br>"+milestone.note:""));
+            var md=document.createElement("div");
+            md.className="g-dot g-dot-ms-rcv";
+            md.style.left="50%";
+            md.style.top=(4+mi*6)+"px";
+            (function(ms,idx){ 
+              md.addEventListener("mouseenter",function(ev){
+                showTooltip(ev,"📥 Giai doan "+(idx+1)+": "+ms.receive_date+(ms.note?"<br>"+ms.note:""));
               });
-              mdot.addEventListener("mouseleave",hideTooltip);
-              mdot.addEventListener("click",function(ev){
-                ev.stopPropagation(); hideTooltip();
-                openMsPanel(t);
-              });
+              md.addEventListener("mouseleave",hideTooltip);
+              md.addEventListener("click",function(ev){ ev.stopPropagation(); openTqPopup(ev,t); });
             })(m,mi);
-            cells[mri].appendChild(mdot);
+            cells[mri].appendChild(md);
           }
         }
-
         if(m.send_date){
           var msi=days.indexOf(m.send_date);
           if(msi>=0&&msi<cells.length){
-            var mdot2=document.createElement("div");
-            mdot2.className="g-dot g-dot-ms-send";
-            mdot2.style.cssText="left:50%;top:"+offBot+"px;";
-            (function(milestone,idx){
-              mdot2.addEventListener("mouseenter",function(ev){
-                showTooltip(ev,"📤 Giai doan "+(idx+1)+" gui: "+milestone.send_date+(milestone.note?"<br>"+milestone.note:""));
+            var md2=document.createElement("div");
+            md2.className="g-dot g-dot-ms-send";
+            md2.style.left="50%";
+            md2.style.top=(26+mi*6)+"px";
+            (function(ms,idx){
+              md2.addEventListener("mouseenter",function(ev){
+                showTooltip(ev,"📤 Giai doan "+(idx+1)+" gui: "+ms.send_date+(ms.note?"<br>"+ms.note:""));
               });
-              mdot2.addEventListener("mouseleave",hideTooltip);
-              mdot2.addEventListener("click",function(ev){
-                ev.stopPropagation(); hideTooltip();
-                openMsPanel(t);
-              });
+              md2.addEventListener("mouseleave",hideTooltip);
+              md2.addEventListener("click",function(ev){ ev.stopPropagation(); openTqPopup(ev,t); });
             })(m,mi);
-            cells[msi].appendChild(mdot2);
+            cells[msi].appendChild(md2);
           }
         }
       });
