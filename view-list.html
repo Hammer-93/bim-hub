@@ -92,11 +92,7 @@
     .proj-row:hover td { background:#f0f7ff; }
     .proj-row.expanded td { background:#e8f4fe; }
     .proj-code { font-weight:700; color:#0077b6; font-size:13px; }
-    .stt-badge { display:inline-flex; align-items:center; justify-content:center; min-width:36px; height:36px; border-radius:10px; font-size:13px; font-weight:800; padding:0 6px; }
-    .stt-a { background:#e8f4fe; color:#0077b6; }
-    .stt-b { background:#d4edda; color:#1a7c3a; }
-    .stt-c { background:#fff3cd; color:#856404; }
-    .stt-d { background:#f3e8ff; color:#7b2d8b; }
+    .stt-badge { display:inline-flex; align-items:center; justify-content:center; min-width:36px; height:36px; border-radius:10px; font-size:13px; font-weight:800; padding:0 6px; background:#e8f4fe; color:#0077b6; }
     .chevron { display:inline-block; transition:transform .25s; font-size:12px; color:#aaa; margin-left:6px; }
     .chevron.open { transform:rotate(90deg); }
     .task-expand-row { display:none; }
@@ -105,8 +101,6 @@
     .task-expand-inner { padding:14px 20px 18px 56px; }
     .task-expand-title { font-size:12px; font-weight:700; color:#0077b6; margin-bottom:12px; }
     .task-cards { display:flex; flex-wrap:wrap; gap:12px; align-items:flex-start; }
-
-    /* TASK CARD */
     .task-card { background:#fff; border:1.5px solid #dde2ea; border-radius:12px; padding:14px 16px; min-width:230px; max-width:280px; flex:1; transition:box-shadow .15s; position:relative; }
     .task-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.1); border-color:#0096c7; }
     .task-card-type { font-size:11px; font-weight:700; color:#fff; padding:3px 12px; border-radius:20px; display:inline-block; margin-bottom:10px; }
@@ -115,8 +109,6 @@
     .task-field-icon { font-size:13px; flex-shrink:0; width:18px; text-align:center; }
     .task-field-label { font-size:11px; color:#aaa; min-width:72px; flex-shrink:0; }
     .task-field-val { font-size:12px; font-weight:600; color:#333; flex:1; }
-
-    /* INLINE EDIT - dung select va input binh thuong khong dung onclick de tranh mat focus */
     .edit-input  { font-size:12px; font-weight:600; color:#222; border:1.5px solid #0096c7; border-radius:6px; padding:4px 8px; background:#fff; outline:none; width:100%; }
     .edit-select { font-size:12px; font-weight:600; color:#222; border:1.5px solid #0096c7; border-radius:6px; padding:4px 8px; background:#fff; outline:none; width:100%; cursor:pointer; }
     .edit-btn-wrap { display:flex; gap:6px; margin-top:10px; }
@@ -131,8 +123,6 @@
     .btn-del-task:hover { background:#fff0f0; }
     .saving-mask { position:absolute; inset:0; background:rgba(255,255,255,.85); border-radius:12px; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:#0077b6; display:none; z-index:10; }
     .no-task-msg { font-size:13px; color:#aaa; padding:8px 0; }
-
-    /* ADD TASK CARD */
     .add-task-card { background:#fff; border:2px dashed #b8dff5; border-radius:12px; padding:14px 16px; min-width:230px; max-width:280px; flex:1; }
     .add-task-btn { display:flex; align-items:center; justify-content:center; gap:8px; min-height:50px; color:#0096c7; font-size:13px; font-weight:600; cursor:pointer; border:none; background:none; width:100%; border-radius:8px; transition:background .15s; }
     .add-task-btn:hover { background:#f0f7ff; }
@@ -141,8 +131,6 @@
     .add-task-title { font-size:12px; font-weight:700; color:#0077b6; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; }
     .btn-close-add { background:none; border:none; color:#aaa; cursor:pointer; font-size:16px; line-height:1; }
     .btn-close-add:hover { color:#e63946; }
-
-    /* GROUP SELECTOR */
     .group-selector { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:6px; }
     .group-opt { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:12px 8px; border:2px solid #dde2ea; border-radius:10px; cursor:pointer; transition:all .15s; background:#fff; }
     .group-opt:hover { border-color:#0096c7; background:#f0f7ff; }
@@ -261,7 +249,7 @@
         </div>
       </div>
       <div class="stt-preview">
-        STT du kien: <b id="sttVal" style="color:#0077b6;">A1</b>
+        STT du kien: <b id="sttVal" style="color:#0077b6;">1</b>
         <span style="color:#aaa;font-size:11px;">(reset theo nam)</span>
       </div>
     </div>
@@ -289,7 +277,7 @@
         <div class="tag-wrap" id="branchTags"></div>
       </div>
       <div class="form-group">
-        <label>&#x8A2D;&#x8A08;&#x533A;&#x5206; <span style="color:#aaa;font-weight:400;font-size:11px;">&#xFF08;&#x7701;&#x7565;&#x53EF;&#xFF09;</span></label>
+        <label>&#x8A2D;&#x8A08;&#x533A;&#x5206; <span style="color:#aaa;font-weight:400;font-size:11px;">&#xFF08;&#x7069;&#x7565;&#x53EF;&#xFF09;</span></label>
         <div class="combo-wrap">
           <input type="text" id="designInput" placeholder="&#x8A2D;&#x8A08;&#x533A;&#x5206;&#x3092;&#x9078;&#x629E;..." autocomplete="off"
             oninput="onCombo('design')" onfocus="openDD('design')" onblur="closeDD('design')"/>
@@ -369,18 +357,32 @@ function selectGroup(g) {
   }
   updateSttPreview();
 }
+
 function updateSttPreview() {
-  var year=document.getElementById('yearInput').value||'26';
-  var count=0;
-  for (var i=0;i<allProjects.length;i++) {
-    var p=allProjects[i];
-    if (p.proj_group===selectedGroup&&(p.year===year||(p.code||'').startsWith(year))) count++;
-  }
-  var el=document.getElementById('sttVal');
-  el.textContent=selectedGroup+(count+1);
-  var cm={A:'#0077b6',B:'#1a7c3a',C:'#856404',D:'#7b2d8b'};
-  el.style.color=cm[selectedGroup]||'#0077b6';
+  /* STT preview trong modal: chỉ là số thứ tự toàn bộ dự án theo mã số */
+  var sorted = getProjectsSorted();
+  var el = document.getElementById('sttVal');
+  el.textContent = sorted.length + 1;
+  el.style.color = '#0077b6';
 }
+
+/* ── HÀM SẮP XẾP DỰ ÁN: theo mã số 25xxx → 26xxx → 27xxx ── */
+function getCodeNum(p) {
+  /* Lấy số đầu của code: "26001_..." → 26001, ưu tiên year+seq */
+  if (p.year && p.seq_number) {
+    return parseInt(p.year) * 1000 + parseInt(p.seq_number);
+  }
+  var code = p.code || p.project_code || '';
+  var m = code.match(/^(\d+)/);
+  return m ? parseInt(m[1]) : 99999;
+}
+
+function getProjectsSorted() {
+  return allProjects.slice().sort(function(a, b) {
+    return getCodeNum(a) - getCodeNum(b);
+  });
+}
+
 function setFilter(f) {
   filterStatus=f;
   var ids=['fAll','fActive','fDone'];
@@ -416,7 +418,6 @@ function getActiveTasks(projId) {
   return result;
 }
 
-/* ── EXPAND ── */
 function toggleExpand(projId) {
   if (expandedId===projId) { collapseRow(projId); expandedId=null; }
   else { if(expandedId) collapseRow(expandedId); expandRow(projId); expandedId=projId; }
@@ -437,8 +438,6 @@ function collapseRow(id) {
   if(tr) tr.classList.remove('open');
   if(ch) ch.classList.remove('open');
 }
-
-/* ── USER / TYPE OPTIONS ── */
 function buildUserOptions(selectedId) {
   var html='<option value="">- Chua phan cong -</option>';
   for (var i=0;i<allUsers.length;i++) {
@@ -454,8 +453,6 @@ function buildTypeOptions(sel) {
   }
   return html;
 }
-
-/* ── EDIT EXISTING TASK ── */
 function editTask(tid) {
   document.getElementById('view-'+tid).style.display='none';
   document.getElementById('edit-'+tid).style.display='block';
@@ -491,8 +488,6 @@ async function saveTask(tid) {
     renderList();
   } catch(e){showToast('Loi: '+e.message,'error');if(mask)mask.style.display='none';}
 }
-
-/* ── DELETE TASK ── */
 async function deleteTask(tid, projId) {
   if(!confirm('Xac nhan xoa task nay?')) return;
   try {
@@ -505,8 +500,6 @@ async function deleteTask(tid, projId) {
     renderList();
   } catch(e){showToast('Loi xoa task: '+e.message,'error');}
 }
-
-/* ── ADD NEW TASK INLINE ── */
 function toggleAddTask(projId) {
   var btn  = document.getElementById('add-btn-'+projId);
   var form = document.getElementById('add-form-'+projId);
@@ -540,8 +533,6 @@ async function saveNewTask(projId) {
     renderList();
   } catch(e){showToast('Loi: '+e.message,'error');}
 }
-
-/* ── REFRESH EXPAND AREA ── */
 function refreshExpand(projId) {
   var inner=document.querySelector('#task-row-'+projId+' .task-expand-inner');
   if(!inner) return;
@@ -549,12 +540,9 @@ function refreshExpand(projId) {
   inner.innerHTML=buildExpandInner(projId,color);
   if(expandedId===projId) expandRow(projId);
 }
-
-/* ── BUILD EXPAND INNER ── */
 function buildExpandInner(projId, projColor) {
   var tasks=getActiveTasks(projId);
   var cardsHtml='';
-
   for(var i=0;i<tasks.length;i++){
     var t=tasks[i];
     var user=null;
@@ -569,7 +557,6 @@ function buildExpandInner(projId, projColor) {
       +'<button class="btn-del-task"  id="delbtn-'+tid+'">&#x1F5D1;&#xFE0F;</button>'
       +'</div>'
       +'<div class="task-card-type" style="background:'+tc+';">'+(t.task_type||'Task')+'</div>'
-      // VIEW MODE
       +'<div id="view-'+tid+'">'
         +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span><span class="task-field-val">'+uname+'</span></div>'
         +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Nhan data:</span><span class="task-field-val">'+(t.receive_date||'-')+'</span></div>'
@@ -577,7 +564,6 @@ function buildExpandInner(projId, projColor) {
         +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">Ket thuc:</span><span class="task-field-val">'+(t.end_date||'-')+'</span></div>'
         +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Ngay gui:</span><span class="task-field-val">'+(t.send_date||'-')+'</span></div>'
       +'</div>'
-      // EDIT MODE
       +'<div id="edit-'+tid+'" style="display:none;">'
         +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span>'
         +'<select class="edit-select" id="eu-'+tid+'">'+buildUserOptions(t.assigned_to)+'</select></div>'
@@ -596,10 +582,7 @@ function buildExpandInner(projId, projColor) {
       +'</div>'
       +'</div>';
   }
-
   if(!tasks.length) cardsHtml='<div class="no-task-msg">&#x1F4AD; Khong co task dang hoat dong</div>';
-
-  // Add task card — dung button HTML thuan, khong dung onclick inline de tranh mat focus dropdown
   var addCardHtml='<div class="add-task-card" id="add-card-'+projId+'">'
     +'<button class="add-task-btn" id="add-btn-'+projId+'">&#x2795; Them task moi</button>'
     +'<div class="add-task-form" id="add-form-'+projId+'">'
@@ -623,16 +606,12 @@ function buildExpandInner(projId, projColor) {
       +'</div>'
     +'</div>'
     +'</div>';
-
   return '<div class="task-expand-title">&#x1F4CB; Task dang hoat dong</div>'
     +'<div class="task-cards">'+cardsHtml+addCardHtml+'</div>';
 }
 
-/* ── BIND EVENTS SAU KHI RENDER (tranh onclick inline lam mat focus) ── */
 function bindExpandEvents(projId) {
   var tasks=getActiveTasks(projId);
-
-  // Bind edit/delete/save/cancel cho tung task
   for(var i=0;i<tasks.length;i++){
     (function(tid, pid){
       var editBtn   = document.getElementById('editbtn-'+tid);
@@ -645,8 +624,6 @@ function bindExpandEvents(projId) {
       if(cancelBtn) cancelBtn.onclick = function(e){e.stopPropagation();cancelEdit(tid);};
     })(tasks[i].id, projId);
   }
-
-  // Bind add task buttons
   (function(pid){
     var addBtn    = document.getElementById('add-btn-'+pid);
     var addClose  = document.getElementById('add-close-'+pid);
@@ -659,21 +636,22 @@ function bindExpandEvents(projId) {
   })(projId);
 }
 
-/* ── RENDER LIST ── */
+/* ── RENDER LIST ──
+   STT: số thứ tự đơn giản (1, 2, 3...) không kèm nhóm
+   Sắp xếp: theo mã số 25xxx → 26xxx → 27xxx
+*/
 function renderList() {
   var q=(document.getElementById('searchProj').value||'').toLowerCase();
   var grpF=document.getElementById('fGroup').value;
   var prevExp=expandedId; expandedId=null;
-  var counters={};
-  var sorted=allProjects.slice().sort(function(a,b){return new Date(a.created_at)-new Date(b.created_at);});
-  var sttMap={};
-  for(var s=0;s<sorted.length;s++){
-    var sp=sorted[s],yr=sp.year||'26',grp=sp.proj_group||'A',key=yr+'_'+grp;
-    counters[key]=(counters[key]||0)+1; sttMap[sp.id]=grp+counters[key];
-  }
+
+  /* Sắp xếp tất cả projects theo mã số tăng dần */
+  var sortedAll = getProjectsSorted();
+
+  /* Lọc theo filter */
   var data=[];
-  for(var i=0;i<allProjects.length;i++){
-    var p=allProjects[i],as=calcStatus(p);
+  for(var i=0;i<sortedAll.length;i++){
+    var p=sortedAll[i], as=calcStatus(p);
     var mQ=!q||p.project_name.toLowerCase().indexOf(q)>=0||(p.code||'').toLowerCase().indexOf(q)>=0;
     var mS=true;
     if(filterStatus==='active') mS=(as==='active');
@@ -681,13 +659,21 @@ function renderList() {
     var mG=!grpF||p.proj_group===grpF;
     if(mQ&&mS&&mG) data.push(p);
   }
+
   var tbody=document.getElementById('listBody');
-  if(!data.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">Khong co du an nao</td></tr>';return;}
+  if(!data.length){
+    tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">Khong co du an nao</td></tr>';
+    return;
+  }
+
   var html='';
   for(var d=0;d<data.length;d++){
-    var p=data[d],color=projColorMap[p.id]||'#a8dadc';
-    var grp2=p.proj_group||'A',cfg=GROUP_CFG[grp2]||GROUP_CFG['A'];
-    var sttTxt=sttMap[p.id]||(grp2+'?');
+    var p=data[d], color=projColorMap[p.id]||'#a8dadc';
+    var grp2=p.proj_group||'A', cfg=GROUP_CFG[grp2]||GROUP_CFG['A'];
+
+    /* STT: số thứ tự đơn giản trong danh sách đã lọc+sắp xếp */
+    var sttNum = d + 1;
+
     var autoSt=calcStatus(p);
     var stBadge=autoSt==='done'
       ?'<span class="status-badge status-done">&#x2B1C; Da ket thuc</span>'
@@ -699,8 +685,9 @@ function renderList() {
     var delBtn=currentUserRole==='Admin'
       ?'<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Xoa</button>':'';
     var expandInner=buildExpandInner(p.id,color);
+
     html+='<tr class="proj-row" id="proj-row-'+p.id+'">'
-      +'<td style="text-align:center;"><div class="stt-badge '+cfg.cls+'">'+sttTxt+'</div></td>'
+      +'<td style="text-align:center;"><div class="stt-badge">'+sttNum+'</div></td>'
       +'<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>'+projId2+'</span></td>'
       +'<td style="font-weight:600;">'+p.project_name+'<span class="chevron" id="chev-'+p.id+'">&#x25B6;</span>'+cntBadge+'</td>'
       +'<td>'+(p.branch||'-')+'</td>'
@@ -716,18 +703,14 @@ function renderList() {
   }
   tbody.innerHTML=html;
 
-  // Bind ALL events sau khi render xong DOM
   for(var d2=0;d2<data.length;d2++){
     var p2=data[d2];
-    // Bind proj row click
     (function(pid){
       var row=document.getElementById('proj-row-'+pid);
       if(row) row.onclick=function(e){
-        // Neu click vao button thi khong expand
         if(e.target.tagName==='BUTTON'||e.target.closest('button')) return;
         toggleExpand(pid);
       };
-      // Bind del proj button
       var dpb=document.getElementById('delprojbtn-'+pid);
       if(dpb) dpb.onclick=function(e){
         e.stopPropagation();
@@ -736,11 +719,8 @@ function renderList() {
         if(proj) deleteProject(pid,proj.project_name);
       };
     })(p2.id);
-    // Bind expand area events
     bindExpandEvents(p2.id);
   }
-
-  // Restore expanded
   if(prevExp){expandRow(prevExp);expandedId=prevExp;}
 }
 
@@ -792,7 +772,7 @@ async function createProject(){
         proj_group:selectedGroup,start_date:pStart||null,end_date:pEnd||null,created_by:createdBy})});
     if(!res.ok){var e=await res.json();showToast(e.message||'Error','error');return;}
     var arr=await res.json();var proj=arr[0];
-    allProjects.unshift(proj);projColorMap[proj.id]=color;
+    allProjects.push(proj);projColorMap[proj.id]=color;
     var taskDivs=document.querySelectorAll('#taskRows .task-row');
     var promises=[];
     for(var i=0;i<taskDivs.length;i++){
