@@ -60,17 +60,10 @@
   }
   .project-row:hover { background: #f5f7ff; }
   .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: #4caf50; }
-
-  /* proj-id hiển thị tên đầy đủ, không bị giới hạn width cứng */
   .proj-id {
     font-size: 13px; font-weight: 700; color: #4f8ef7;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    flex: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1;
   }
-
-  /* proj-name ẩn hoàn toàn */
-  .proj-name { display: none; }
-
   .proj-group {
     font-size: 11px; background: #eef2ff; color: #5c6bc0;
     border-radius: 4px; padding: 2px 7px; font-weight: 600; flex-shrink: 0;
@@ -90,22 +83,20 @@
   }
   .modal-header {
     padding: 20px 24px 16px; border-bottom: 1px solid #eee;
-    display: flex; justify-content: space-between; align-items: flex-start;
+    display: flex; justify-content: space-between; align-items: center;
   }
-  .modal-header h2 { font-size: 17px; font-weight: 700; color: #222; }
+  .modal-header h2 { font-size: 16px; font-weight: 700; color: #222; }
   .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #999; }
   .modal-body { padding: 20px 24px; }
-  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
-  .info-item .lbl { font-size: 11px; color: #999; text-transform: uppercase; margin-bottom: 3px; }
-  .info-item .val { font-size: 14px; font-weight: 600; color: #333; }
-  .task-list-title { font-size: 13px; font-weight: 700; color: #555; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+
+  .task-list-title { font-size: 13px; font-weight: 700; color: #555; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .5px; }
   .task-item {
     display: flex; align-items: center; gap: 10px;
     padding: 10px 14px; border-radius: 8px; background: #f8f9ff; margin-bottom: 8px;
   }
-  .task-type-badge { font-size: 11px; background: #e8eaf6; color: #3949ab; border-radius: 4px; padding: 2px 8px; font-weight: 600; }
-  .task-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; background: #e8f5e9; color: #388e3c; }
-  .task-date { font-size: 11px; color: #999; margin-left: auto; }
+  .task-type-badge { font-size: 12px; background: #e8eaf6; color: #3949ab; border-radius: 4px; padding: 3px 9px; font-weight: 600; }
+  .task-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; background: #e8f5e9; color: #388e3c; white-space: nowrap; }
+  .task-date { font-size: 11px; color: #999; margin-left: auto; white-space: nowrap; }
 
   .toast { position:fixed; bottom:24px; right:24px; padding:12px 22px; border-radius:10px; font-size:14px; color:#fff; opacity:0; transition:opacity .3s; z-index:9999; pointer-events:none; }
   .toast.show { opacity:1; }
@@ -162,7 +153,7 @@
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-header">
-      <h2 id="modalTitle">Chi tiết dự án</h2>
+      <h2 id="modalTitle">Chi tiết task</h2>
       <button class="modal-close" onclick="closeModalDirect()">✕</button>
     </div>
     <div class="modal-body" id="modalBody"></div>
@@ -176,15 +167,14 @@ const GROUP_LABELS = { A:'設計BIM', B:'施工BIM', C:'清算', D:'M&F' };
 const ACTIVE_STATUSES = ['active','in_progress','doing','進行中','アクティブ','running','ongoing'];
 
 function isActiveTask(t) {
-  const s = (t.status || '').toLowerCase().trim();
+  var s = (t.status || '').toLowerCase().trim();
   return ACTIVE_STATUSES.some(function(a) { return s === a.toLowerCase(); });
 }
-
 function getGroup(p) {
   return (p.proj_group || p.project_group || p.group || '').toString().toUpperCase().trim();
 }
-function getCode(p)  { return p.project_code || p.code || p.id || ''; }
-function getName(p)  { return p.project_name || p.name || ''; }
+function getCode(p) { return p.project_code || p.code || p.id || ''; }
+function getName(p) { return p.project_name || p.name || ''; }
 
 async function init() {
   initTopbar();
@@ -201,10 +191,10 @@ async function init() {
 }
 
 function render() {
-  const search = document.getElementById('searchInput').value.toLowerCase().trim();
-  const group  = document.getElementById('groupFilter').value.toUpperCase().trim();
+  var search = document.getElementById('searchInput').value.toLowerCase().trim();
+  var group  = document.getElementById('groupFilter').value.toUpperCase().trim();
 
-  const activeProjectIds = new Set(
+  var activeProjectIds = new Set(
     allTasks.filter(isActiveTask).map(function(t) { return t.project_id; })
   );
 
@@ -265,16 +255,12 @@ function render() {
       var grp  = getGroup(p);
       var code = getCode(p);
       var name = getName(p);
-
-      var row = document.createElement('div');
+      var row  = document.createElement('div');
       row.className = 'project-row';
-
-      /* Chỉ hiện proj-id (code), ẩn hoàn toàn proj-name (tên đen) */
       row.innerHTML =
         '<span class="status-dot"></span>' +
         '<span class="proj-id" title="' + name + '">' + code + '</span>' +
         (grp ? '<span class="proj-group">' + grp + '</span>' : '');
-
       row.onclick = function() { openModal(p); };
       list.appendChild(row);
     });
@@ -290,26 +276,17 @@ function render() {
 }
 
 function openModal(p) {
-  var code  = getCode(p);
-  var name  = getName(p);
-  var grp   = getGroup(p);
-  var tasks = allTasks.filter(function(t) { return t.project_id === p.id; });
+  var code   = getCode(p);
+  var tasks  = allTasks.filter(function(t) { return t.project_id === p.id; });
   var active = tasks.filter(isActiveTask);
 
-  document.getElementById('modalTitle').textContent = code + (name ? ' — ' + name : '');
+  /* Title chỉ là mã dự án */
+  document.getElementById('modalTitle').textContent = code;
 
-  var body = '<div class="info-grid">';
-  body += '<div class="info-item"><div class="lbl">Mã dự án</div><div class="val">' + code + '</div></div>';
-  body += '<div class="info-item"><div class="lbl">Nhóm</div><div class="val">' + (grp ? grp + ' — ' + (GROUP_LABELS[grp] || '') : '—') + '</div></div>';
-  body += '<div class="info-item"><div class="lbl">Task đang chạy</div><div class="val">' + active.length + '</div></div>';
-  body += '<div class="info-item"><div class="lbl">Tổng task</div><div class="val">' + tasks.length + '</div></div>';
-  if (name) {
-    body += '<div class="info-item" style="grid-column:1/-1;"><div class="lbl">Tên dự án</div><div class="val" style="font-weight:400;font-size:13px;">' + name + '</div></div>';
-  }
-  body += '</div>';
+  var body = '';
 
   if (active.length > 0) {
-    body += '<div class="task-list-title">Task đang hoạt động</div>';
+    body += '<div class="task-list-title">Task đang hoạt động (' + active.length + ')</div>';
     active.forEach(function(t) {
       var sd = t.start_date ? t.start_date.substring(0,10) : '';
       var ed = t.end_date   ? t.end_date.substring(0,10)   : '';
@@ -320,6 +297,8 @@ function openModal(p) {
         (dateStr ? '<span class="task-date">' + dateStr + '</span>' : '') +
         '</div>';
     });
+  } else {
+    body = '<div style="text-align:center;color:#bbb;padding:20px;">Không có task đang hoạt động.</div>';
   }
 
   document.getElementById('modalBody').innerHTML = body;
