@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>BIM Hub \u2013 Quan ly thanh vien</title>
+  <title>BIM Hub - Quan ly thanh vien</title>
   <style>
     * { box-sizing:border-box; margin:0; padding:0; }
     body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f4f8; min-height:100vh; }
@@ -17,7 +17,7 @@
     .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#00b4d8,#0077b6); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:12px; }
     .btn-top { background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; text-decoration:none; transition:background .2s; font-family:inherit; }
     .btn-top:hover { background:rgba(255,255,255,.22); }
-    .main { max-width:1080px; margin:32px auto; padding:0 24px; }
+    .main { max-width:1100px; margin:32px auto; padding:0 24px; }
     .page-title { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
     .page-sub   { font-size:13px; color:#888; margin-bottom:28px; }
 
@@ -25,7 +25,7 @@
     .stats { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-bottom:28px; }
     .stat-card { background:#fff; border-radius:13px; padding:16px 14px; box-shadow:0 2px 10px rgba(0,0,0,.06); text-align:center; }
     .stat-num   { font-size:24px; font-weight:800; }
-    .stat-label { font-size:11px; color:#888; margin-top:4px; line-height:1.3; }
+    .stat-label { font-size:11px; color:#888; margin-top:4px; }
     .c-blue   { color:#0077b6; }
     .c-teal   { color:#0096c7; }
     .c-green  { color:#52b788; }
@@ -35,7 +35,7 @@
 
     /* CARD */
     .card { background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); padding:24px 28px; margin-bottom:24px; }
-    .card-title { font-size:14px; font-weight:700; color:#1a1a2e; margin-bottom:18px; padding-bottom:12px; border-bottom:1.5px solid #f0f0f0; display:flex; align-items:center; gap:8px; }
+    .card-title { font-size:14px; font-weight:700; color:#1a1a2e; margin-bottom:18px; padding-bottom:12px; border-bottom:1.5px solid #f0f0f0; }
 
     /* FORM */
     .form-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px 18px; }
@@ -46,7 +46,7 @@
     input[type=email], input[type=text], input[type=password], select {
       width:100%; padding:10px 14px; border:1.5px solid #dde2ea;
       border-radius:8px; font-size:13.5px; outline:none;
-      transition:border-color .2s, box-shadow .2s; font-family:inherit; color:#222;
+      transition:border-color .2s; font-family:inherit; color:#222;
     }
     input:focus, select:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.12); }
     .pw-wrap { position:relative; }
@@ -59,11 +59,10 @@
     .info-box { background:#f0f7ff; border:1.5px solid #b8dff5; border-radius:10px; padding:12px 16px; font-size:12.5px; color:#0077b6; margin-top:16px; line-height:1.7; }
 
     /* SEARCH + FILTER */
-    .table-controls { display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+    .table-controls { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
     .search-bar { display:flex; align-items:center; gap:8px; background:#f8f8f8; border:1.5px solid #e8e8e8; border-radius:8px; padding:8px 14px; min-width:260px; }
     .search-bar input { border:none; background:transparent; outline:none; font-size:13.5px; flex:1; font-family:inherit; }
     .filter-select { padding:8px 12px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; font-family:inherit; color:#333; cursor:pointer; }
-    .filter-select:focus { border-color:#0096c7; }
 
     /* TABLE */
     .table-wrap { overflow-x:auto; }
@@ -78,19 +77,18 @@
     .email-text { font-weight:600; font-size:13px; color:#1a1a2e; }
     .name-text  { font-size:11px; color:#888; margin-top:1px; }
 
-    /* BADGES */
-    .role-badge-pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
-    .rb-staff   { background:#e8f4fe; color:#0077b6; }
-    .rb-leader  { background:#d4edda; color:#1a7c3a; }
-    .rb-sub     { background:#fff3cd; color:#856404; }
-    .rb-manager { background:#fde8e8; color:#c0392b; }
-    .rb-admin   { background:#e63946; color:#fff; }
+    /* ROLE BADGES */
+    .rb-staff   { background:#e8f4fe; color:#0077b6; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; display:inline-block; }
+    .rb-leader  { background:#d4edda; color:#1a7c3a; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; display:inline-block; }
+    .rb-sub     { background:#fff3cd; color:#856404; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; display:inline-block; }
+    .rb-manager { background:#fde8e8; color:#c0392b; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; display:inline-block; }
+    .rb-admin   { background:#e63946; color:#fff; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; display:inline-block; }
     .grp-badge  { display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700; }
     .grp-sekkei { background:#e8f4fe; color:#0077b6; }
     .grp-sekou  { background:#d4edda; color:#1a7c3a; }
     .grp-cim    { background:#f3e8ff; color:#7b2d8b; }
 
-    /* ACTIONS */
+    /* ACTION BUTTONS */
     .action-btns { display:flex; gap:6px; flex-wrap:wrap; }
     .btn-sm { border:1.5px solid; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:600; background:#fff; transition:all .15s; white-space:nowrap; }
     .btn-del  { border-color:#ffb3b3; color:#e63946; }
@@ -99,36 +97,40 @@
     .btn-role:hover { background:#f0fff4; }
     .btn-pw   { border-color:#b8dff5; color:#0077b6; }
     .btn-pw:hover   { background:#e8f4fe; }
+    .btn-chpw { border-color:#f3e8ff; color:#7b2d8b; }
+    .btn-chpw:hover { background:#f3e8ff; }
 
     /* MODAL */
     .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:500; display:none; align-items:center; justify-content:center; }
     .modal-overlay.open { display:flex; }
-    .modal { background:#fff; border-radius:16px; padding:32px; width:100%; max-width:400px; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:slideIn .3s ease; text-align:center; }
+    .modal { background:#fff; border-radius:16px; padding:32px; width:100%; max-width:420px; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:slideIn .3s ease; }
     @keyframes slideIn { from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);} }
-    .modal-icon  { font-size:44px; margin-bottom:10px; }
-    .modal-title { font-size:17px; font-weight:700; color:#1a1a2e; margin-bottom:6px; }
-    .modal-sub   { font-size:13px; color:#888; margin-bottom:18px; }
-    .pw-display  { background:#f0f7ff; border:1.5px solid #b8dff5; border-radius:10px; padding:16px; font-size:20px; font-weight:800; color:#0077b6; letter-spacing:2px; margin-bottom:8px; font-family:'Courier New',monospace; word-break:break-all; }
-    .pw-note     { font-size:12px; color:#aaa; margin-bottom:20px; line-height:1.6; }
-    .btn-copy    { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; margin-right:8px; }
+    .modal-icon  { font-size:44px; margin-bottom:10px; text-align:center; }
+    .modal-title { font-size:17px; font-weight:700; color:#1a1a2e; margin-bottom:6px; text-align:center; }
+    .modal-sub   { font-size:13px; color:#888; margin-bottom:18px; text-align:center; }
+    .pw-display  { background:#f0f7ff; border:1.5px solid #b8dff5; border-radius:10px; padding:16px; font-size:20px; font-weight:800; color:#0077b6; letter-spacing:2px; margin-bottom:8px; font-family:'Courier New',monospace; word-break:break-all; text-align:center; }
+    .pw-note     { font-size:12px; color:#aaa; margin-bottom:20px; line-height:1.6; text-align:center; }
+    .modal-actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+    .btn-copy { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
     .btn-copy:hover { opacity:.9; }
     .btn-close-modal { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
     .btn-close-modal:hover { background:#f5f5f5; }
-    .role-opt-btn {
-  display:flex; align-items:center; gap:12px;
-  width:100%; padding:11px 16px;
-  border:1.5px solid #dde2ea; border-radius:10px;
-  background:#fff; font-size:14px; font-weight:600;
-  color:#333; cursor:pointer; transition:all .15s;
-  text-align:left;
-}
-.role-opt-btn:hover {
-  background:#e8f4fe; border-color:#0096c7; color:#0077b6;
-}
-.role-opt-btn.selected {
-  background:#e8f4fe; border-color:#0096c7;
-  color:#0077b6; box-shadow:0 0 0 3px rgba(0,150,199,.12);
-}
+
+    /* CHANGE PW MODAL */
+    .chpw-field { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+    .chpw-field label { font-size:12px; font-weight:600; color:#555; }
+    .chpw-input-wrap { position:relative; }
+    .chpw-input-wrap input { padding-right:40px; }
+    .chpw-eye { position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#aaa; font-size:15px; user-select:none; }
+    .chpw-eye:hover { color:#0096c7; }
+    .btn-save-pw { background:linear-gradient(135deg,#9b5de5,#7b2d8b); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
+    .btn-save-pw:hover { opacity:.9; }
+
+    /* ROLE MODAL */
+    .role-opt-btn { display:flex; align-items:center; gap:12px; width:100%; padding:11px 16px; border:1.5px solid #dde2ea; border-radius:10px; background:#fff; font-size:14px; font-weight:600; color:#333; cursor:pointer; transition:all .15s; margin-bottom:8px; }
+    .role-opt-btn:hover { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
+    .role-opt-btn.selected { background:#e8f4fe; border-color:#0096c7; color:#0077b6; box-shadow:0 0 0 3px rgba(0,150,199,.12); }
+    .role-opt-btn:last-child { margin-bottom:0; }
 
     /* TOAST */
     .toast { position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:999; transform:translateY(80px); opacity:0; transition:all .35s; }
@@ -159,13 +161,13 @@
   <div class="topbar-right">
     <div class="avatar" id="topAvatar">AD</div>
     <span class="user-name" id="topName">Admin</span>
-    <a class="btn-top" href="view-list.html">🏠 Dashboard</a>
+    <a class="btn-top" href="view-list.html">&#x1F3E0; Dashboard</a>
     <button class="btn-top" onclick="logout()">Dang xuat</button>
   </div>
 </nav>
 
 <div class="main">
-  <div class="page-title">👥 Quan ly thanh vien</div>
+  <div class="page-title">&#x1F465; Quan ly thanh vien</div>
   <div class="page-sub">Them va phan quyen nhan vien VINADECONS (@vinadecons.vn)</div>
 
   <!-- STATS -->
@@ -180,7 +182,7 @@
 
   <!-- FORM THEM THANH VIEN -->
   <div class="card">
-    <div class="card-title">➕ Them thanh vien moi</div>
+    <div class="card-title">&#x2795; Them thanh vien moi</div>
     <div class="form-grid">
       <div class="field">
         <label>Email <span class="req">*</span></label>
@@ -194,7 +196,7 @@
         <label>Mat khau <span class="req">*</span></label>
         <div class="pw-wrap">
           <input type="password" id="invitePw" placeholder="Nhap mat khau..."/>
-          <span class="pw-eye" id="pwEyeBtn" onclick="togglePwVisible()">👁️</span>
+          <span class="pw-eye" onclick="togglePwVisible('invitePw','eyeAdd')">&#x1F441;&#xFE0F;</span>
         </div>
       </div>
     </div>
@@ -202,19 +204,19 @@
       <div class="field">
         <label>Nhom <span class="req">*</span></label>
         <select id="inviteGroup">
-          <option value="設計BIM">🏛️ 設計BIM</option>
-          <option value="施工BIM">🏗️ 施工BIM</option>
-          <option value="CIM">🌐 CIM</option>
+          <option value="&#x8A2D;&#x8A08;BIM">&#x1F3DB;&#xFE0F; &#x8A2D;&#x8A08;BIM</option>
+          <option value="&#x65BD;&#x5DE5;BIM">&#x1F3D7;&#xFE0F; &#x65BD;&#x5DE5;BIM</option>
+          <option value="CIM">&#x1F310; CIM</option>
         </select>
       </div>
       <div class="field">
         <label>Phan quyen <span class="req">*</span></label>
         <select id="inviteRole">
-          <option value="Staff">👤 Staff</option>
-          <option value="Leader">🟢 Leader</option>
-          <option value="Sub Manager">🟡 Sub Manager</option>
-          <option value="Manager">🟠 Manager</option>
-          <option value="Admin">🔴 Admin</option>
+          <option value="Staff">&#x1F464; Staff</option>
+          <option value="Leader">&#x1F7E2; Leader</option>
+          <option value="Sub Manager">&#x1F7E1; Sub Manager</option>
+          <option value="Manager">&#x1F7E0; Manager</option>
+          <option value="Admin">&#x1F534; Admin</option>
         </select>
       </div>
       <div class="field">
@@ -222,28 +224,28 @@
         <input type="text" id="inviteTitle" placeholder="VD: BIM Designer..."/>
       </div>
       <div class="field">
-        <button class="btn-add" id="addBtn" onclick="addMember()">✅ Them thanh vien</button>
+        <button class="btn-add" id="addBtn" onclick="addMember()">&#x2705; Them thanh vien</button>
       </div>
     </div>
     <div class="info-box">
-      ℹ️ Chi chap nhan email <b>@vinadecons.vn</b>.<br/>
+      &#x2139;&#xFE0F; Chi chap nhan email <b>@vinadecons.vn</b>.
       Admin cung cap <b>email + mat khau</b> truc tiep cho nhan vien de dang nhap.
     </div>
   </div>
 
   <!-- DANH SACH -->
   <div class="card">
-    <div class="card-title">📋 Danh sach thanh vien</div>
+    <div class="card-title">&#x1F4CB; Danh sach thanh vien</div>
     <div class="table-controls">
       <div class="search-bar">
-        <span>🔍</span>
+        <span>&#x1F50D;</span>
         <input type="text" id="searchInput" placeholder="Tim theo email hoac ten..." oninput="filterTable()"/>
       </div>
       <select class="filter-select" id="filterGroup" onchange="filterTable()">
         <option value="">Tat ca nhom</option>
-        <option value="設計BIM">🏛️ 設計BIM</option>
-        <option value="施工BIM">🏗️ 施工BIM</option>
-        <option value="CIM">🌐 CIM</option>
+        <option value="&#x8A2D;&#x8A08;BIM">&#x1F3DB;&#xFE0F; &#x8A2D;&#x8A08;BIM</option>
+        <option value="&#x65BD;&#x5DE5;BIM">&#x1F3D7;&#xFE0F; &#x65BD;&#x5DE5;BIM</option>
+        <option value="CIM">&#x1F310; CIM</option>
       </select>
       <select class="filter-select" id="filterRole" onchange="filterTable()">
         <option value="">Tat ca quyen</option>
@@ -272,45 +274,65 @@
     </div>
   </div>
 </div>
-<!-- MODAL DOI QUYEN -->
-<div class="modal-overlay" id="roleModal">
-  <div class="modal">
-    <div class="modal-icon">🔄</div>
-    <div class="modal-title">Doi quyen thanh vien</div>
-    <div class="modal-sub" id="roleModalEmail">email@vinadecons.vn</div>
-    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
-      <button class="role-opt-btn" onclick="selectRole('Staff')">
-        <span>👤</span><span>Staff</span>
-      </button>
-      <button class="role-opt-btn" onclick="selectRole('Leader')">
-        <span>🟢</span><span>Leader</span>
-      </button>
-      <button class="role-opt-btn" onclick="selectRole('Sub Manager')">
-        <span>🟡</span><span>Sub Manager</span>
-      </button>
-      <button class="role-opt-btn" onclick="selectRole('Manager')">
-        <span>🟠</span><span>Manager</span>
-      </button>
-      <button class="role-opt-btn" onclick="selectRole('Admin')">
-        <span>🔴</span><span>Admin</span>
-      </button>
-    </div>
-    <button class="btn-close-modal" onclick="closeRoleModal()">Huy</button>
-  </div>
-</div>
+
 <!-- MODAL XEM MAT KHAU -->
 <div class="modal-overlay" id="pwModal">
   <div class="modal">
-    <div class="modal-icon">🔐</div>
+    <div class="modal-icon">&#x1F510;</div>
     <div class="modal-title">Thong tin tai khoan</div>
     <div class="modal-sub" id="modalEmail">email@vinadecons.vn</div>
-    <div class="pw-display" id="modalPw">–</div>
-    <div class="pw-note">
-      Cung cap email + mat khau nay truc tiep cho nhan vien.<br/>
-      Ho dang nhap tai link cua he thong.
+    <div class="pw-display" id="modalPw">-</div>
+    <div class="pw-note">Cung cap email + mat khau nay truc tiep cho nhan vien de dang nhap.</div>
+    <div class="modal-actions">
+      <button class="btn-copy" onclick="copyPw()">&#x1F4CB; Copy mat khau</button>
+      <button class="btn-close-modal" onclick="closeModal('pwModal')">Dong</button>
     </div>
-    <button class="btn-copy" onclick="copyPw()">📋 Copy mat khau</button>
-    <button class="btn-close-modal" onclick="closePwModal()">Dong</button>
+  </div>
+</div>
+
+<!-- MODAL DOI QUYEN -->
+<div class="modal-overlay" id="roleModal">
+  <div class="modal">
+    <div class="modal-icon">&#x1F504;</div>
+    <div class="modal-title">Doi quyen thanh vien</div>
+    <div class="modal-sub" id="roleModalSub">email@vinadecons.vn</div>
+    <div id="roleOptList">
+      <button class="role-opt-btn" id="ropt-Staff"       onclick="selectRole('Staff')">&#x1F464; Staff</button>
+      <button class="role-opt-btn" id="ropt-Leader"      onclick="selectRole('Leader')">&#x1F7E2; Leader</button>
+      <button class="role-opt-btn" id="ropt-SubManager"  onclick="selectRole('Sub Manager')">&#x1F7E1; Sub Manager</button>
+      <button class="role-opt-btn" id="ropt-Manager"     onclick="selectRole('Manager')">&#x1F7E0; Manager</button>
+      <button class="role-opt-btn" id="ropt-Admin"       onclick="selectRole('Admin')">&#x1F534; Admin</button>
+    </div>
+    <div class="modal-actions" style="margin-top:14px;">
+      <button class="btn-close-modal" onclick="closeModal('roleModal')">Huy</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DOI MAT KHAU -->
+<div class="modal-overlay" id="chpwModal">
+  <div class="modal">
+    <div class="modal-icon">&#x1F511;</div>
+    <div class="modal-title">Doi mat khau</div>
+    <div class="modal-sub" id="chpwModalSub">email@vinadecons.vn</div>
+    <div class="chpw-field">
+      <label>Mat khau moi <span class="req">*</span></label>
+      <div class="chpw-input-wrap">
+        <input type="password" id="chpwInput" placeholder="Nhap mat khau moi (toi thieu 6 ky tu)..."/>
+        <span class="chpw-eye" onclick="togglePwVisible('chpwInput','chpwEye')" id="chpwEye">&#x1F441;&#xFE0F;</span>
+      </div>
+    </div>
+    <div class="chpw-field">
+      <label>Xac nhan mat khau <span class="req">*</span></label>
+      <div class="chpw-input-wrap">
+        <input type="password" id="chpwConfirm" placeholder="Nhap lai mat khau moi..."/>
+        <span class="chpw-eye" onclick="togglePwVisible('chpwConfirm','chpwEye2')" id="chpwEye2">&#x1F441;&#xFE0F;</span>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-save-pw" onclick="saveNewPassword()">&#x1F4BE; Luu mat khau</button>
+      <button class="btn-close-modal" onclick="closeModal('chpwModal')">Huy</button>
+    </div>
   </div>
 </div>
 
@@ -318,7 +340,7 @@
 
 <script src="js/config.js"></script>
 <script>
-const AVATAR_COLORS = [
+var AVATAR_COLORS = [
   'linear-gradient(135deg,#0096c7,#0077b6)',
   'linear-gradient(135deg,#52b788,#2d6a4f)',
   'linear-gradient(135deg,#9b5de5,#7b2d8b)',
@@ -328,223 +350,221 @@ const AVATAR_COLORS = [
   'linear-gradient(135deg,#06d6a0,#028a6a)',
   'linear-gradient(135deg,#e63946,#b5000f)',
 ];
+var ROLE_CLASS = { 'Staff':'rb-staff','Leader':'rb-leader','Sub Manager':'rb-sub','Manager':'rb-manager','Admin':'rb-admin' };
+var ROLE_ICON  = { 'Staff':'👤','Leader':'🟢','Sub Manager':'🟡','Manager':'🟠','Admin':'🔴' };
+var GRP_CLASS  = { '設計BIM':'grp-sekkei','施工BIM':'grp-sekou','CIM':'grp-cim' };
+var GRP_ICON   = { '設計BIM':'🏛️','施工BIM':'🏗️','CIM':'🌐' };
 
-const ROLE_CLASS = {
-  'Staff':       'rb-staff',
-  'Leader':      'rb-leader',
-  'Sub Manager': 'rb-sub',
-  'Manager':     'rb-manager',
-  'Admin':       'rb-admin',
-};
-const ROLE_ICON = {
-  'Staff':'👤', 'Leader':'🟢', 'Sub Manager':'🟡', 'Manager':'🟠', 'Admin':'🔴'
-};
-const GRP_CLASS = {
-  '設計BIM':'grp-sekkei',
-  '施工BIM':'grp-sekou',
-  'CIM':    'grp-cim',
-};
-const GRP_ICON = { '設計BIM':'🏛️', '施工BIM':'🏗️', 'CIM':'🌐' };
+var allMembers     = [];
+var currentEditId  = null;
+var currentEditRole= null;
+var currentChpwId  = null;
 
-let allMembers = [];
-
-window.onload = async () => {
-  const role = localStorage.getItem('user_role') || 'Staff';
-  const name = localStorage.getItem('user_name') || 'Admin';
-  if (role !== 'Admin') { window.location.href = 'view-list.html'; return; }
-  document.getElementById('topName').textContent   = name;
-  document.getElementById('topAvatar').textContent = name.substring(0,2).toUpperCase();
+window.onload = async function() {
+  var role=localStorage.getItem('user_role')||'Staff';
+  var name=localStorage.getItem('user_name')||'Admin';
+  if(role!=='Admin'){window.location.href='view-list.html';return;}
+  document.getElementById('topName').textContent=name;
+  document.getElementById('topAvatar').textContent=name.substring(0,2).toUpperCase();
   await loadMembers();
 };
 
 async function loadMembers() {
   try {
-    const res = await fetch(SUPABASE_URL+'/rest/v1/users?select=*&order=created_at.asc', {headers:HDRS});
-    allMembers = await res.json();
+    var res=await fetch(SUPABASE_URL+'/rest/v1/users?select=*&order=created_at.asc',{headers:HDRS});
+    allMembers=await res.json();
     renderTable(allMembers);
     updateStats(allMembers);
-  } catch(e) {
-    showToast('❌ Loi tai danh sach: '+e.message, 'error');
-  }
+  } catch(e) { showToast('Loi tai danh sach: '+e.message,'error'); }
 }
 
 async function addMember() {
-  const email = document.getElementById('inviteEmail').value.trim().toLowerCase();
-  const name  = document.getElementById('inviteName').value.trim();
-  const pw    = document.getElementById('invitePw').value;
-  const group = document.getElementById('inviteGroup').value;
-  const role  = document.getElementById('inviteRole').value;
-  const title = document.getElementById('inviteTitle').value.trim();
-
-  if (!email) { showToast('❌ Vui long nhap email','error'); return; }
-  if (!email.endsWith('@vinadecons.vn')) { showToast('❌ Chi chap nhan @vinadecons.vn','error'); return; }
-  if (!name)  { showToast('❌ Vui long nhap ho ten','error'); return; }
-  if (!pw)    { showToast('❌ Vui long nhap mat khau','error'); return; }
-  if (pw.length < 6) { showToast('❌ Mat khau toi thieu 6 ky tu','error'); return; }
-
-  const btn = document.getElementById('addBtn');
-  btn.disabled = true; btn.textContent = 'Dang them...';
-
+  var email=document.getElementById('inviteEmail').value.trim().toLowerCase();
+  var name =document.getElementById('inviteName').value.trim();
+  var pw   =document.getElementById('invitePw').value;
+  var group=document.getElementById('inviteGroup').value;
+  var role =document.getElementById('inviteRole').value;
+  var title=document.getElementById('inviteTitle').value.trim();
+  if(!email){showToast('Vui long nhap email','error');return;}
+  if(!email.endsWith('@vinadecons.vn')){showToast('Chi chap nhan @vinadecons.vn','error');return;}
+  if(!name) {showToast('Vui long nhap ho ten','error');return;}
+  if(!pw)   {showToast('Vui long nhap mat khau','error');return;}
+  if(pw.length<6){showToast('Mat khau toi thieu 6 ky tu','error');return;}
+  var btn=document.getElementById('addBtn');
+  btn.disabled=true; btn.textContent='Dang them...';
   try {
-    const body = { email, name, password:pw, role, status:'active' };
-    if (group) body.group_name = group;
-    if (title) body.role_title = title;
-
-    const res = await fetch(SUPABASE_URL+'/rest/v1/users', {
-      method:'POST', headers:HDRS, body:JSON.stringify(body)
-    });
-    if (!res.ok) {
-      const e = await res.json();
-      const msg = e.code==='23505' ? 'Email nay da ton tai' : (e.message||'Loi khong xac dinh');
-      showToast('❌ '+msg, 'error');
+    var body={email:email,name:name,password:pw,role:role,status:'active'};
+    if(group) body.group_name=group;
+    if(title) body.role_title=title;
+    var res=await fetch(SUPABASE_URL+'/rest/v1/users',{method:'POST',headers:HDRS,body:JSON.stringify(body)});
+    if(!res.ok){
+      var e=await res.json();
+      showToast(e.code==='23505'?'Email nay da ton tai':(e.message||'Loi'),'error');
       btn.disabled=false; btn.textContent='✅ Them thanh vien'; return;
     }
-    showPwModal(email, pw);
-    document.getElementById('inviteEmail').value = '';
-    document.getElementById('inviteName').value  = '';
-    document.getElementById('invitePw').value    = '';
-    document.getElementById('inviteTitle').value = '';
-    showToast('✅ Da them thanh vien: '+name, 'success');
+    showPwModal(email,pw);
+    document.getElementById('inviteEmail').value='';
+    document.getElementById('inviteName').value='';
+    document.getElementById('invitePw').value='';
+    document.getElementById('inviteTitle').value='';
+    showToast('Da them thanh vien: '+name,'success');
     await loadMembers();
-  } catch(e) {
-    showToast('❌ Loi ket noi: '+e.message, 'error');
-  }
+  } catch(e){showToast('Loi ket noi: '+e.message,'error');}
   btn.disabled=false; btn.textContent='✅ Them thanh vien';
 }
 
 function renderTable(data) {
-  const tbody = document.getElementById('memberTable');
-  const me    = localStorage.getItem('user_email') || '';
-  if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:32px;color:#aaa;">Chua co thanh vien nao</td></tr>';
-    return;
-  }
-  tbody.innerHTML = data.map((m,i) => {
-    const initials = (m.name||m.email).substring(0,2).toUpperCase();
-    const color    = AVATAR_COLORS[i % AVATAR_COLORS.length];
-    const rc       = ROLE_CLASS[m.role] || 'rb-staff';
-    const ri       = ROLE_ICON[m.role]  || '👤';
-    const gc       = GRP_CLASS[m.group_name] || 'grp-sekkei';
-    const gi       = GRP_ICON[m.group_name]  || '–';
-    const grpText  = m.group_name ? gi+' '+m.group_name : '–';
-    const date     = m.created_at ? new Date(m.created_at).toLocaleDateString('vi-VN') : '-';
-    const isMe     = m.email === me;
-    const actions  = isMe
-      ? '<span style="color:#aaa;font-size:12px;">（Tai khoan cua ban）</span>'
-      : '<div class="action-btns">'
-        + '<button class="btn-sm btn-pw"   onclick="showPwModal(\''+m.email+'\',\''+m.password+'\')">🔑 Xem MK</button>'
-        + '<button class="btn-sm btn-role" onclick="changeRole(\''+m.id+'\',\''+m.role+'\')">🔄 Doi quyen</button>'
-        + '<button class="btn-sm btn-del"  onclick="deleteMember(\''+m.id+'\',\''+m.email+'\')">🗑️ Xoa</button>'
-        + '</div>';
+  var tbody=document.getElementById('memberTable');
+  var me=localStorage.getItem('user_email')||'';
+  if(!data.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:32px;color:#aaa;">Chua co thanh vien</td></tr>';return;}
+  tbody.innerHTML=data.map(function(m,i){
+    var initials=(m.name||m.email).substring(0,2).toUpperCase();
+    var color=AVATAR_COLORS[i%AVATAR_COLORS.length];
+    var rc=ROLE_CLASS[m.role]||'rb-staff';
+    var ri=ROLE_ICON[m.role]||'👤';
+    var gc=GRP_CLASS[m.group_name]||'';
+    var gi=GRP_ICON[m.group_name]||'';
+    var grpTxt=m.group_name?(gi+' '+m.group_name):'-';
+    var date=m.created_at?new Date(m.created_at).toLocaleDateString('vi-VN'):'-';
+    var isMe=m.email===me;
+    var actions=isMe
+      ?'<span style="color:#aaa;font-size:12px;">( Tai khoan cua ban )</span>'
+      :'<div class="action-btns">'
+        +'<button class="btn-sm btn-pw"   onclick="showPwModal(\''+m.email+'\',\''+m.password+'\')">&#x1F510; Xem MK</button>'
+        +'<button class="btn-sm btn-chpw" onclick="openChpwModal(\''+m.id+'\',\''+m.email+'\')">&#x1F511; Doi MK</button>'
+        +'<button class="btn-sm btn-role" onclick="openRoleModal(\''+m.id+'\',\''+m.email+'\',\''+m.role+'\')">&#x1F504; Doi quyen</button>'
+        +'<button class="btn-sm btn-del"  onclick="deleteMember(\''+m.id+'\',\''+m.email+'\')">&#x1F5D1;&#xFE0F; Xoa</button>'
+        +'</div>';
     return '<tr>'
-      + '<td><div class="member-cell">'
-      + '<div class="av-sm" style="background:'+color+'">'+initials+'</div>'
-      + '<div><div class="email-text">'+m.email+'</div>'
-      + '<div class="name-text">'+(m.name||'')+(m.role_title?' · '+m.role_title:'')+'</div></div>'
-      + '</div></td>'
-      + '<td><span class="grp-badge '+gc+'">'+grpText+'</span></td>'
-      + '<td><span class="role-badge-pill '+rc+'">'+ri+' '+m.role+'</span></td>'
-      + '<td style="color:#888;">'+date+'</td>'
-      + '<td>'+actions+'</td>'
-      + '</tr>';
+      +'<td><div class="member-cell">'
+      +'<div class="av-sm" style="background:'+color+'">'+initials+'</div>'
+      +'<div>'
+      +'<div class="email-text">'+m.email+'</div>'
+      +'<div class="name-text">'+(m.name||'')+(m.role_title?' · '+m.role_title:'')+'</div>'
+      +'</div></div></td>'
+      +'<td>'+(gc?'<span class="grp-badge '+gc+'">'+grpTxt+'</span>':'-')+'</td>'
+      +'<td><span class="'+rc+'">'+ri+' '+m.role+'</span></td>'
+      +'<td style="color:#888;">'+date+'</td>'
+      +'<td>'+actions+'</td>'
+      +'</tr>';
   }).join('');
 }
 
 function filterTable() {
-  const q    = document.getElementById('searchInput').value.trim().toLowerCase();
-  const grp  = document.getElementById('filterGroup').value;
-  const role = document.getElementById('filterRole').value;
-  const filtered = allMembers.filter(m => {
-    const mQ = !q   || m.email.includes(q) || (m.name||'').toLowerCase().includes(q);
-    const mG = !grp || m.group_name === grp;
-    const mR = !role|| m.role === role;
-    return mQ && mG && mR;
+  var q=document.getElementById('searchInput').value.trim().toLowerCase();
+  var grp=document.getElementById('filterGroup').value;
+  var role=document.getElementById('filterRole').value;
+  var filtered=allMembers.filter(function(m){
+    var mQ=!q||m.email.includes(q)||(m.name||'').toLowerCase().includes(q);
+    var mG=!grp||m.group_name===grp;
+    var mR=!role||m.role===role;
+    return mQ&&mG&&mR;
   });
   renderTable(filtered);
 }
 
 function updateStats(data) {
-  document.getElementById('statTotal').textContent   = data.length;
-  document.getElementById('statStaff').textContent   = data.filter(m=>m.role==='Staff').length;
-  document.getElementById('statLeader').textContent  = data.filter(m=>m.role==='Leader').length;
-  document.getElementById('statSub').textContent     = data.filter(m=>m.role==='Sub Manager').length;
-  document.getElementById('statManager').textContent = data.filter(m=>m.role==='Manager').length;
-  document.getElementById('statAdmin').textContent   = data.filter(m=>m.role==='Admin').length;
+  document.getElementById('statTotal').textContent  =data.length;
+  document.getElementById('statStaff').textContent  =data.filter(function(m){return m.role==='Staff';}).length;
+  document.getElementById('statLeader').textContent =data.filter(function(m){return m.role==='Leader';}).length;
+  document.getElementById('statSub').textContent    =data.filter(function(m){return m.role==='Sub Manager';}).length;
+  document.getElementById('statManager').textContent=data.filter(function(m){return m.role==='Manager';}).length;
+  document.getElementById('statAdmin').textContent  =data.filter(function(m){return m.role==='Admin';}).length;
 }
 
-async function deleteMember(id, email) {
-  if (!confirm('Xac nhan xoa: '+email+'?')) return;
-  try {
-    await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+id, {method:'DELETE',headers:HDRS});
-    showToast('🗑️ Da xoa: '+email, 'success');
-    await loadMembers();
-  } catch(e) { showToast('❌ Loi xoa thanh vien','error'); }
-}
-
-let currentEditId   = null;
-let currentEditRole = null;
-
-function changeRole(id, currentRole) {
-  currentEditId   = id;
-  currentEditRole = currentRole;
-  document.querySelectorAll('.role-opt-btn').forEach(btn => {
-    btn.classList.remove('selected');
-    if (btn.querySelector('span:last-child').textContent === currentRole) {
-      btn.classList.add('selected');
-    }
-  });
-  const member = allMembers.find(m => m.id === id);
-  document.getElementById('roleModalEmail').textContent = member ? member.email : '';
-  document.getElementById('roleModal').classList.add('open');
-}
-
-async function selectRole(newRole) {
-  if (!currentEditId) return;
-  if (newRole === currentEditRole) {
-    closeRoleModal();
-    showToast('ℹ️ Quyen khong thay doi', 'success');
-    return;
-  }
-  try {
-    await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+currentEditId, {
-      method:'PATCH', headers:HDRS,
-      body:JSON.stringify({ role: newRole })
-    });
-    showToast('✅ Da doi quyen thanh ' + newRole, 'success');
-    closeRoleModal();
-    await loadMembers();
-  } catch(e) {
-    showToast('❌ Loi doi quyen: ' + e.message, 'error');
-  }
-}
-
-function closeRoleModal() {
-  document.getElementById('roleModal').classList.remove('open');
-  currentEditId   = null;
-  currentEditRole = null;
-}
-
-function showPwModal(email, pw) {
-  document.getElementById('modalEmail').textContent = email;
-  document.getElementById('modalPw').textContent    = pw || '(khong co)';
+/* ── XEM MAT KHAU ── */
+function showPwModal(email,pw) {
+  document.getElementById('modalEmail').textContent=email;
+  document.getElementById('modalPw').textContent=pw||'(khong co)';
   document.getElementById('pwModal').classList.add('open');
 }
-function closePwModal() { document.getElementById('pwModal').classList.remove('open'); }
 function copyPw() {
-  const pw = document.getElementById('modalPw').textContent;
+  var pw=document.getElementById('modalPw').textContent;
   navigator.clipboard.writeText(pw)
-    .then(()=>showToast('📋 Da copy mat khau','success'))
-    .catch(()=>showToast('❌ Khong the copy','error'));
+    .then(function(){showToast('Da copy mat khau','success');})
+    .catch(function(){showToast('Khong the copy','error');});
 }
-function togglePwVisible() {
-  const inp = document.getElementById('invitePw');
-  const eye = document.getElementById('pwEyeBtn');
-  if (inp.type==='password'){inp.type='text';eye.textContent='🙈';}
-  else{inp.type='password';eye.textContent='👁️';}
+
+/* ── DOI MAT KHAU ── */
+function openChpwModal(id,email) {
+  currentChpwId=id;
+  document.getElementById('chpwModalSub').textContent=email;
+  document.getElementById('chpwInput').value='';
+  document.getElementById('chpwConfirm').value='';
+  document.getElementById('chpwInput').type='password';
+  document.getElementById('chpwConfirm').type='password';
+  document.getElementById('chpwEye').textContent='👁️';
+  document.getElementById('chpwEye2').textContent='👁️';
+  document.getElementById('chpwModal').classList.add('open');
 }
-function logout() {
-  if(confirm('Dang xuat?')){localStorage.clear();window.location.href='index.html';}
+async function saveNewPassword() {
+  var pw1=document.getElementById('chpwInput').value;
+  var pw2=document.getElementById('chpwConfirm').value;
+  if(!pw1){showToast('Vui long nhap mat khau moi','error');return;}
+  if(pw1.length<6){showToast('Mat khau toi thieu 6 ky tu','error');return;}
+  if(pw1!==pw2){showToast('Mat khau xac nhan khong khop','error');return;}
+  try {
+    var res=await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+currentChpwId,{
+      method:'PATCH',headers:HDRS,body:JSON.stringify({password:pw1})
+    });
+    if(!res.ok){showToast('Loi doi mat khau','error');return;}
+    // Update local data
+    for(var i=0;i<allMembers.length;i++){
+      if(allMembers[i].id===currentChpwId){allMembers[i].password=pw1;break;}
+    }
+    showToast('Da doi mat khau thanh cong!','success');
+    closeModal('chpwModal');
+  } catch(e){showToast('Loi: '+e.message,'error');}
 }
+
+/* ── DOI QUYEN ── */
+function openRoleModal(id,email,currentRole) {
+  currentEditId=id; currentEditRole=currentRole;
+  document.getElementById('roleModalSub').textContent=email;
+  var keys=['Staff','Leader','Sub Manager','Manager','Admin'];
+  var ids =['Staff','Leader','SubManager','Manager','Admin'];
+  for(var i=0;i<keys.length;i++){
+    var btn=document.getElementById('ropt-'+ids[i]);
+    if(btn){
+      if(keys[i]===currentRole) btn.classList.add('selected');
+      else btn.classList.remove('selected');
+    }
+  }
+  document.getElementById('roleModal').classList.add('open');
+}
+async function selectRole(newRole) {
+  if(!currentEditId) return;
+  if(newRole===currentEditRole){closeModal('roleModal');showToast('Quyen khong thay doi','success');return;}
+  try {
+    await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+currentEditId,{
+      method:'PATCH',headers:HDRS,body:JSON.stringify({role:newRole})
+    });
+    showToast('Da doi quyen thanh '+newRole,'success');
+    closeModal('roleModal');
+    await loadMembers();
+  } catch(e){showToast('Loi doi quyen: '+e.message,'error');}
+}
+
+/* ── XOA THANH VIEN ── */
+async function deleteMember(id,email) {
+  if(!confirm('Xac nhan xoa: '+email+'?')) return;
+  try {
+    await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+id,{method:'DELETE',headers:HDRS});
+    showToast('Da xoa: '+email,'success');
+    await loadMembers();
+  } catch(e){showToast('Loi xoa: '+e.message,'error');}
+}
+
+/* ── HELPERS ── */
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function togglePwVisible(inputId, eyeId) {
+  var inp=document.getElementById(inputId);
+  var eye=document.getElementById(eyeId);
+  if(!inp) return;
+  if(inp.type==='password'){inp.type='text'; if(eye)eye.textContent='🙈';}
+  else{inp.type='password'; if(eye)eye.textContent='👁️';}
+}
+function logout(){if(confirm('Dang xuat?')){localStorage.clear();window.location.href='index.html';}}
 </script>
 </body>
 </html>
