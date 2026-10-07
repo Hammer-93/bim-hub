@@ -1,175 +1,356 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>BIM Hub - Theo the loai</title>
-  <style>
-    * { box-sizing:border-box; margin:0; padding:0; }
-    body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f4f8; min-height:100vh; }
-    .topbar { display:flex; align-items:center; justify-content:space-between; background:#1a1a2e; padding:0 24px; height:52px; position:sticky; top:0; z-index:200; }
-    .topbar-left { display:flex; align-items:center; gap:10px; }
-    .topbar-logo { width:30px; height:30px; background:linear-gradient(135deg,#00b4d8,#0077b6); border-radius:7px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:15px; }
-    .topbar-title { color:#fff; font-size:16px; font-weight:700; }
-    .topbar-right { display:flex; align-items:center; gap:12px; }
-    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#00b4d8,#0096c7); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:12px; }
-    .user-name { color:#ddd; font-size:13px; }
-    .role-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; }
-    .role-admin { background:#e63946; color:#fff; }
-    .role-staff { background:#0096c7; color:#fff; }
-    .btn-top { background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; text-decoration:none; transition:background .2s; font-family:inherit; }
-    .btn-top:hover { background:rgba(255,255,255,.22); }
-    .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; }
-    .nav-tab { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; text-decoration:none; display:flex; align-items:center; gap:7px; }
-    .nav-tab:hover { color:#0096c7; }
-    .nav-tab.active { color:#0077b6; border-bottom-color:#0077b6; }
-    .main { padding:28px 32px; }
-    .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
-    .section-title { font-size:18px; font-weight:700; color:#1a1a2e; }
-    .toast { position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:9999; transform:translateY(80px); opacity:0; transition:all .35s; }
-    .toast.show { transform:translateY(0); opacity:1; }
-    .toast.success { border-left:4px solid #52b788; }
-    .toast.error   { border-left:4px solid #e63946; }
-    .tooltip { position:fixed; background:#1a1a2e; color:#fff; padding:8px 12px; border-radius:8px; font-size:12px; z-index:9999; pointer-events:none; display:none; max-width:260px; line-height:1.6; }
-    .color-dot { width:11px; height:11px; border-radius:50%; display:inline-block; margin-right:5px; vertical-align:middle; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BIM Hub — Theo thể loại</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
 
-    /* CATEGORY */
-    .cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
-    .cat-card { background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); overflow:hidden; transition:transform .2s, box-shadow .2s; }
-    .cat-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
-    .cat-hdr { padding:14px 20px; font-size:14px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; }
-    .cat-count { margin-left:auto; font-size:12px; opacity:.8; background:rgba(255,255,255,.2); padding:2px 8px; border-radius:20px; }
-    .cat-body { padding:8px 0; }
-    .cat-empty { padding:16px 20px; color:#aaa; font-size:13px; }
-    .cat-item { padding:10px 20px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f5f5f5; transition:background .15s; cursor:pointer; }
-    .cat-item:last-child { border-bottom:none; }
-    .cat-item:hover { background:#f8fbff; }
-    .cat-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-    .cat-code { font-size:11px; font-weight:700; color:#0077b6; background:#e8f4fe; padding:2px 8px; border-radius:20px; white-space:nowrap; }
-    .cat-name { font-size:13px; color:#222; font-weight:500; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .cat-staff { font-size:11px; color:#888; white-space:nowrap; flex-shrink:0; }
+  /* NAV */
+  .navbar { background: #1a1a2e; padding: 0 24px; display: flex; align-items: center; gap: 8px; height: 56px; }
+  .navbar .brand { color: #fff; font-weight: 700; font-size: 18px; margin-right: 24px; }
+  .nav-tab { color: #aaa; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 14px; transition: all .2s; }
+  .nav-tab:hover { background: #ffffff22; color: #fff; }
+  .nav-tab.active { background: #4f8ef7; color: #fff; }
+  .navbar .user-info { margin-left: auto; color: #ccc; font-size: 13px; display: flex; align-items: center; gap: 10px; }
+  .logout-btn { background: #e74c3c22; color: #e74c3c; border: 1px solid #e74c3c44; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+  .logout-btn:hover { background: #e74c3c44; }
 
-    /* STATS ROW */
-    .stats-row { display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
-    .stat-box { background:#fff; border-radius:12px; padding:14px 20px; box-shadow:0 2px 8px rgba(0,0,0,.06); text-align:center; flex:1; min-width:120px; }
-    .stat-num { font-size:24px; font-weight:800; }
-    .stat-label { font-size:11px; color:#888; margin-top:3px; }
-  </style>
+  /* STATS */
+  .stats-bar { display: flex; gap: 16px; padding: 20px 24px 0; }
+  .stat-card { background: #fff; border-radius: 12px; padding: 16px 28px; text-align: center; flex: 1; box-shadow: 0 1px 6px #0001; }
+  .stat-card .num { font-size: 28px; font-weight: 700; }
+  .stat-card .lbl { font-size: 12px; color: #888; margin-top: 4px; }
+  .stat-card.blue .num { color: #2196f3; }
+  .stat-card.green .num { color: #4caf50; }
+  .stat-card.orange .num { color: #ff9800; }
+
+  /* FILTER BAR */
+  .filter-bar { display: flex; gap: 12px; padding: 18px 24px 0; align-items: center; flex-wrap: wrap; }
+  .filter-bar input, .filter-bar select {
+    padding: 8px 14px; border: 1px solid #ddd; border-radius: 8px;
+    font-size: 14px; outline: none; background: #fff;
+  }
+  .filter-bar input { flex: 1; min-width: 200px; }
+  .filter-bar select { min-width: 160px; }
+
+  /* CATEGORY SECTIONS */
+  .categories { padding: 20px 24px 40px; display: flex; flex-direction: column; gap: 24px; }
+
+  .category-section { background: #fff; border-radius: 14px; box-shadow: 0 1px 8px #0001; overflow: hidden; }
+
+  .category-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;
+    user-select: none;
+  }
+  .category-header .badge {
+    background: #ffffff33; border-radius: 20px;
+    padding: 2px 12px; font-size: 13px; font-weight: 500;
+  }
+  .category-header .toggle-icon { font-size: 12px; transition: transform .2s; }
+  .category-header.collapsed .toggle-icon { transform: rotate(-90deg); }
+
+  /* Colors per category */
+  .cat-パース・動画 .category-header { background: linear-gradient(135deg, #ff9a56, #ff6b35); }
+  .cat-意匠モデル   .category-header { background: linear-gradient(135deg, #667eea, #764ba2); }
+  .cat-構造モデル   .category-header { background: linear-gradient(135deg, #11998e, #38ef7d); }
+  .cat-清算モデル   .category-header { background: linear-gradient(135deg, #f093fb, #f5576c); }
+  .cat-図面         .category-header { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+  .cat-施工ステップ .category-header { background: linear-gradient(135deg, #f7971e, #ffd200); }
+
+  /* PROJECT ROWS */
+  .project-list { padding: 0 16px 12px; }
+
+  .project-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 12px; border-radius: 8px; cursor: pointer;
+    transition: background .15s;
+  }
+  .project-row:hover { background: #f5f7ff; }
+
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .status-dot.active { background: #4caf50; }
+  .status-dot.pending { background: #ff9800; }
+  .status-dot.done { background: #9e9e9e; }
+
+  .proj-id { font-size: 13px; font-weight: 700; color: #4f8ef7; min-width: 52px; }
+  .proj-name { font-size: 14px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .proj-group { font-size: 11px; background: #eef2ff; color: #5c6bc0; border-radius: 4px; padding: 2px 7px; font-weight: 600; }
+
+  .empty-msg { text-align: center; color: #bbb; padding: 20px; font-size: 14px; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: #0005; z-index: 1000; align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff; border-radius: 16px; width: 520px; max-width: 95vw;
+    max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 40px #0003;
+  }
+  .modal-header {
+    padding: 20px 24px 16px; border-bottom: 1px solid #eee;
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .modal-header h2 { font-size: 17px; font-weight: 700; color: #222; }
+  .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #999; line-height: 1; }
+  .modal-body { padding: 20px 24px; }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+  .info-item .lbl { font-size: 11px; color: #999; text-transform: uppercase; margin-bottom: 3px; }
+  .info-item .val { font-size: 14px; font-weight: 600; color: #333; }
+  .task-list-title { font-size: 13px; font-weight: 700; color: #555; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+  .task-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 8px; background: #f8f9ff;
+    margin-bottom: 8px;
+  }
+  .task-type-badge { font-size: 11px; background: #e8eaf6; color: #3949ab; border-radius: 4px; padding: 2px 8px; font-weight: 600; }
+  .task-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+  .task-status.active { background: #e8f5e9; color: #388e3c; }
+  .task-status.pending { background: #fff3e0; color: #f57c00; }
+  .task-status.done { background: #f5f5f5; color: #757575; }
+  .task-date { font-size: 11px; color: #999; margin-left: auto; }
+
+  /* LOADING */
+  .loading { text-align: center; padding: 60px; color: #999; font-size: 15px; }
+</style>
 </head>
 <body>
 
-<!-- TOPBAR -->
-<nav class="topbar">
-  <div class="topbar-left">
-    <div class="topbar-logo">B</div>
-    <span class="topbar-title">BIM Hub</span>
-  </div>
-  <div class="topbar-right">
-    <div class="avatar" id="topAvatar">?</div>
-    <span class="user-name" id="topName">...</span>
-    <span class="role-badge" id="topRole"></span>
-    <a class="btn-top" href="my-tasks.html">📋 Lich cua toi</a>
-    <a class="btn-top admin-only" href="admin.html" style="display:none;">👥 Thanh vien</a>
-    <button class="btn-top" onclick="logout()">Dang xuat</button>
-  </div>
-</nav>
-
-<!-- NAV TABS -->
-<div class="nav-tabs">
+<nav class="navbar">
+  <span class="brand">🏗️ BIM Hub</span>
   <a class="nav-tab" href="view-list.html">📋 Danh sach du an</a>
   <a class="nav-tab active" href="view-category.html">🗂️ Theo the loai</a>
   <a class="nav-tab" href="view-schedule.html">📅 Schedule du an</a>
   <a class="nav-tab" href="view-staff.html">👥 Lich nhan vien</a>
+  <div class="user-info">
+    <span id="userLabel">...</span>
+    <button class="logout-btn" onclick="logout()">Đăng xuất</button>
+  </div>
+</nav>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-card blue">
+    <div class="num" id="statTotal">—</div>
+    <div class="lbl">Tong du an</div>
+  </div>
+  <div class="stat-card green">
+    <div class="num" id="statActive">—</div>
+    <div class="lbl">Dang hoat dong</div>
+  </div>
+  <div class="stat-card orange">
+    <div class="num" id="statTasks">—</div>
+    <div class="lbl">Tong task</div>
+  </div>
 </div>
 
-<div class="toast" id="toast"></div>
-<div class="tooltip" id="tooltip"></div>
+<!-- FILTER -->
+<div class="filter-bar">
+  <input id="searchInput" type="text" placeholder="🔍 Tìm kiếm dự án..."/>
+  <select id="groupFilter">
+    <option value="">Tất cả nhóm</option>
+    <option value="A">A — 設計BIM</option>
+    <option value="B">B — 施工BIM</option>
+    <option value="C">C — 清算</option>
+    <option value="D">D — M&F</option>
+  </select>
+</div>
 
-<!-- MAIN -->
-<div class="main">
-  <div class="section-header">
-    <div class="section-title">🗂️ Phan loai theo the loai cong viec</div>
-  </div>
+<!-- CATEGORIES -->
+<div class="categories" id="categoriesContainer">
+  <div class="loading">⏳ Đang tải dữ liệu...</div>
+</div>
 
-  <!-- STATS -->
-  <div class="stats-row" id="statsRow">
-    <div class="stat-box"><div class="stat-num" style="color:#0077b6;" id="statTotal">-</div><div class="stat-label">Tong du an</div></div>
-    <div class="stat-box"><div class="stat-num" style="color:#52b788;" id="statActive">-</div><div class="stat-label">Dang hoat dong</div></div>
-    <div class="stat-box"><div class="stat-num" style="color:#f4a261;" id="statTasks">-</div><div class="stat-label">Tong task</div></div>
-    <div class="stat-box"><div class="stat-num" style="color:#9b5de5;" id="statUsers">-</div><div class="stat-label">Nhan vien</div></div>
-  </div>
-
-  <!-- CATEGORY GRID -->
-  <div class="cat-grid" id="catGrid">
-    <div style="color:#aaa;padding:32px;">Dang tai...</div>
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Chi tiết dự án</h2>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
 
 <script src="js/config.js"></script>
 <script>
-window.onload = async () => {
-  initTopbar();
+const TASK_TYPES = ['パース・動画','意匠モデル','構造モデル','清算モデル','図面','施工ステップ'];
+const GROUP_LABELS = { A:'設計BIM', B:'施工BIM', C:'清算', D:'M&F' };
+
+const ACTIVE_STATUSES = ['active','in_progress','doing','進行中','アクティブ'];
+
+let allProjects = [];
+let allTasks = [];
+let currentUser = null;
+
+function isActiveTask(t) {
+  const s = (t.status || '').toLowerCase().trim();
+  return ACTIVE_STATUSES.some(a => s === a.toLowerCase()) || s === 'active' || s === 'in_progress' || s === 'doing';
+}
+
+async function init() {
   try {
-    await loadAllData();
-    renderStats();
-    renderCategory();
+    const session = JSON.parse(localStorage.getItem('bim_session') || 'null');
+    if (!session) { location.href = 'index.html'; return; }
+    currentUser = session;
+    document.getElementById('userLabel').textContent = session.full_name || session.email || 'User';
+
+    const [pRes, tRes] = await Promise.all([
+      supabase.from('projects').select('*'),
+      supabase.from('project_tasks').select('*')
+    ]);
+
+    allProjects = pRes.data || [];
+    allTasks    = tRes.data || [];
+
+    render();
   } catch(e) {
-    showToast('❌ Loi tai du lieu: ' + e.message, 'error');
+    console.error(e);
+    document.getElementById('categoriesContainer').innerHTML = '<div class="empty-msg">❌ Lỗi tải dữ liệu</div>';
   }
-};
-
-function renderStats() {
-  document.getElementById('statTotal').textContent  = allProjects.length;
-  document.getElementById('statActive').textContent = allProjects.filter(p=>p.status==='active').length;
-  document.getElementById('statTasks').textContent  = allTasks.length;
-  document.getElementById('statUsers').textContent  = allUsers.length;
 }
 
-function renderCategory() {
-  const CFG = {
-    'パース・動画':  { icon:'🎨', bg:'#f4a261' },
-    '意匠モデル':    { icon:'🏛️', bg:'#4cc9f0' },
-    '構造モデル':    { icon:'🏗️', bg:'#52b788' },
-    '清算モデル':    { icon:'💰', bg:'#9b5de5' },
-    '図面':          { icon:'📐', bg:'#e63946' },
-    '施工ステップ':  { icon:'🔨', bg:'#ffd166' }
-  };
+function render() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const group  = document.getElementById('groupFilter').value;
 
-  const grid = document.getElementById('catGrid');
-  grid.innerHTML = TASK_TYPES.map(type => {
-    const tasks   = allTasks.filter(t => t.task_type === type && t.project_id);
-    const projIds = [...new Set(tasks.map(t => t.project_id))];
-    const projs   = projIds.map(id => allProjects.find(p => p.id === id)).filter(Boolean);
-    const cfg     = CFG[type] || { icon:'📋', bg:'#888' };
+  // Only projects that have at least one active task
+  const activeTaskProjectIds = new Set(allTasks.filter(isActiveTask).map(t => t.project_id));
 
-    const items = projs.length
-      ? projs.map(p => {
-          const uids  = [...new Set(
-            tasks.filter(t => t.project_id===p.id && t.task_type===type).map(t => t.assigned_to)
-          )];
-          const names = uids
-            .map(uid => { const u = allUsers.find(u => u.id===uid); return u ? u.name : ''; })
-            .filter(Boolean).join(', ');
-          const color = projColorMap[p.id] || '#aaa';
-          const code  = (p.code||'').split('_')[0] || '-';
-          return '<div class="cat-item">'
-            + '<div class="cat-dot" style="background:'+color+';"></div>'
-            + '<span class="cat-code">'+code+'</span>'
-            + '<span class="cat-name" title="'+p.project_name+'">'+p.project_name+'</span>'
-            + (names ? '<span class="cat-staff">👤 '+names+'</span>' : '')
-            + '</div>';
-        }).join('')
-      : '<div class="cat-empty">Khong co du an nao</div>';
+  let projects = allProjects.filter(p => activeTaskProjectIds.has(p.id));
 
-    return '<div class="cat-card">'
-      + '<div class="cat-hdr" style="background:'+cfg.bg+';">'
-      + cfg.icon + ' ' + type
-      + '<span class="cat-count">'+projs.length+' du an</span>'
-      + '</div>'
-      + '<div class="cat-body">'+items+'</div>'
-      + '</div>';
-  }).join('');
+  if (group)  projects = projects.filter(p => (p.project_group || p.group || '').toUpperCase() === group);
+  if (search) projects = projects.filter(p =>
+    (p.project_code || p.code || '').toLowerCase().includes(search) ||
+    (p.project_name || p.name || '').toLowerCase().includes(search)
+  );
+
+  // Active tasks for filtered projects
+  const activeTasks = allTasks.filter(t => isActiveTask(t) && projects.some(p => p.id === t.project_id));
+
+  // Stats
+  document.getElementById('statTotal').textContent  = projects.length;
+  document.getElementById('statActive').textContent = projects.length;
+  document.getElementById('statTasks').textContent  = activeTasks.length;
+
+  const container = document.getElementById('categoriesContainer');
+  container.innerHTML = '';
+
+  let hasAny = false;
+
+  TASK_TYPES.forEach(type => {
+    const typeTasks = activeTasks.filter(t => (t.task_type || t.type || '') === type);
+    const projectIds = [...new Set(typeTasks.map(t => t.project_id))];
+    const typeProjects = projects.filter(p => projectIds.includes(p.id));
+
+    if (typeProjects.length === 0) return;
+    hasAny = true;
+
+    const section = document.createElement('div');
+    const slug = type.replace(/[^a-zA-Z\u3000-\u9fff]/g,'');
+    section.className = 'category-section cat-' + type;
+
+    const header = document.createElement('div');
+    header.className = 'category-header';
+    header.innerHTML =
+      '<span>🌸 ' + type + '</span>' +
+      '<span>' +
+        '<span class="badge">' + typeProjects.length + ' du an</span> ' +
+        '<span class="toggle-icon">▼</span>' +
+      '</span>';
+    header.onclick = () => {
+      header.classList.toggle('collapsed');
+      list.style.display = header.classList.contains('collapsed') ? 'none' : 'block';
+    };
+
+    const list = document.createElement('div');
+    list.className = 'project-list';
+
+    typeProjects.forEach(p => {
+      const code = p.project_code || p.code || '';
+      const name = p.project_name || p.name || '';
+      const grp  = (p.project_group || p.group || '').toUpperCase();
+      const pts  = allTasks.filter(t => t.project_id === p.id);
+      const hasActive = pts.some(isActiveTask);
+
+      const row = document.createElement('div');
+      row.className = 'project-row';
+      row.innerHTML =
+        '<span class="status-dot ' + (hasActive ? 'active' : 'pending') + '"></span>' +
+        '<span class="proj-id">' + code + '</span>' +
+        '<span class="proj-name">' + name + '</span>' +
+        (grp ? '<span class="proj-group">' + grp + '</span>' : '');
+      row.onclick = () => openModal(p);
+      list.appendChild(row);
+    });
+
+    section.appendChild(header);
+    section.appendChild(list);
+    container.appendChild(section);
+  });
+
+  if (!hasAny) {
+    container.innerHTML = '<div class="empty-msg">Không có dự án nào đang hoạt động.</div>';
+  }
 }
+
+function openModal(p) {
+  const code  = p.project_code || p.code || '';
+  const name  = p.project_name || p.name || '';
+  const grp   = (p.project_group || p.group || '').toUpperCase();
+  const tasks = allTasks.filter(t => t.project_id === p.id);
+  const active = tasks.filter(isActiveTask);
+
+  document.getElementById('modalTitle').textContent = code + ' — ' + name;
+
+  let body = '<div class="info-grid">';
+  body += '<div class="info-item"><div class="lbl">Mã dự án</div><div class="val">' + code + '</div></div>';
+  body += '<div class="info-item"><div class="lbl">Nhóm</div><div class="val">' + (grp ? grp + ' — ' + (GROUP_LABELS[grp] || '') : '—') + '</div></div>';
+  body += '<div class="info-item"><div class="lbl">Task đang chạy</div><div class="val">' + active.length + '</div></div>';
+  body += '<div class="info-item"><div class="lbl">Tổng task</div><div class="val">' + tasks.length + '</div></div>';
+  body += '</div>';
+
+  if (active.length > 0) {
+    body += '<div class="task-list-title">Task đang hoạt động</div>';
+    active.forEach(t => {
+      const st = (t.status || '').toLowerCase();
+      const stCls = isActiveTask(t) ? 'active' : (st === 'done' || st === '完了' ? 'done' : 'pending');
+      const sd = t.start_date ? t.start_date.substring(0,10) : '';
+      const ed = t.end_date   ? t.end_date.substring(0,10)   : '';
+      const dateStr = sd || ed ? (sd + (ed ? ' → ' + ed : '')) : '';
+      body += '<div class="task-item">' +
+        '<span class="task-type-badge">' + (t.task_type || t.type || '—') + '</span>' +
+        '<span class="task-status ' + stCls + '">' + (t.status || '—') + '</span>' +
+        (dateStr ? '<span class="task-date">' + dateStr + '</span>' : '') +
+        '</div>';
+    });
+  }
+
+  document.getElementById('modalBody').innerHTML = body;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+function logout() {
+  localStorage.removeItem('bim_session');
+  location.href = 'index.html';
+}
+
+document.getElementById('searchInput').addEventListener('input', render);
+document.getElementById('groupFilter').addEventListener('change', render);
+
+init();
 </script>
 </body>
 </html>
