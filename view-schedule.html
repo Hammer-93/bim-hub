@@ -41,21 +41,22 @@
     .legend-bar { width:28px; height:11px; border-radius:3px; }
     .legend-dot { width:11px; height:11px; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.2); }
     .gantt-wrap { overflow-x:auto; background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); }
-    table.gantt { width:100%; border-collapse:collapse; min-width:800px; }
+    table.gantt { border-collapse:collapse; min-width:800px; }
+    .col-proj { min-width:200px; width:220px; resize:horizontal; overflow:hidden; }
     table.gantt thead tr:first-child th { padding:6px 8px; font-size:11px; font-weight:700; color:#fff; background:#1a1a2e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.1); }
     table.gantt thead tr:last-child th { padding:5px 4px; font-size:10px; font-weight:600; color:#fff; background:#2a2a3e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.08); }
     table.gantt thead th.today-hdr { background:#e63946 !important; }
     table.gantt tbody td { padding:0; border-bottom:1px solid #f0f0f0; }
-    .g-left { padding:8px 14px; min-width:200px; max-width:200px; border-right:1px solid #e8e8e8; vertical-align:middle; background:#fff; cursor:pointer; transition:background .15s; }
+    .g-left { padding:8px 14px; border-right:1px solid #e8e8e8; vertical-align:top; background:#fff; cursor:pointer; transition:background .15s; }
     .g-left:hover { background:#e8f4fe; }
-    .g-pname { font-size:13px; font-weight:700; color:#1a1a2e; display:flex; align-items:center; gap:8px; }
+    .g-pname { font-size:13px; font-weight:700; color:#1a1a2e; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     .stt-badge { font-size:10px; font-weight:800; padding:1px 7px; border-radius:4px; background:#e8f4fe; color:#0077b6; flex-shrink:0; white-space:nowrap; }
-    .pname-text { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .pname-text { word-break:break-word; white-space:normal; line-height:1.4; }
     .g-pcode { font-size:10px; color:#aaa; margin-top:2px; padding-left:30px; }
-    .g-subinfo { font-size:10px; color:#0077b6; margin-top:2px; padding-left:30px; }
-    .g-edit-hint { font-size:9px; color:#bbb; margin-top:2px; padding-left:30px; font-style:italic; }
-    .g-bico { min-width:160px; max-width:200px; border-right:1px solid #e8e8e8; vertical-align:top; background:#fff; padding:8px 10px; font-size:11px; color:#444; white-space:pre-wrap; word-break:break-word; }
-    .g-staff { min-width:110px; max-width:140px; border-right:2px solid #e8e8e8; vertical-align:middle; background:#fff; padding:8px 10px; font-size:11px; color:#333; }
+    .g-software { font-size:10px; color:#0077b6; margin-top:3px; padding-left:30px; }
+    .g-koujou { font-size:10px; color:#e63946; margin-top:1px; padding-left:30px; }
+    .g-bico { min-width:160px; max-width:220px; border-right:1px solid #e8e8e8; vertical-align:top; background:#fff; padding:8px 10px; font-size:11px; color:#444; white-space:pre-wrap; word-break:break-word; text-align:right; }
+    .g-staff { min-width:110px; max-width:150px; border-right:2px solid #e8e8e8; vertical-align:top; background:#fff; padding:8px 10px; font-size:11px; color:#333; text-align:right; }
     .g-cell { position:relative; height:38px; border-right:1px solid #f0f0f0; vertical-align:middle; }
     .g-cell.we  { background:#f8f8f8; }
     .g-cell.tdy { background:#fff5f5; }
@@ -166,23 +167,25 @@
     <div class="legend-item"><div class="legend-bar" style="background:#a8dadc;"></div><span>Khoan lam viec</span></div>
     <div class="legend-item"><div class="legend-dot g-dot-rcv"></div><span>Nhan data</span></div>
     <div class="legend-item"><div class="legend-dot g-dot-send"></div><span>Gui</span></div>
-    <span style="margin-left:auto;font-size:11px;color:#0077b6;font-style:italic;">✏ Click ten du an de nhap ghi chu / phu trach</span>
+    <span style="margin-left:auto;font-size:11px;color:#0077b6;font-style:italic;">✏ Click ten du an de nhap ghi chu</span>
   </div>
-  <div class="gantt-wrap"><div id="ganttCont"><div style="padding:40px;text-align:center;color:#aaa;">Dang tai...</div></div></div>
+  <div class="gantt-wrap">
+    <div id="ganttCont"><div style="padding:40px;text-align:center;color:#aaa;">Dang tai...</div></div>
+  </div>
 </div>
 
 <script src="js/config.js"></script>
 <script>
-var gZoom="day",currentProjId=null,LS_KEY="bimhub_proj_meta";
+var gZoom="day", currentProjId=null, LS_KEY="bimhub_proj_meta";
 var GROUP_ORDER={A:0,B:1,C:2,D:3};
 var TASK_TYPE_ORDER={"意匠モデル":0,"構造モデル":1,"図面":2,"パース・動画":3,"動画・パース":3,"施工ステップ":4,"清算モデル":5};
 
-function getMeta(id){try{return JSON.parse(localStorage.getItem(LS_KEY)||"{}")[id]||{};}catch(e){return {};}}
-function setMeta(id,data){try{var a=JSON.parse(localStorage.getItem(LS_KEY)||"{}");a[id]=Object.assign(a[id]||{},data);localStorage.setItem(LS_KEY,JSON.stringify(a));}catch(e){}}
+function getMeta(id){ try{ return JSON.parse(localStorage.getItem(LS_KEY)||"{}")[id]||{}; }catch(e){ return {}; } }
+function setMeta(id,data){ try{ var a=JSON.parse(localStorage.getItem(LS_KEY)||"{}"); a[id]=Object.assign(a[id]||{},data); localStorage.setItem(LS_KEY,JSON.stringify(a)); }catch(e){} }
 
 function openPanel(pid){
   var p=allProjects.find(function(x){return x.id===pid;});
-  if(!p)return;
+  if(!p) return;
   currentProjId=pid;
   var m=getMeta(pid);
   document.getElementById("epCode").textContent=getCode(p);
@@ -201,7 +204,7 @@ function closePanel(){
   currentProjId=null;
 }
 function savePanel(){
-  if(!currentProjId)return;
+  if(!currentProjId) return;
   setMeta(currentProjId,{
     note:document.getElementById("epNote").value.trim(),
     staff:document.getElementById("epStaff").value.trim(),
@@ -221,20 +224,20 @@ document.addEventListener("DOMContentLoaded",function(){
   document.getElementById("epOverlay").addEventListener("click",closePanel);
 });
 
-function getGroup(p){return(p.proj_group||p.project_group||p.group||"").toString().toUpperCase().trim();}
+function getGroup(p){ return (p.proj_group||p.project_group||p.group||"").toString().toUpperCase().trim(); }
 function getCode(p){
-  if(p.year&&p.seq_number)return p.year+String(p.seq_number).padStart(3,"0");
-  return(p.code||p.project_code||"").split("_")[0]||"";
+  if(p.year&&p.seq_number) return p.year+String(p.seq_number).padStart(3,"0");
+  return (p.code||p.project_code||"").split("_")[0]||"";
 }
 function getCodeNum(p){
-  if(p.year&&p.seq_number)return parseInt(p.year)*1000+parseInt(p.seq_number);
-  var n=parseInt(p.code||p.project_code||"");return isNaN(n)?99999:n;
+  if(p.year&&p.seq_number) return parseInt(p.year)*1000+parseInt(p.seq_number);
+  var n=parseInt(p.code||p.project_code||""); return isNaN(n)?99999:n;
 }
 function getBestTaskOrder(p){
   var best=99;
   allTasks.filter(function(t){return t.project_id===p.id;}).forEach(function(t){
     var o=TASK_TYPE_ORDER.hasOwnProperty(t.task_type)?TASK_TYPE_ORDER[t.task_type]:98;
-    if(o<best)best=o;
+    if(o<best) best=o;
   });
   return best;
 }
@@ -242,15 +245,15 @@ function sortProjects(list){
   return list.slice().sort(function(a,b){
     var ga=GROUP_ORDER[getGroup(a)]!==undefined?GROUP_ORDER[getGroup(a)]:99;
     var gb=GROUP_ORDER[getGroup(b)]!==undefined?GROUP_ORDER[getGroup(b)]:99;
-    if(ga!==gb)return ga-gb;
+    if(ga!==gb) return ga-gb;
     var ta=getBestTaskOrder(a),tb=getBestTaskOrder(b);
-    if(ta!==tb)return ta-tb;
+    if(ta!==tb) return ta-tb;
     return getCodeNum(a)-getCodeNum(b);
   });
 }
 function buildSttMap(sorted){
   var c={},m={};
-  sorted.forEach(function(p){var g=getGroup(p)||"?";c[g]=(c[g]||0)+1;m[p.id]=g+c[g];});
+  sorted.forEach(function(p){ var g=getGroup(p)||"?"; c[g]=(c[g]||0)+1; m[p.id]=g+c[g]; });
   return m;
 }
 
@@ -259,8 +262,8 @@ window.onload=async function(){
   var t=new Date(),y=t.getFullYear(),mo=t.getMonth();
   document.getElementById("gStart").value=fmt(new Date(y,mo,1));
   document.getElementById("gEnd").value=fmt(new Date(y,mo+1,0));
-  try{await loadAllData();renderGantt();}
-  catch(e){showToast("Loi: "+e.message,"error");}
+  try{ await loadAllData(); renderGantt(); }
+  catch(e){ showToast("Loi: "+e.message,"error"); }
 };
 
 function setZoom(z,btn){
@@ -268,9 +271,9 @@ function setZoom(z,btn){
   document.querySelectorAll(".zoom-btn").forEach(function(b){b.classList.remove("active");});
   btn.classList.add("active");
   var t=new Date(),y=t.getFullYear(),mo=t.getMonth(),d=t.getDate();
-  if(z==="day"){document.getElementById("gStart").value=fmt(new Date(y,mo,1));document.getElementById("gEnd").value=fmt(new Date(y,mo+1,0));}
-  else if(z==="week"){document.getElementById("gStart").value=fmt(new Date(y,mo,d-14));document.getElementById("gEnd").value=fmt(new Date(y,mo,d+42));}
-  else{document.getElementById("gStart").value=fmt(new Date(y,mo-1,1));document.getElementById("gEnd").value=fmt(new Date(y,mo+5,0));}
+  if(z==="day"){ document.getElementById("gStart").value=fmt(new Date(y,mo,1)); document.getElementById("gEnd").value=fmt(new Date(y,mo+1,0)); }
+  else if(z==="week"){ document.getElementById("gStart").value=fmt(new Date(y,mo,d-14)); document.getElementById("gEnd").value=fmt(new Date(y,mo,d+42)); }
+  else{ document.getElementById("gStart").value=fmt(new Date(y,mo-1,1)); document.getElementById("gEnd").value=fmt(new Date(y,mo+5,0)); }
   renderGantt();
 }
 
@@ -278,7 +281,7 @@ function renderGantt(){
   var start=new Date(document.getElementById("gStart").value);
   var end=new Date(document.getElementById("gEnd").value);
   var showDone=document.getElementById("showDone").checked;
-  if(isNaN(start)||isNaN(end)||start>end)return;
+  if(isNaN(start)||isNaN(end)||start>end) return;
   var days=getDaysArray(fmt(start),fmt(end));
   var today=fmt(new Date());
   var CW=gZoom==="month"?20:gZoom==="week"?28:36;
@@ -286,9 +289,9 @@ function renderGantt(){
   var projects=sortProjects(raw);
   var sttMap=buildSttMap(projects);
 
-  var hdr1='<th rowspan="2" style="min-width:200px;text-align:left;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">Project</th>'
-    +'<th rowspan="2" style="min-width:160px;text-align:left;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">備考</th>'
-    +'<th rowspan="2" style="min-width:110px;text-align:left;padding:10px 14px;border-right:2px solid rgba(255,255,255,.3);">Staff担当</th>';
+  var hdr1='<th class="col-proj" rowspan="2" style="text-align:left;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">Project</th>'
+    +'<th rowspan="2" style="min-width:160px;text-align:right;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">備考</th>'
+    +'<th rowspan="2" style="min-width:110px;text-align:right;padding:10px 14px;border-right:2px solid rgba(255,255,255,.3);">Staff担当</th>';
   var hdr2="";
 
   if(gZoom==="month"){
@@ -310,7 +313,9 @@ function renderGantt(){
   }
 
   var rows="";
-  if(!projects.length){rows='<tr><td colspan="'+(days.length+3)+'" style="text-align:center;padding:40px;color:#aaa;">Khong co du an</td></tr>';}
+  if(!projects.length){
+    rows='<tr><td colspan="'+(days.length+3)+'" style="text-align:center;padding:40px;color:#aaa;">Khong co du an</td></tr>';
+  }
 
   projects.forEach(function(p){
     var color=projColorMap[p.id]||"#a8dadc";
@@ -321,10 +326,9 @@ function renderGantt(){
     var name=p.project_name||p.name||"";
     var meta=getMeta(p.id);
     var pid=p.id;
-    var subParts=[];
-    if(meta.software)subParts.push(meta.software+(meta.version?" "+meta.version:""));
-    if(meta.koujou)subParts.push("着工"+meta.koujou);
-    var subHtml=subParts.length?'<div class="g-subinfo">'+subParts.join(" | ")+'</div>':"";
+    var swHtml="";
+    if(meta.software) swHtml+='<div class="g-software">'+meta.software+(meta.version?" "+meta.version:"")+'</div>';
+    if(meta.koujou)   swHtml+='<div class="g-koujou">着工 '+meta.koujou+'</div>';
     var noteVal=(meta.note||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
     var staffVal=(meta.staff||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
     var dc=days.map(function(d){
@@ -332,14 +336,13 @@ function renderGantt(){
     }).join("");
     var safeN=name.replace(/"/g,"&quot;");
     var pCell='<td class="g-left" rowspan="'+rs+'" data-pid="'+pid+'" title="Click de nhap ghi chu">'
-      +'<div class="g-pname"><span class="stt-badge">'+stt+'</span><span class="pname-text" title="'+safeN+'">'+name+'</span></div>'
+      +'<div class="g-pname"><span class="stt-badge">'+stt+'</span><span class="pname-text">'+name+'</span></div>'
       +'<div class="g-pcode">'+code+'</div>'
-      +subHtml
-      +'<div class="g-edit-hint">✏ Click de sua</div>'
+      +swHtml
       +'</td>';
     var bicoCell='<td class="g-bico" rowspan="'+rs+'">'+noteVal+'</td>';
     var staffCell='<td class="g-staff" rowspan="'+rs+'">'+staffVal+'</td>';
-    if(!tasks.length){rows+="<tr>"+pCell+bicoCell+staffCell+dc+"</tr>";return;}
+    if(!tasks.length){ rows+="<tr>"+pCell+bicoCell+staffCell+dc+"</tr>"; return; }
     tasks.forEach(function(t,ti){
       rows+='<tr data-tid="'+t.id+'">'+(ti===0?pCell+bicoCell+staffCell:"")+dc+"</tr>";
     });
@@ -359,7 +362,7 @@ function renderGantt(){
     var color=projColorMap[p.id]||"#a8dadc";
     allTasks.filter(function(t){return t.project_id===p.id;}).forEach(function(t){
       var row=document.querySelector('tr[data-tid="'+t.id+'"]');
-      if(!row)return;
+      if(!row) return;
       var cells=Array.from(row.querySelectorAll(".g-cell"));
       var user=allUsers.find(function(u){return u.id===t.assigned_to;});
       if(t.start_date&&t.end_date){
@@ -370,13 +373,29 @@ function renderGantt(){
           bar.className="g-bar";
           bar.style.cssText="left:2px;width:"+Math.max((rei-si+1)*CW-4,CW-4)+"px;background:"+color+";";
           bar.textContent=t.task_type||"";
-          bar.addEventListener("mouseenter",function(ev){showTooltip(ev,"<b>"+(t.task_type||"")+"</b><br>"+(user?user.name:"Chua phan cong")+"<br>"+t.start_date+" → "+t.end_date);});
+          bar.addEventListener("mouseenter",function(ev){ showTooltip(ev,"<b>"+(t.task_type||"")+"</b><br>"+(user?user.name:"Chua phan cong")+"<br>"+t.start_date+" → "+t.end_date); });
           bar.addEventListener("mouseleave",hideTooltip);
           cells[si].appendChild(bar);
         }
       }
-      if(t.receive_date){var ri=days.indexOf(t.receive_date);if(ri>=0&&ri<cells.length){var dot=document.createElement("div");dot.className="g-dot g-dot-rcv";dot.style.left="50%";dot.addEventListener("mouseenter",function(ev){showTooltip(ev,"Nhan data: "+t.receive_date);});dot.addEventListener("mouseleave",hideTooltip);cells[ri].appendChild(dot);}}
-      if(t.send_date){var si2=days.indexOf(t.send_date);if(si2>=0&&si2<cells.length){var dot2=document.createElement("div");dot2.className="g-dot g-dot-send";dot2.style.left="50%";dot2.addEventListener("mouseenter",function(ev){showTooltip(ev,"Gui: "+t.send_date);});dot2.addEventListener("mouseleave",hideTooltip);cells[si2].appendChild(dot2);}}
+      if(t.receive_date){
+        var ri=days.indexOf(t.receive_date);
+        if(ri>=0&&ri<cells.length){
+          var dot=document.createElement("div"); dot.className="g-dot g-dot-rcv"; dot.style.left="50%";
+          dot.addEventListener("mouseenter",function(ev){showTooltip(ev,"Nhan data: "+t.receive_date);});
+          dot.addEventListener("mouseleave",hideTooltip);
+          cells[ri].appendChild(dot);
+        }
+      }
+      if(t.send_date){
+        var si2=days.indexOf(t.send_date);
+        if(si2>=0&&si2<cells.length){
+          var dot2=document.createElement("div"); dot2.className="g-dot g-dot-send"; dot2.style.left="50%";
+          dot2.addEventListener("mouseenter",function(ev){showTooltip(ev,"Gui: "+t.send_date);});
+          dot2.addEventListener("mouseleave",hideTooltip);
+          cells[si2].appendChild(dot2);
+        }
+      }
     });
   });
 }
