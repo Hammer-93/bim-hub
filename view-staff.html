@@ -7,6 +7,8 @@
   <style>
     * { box-sizing:border-box; margin:0; padding:0; }
     body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f4f8; min-height:100vh; }
+
+    /* TOPBAR */
     .topbar { display:flex; align-items:center; justify-content:space-between; background:#1a1a2e; padding:0 24px; height:52px; position:sticky; top:0; z-index:200; }
     .topbar-left { display:flex; align-items:center; gap:10px; }
     .topbar-logo { width:30px; height:30px; background:linear-gradient(135deg,#00b4d8,#0077b6); border-radius:7px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:15px; }
@@ -19,13 +21,16 @@
     .role-staff { background:#0096c7; color:#fff; }
     .btn-top { background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; text-decoration:none; transition:background .2s; font-family:inherit; }
     .btn-top:hover { background:rgba(255,255,255,.22); }
-    .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; position:sticky; top:52px; z-index:190; }
+
+    /* NAV */
+    .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; position:sticky; top:52px; z-index:150; }
     .nav-tab { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; text-decoration:none; display:flex; align-items:center; gap:7px; }
     .nav-tab:hover { color:#0096c7; }
     .nav-tab.active { color:#0077b6; border-bottom-color:#0077b6; }
+
     .main { padding:28px 32px; }
-    .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:12px; }
-    .section-title { font-size:18px; font-weight:700; color:#1a1a2e; }
+    .section-title { font-size:18px; font-weight:700; color:#1a1a2e; margin-bottom:16px; }
+
     .toast { position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:9999; transform:translateY(80px); opacity:0; transition:all .35s; }
     .toast.show { transform:translateY(0); opacity:1; }
     .toast.success { border-left:4px solid #52b788; }
@@ -48,24 +53,42 @@
     .legend-bar { width:28px; height:11px; border-radius:3px; }
     .legend-line { width:3px; height:16px; border-radius:2px; }
 
-    /* STAFF TABLE */
-    .staff-wrap { overflow-x:auto; background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); }
-    table.staff { width:100%; border-collapse:collapse; min-width:800px; }
+    /* STAFF WRAP — scroll cả 2 chiều, sticky thead bên trong */
+    .staff-wrap {
+      overflow:auto;
+      max-height: calc(100vh - 230px);
+      background:#fff;
+      border-radius:14px;
+      box-shadow:0 2px 12px rgba(0,0,0,.07);
+    }
 
-    /* Sticky thead — sticks below topbar+navtabs (52+50=102px) */
-    table.staff thead tr { position:sticky; top:102px; z-index:30; }
+    table.staff { border-collapse:collapse; min-width:800px; }
+
+    /* Sticky thead bên trong scroll container */
     table.staff thead th {
-      padding:8px 10px; font-size:11px; font-weight:700; color:#fff;
-      background:#1a1a2e; text-align:center; white-space:nowrap;
+      position:sticky;
+      top:0;
+      z-index:20;
+      padding:8px 10px;
+      font-size:11px;
+      font-weight:700;
+      color:#fff;
+      background:#1a1a2e;
+      text-align:center;
+      white-space:nowrap;
       border-right:1px solid rgba(255,255,255,.1);
     }
     table.staff thead th.today-hdr { background:#e63946; }
 
-    /* Sticky first column header */
+    /* Sticky first-col header (góc trái trên) */
     table.staff thead th:first-child {
-      position:sticky; left:0; z-index:40;
-      background:#1a1a2e;
-      text-align:left; padding:10px 14px;
+      position:sticky;
+      top:0;
+      left:0;
+      z-index:30;
+      text-align:left;
+      padding:10px 14px;
+      min-width:200px;
       border-right:2px solid rgba(255,255,255,.2);
     }
 
@@ -74,18 +97,21 @@
     /* NAME CELL — sticky left */
     .s-name-cell {
       padding:10px 14px;
-      min-width:200px; max-width:200px; width:200px;
+      min-width:200px;
+      max-width:200px;
+      width:200px;
       border-right:2px solid #e8e8e8;
-      vertical-align:middle;
+      vertical-align:top;
       background:#fff;
-      position:sticky; left:0; z-index:9;
-      box-shadow:2px 0 6px rgba(0,0,0,.06);
+      position:sticky;
+      left:0;
+      z-index:10;
+      box-shadow:2px 0 5px rgba(0,0,0,.05);
     }
-    .s-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#0096c7,#0077b6); display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; flex-shrink:0; }
-    .s-name { font-size:13px; font-weight:700; color:#1a1a2e; }
+    .s-name { font-size:13px; font-weight:700; color:#1a1a2e; margin-bottom:3px; }
 
     /* ROLE PILL */
-    .role-pill { display:inline-block; font-size:10px; font-weight:700; padding:1px 7px; border-radius:20px; margin-top:3px; }
+    .role-pill { display:inline-block; font-size:10px; font-weight:700; padding:1px 7px; border-radius:20px; }
     .role-pill.Manager    { background:#e63946; color:#fff; }
     .role-pill.SubManager { background:#f4a261; color:#fff; }
     .role-pill.Leader     { background:#2a9d8f; color:#fff; }
@@ -98,8 +124,9 @@
     .s-cell.tdy::before { content:""; position:absolute; top:0; bottom:0; left:50%; width:2px; background:#e63946; z-index:5; transform:translateX(-50%); }
 
     /* LANE BORDERS */
-    .lane-first td { border-top:2px solid #dde2ea; }
-    .lane-last  td { border-bottom:2px solid #dde2ea !important; }
+    .lane-first .s-cell,
+    .lane-first .s-name-cell { border-top:2px solid #dde2ea; }
+    .lane-last  .s-cell      { border-bottom:2px solid #dde2ea !important; }
 
     /* BARS */
     .s-bar { position:absolute; height:22px; border-radius:3px; top:7px; display:flex; align-items:center; padding:0 6px; font-size:9.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.15); z-index:2; transition:opacity .2s,transform .15s; }
@@ -108,11 +135,15 @@
     /* GROUP HEADER */
     .grp-hdr td {
       background:linear-gradient(90deg,#f0f4f8,#f8fbff);
-      padding:8px 16px; font-size:12px; font-weight:700; color:#0077b6;
-      border-bottom:1.5px solid #dde2ea; border-top:1.5px solid #dde2ea;
-      position:sticky; left:0;
+      padding:8px 16px;
+      font-size:12px;
+      font-weight:700;
+      color:#0077b6;
+      border-bottom:1.5px solid #dde2ea;
+      border-top:2px solid #c8d8e8;
+      position:sticky;
+      left:0;
     }
-    .grp-hdr-icon { margin-right:6px; }
   </style>
 </head>
 <body>
@@ -143,9 +174,7 @@
 <div class="tooltip" id="tooltip"></div>
 
 <div class="main">
-  <div class="section-header">
-    <div class="section-title">👥 Lich lam viec nhan vien</div>
-  </div>
+  <div class="section-title">👥 Lich lam viec nhan vien</div>
 
   <div class="controls">
     <div class="grp-tabs">
@@ -180,7 +209,7 @@
 <script>
 const ROLE_ORDER = { 'Manager':0, 'Sub Manager':1, 'Leader':2, 'Staff':3 };
 const ROLE_PILL_CLASS = {
-  'Manager':'Manager', 'Sub Manager':'SubManager', 'Leader':'Leader', 'Staff':'Staff'
+  'Manager':'Manager','Sub Manager':'SubManager','Leader':'Leader','Staff':'Staff'
 };
 
 let sZoom  = 'day';
@@ -199,16 +228,16 @@ window.onload = async () => {
   }
 };
 
-function visibleUsers(users) {
-  return users.filter(u => u.role !== 'Admin');
+function visibleUsers(list) {
+  return list.filter(u => u.role !== 'Admin');
 }
 
-function sortUsers(users) {
-  return [...users].sort((a, b) => {
+function sortUsers(list) {
+  return [...list].sort((a,b) => {
     const ra = ROLE_ORDER[a.role] ?? 99;
     const rb = ROLE_ORDER[b.role] ?? 99;
     if (ra !== rb) return ra - rb;
-    return (a.name || a.email).localeCompare(b.name || b.email, 'vi');
+    return (a.name||a.email).localeCompare(b.name||b.email,'vi');
   });
 }
 
@@ -240,22 +269,22 @@ function setZoom(z, btn) {
 function renderStaff() {
   const start = new Date(document.getElementById('sStart').value);
   const end   = new Date(document.getElementById('sEnd').value);
-  if (isNaN(start) || isNaN(end) || start > end) return;
+  if (isNaN(start)||isNaN(end)||start>end) return;
 
   const days  = getDaysArray(fmt(start), fmt(end));
   const today = fmt(new Date());
-  const CW    = sZoom === 'month' ? 18 : sZoom === 'week' ? 26 : 34;
+  const CW    = sZoom==='month' ? 18 : sZoom==='week' ? 26 : 34;
 
-  const sekkeiUsers = sortUsers(visibleUsers(allUsers.filter(u => u.group_name === '設計BIM')));
-  const sekouUsers  = sortUsers(visibleUsers(allUsers.filter(u => u.group_name === '施工BIM')));
+  const sekkeiUsers = sortUsers(visibleUsers(allUsers.filter(u => u.group_name==='設計BIM')));
+  const sekouUsers  = sortUsers(visibleUsers(allUsers.filter(u => u.group_name==='施工BIM')));
 
   // ── Header ──────────────────────────────────────────────────────────
-  let hdr = '<th style="min-width:200px;text-align:left;">Nhan vien</th>';
+  let hdr = '<th style="min-width:200px;">Nhan vien</th>';
 
   if (sZoom === 'month') {
     const months = {};
-    days.forEach(d => { const k = d.substring(0,7); months[k]=(months[k]||0)+1; });
-    Object.entries(months).forEach(([mo, cnt]) => {
+    days.forEach(d => { const k=d.substring(0,7); months[k]=(months[k]||0)+1; });
+    Object.entries(months).forEach(([mo,cnt]) => {
       hdr += '<th colspan="'+cnt+'" style="min-width:'+(cnt*CW)+'px;">'+mo+'</th>';
     });
   } else {
@@ -263,7 +292,7 @@ function renderStaff() {
       const dt  = new Date(d+'T00:00:00');
       const dow = ['日','月','火','水','木','金','土'][dt.getDay()];
       const we  = isWeekend(d);
-      const td  = d === today;
+      const td  = d===today;
       hdr += '<th style="min-width:'+CW+'px;'+(we?'opacity:.45;':'')+(td?'background:#e63946;':'')+'"'+(td?' class="today-hdr"':'')+'>'+
         dt.getDate()+'<br><span style="font-size:9px;opacity:.8;">'+dow+'</span></th>';
     });
@@ -271,55 +300,54 @@ function renderStaff() {
 
   // ── Rows ────────────────────────────────────────────────────────────
   let rows = '';
-  if (sGroup === 'all') {
+  if (sGroup==='all') {
     if (sekkeiUsers.length) {
-      rows += buildGroupHeader('🏛️','設計BIM', sekkeiUsers.length, days.length);
-      sekkeiUsers.forEach(u => { rows += buildUserRows(u, days, today, CW); });
+      rows += buildGroupHeader('🏛️','設計BIM',sekkeiUsers.length,days.length);
+      sekkeiUsers.forEach(u => { rows += buildUserRows(u,days,today,CW); });
     }
     if (sekouUsers.length) {
-      rows += buildGroupHeader('🏗️','施工BIM', sekouUsers.length, days.length);
-      sekouUsers.forEach(u => { rows += buildUserRows(u, days, today, CW); });
+      rows += buildGroupHeader('🏗️','施工BIM',sekouUsers.length,days.length);
+      sekouUsers.forEach(u => { rows += buildUserRows(u,days,today,CW); });
     }
   } else {
-    const users = sGroup === 'sekkei' ? sekkeiUsers : sekouUsers;
+    const users = sGroup==='sekkei' ? sekkeiUsers : sekouUsers;
     if (!users.length) {
       rows = '<tr><td colspan="'+(days.length+1)+'" style="text-align:center;padding:40px;color:#aaa;">Khong co nhan vien</td></tr>';
     } else {
-      users.forEach(u => { rows += buildUserRows(u, days, today, CW); });
+      users.forEach(u => { rows += buildUserRows(u,days,today,CW); });
     }
   }
 
   document.getElementById('staffCont').innerHTML =
     '<table class="staff"><thead><tr>'+hdr+'</tr></thead><tbody>'+rows+'</tbody></table>';
 
-  const renderUsers = sGroup === 'all'
-    ? [...sekkeiUsers, ...sekouUsers]
-    : (sGroup === 'sekkei' ? sekkeiUsers : sekouUsers);
-  renderUsers.forEach(u => drawBarsMultiLane(u, days, CW));
+  const renderUsers = sGroup==='all'
+    ? [...sekkeiUsers,...sekouUsers]
+    : (sGroup==='sekkei' ? sekkeiUsers : sekouUsers);
+  renderUsers.forEach(u => drawBarsMultiLane(u,days,CW));
 }
 
 function buildGroupHeader(icon, label, count, dayCount) {
-  return '<tr class="grp-hdr"><td colspan="'+(dayCount+1)+'">'+
-    '<span class="grp-hdr-icon">'+icon+'</span>'+label+'（'+count+' nhan vien）</td></tr>';
+  return '<tr class="grp-hdr"><td colspan="'+(dayCount+1)+'">'+icon+' '+label+'（'+count+' nhan vien）</td></tr>';
 }
 
 function buildUserRows(u, days, today, CW) {
-  const tasks     = allTasks.filter(t => t.assigned_to === u.id && t.start_date && t.end_date);
+  const tasks     = allTasks.filter(t => t.assigned_to===u.id && t.start_date && t.end_date);
   const laneCount = Math.max(1, tasks.length);
-  const initials  = (u.name || u.email).substring(0,2).toUpperCase();
   const pillClass = ROLE_PILL_CLASS[u.role] || 'Staff';
   let html = '';
 
-  for (let lane = 0; lane < laneCount; lane++) {
-    const isFirst  = lane === 0;
-    const isLast   = lane === laneCount - 1;
-    const rowClass = (isFirst ? 'lane-first ' : '') + (isLast ? 'lane-last' : '');
+  for (let lane=0; lane<laneCount; lane++) {
+    const isFirst = lane===0;
+    const isLast  = lane===laneCount-1;
+    const rowClass= (isFirst?'lane-first ':'')+(isLast?'lane-last':'');
 
+    // Name cell chỉ ở lane đầu, rowspan bao hết
     const nameCell = isFirst
-      ? '<td class="s-name-cell" rowspan="'+laneCount+'">' +
-          '<div class="s-name">'+(u.name||u.email)+'</div>' +
-'<span class="role-pill '+pillClass+'">'+(u.role||'Staff')+'</span>' +
-        '</td>'
+      ? '<td class="s-name-cell" rowspan="'+laneCount+'">'
+          +'<div class="s-name">'+(u.name||u.email)+'</div>'
+          +'<span class="role-pill '+pillClass+'">'+(u.role||'Staff')+'</span>'
+        +'</td>'
       : '';
 
     const cells = days.map(d =>
@@ -334,31 +362,31 @@ function buildUserRows(u, days, today, CW) {
 }
 
 function drawBarsMultiLane(u, days, CW) {
-  const tasks = allTasks.filter(t => t.assigned_to === u.id && t.start_date && t.end_date);
+  const tasks = allTasks.filter(t => t.assigned_to===u.id && t.start_date && t.end_date);
   if (!tasks.length) return;
 
   tasks.forEach((task, lane) => {
-    const proj = allProjects.find(p => p.id === task.project_id);
+    const proj = allProjects.find(p => p.id===task.project_id);
     if (!proj) return;
 
     const color = projColorMap[proj.id] || '#a8dadc';
     const si    = days.indexOf(task.start_date);
     const ei    = days.indexOf(task.end_date);
-    if (si < 0 || si >= days.length) return;
+    if (si<0||si>=days.length) return;
 
     const row = document.querySelector('tr[data-uid="'+u.id+'"][data-lane="'+lane+'"]');
     if (!row) return;
     const cells = [...row.querySelectorAll('.s-cell')];
     if (!cells[si]) return;
 
-    const realEi = ei < 0 ? days.length-1 : Math.min(ei, days.length-1);
+    const realEi = ei<0 ? days.length-1 : Math.min(ei, days.length-1);
     const barW   = Math.max((realEi-si+1)*CW-4, CW-4);
 
     const bar = document.createElement('div');
     bar.className = 's-bar';
     bar.style.cssText = 'left:2px;width:'+barW+'px;background:'+color+';color:'+(isLight(color)?'#333':'#fff')+';';
-    const codeShort = (proj.project_code||'').split('_')[0];
-    bar.textContent  = (codeShort?'['+codeShort+'] ':'')+proj.project_name;
+    const code = (proj.project_code||'').split('_')[0];
+    bar.textContent = (code?'['+code+'] ':'')+proj.project_name;
 
     bar.addEventListener('mouseenter', e => showTooltip(e,
       '<b>'+proj.project_name+'</b>'+
@@ -372,12 +400,12 @@ function drawBarsMultiLane(u, days, CW) {
 }
 
 function isLight(hex) {
-  const c = (hex||'').replace('#','');
-  if (c.length !== 6) return true;
-  const r = parseInt(c.substring(0,2),16);
-  const g = parseInt(c.substring(2,4),16);
-  const b = parseInt(c.substring(4,6),16);
-  return (r*299+g*587+b*114)/1000 > 160;
+  const c=(hex||'').replace('#','');
+  if(c.length!==6) return true;
+  const r=parseInt(c.substring(0,2),16);
+  const g=parseInt(c.substring(2,4),16);
+  const b=parseInt(c.substring(4,6),16);
+  return (r*299+g*587+b*114)/1000>160;
 }
 </script>
 </body>
