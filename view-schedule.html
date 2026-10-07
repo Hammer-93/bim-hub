@@ -32,43 +32,43 @@
     .toast.error   { border-left:4px solid #e63946; }
     .tooltip { position:fixed; background:#1a1a2e; color:#fff; padding:8px 12px; border-radius:8px; font-size:12px; z-index:9999; pointer-events:none; display:none; max-width:260px; line-height:1.6; box-shadow:0 4px 12px rgba(0,0,0,.2); }
 
-    /* CONTROLS */
     .controls { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
     .zoom-btn { padding:7px 14px; border:1.5px solid #dde2ea; border-radius:7px; font-size:12.5px; font-weight:600; cursor:pointer; background:#fff; color:#555; transition:all .15s; }
     .zoom-btn:hover, .zoom-btn.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
     .filter-input { padding:8px 14px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; font-family:inherit; }
     .filter-input:focus { border-color:#0096c7; }
 
-    /* LEGEND */
     .legend { display:flex; gap:18px; flex-wrap:wrap; margin-bottom:14px; font-size:12px; color:#555; align-items:center; }
     .legend-item { display:flex; align-items:center; gap:6px; }
     .legend-bar { width:28px; height:11px; border-radius:3px; }
     .legend-dot { width:11px; height:11px; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.2); }
     .legend-line { width:3px; height:16px; border-radius:2px; }
 
-    /* GANTT WRAPPER */
     .gantt-wrap { overflow-x:auto; background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); }
 
-    /* GANTT TABLE */
     table.gantt { width:100%; border-collapse:collapse; min-width:800px; }
     table.gantt thead tr:first-child th { padding:6px 8px; font-size:11px; font-weight:700; color:#fff; background:#1a1a2e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.1); }
     table.gantt thead tr:last-child th { padding:5px 4px; font-size:10px; font-weight:600; color:#fff; background:#2a2a3e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.08); }
     table.gantt thead th.today-hdr { background:#e63946 !important; }
     table.gantt tbody td { padding:0; border-bottom:1px solid #f0f0f0; }
 
-    /* LEFT CELL */
-    .g-left { padding:10px 14px; min-width:220px; max-width:220px; border-right:2px solid #e8e8e8; vertical-align:middle; background:#fff; }
-    .g-pname { font-size:13px; font-weight:700; color:#1a1a2e; display:flex; align-items:center; gap:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .g-psub  { font-size:11px; color:#888; margin-top:2px; }
-    .g-task-label { font-size:11px; color:#555; padding:8px 14px 8px 28px; border-right:2px solid #e8e8e8; min-width:220px; max-width:220px; vertical-align:middle; background:#fafbfc; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    /* LEFT CELL — chỉ còn STT + tên dự án, bỏ mã số */
+    .g-left { padding:10px 14px; min-width:260px; max-width:260px; border-right:2px solid #e8e8e8; vertical-align:middle; background:#fff; }
+    .g-pname { font-size:13px; font-weight:700; color:#1a1a2e; display:flex; align-items:center; gap:8px; }
+    .g-pname .stt-badge {
+      font-size:10px; font-weight:800; padding:1px 6px; border-radius:4px;
+      background:#e8f4fe; color:#0077b6; flex-shrink:0; white-space:nowrap;
+    }
+    .g-pname .pname-text { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    /* bỏ g-psub hoàn toàn */
 
-    /* GANTT CELLS */
+    .g-task-label { font-size:11px; color:#555; padding:8px 14px 8px 28px; border-right:2px solid #e8e8e8; min-width:260px; max-width:260px; vertical-align:middle; background:#fafbfc; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
     .g-cell { position:relative; height:38px; border-right:1px solid #f0f0f0; vertical-align:middle; }
     .g-cell.we  { background:#f8f8f8; }
     .g-cell.tdy { background:#fff5f5; }
     .g-cell.tdy::before { content:''; position:absolute; top:0; bottom:0; left:50%; width:2px; background:#e63946; z-index:5; transform:translateX(-50%); }
 
-    /* BARS & DOTS */
     .g-bar { position:absolute; height:20px; border-radius:4px; top:9px; display:flex; align-items:center; padding:0 7px; font-size:10px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,.18); z-index:2; transition:opacity .2s, transform .15s; }
     .g-bar:hover { opacity:.85; transform:scaleY(1.08); }
     .g-dot { position:absolute; width:11px; height:11px; border-radius:50%; transform:translateX(-50%); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.25); z-index:4; cursor:pointer; }
@@ -79,7 +79,6 @@
 </head>
 <body>
 
-<!-- TOPBAR -->
 <nav class="topbar">
   <div class="topbar-left">
     <div class="topbar-logo">B</div>
@@ -95,7 +94,6 @@
   </div>
 </nav>
 
-<!-- NAV TABS -->
 <div class="nav-tabs">
   <a class="nav-tab" href="view-list.html">📋 Danh sach du an</a>
   <a class="nav-tab" href="view-category.html">🗂️ Theo the loai</a>
@@ -106,13 +104,11 @@
 <div class="toast" id="toast"></div>
 <div class="tooltip" id="tooltip"></div>
 
-<!-- MAIN -->
 <div class="main">
   <div class="section-header">
     <div class="section-title">📅 Schedule du an</div>
   </div>
 
-  <!-- CONTROLS -->
   <div class="controls">
     <button class="zoom-btn active" onclick="setZoom('day',this)">Ngay</button>
     <button class="zoom-btn" onclick="setZoom('week',this)">Tuan</button>
@@ -125,7 +121,6 @@
     </label>
   </div>
 
-  <!-- LEGEND -->
   <div class="legend">
     <div class="legend-item"><div class="legend-bar" style="background:#a8dadc;"></div><span>Khoan lam viec</span></div>
     <div class="legend-item"><div class="legend-dot g-dot-rcv"></div><span>Nhan data (tren)</span></div>
@@ -133,7 +128,6 @@
     <div class="legend-item"><div class="legend-line" style="background:#e63946;"></div><span>Hom nay</span></div>
   </div>
 
-  <!-- GANTT -->
   <div class="gantt-wrap">
     <div id="ganttCont">
       <div style="padding:40px;text-align:center;color:#aaa;">Dang tai...</div>
@@ -176,6 +170,18 @@ function setZoom(z, btn) {
   renderGantt();
 }
 
+// Tạo STT theo nhóm proj_group: A1,A2,... B1,B2,...
+function buildSttMap(projects) {
+  const counters = {};
+  const map = {};
+  projects.forEach(p => {
+    const grp = (p.proj_group || p.project_group || p.group || '?').toString().toUpperCase().trim();
+    counters[grp] = (counters[grp] || 0) + 1;
+    map[p.id] = grp + counters[grp];
+  });
+  return map;
+}
+
 function renderGantt() {
   const start    = new Date(document.getElementById('gStart').value);
   const end      = new Date(document.getElementById('gEnd').value);
@@ -188,8 +194,12 @@ function renderGantt() {
 
   const projects = allProjects.filter(p => showDone ? true : p.status === 'active');
 
-  // ── Build header ──────────────────────────────────
-  let hdr1 = '<th rowspan="2" style="min-width:220px;text-align:left;padding:10px 14px;border-right:2px solid rgba(255,255,255,.2);">Du an / Task</th>';
+  // STT map
+  const sttMap = buildSttMap(projects);
+
+  // ── Header ──────────────────────────────────────────
+  // Đổi tiêu đề cột thành "Project"
+  let hdr1 = '<th rowspan="2" style="min-width:260px;text-align:left;padding:10px 14px;border-right:2px solid rgba(255,255,255,.2);">Project</th>';
   let hdr2 = '';
 
   if (gZoom === 'month') {
@@ -199,9 +209,9 @@ function renderGantt() {
       hdr1 += '<th colspan="'+cnt+'" style="min-width:'+(cnt*CW)+'px;border-right:1px solid rgba(255,255,255,.15);">'+m+'</th>';
     });
     days.forEach(d => {
-      const dt  = new Date(d);
-      const we  = isWeekend(d);
-      const td  = d === today;
+      const dt = new Date(d);
+      const we = isWeekend(d);
+      const td = d === today;
       hdr2 += '<th style="min-width:'+CW+'px;'+(we?'opacity:.45':'')+(td?';background:#e63946;':'')+'">'+dt.getDate()+'</th>';
     });
   } else {
@@ -215,7 +225,7 @@ function renderGantt() {
     });
   }
 
-  // ── Build rows ────────────────────────────────────
+  // ── Rows ─────────────────────────────────────────────
   let rows = '';
   if (!projects.length) {
     rows = '<tr><td colspan="'+(days.length+1)+'" style="text-align:center;padding:40px;color:#aaa;">Khong co du an nao</td></tr>';
@@ -225,14 +235,14 @@ function renderGantt() {
     const color = projColorMap[p.id] || '#a8dadc';
     const tasks = allTasks.filter(t => t.project_id === p.id);
     const rs    = Math.max(tasks.length, 1);
+    const stt   = sttMap[p.id] || '';
 
-    // Project name cell (rowspan)
+    // Project name cell — chỉ STT badge + tên dự án, không có mã số/code bên dưới
     const pCell = '<td class="g-left" rowspan="'+rs+'">'
       + '<div class="g-pname">'
-      + '<span style="width:10px;height:10px;border-radius:50%;background:'+color+';flex-shrink:0;display:inline-block;"></span>'
-      + p.project_name
+      + '<span class="stt-badge">' + stt + '</span>'
+      + '<span class="pname-text" title="' + (p.project_name||'') + '">' + (p.project_name||'') + '</span>'
       + '</div>'
-      + '<div class="g-psub">'+(p.code||'')+(p.status==='done'?' · Da ket thuc':'')+'</div>'
       + '</td>';
 
     if (!tasks.length) {
@@ -243,7 +253,6 @@ function renderGantt() {
     }
 
     tasks.forEach((t, ti) => {
-      const user = allUsers.find(u => u.id === t.assigned_to);
       rows += '<tr data-tid="'+t.id+'">'
         + (ti === 0 ? pCell : '')
         + days.map(d => '<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;"></td>').join('')
@@ -251,7 +260,7 @@ function renderGantt() {
     });
   });
 
-  // ── Render ────────────────────────────────────────
+  // ── Render table ──────────────────────────────────────
   const thead = gZoom === 'month'
     ? '<thead><tr>'+hdr1+'</tr><tr>'+hdr2+'</tr></thead>'
     : '<thead><tr>'+hdr1+'</tr></thead>';
@@ -259,7 +268,7 @@ function renderGantt() {
   document.getElementById('ganttCont').innerHTML =
     '<table class="gantt">'+thead+'<tbody>'+rows+'</tbody></table>';
 
-  // ── Draw bars ─────────────────────────────────────
+  // ── Draw bars & dots ──────────────────────────────────
   projects.forEach(p => {
     const color = projColorMap[p.id] || '#a8dadc';
     allTasks.filter(t => t.project_id === p.id).forEach(t => {
@@ -268,7 +277,6 @@ function renderGantt() {
       const cells = [...row.querySelectorAll('.g-cell')];
       const user  = allUsers.find(u => u.id === t.assigned_to);
 
-      // Work bar
       if (t.start_date && t.end_date) {
         const si = days.indexOf(t.start_date);
         const ei = days.indexOf(t.end_date);
@@ -290,28 +298,24 @@ function renderGantt() {
         }
       }
 
-      // Receive dot
       if (t.receive_date) {
         const ri = days.indexOf(t.receive_date);
         if (ri >= 0 && ri < cells.length) {
           const dot = document.createElement('div');
           dot.className = 'g-dot g-dot-rcv';
           dot.style.left = '50%';
-          dot.title = '受信日: '+t.receive_date;
           dot.addEventListener('mouseenter', e => showTooltip(e, '📥 Nhan data<br>'+t.receive_date));
           dot.addEventListener('mouseleave', hideTooltip);
           cells[ri].appendChild(dot);
         }
       }
 
-      // Send dot
       if (t.send_date) {
         const si2 = days.indexOf(t.send_date);
         if (si2 >= 0 && si2 < cells.length) {
           const dot2 = document.createElement('div');
           dot2.className = 'g-dot g-dot-send';
           dot2.style.left = '50%';
-          dot2.title = '送信日: '+t.send_date;
           dot2.addEventListener('mouseenter', e => showTooltip(e, '📤 Gui<br>'+t.send_date));
           dot2.addEventListener('mouseleave', hideTooltip);
           cells[si2].appendChild(dot2);
