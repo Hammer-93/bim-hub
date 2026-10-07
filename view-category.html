@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang=\"vi\">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset=\"UTF-8\"/>
+<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>
 <title>BIM Hub — Theo thể loại</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -15,6 +15,8 @@
   .nav-tab:hover { background: #ffffff22; color: #fff; }
   .nav-tab.active { background: #4f8ef7; color: #fff; }
   .navbar .user-info { margin-left: auto; color: #ccc; font-size: 13px; display: flex; align-items: center; gap: 10px; }
+  .role-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #4f8ef722; color: #4f8ef7; font-weight: 600; }
+  .role-badge.role-admin { background: #e74c3c22; color: #e74c3c; }
   .logout-btn { background: #e74c3c22; color: #e74c3c; border: 1px solid #e74c3c44; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
   .logout-btn:hover { background: #e74c3c44; }
 
@@ -27,7 +29,7 @@
   .stat-card.green .num { color: #4caf50; }
   .stat-card.orange .num { color: #ff9800; }
 
-  /* FILTER BAR */
+  /* FILTER */
   .filter-bar { display: flex; gap: 12px; padding: 18px 24px 0; align-items: center; flex-wrap: wrap; }
   .filter-bar input, .filter-bar select {
     padding: 8px 14px; border: 1px solid #ddd; border-radius: 8px;
@@ -36,51 +38,39 @@
   .filter-bar input { flex: 1; min-width: 200px; }
   .filter-bar select { min-width: 160px; }
 
-  /* CATEGORY SECTIONS */
+  /* CATEGORIES */
   .categories { padding: 20px 24px 40px; display: flex; flex-direction: column; gap: 24px; }
-
   .category-section { background: #fff; border-radius: 14px; box-shadow: 0 1px 8px #0001; overflow: hidden; }
-
   .category-header {
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px 20px; color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;
     user-select: none;
   }
-  .category-header .badge {
-    background: #ffffff33; border-radius: 20px;
-    padding: 2px 12px; font-size: 13px; font-weight: 500;
-  }
-  .category-header .toggle-icon { font-size: 12px; transition: transform .2s; }
+  .category-header .badge { background: #ffffff33; border-radius: 20px; padding: 2px 12px; font-size: 13px; font-weight: 500; }
+  .category-header .toggle-icon { font-size: 12px; transition: transform .2s; margin-left: 8px; }
   .category-header.collapsed .toggle-icon { transform: rotate(-90deg); }
 
-  /* Colors per category */
-  .cat-パース・動画 .category-header { background: linear-gradient(135deg, #ff9a56, #ff6b35); }
-  .cat-意匠モデル   .category-header { background: linear-gradient(135deg, #667eea, #764ba2); }
-  .cat-構造モデル   .category-header { background: linear-gradient(135deg, #11998e, #38ef7d); }
-  .cat-清算モデル   .category-header { background: linear-gradient(135deg, #f093fb, #f5576c); }
-  .cat-図面         .category-header { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-  .cat-施工ステップ .category-header { background: linear-gradient(135deg, #f7971e, #ffd200); }
+  .cat-0 .category-header { background: linear-gradient(135deg, #ff9a56, #ff6b35); }
+  .cat-1 .category-header { background: linear-gradient(135deg, #667eea, #764ba2); }
+  .cat-2 .category-header { background: linear-gradient(135deg, #11998e, #38ef7d); }
+  .cat-3 .category-header { background: linear-gradient(135deg, #f093fb, #f5576c); }
+  .cat-4 .category-header { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+  .cat-5 .category-header { background: linear-gradient(135deg, #f7971e, #ffd200); }
 
-  /* PROJECT ROWS */
   .project-list { padding: 0 16px 12px; }
-
   .project-row {
     display: flex; align-items: center; gap: 12px;
     padding: 11px 12px; border-radius: 8px; cursor: pointer;
     transition: background .15s;
   }
   .project-row:hover { background: #f5f7ff; }
-
-  .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .status-dot.active { background: #4caf50; }
-  .status-dot.pending { background: #ff9800; }
-  .status-dot.done { background: #9e9e9e; }
-
-  .proj-id { font-size: 13px; font-weight: 700; color: #4f8ef7; min-width: 52px; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: #4caf50; }
+  .proj-id { font-size: 13px; font-weight: 700; color: #4f8ef7; min-width: 60px; }
   .proj-name { font-size: 14px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .proj-group { font-size: 11px; background: #eef2ff; color: #5c6bc0; border-radius: 4px; padding: 2px 7px; font-weight: 600; }
 
-  .empty-msg { text-align: center; color: #bbb; padding: 20px; font-size: 14px; }
+  .empty-msg { text-align: center; color: #bbb; padding: 24px; font-size: 14px; }
+  .loading { text-align: center; padding: 60px; color: #999; font-size: 15px; }
 
   /* MODAL */
   .modal-overlay {
@@ -97,7 +87,7 @@
     display: flex; justify-content: space-between; align-items: flex-start;
   }
   .modal-header h2 { font-size: 17px; font-weight: 700; color: #222; }
-  .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #999; line-height: 1; }
+  .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #999; }
   .modal-body { padding: 20px 24px; }
   .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
   .info-item .lbl { font-size: 11px; color: #999; text-transform: uppercase; margin-bottom: 3px; }
@@ -105,18 +95,19 @@
   .task-list-title { font-size: 13px; font-weight: 700; color: #555; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
   .task-item {
     display: flex; align-items: center; gap: 10px;
-    padding: 10px 14px; border-radius: 8px; background: #f8f9ff;
-    margin-bottom: 8px;
+    padding: 10px 14px; border-radius: 8px; background: #f8f9ff; margin-bottom: 8px;
   }
   .task-type-badge { font-size: 11px; background: #e8eaf6; color: #3949ab; border-radius: 4px; padding: 2px 8px; font-weight: 600; }
   .task-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
   .task-status.active { background: #e8f5e9; color: #388e3c; }
   .task-status.pending { background: #fff3e0; color: #f57c00; }
-  .task-status.done { background: #f5f5f5; color: #757575; }
   .task-date { font-size: 11px; color: #999; margin-left: auto; }
 
-  /* LOADING */
-  .loading { text-align: center; padding: 60px; color: #999; font-size: 15px; }
+  /* TOAST */
+  .toast { position:fixed; bottom:24px; right:24px; padding:12px 22px; border-radius:10px; font-size:14px; color:#fff; opacity:0; transition:opacity .3s; z-index:9999; pointer-events:none; }
+  .toast.show { opacity:1; }
+  .toast.success { background:#4caf50; }
+  .toast.error { background:#e74c3c; }
 </style>
 </head>
 <body>
@@ -128,12 +119,14 @@
   <a class="nav-tab" href="view-schedule.html">📅 Schedule du an</a>
   <a class="nav-tab" href="view-staff.html">👥 Lich nhan vien</a>
   <div class="user-info">
-    <span id="userLabel">...</span>
+    <span id="topAvatar" style="width:32px;height:32px;border-radius:50%;background:#4f8ef7;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;"></span>
+    <span id="topName">...</span>
+    <span id="topRole" class="role-badge">Staff</span>
     <button class="logout-btn" onclick="logout()">Đăng xuất</button>
   </div>
 </nav>
 
-<!-- STATS -->
+<!-- STATS: only 3 cards -->
 <div class="stats-bar">
   <div class="stat-card blue">
     <div class="num" id="statTotal">—</div>
@@ -179,91 +172,89 @@
 
 <script src="js/config.js"></script>
 <script>
-const TASK_TYPES = ['パース・動画','意匠モデル','構造モデル','清算モデル','図面','施工ステップ'];
+// ── constants ──────────────────────────────────────────────
+const TASK_TYPES_LOCAL = ['パース・動画','意匠モデル','構造モデル','清算モデル','図面','施工ステップ'];
 const GROUP_LABELS = { A:'設計BIM', B:'施工BIM', C:'清算', D:'M&F' };
+const ACTIVE_STATUSES = ['active','in_progress','doing','進行中','アクティブ','running','ongoing'];
 
-const ACTIVE_STATUSES = ['active','in_progress','doing','進行中','アクティブ'];
-
-let allProjects = [];
-let allTasks = [];
-let currentUser = null;
-
+// ── helpers ────────────────────────────────────────────────
 function isActiveTask(t) {
   const s = (t.status || '').toLowerCase().trim();
-  return ACTIVE_STATUSES.some(a => s === a.toLowerCase()) || s === 'active' || s === 'in_progress' || s === 'doing';
+  return ACTIVE_STATUSES.some(a => s === a.toLowerCase());
 }
 
+function getCode(p)  { return p.project_code || p.code || p.id || ''; }
+function getName(p)  { return p.project_name || p.name || '(no name)'; }
+function getGroup(p) { return (p.project_group || p.group || '').toUpperCase(); }
+
+// ── init ───────────────────────────────────────────────────
 async function init() {
+  initTopbar();
   try {
-    const session = JSON.parse(localStorage.getItem('bim_session') || 'null');
-    if (!session) { location.href = 'index.html'; return; }
-    currentUser = session;
-    document.getElementById('userLabel').textContent = session.full_name || session.email || 'User';
-
-    const [pRes, tRes] = await Promise.all([
-      supabase.from('projects').select('*'),
-      supabase.from('project_tasks').select('*')
-    ]);
-
-    allProjects = pRes.data || [];
-    allTasks    = tRes.data || [];
-
+    await loadAllData();
     render();
   } catch(e) {
-    console.error(e);
-    document.getElementById('categoriesContainer').innerHTML = '<div class="empty-msg">❌ Lỗi tải dữ liệu</div>';
+    console.error('Load error:', e);
+    document.getElementById('categoriesContainer').innerHTML =
+      '<div class="empty-msg">❌ Lỗi tải dữ liệu: ' + e.message + '</div>';
   }
 }
 
+// ── render ─────────────────────────────────────────────────
 function render() {
-  const search = document.getElementById('searchInput').value.toLowerCase();
+  const search = document.getElementById('searchInput').value.toLowerCase().trim();
   const group  = document.getElementById('groupFilter').value;
 
-  // Only projects that have at least one active task
-  const activeTaskProjectIds = new Set(allTasks.filter(isActiveTask).map(t => t.project_id));
-
-  let projects = allProjects.filter(p => activeTaskProjectIds.has(p.id));
-
-  if (group)  projects = projects.filter(p => (p.project_group || p.group || '').toUpperCase() === group);
-  if (search) projects = projects.filter(p =>
-    (p.project_code || p.code || '').toLowerCase().includes(search) ||
-    (p.project_name || p.name || '').toLowerCase().includes(search)
+  // IDs of projects that have at least 1 active task
+  const activeProjectIds = new Set(
+    allTasks.filter(isActiveTask).map(t => t.project_id)
   );
 
-  // Active tasks for filtered projects
+  // filter projects: must have active task + optional group/search
+  let projects = allProjects.filter(p => {
+    if (!activeProjectIds.has(p.id)) return false;
+    if (group && getGroup(p) !== group) return false;
+    if (search) {
+      const c = getCode(p).toLowerCase();
+      const n = getName(p).toLowerCase();
+      if (!c.includes(search) && !n.includes(search)) return false;
+    }
+    return true;
+  });
+
+  // active tasks for filtered projects only
   const activeTasks = allTasks.filter(t => isActiveTask(t) && projects.some(p => p.id === t.project_id));
 
-  // Stats
+  // update stats
   document.getElementById('statTotal').textContent  = projects.length;
   document.getElementById('statActive').textContent = projects.length;
   document.getElementById('statTasks').textContent  = activeTasks.length;
 
   const container = document.getElementById('categoriesContainer');
   container.innerHTML = '';
-
   let hasAny = false;
 
-  TASK_TYPES.forEach(type => {
+  TASK_TYPES_LOCAL.forEach((type, idx) => {
+    // tasks of this type that are active, belonging to filtered projects
     const typeTasks = activeTasks.filter(t => (t.task_type || t.type || '') === type);
-    const projectIds = [...new Set(typeTasks.map(t => t.project_id))];
-    const typeProjects = projects.filter(p => projectIds.includes(p.id));
+    const typeProjectIds = new Set(typeTasks.map(t => t.project_id));
+    const typeProjects = projects.filter(p => typeProjectIds.has(p.id));
 
     if (typeProjects.length === 0) return;
     hasAny = true;
 
     const section = document.createElement('div');
-    const slug = type.replace(/[^a-zA-Z\u3000-\u9fff]/g,'');
-    section.className = 'category-section cat-' + type;
+    section.className = 'category-section cat-' + idx;
 
     const header = document.createElement('div');
     header.className = 'category-header';
     header.innerHTML =
       '<span>🌸 ' + type + '</span>' +
-      '<span>' +
-        '<span class="badge">' + typeProjects.length + ' du an</span> ' +
+      '<span style="display:flex;align-items:center;gap:8px;">' +
+        '<span class="badge">' + typeProjects.length + ' du an</span>' +
         '<span class="toggle-icon">▼</span>' +
       '</span>';
-    header.onclick = () => {
+    header.onclick = function() {
       header.classList.toggle('collapsed');
       list.style.display = header.classList.contains('collapsed') ? 'none' : 'block';
     };
@@ -272,20 +263,15 @@ function render() {
     list.className = 'project-list';
 
     typeProjects.forEach(p => {
-      const code = p.project_code || p.code || '';
-      const name = p.project_name || p.name || '';
-      const grp  = (p.project_group || p.group || '').toUpperCase();
-      const pts  = allTasks.filter(t => t.project_id === p.id);
-      const hasActive = pts.some(isActiveTask);
-
+      const grp = getGroup(p);
       const row = document.createElement('div');
       row.className = 'project-row';
       row.innerHTML =
-        '<span class="status-dot ' + (hasActive ? 'active' : 'pending') + '"></span>' +
-        '<span class="proj-id">' + code + '</span>' +
-        '<span class="proj-name">' + name + '</span>' +
+        '<span class="status-dot"></span>' +
+        '<span class="proj-id">' + getCode(p) + '</span>' +
+        '<span class="proj-name" title="' + getName(p) + '">' + getName(p) + '</span>' +
         (grp ? '<span class="proj-group">' + grp + '</span>' : '');
-      row.onclick = () => openModal(p);
+      row.onclick = function() { openModal(p); };
       list.appendChild(row);
     });
 
@@ -295,14 +281,15 @@ function render() {
   });
 
   if (!hasAny) {
-    container.innerHTML = '<div class="empty-msg">Không có dự án nào đang hoạt động.</div>';
+    container.innerHTML = '<div class="empty-msg">Không có dự án nào có task đang hoạt động.</div>';
   }
 }
 
+// ── modal ──────────────────────────────────────────────────
 function openModal(p) {
-  const code  = p.project_code || p.code || '';
-  const name  = p.project_name || p.name || '';
-  const grp   = (p.project_group || p.group || '').toUpperCase();
+  const code  = getCode(p);
+  const name  = getName(p);
+  const grp   = getGroup(p);
   const tasks = allTasks.filter(t => t.project_id === p.id);
   const active = tasks.filter(isActiveTask);
 
@@ -317,15 +304,13 @@ function openModal(p) {
 
   if (active.length > 0) {
     body += '<div class="task-list-title">Task đang hoạt động</div>';
-    active.forEach(t => {
-      const st = (t.status || '').toLowerCase();
-      const stCls = isActiveTask(t) ? 'active' : (st === 'done' || st === '完了' ? 'done' : 'pending');
+    active.forEach(function(t) {
       const sd = t.start_date ? t.start_date.substring(0,10) : '';
       const ed = t.end_date   ? t.end_date.substring(0,10)   : '';
       const dateStr = sd || ed ? (sd + (ed ? ' → ' + ed : '')) : '';
       body += '<div class="task-item">' +
         '<span class="task-type-badge">' + (t.task_type || t.type || '—') + '</span>' +
-        '<span class="task-status ' + stCls + '">' + (t.status || '—') + '</span>' +
+        '<span class="task-status active">' + (t.status || '—') + '</span>' +
         (dateStr ? '<span class="task-date">' + dateStr + '</span>' : '') +
         '</div>';
     });
@@ -342,11 +327,7 @@ function closeModalDirect() {
   document.getElementById('modalOverlay').classList.remove('open');
 }
 
-function logout() {
-  localStorage.removeItem('bim_session');
-  location.href = 'index.html';
-}
-
+// ── events ─────────────────────────────────────────────────
 document.getElementById('searchInput').addEventListener('input', render);
 document.getElementById('groupFilter').addEventListener('change', render);
 
