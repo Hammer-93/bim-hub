@@ -57,32 +57,55 @@
     .g-koujou { font-size:10px; color:#e63946; margin-top:1px; padding-left:30px; }
     .g-bico { min-width:160px; max-width:220px; border-right:1px solid #e8e8e8; vertical-align:top; background:#fff; padding:8px 10px; font-size:11px; color:#444; white-space:pre-wrap; word-break:break-word; text-align:right; }
     .g-staff { min-width:110px; max-width:150px; border-right:2px solid #e8e8e8; vertical-align:top; background:#fff; padding:8px 10px; font-size:11px; color:#333; text-align:right; }
-    .g-cell { position:relative; height:38px; border-right:1px solid #f0f0f0; vertical-align:middle; }
+    .g-cell { position:relative; height:44px; border-right:1px solid #f0f0f0; vertical-align:middle; }
     .g-cell.we  { background:#f8f8f8; }
     .g-cell.tdy { background:#fff5f5; }
     .g-cell.tdy::before { content:""; position:absolute; top:0; bottom:0; left:50%; width:2px; background:#e63946; z-index:5; transform:translateX(-50%); }
-    .g-bar { position:absolute; height:20px; border-radius:4px; top:9px; display:flex; align-items:center; padding:0 7px; font-size:10px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,.18); z-index:2; transition:opacity .2s,transform .15s; }
+    .g-bar { position:absolute; height:18px; border-radius:4px; top:4px; display:flex; align-items:center; padding:0 7px; font-size:10px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,.18); z-index:2; transition:opacity .2s,transform .15s; }
     .g-bar:hover { opacity:.85; transform:scaleY(1.08); }
-    .g-dot { position:absolute; width:13px; height:13px; border-radius:50%; transform:translateX(-50%); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.25); z-index:6; cursor:pointer; transition:transform .15s; }
+    .g-dot { position:absolute; width:12px; height:12px; border-radius:50%; transform:translateX(-50%); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3); z-index:6; cursor:pointer; transition:transform .15s; }
     .g-dot:hover { transform:translateX(-50%) scale(1.4); }
-    .g-dot-rcv  { background:#52b788; top:5px; }
-    .g-dot-send { background:#e63946; top:20px; }
+    .g-dot-rcv  { background:#52b788; }
+    .g-dot-send { background:#e63946; }
+    .g-dot-add  { background:#ffd166; border:2px solid #fff; cursor:pointer; }
 
-    /* DATE EDIT POPUP */
-    .date-popup { position:fixed; background:#fff; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,.2); z-index:9500; padding:16px 18px; min-width:220px; display:none; }
-    .date-popup.open { display:block; }
-    .date-popup-title { font-size:11px; font-weight:700; color:#0077b6; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
-    .date-popup input[type=date] { width:100%; padding:7px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; margin-bottom:10px; }
-    .date-popup input[type=date]:focus { border-color:#0096c7; }
-    .date-popup-actions { display:flex; gap:8px; justify-content:flex-end; }
-    .date-popup-save { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:6px 16px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
-    .date-popup-save:hover { opacity:.9; }
-    .date-popup-cancel { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
-    .date-popup-cancel:hover { background:#f5f5f5; }
-    .date-popup-clear { background:#fff; color:#e63946; border:1.5px solid #ffb3b3; padding:6px 10px; border-radius:6px; font-size:12px; cursor:pointer; }
-    .date-popup-clear:hover { background:#fff0f0; }
+    /* MILESTONE PANEL */
+    .ms-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:800; }
+    .ms-overlay.open { display:block; }
+    .ms-panel { position:fixed; top:0; right:-520px; width:500px; max-width:96vw; height:100vh; background:#fff; box-shadow:-4px 0 28px rgba(0,0,0,.18); z-index:900; transition:right .3s ease; display:flex; flex-direction:column; }
+    .ms-panel.open { right:0; }
+    .ms-head { background:#1a1a2e; padding:16px 20px; display:flex; align-items:flex-start; gap:10px; flex-shrink:0; }
+    .ms-head-text { flex:1; min-width:0; }
+    .ms-head-sub { color:#00b4d8; font-size:11px; font-weight:700; margin-bottom:3px; }
+    .ms-head-title { color:#fff; font-size:14px; font-weight:700; }
+    .ms-x { background:none; border:none; color:#fff; font-size:22px; cursor:pointer; opacity:.7; padding:0; flex-shrink:0; }
+    .ms-x:hover { opacity:1; }
+    .ms-body { flex:1; overflow-y:auto; padding:20px; }
+    .ms-foot { padding:14px 20px; border-top:1px solid #eee; display:flex; gap:10px; justify-content:space-between; align-items:center; flex-shrink:0; }
+    .ms-add-btn { background:#e8f4fe; color:#0077b6; border:1.5px solid #b8dff5; padding:8px 18px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+    .ms-add-btn:hover { background:#d0ecfe; }
+    .ms-close-btn { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:8px 18px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+    .ms-close-btn:hover { background:#f5f5f5; }
 
-    /* EDIT PANEL */
+    /* MILESTONE ITEM */
+    .ms-item { background:#f8fbff; border:1.5px solid #dde2ea; border-radius:10px; padding:14px 16px; margin-bottom:12px; position:relative; }
+    .ms-item-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .ms-item-num { font-size:11px; font-weight:700; color:#0077b6; background:#e8f4fe; padding:2px 8px; border-radius:4px; }
+    .ms-item-del { background:none; border:1.5px solid #ffb3b3; color:#e63946; padding:3px 10px; border-radius:6px; font-size:11px; cursor:pointer; }
+    .ms-item-del:hover { background:#fff0f0; }
+    .ms-row2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:8px; }
+    .ms-field label { display:block; font-size:11px; font-weight:600; color:#666; margin-bottom:3px; }
+    .ms-field input { width:100%; padding:7px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; }
+    .ms-field input:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.1); }
+    .ms-field-note label { display:block; font-size:11px; font-weight:600; color:#666; margin-bottom:3px; }
+    .ms-field-note input { width:100%; padding:7px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; }
+    .ms-field-note input:focus { border-color:#0096c7; }
+    .ms-save-row { display:flex; justify-content:flex-end; margin-top:8px; }
+    .ms-item-save { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:6px 16px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
+    .ms-item-save:hover { opacity:.9; }
+    .ms-empty { text-align:center; color:#bbb; padding:30px; font-size:13px; }
+
+    /* EDIT PANEL (project meta) */
     .ep-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:800; }
     .ep-overlay.open { display:block; }
     .ep-panel { position:fixed; top:0; right:-480px; width:460px; max-width:96vw; height:100vh; background:#fff; box-shadow:-4px 0 28px rgba(0,0,0,.18); z-index:900; transition:right .3s ease; display:flex; flex-direction:column; }
@@ -136,18 +159,24 @@
 <div class="toast" id="toast"></div>
 <div class="tooltip" id="tooltip"></div>
 
-<!-- DATE EDIT POPUP -->
-<div class="date-popup" id="datePopup">
-  <div class="date-popup-title" id="datePopupTitle">Nhan data</div>
-  <input type="date" id="datePopupInput"/>
-  <div class="date-popup-actions">
-    <button class="date-popup-clear" id="datePopupClear">Xoa</button>
-    <button class="date-popup-cancel" id="datePopupCancel">Huy</button>
-    <button class="date-popup-save" id="datePopupSave">💾 Luu</button>
+<!-- MILESTONE PANEL -->
+<div class="ms-overlay" id="msOverlay"></div>
+<div class="ms-panel" id="msPanel">
+  <div class="ms-head">
+    <div class="ms-head-text">
+      <div class="ms-head-sub" id="msPanelSub"></div>
+      <div class="ms-head-title" id="msPanelTitle"></div>
+    </div>
+    <button class="ms-x" id="msClose">✕</button>
+  </div>
+  <div class="ms-body" id="msBody"></div>
+  <div class="ms-foot">
+    <button class="ms-add-btn" id="msAddBtn">➕ Them giai doan</button>
+    <button class="ms-close-btn" id="msCloseBtn">Dong</button>
   </div>
 </div>
 
-<!-- EDIT PANEL -->
+<!-- PROJECT META PANEL -->
 <div class="ep-overlay" id="epOverlay"></div>
 <div class="ep-panel" id="epPanel">
   <div class="ep-head">
@@ -193,8 +222,9 @@
   </div>
   <div class="legend">
     <div class="legend-item"><div class="legend-bar" style="background:#a8dadc;"></div><span>Khoan lam viec</span></div>
-    <div class="legend-item"><div class="legend-dot" style="background:#52b788;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.2);"></div><span>Nhan data (click de sua)</span></div>
-    <div class="legend-item"><div class="legend-dot" style="background:#e63946;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.2);"></div><span>Gui (click de sua)</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#52b788;border:2px solid #fff;"></div><span>Nhan data</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e63946;border:2px solid #fff;"></div><span>Ngay gui</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ffd166;border:2px solid #fff;"></div><span>Click de quan ly giai doan</span></div>
     <span style="margin-left:auto;font-size:11px;color:#0077b6;font-style:italic;">✏ Click ten du an de nhap ghi chu</span>
   </div>
   <div class="gantt-wrap">
@@ -204,98 +234,151 @@
 
 <script src="js/config.js"></script>
 <script>
-var gZoom="day", currentProjId=null, LS_KEY="bimhub_proj_meta";
-var GROUP_ORDER={A:0,B:1,C:2,D:3};
-var TASK_TYPE_ORDER={"意匠モデル":0,"構造モデル":1,"図面":2,"パース・動画":3,"動画・パース":3,"施工ステップ":4,"清算モデル":5};
+var gZoom = "day";
+var currentProjId = null;
+var currentMsTask = null;
+var allMilestones = [];
+var LS_KEY = "bimhub_proj_meta";
+var GROUP_ORDER = {A:0,B:1,C:2,D:3};
+var TASK_TYPE_ORDER = {"意匠モデル":0,"構造モデル":1,"図面":2,"パース・動画":3,"動画・パース":3,"施工ステップ":4,"清算モデル":5};
 
 /* ── localStorage meta ── */
 function getMeta(id){ try{ return JSON.parse(localStorage.getItem(LS_KEY)||"{}")[id]||{}; }catch(e){ return {}; } }
 function setMeta(id,data){ try{ var a=JSON.parse(localStorage.getItem(LS_KEY)||"{}"); a[id]=Object.assign(a[id]||{},data); localStorage.setItem(LS_KEY,JSON.stringify(a)); }catch(e){} }
 
-/* ── DATE POPUP ── */
-var dpTask=null, dpField=null;
-
-function openDatePopup(e, task, field) {
-  e.stopPropagation();
-  hideTooltip();
-  dpTask  = task;
-  dpField = field;
-  var popup = document.getElementById("datePopup");
-  var title = field==="receive_date" ? "📥 Nhan data" : "📤 Ngay gui";
-  document.getElementById("datePopupTitle").textContent = title;
-  document.getElementById("datePopupInput").value = task[field] || "";
-  popup.classList.add("open");
-  /* position near click */
-  var x = e.clientX, y = e.clientY;
-  var pw = 220, ph = 130;
-  if(x + pw > window.innerWidth)  x = window.innerWidth  - pw - 8;
-  if(y + ph > window.innerHeight) y = window.innerHeight - ph - 8;
-  popup.style.left = x + "px";
-  popup.style.top  = y + "px";
-}
-function closeDatePopup() {
-  document.getElementById("datePopup").classList.remove("open");
-  dpTask = null; dpField = null;
-}
-async function saveDatePopup() {
-  if(!dpTask || !dpField) return;
-  var val = document.getElementById("datePopupInput").value || null;
-  var body = {};
-  body[dpField] = val;
-  try {
-    var res = await fetch(SUPABASE_URL+"/rest/v1/project_tasks?id=eq."+dpTask.id, {
-      method:"PATCH", headers:HDRS, body:JSON.stringify(body)
-    });
-    if(!res.ok){ showToast("Loi luu ngay","error"); return; }
-    dpTask[dpField] = val;
-    showToast("Da luu!","success");
-    closeDatePopup();
-    renderGantt();
-  } catch(err){ showToast("Loi: "+err.message,"error"); }
-}
-function clearDatePopup() {
-  document.getElementById("datePopupInput").value = "";
+/* ── Load milestones ── */
+async function loadMilestones() {
+  var res = await fetch(SUPABASE_URL+"/rest/v1/task_milestones?select=*&order=created_at.asc", {headers:HDRS});
+  allMilestones = await res.json();
+  if(!Array.isArray(allMilestones)) allMilestones = [];
 }
 
-document.addEventListener("DOMContentLoaded", function(){
-  document.getElementById("datePopupSave").addEventListener("click", saveDatePopup);
-  document.getElementById("datePopupCancel").addEventListener("click", closeDatePopup);
-  document.getElementById("datePopupClear").addEventListener("click", clearDatePopup);
-  /* close on outside click */
-  document.addEventListener("click", function(e){
-    var popup = document.getElementById("datePopup");
-    if(popup.classList.contains("open") && !popup.contains(e.target)) closeDatePopup();
+function getMilestonesForTask(taskId) {
+  return allMilestones.filter(function(m){ return m.task_id === taskId; });
+}
+
+/* ── MILESTONE PANEL ── */
+function openMsPanel(task) {
+  currentMsTask = task;
+  var p = allProjects.find(function(x){ return x.id === task.project_id; });
+  document.getElementById("msPanelSub").textContent = (task.task_type||"Task") + (p ? " — "+getCode(p) : "");
+  document.getElementById("msPanelTitle").textContent = p ? (p.project_name||p.name||"") : "";
+  renderMsBody();
+  document.getElementById("msOverlay").classList.add("open");
+  document.getElementById("msPanel").classList.add("open");
+}
+function closeMsPanel() {
+  document.getElementById("msOverlay").classList.remove("open");
+  document.getElementById("msPanel").classList.remove("open");
+  currentMsTask = null;
+}
+
+function renderMsBody() {
+  if(!currentMsTask) return;
+  var ms = getMilestonesForTask(currentMsTask.id);
+  var body = document.getElementById("msBody");
+  if(!ms.length) {
+    body.innerHTML = '<div class="ms-empty">Chua co giai doan nao.<br>Bam "Them giai doan" de them moi.</div>';
+    return;
+  }
+  var html = "";
+  ms.forEach(function(m, i) {
+    html += '<div class="ms-item" id="ms-item-'+m.id+'">'
+      +'<div class="ms-item-head">'
+        +'<span class="ms-item-num">Giai doan '+(i+1)+'</span>'
+        +'<button class="ms-item-del" data-msid="'+m.id+'">🗑 Xoa</button>'
+      +'</div>'
+      +'<div class="ms-row2">'
+        +'<div class="ms-field"><label>📥 Ngay nhan data</label>'
+        +'<input type="date" id="ms-rcv-'+m.id+'" value="'+(m.receive_date||"")+'"/></div>'
+        +'<div class="ms-field"><label>📤 Ngay gui</label>'
+        +'<input type="date" id="ms-snd-'+m.id+'" value="'+(m.send_date||"")+'"/></div>'
+      +'</div>'
+      +'<div class="ms-field-note"><label>📝 Ghi chu</label>'
+      +'<input type="text" id="ms-note-'+m.id+'" value="'+(m.note||"").replace(/"/g,"&quot;")+'"/></div>'
+      +'<div class="ms-save-row"><button class="ms-item-save" data-msid="'+m.id+'">💾 Luu</button></div>'
+      +'</div>';
   });
+  body.innerHTML = html;
 
-  /* EDIT PANEL buttons */
-  document.getElementById("epClose").addEventListener("click", closePanel);
-  document.getElementById("epCancelBtn").addEventListener("click", closePanel);
-  document.getElementById("epSaveBtn").addEventListener("click", savePanel);
-  document.getElementById("epOverlay").addEventListener("click", closePanel);
-});
+  /* bind save & delete */
+  body.querySelectorAll(".ms-item-save").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      saveMilestone(btn.getAttribute("data-msid"));
+    });
+  });
+  body.querySelectorAll(".ms-item-del").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      deleteMilestone(btn.getAttribute("data-msid"));
+    });
+  });
+}
 
-/* ── EDIT PANEL ── */
-function openPanel(pid){
-  var p=allProjects.find(function(x){return x.id===pid;});
+async function addMilestone() {
+  if(!currentMsTask) return;
+  try {
+    var res = await fetch(SUPABASE_URL+"/rest/v1/task_milestones", {
+      method:"POST", headers:HDRS,
+      body:JSON.stringify({task_id:currentMsTask.id, receive_date:null, send_date:null, note:null})
+    });
+    if(!res.ok){ showToast("Loi them giai doan","error"); return; }
+    var arr = await res.json();
+    if(arr && arr[0]) allMilestones.push(arr[0]);
+    renderMsBody();
+    renderGantt();
+  } catch(e){ showToast("Loi: "+e.message,"error"); }
+}
+
+async function saveMilestone(msId) {
+  var rcv  = document.getElementById("ms-rcv-"+msId).value || null;
+  var snd  = document.getElementById("ms-snd-"+msId).value || null;
+  var note = document.getElementById("ms-note-"+msId).value.trim() || null;
+  try {
+    var res = await fetch(SUPABASE_URL+"/rest/v1/task_milestones?id=eq."+msId, {
+      method:"PATCH", headers:HDRS,
+      body:JSON.stringify({receive_date:rcv, send_date:snd, note:note})
+    });
+    if(!res.ok){ showToast("Loi luu","error"); return; }
+    var m = allMilestones.find(function(x){return x.id===msId;});
+    if(m){ m.receive_date=rcv; m.send_date=snd; m.note=note; }
+    showToast("Da luu giai doan!","success");
+    renderGantt();
+  } catch(e){ showToast("Loi: "+e.message,"error"); }
+}
+
+async function deleteMilestone(msId) {
+  if(!confirm("Xac nhan xoa giai doan nay?")) return;
+  try {
+    await fetch(SUPABASE_URL+"/rest/v1/task_milestones?id=eq."+msId, {method:"DELETE", headers:HDRS});
+    allMilestones = allMilestones.filter(function(x){return x.id!==msId;});
+    showToast("Da xoa!","success");
+    renderMsBody();
+    renderGantt();
+  } catch(e){ showToast("Loi: "+e.message,"error"); }
+}
+
+/* ── PROJECT META PANEL ── */
+function openPanel(pid) {
+  var p = allProjects.find(function(x){return x.id===pid;});
   if(!p) return;
-  currentProjId=pid;
-  var m=getMeta(pid);
-  document.getElementById("epCode").textContent=getCode(p);
-  document.getElementById("epName").textContent=p.project_name||p.name||"";
-  document.getElementById("epNote").value=m.note||"";
-  document.getElementById("epStaff").value=m.staff||"";
-  document.getElementById("epKoujou").value=m.koujou||"";
-  document.getElementById("epSoftware").value=m.software||"";
-  document.getElementById("epVersion").value=m.version||"";
+  currentProjId = pid;
+  var m = getMeta(pid);
+  document.getElementById("epCode").textContent = getCode(p);
+  document.getElementById("epName").textContent = p.project_name||p.name||"";
+  document.getElementById("epNote").value     = m.note||"";
+  document.getElementById("epStaff").value    = m.staff||"";
+  document.getElementById("epKoujou").value   = m.koujou||"";
+  document.getElementById("epSoftware").value = m.software||"";
+  document.getElementById("epVersion").value  = m.version||"";
   document.getElementById("epOverlay").classList.add("open");
   document.getElementById("epPanel").classList.add("open");
 }
-function closePanel(){
+function closePanel() {
   document.getElementById("epOverlay").classList.remove("open");
   document.getElementById("epPanel").classList.remove("open");
-  currentProjId=null;
+  currentProjId = null;
 }
-function savePanel(){
+function savePanel() {
   if(!currentProjId) return;
   setMeta(currentProjId,{
     note:document.getElementById("epNote").value.trim(),
@@ -308,6 +391,18 @@ function savePanel(){
   closePanel();
   renderGantt();
 }
+
+/* ── DOM READY ── */
+document.addEventListener("DOMContentLoaded", function(){
+  document.getElementById("msClose").addEventListener("click", closeMsPanel);
+  document.getElementById("msCloseBtn").addEventListener("click", closeMsPanel);
+  document.getElementById("msAddBtn").addEventListener("click", addMilestone);
+  document.getElementById("msOverlay").addEventListener("click", closeMsPanel);
+  document.getElementById("epClose").addEventListener("click", closePanel);
+  document.getElementById("epCancelBtn").addEventListener("click", closePanel);
+  document.getElementById("epSaveBtn").addEventListener("click", savePanel);
+  document.getElementById("epOverlay").addEventListener("click", closePanel);
+});
 
 /* ── HELPERS ── */
 function getGroup(p){ return (p.proj_group||p.project_group||p.group||"").toString().toUpperCase().trim(); }
@@ -344,13 +439,16 @@ function buildSttMap(sorted){
 }
 
 /* ── INIT ── */
-window.onload=async function(){
+window.onload = async function(){
   initTopbar();
-  var t=new Date(),y=t.getFullYear(),mo=t.getMonth();
-  document.getElementById("gStart").value=fmt(new Date(y,mo,1));
-  document.getElementById("gEnd").value=fmt(new Date(y,mo+1,0));
-  try{ await loadAllData(); renderGantt(); }
-  catch(e){ showToast("Loi: "+e.message,"error"); }
+  var t=new Date(), y=t.getFullYear(), mo=t.getMonth();
+  document.getElementById("gStart").value = fmt(new Date(y,mo,1));
+  document.getElementById("gEnd").value   = fmt(new Date(y,mo+1,0));
+  try {
+    await loadAllData();
+    await loadMilestones();
+    renderGantt();
+  } catch(e){ showToast("Loi: "+e.message,"error"); }
 };
 
 function setZoom(z,btn){
@@ -366,21 +464,21 @@ function setZoom(z,btn){
 
 /* ── RENDER GANTT ── */
 function renderGantt(){
-  var start=new Date(document.getElementById("gStart").value);
-  var end=new Date(document.getElementById("gEnd").value);
-  var showDone=document.getElementById("showDone").checked;
+  var start    = new Date(document.getElementById("gStart").value);
+  var end      = new Date(document.getElementById("gEnd").value);
+  var showDone = document.getElementById("showDone").checked;
   if(isNaN(start)||isNaN(end)||start>end) return;
-  var days=getDaysArray(fmt(start),fmt(end));
-  var today=fmt(new Date());
-  var CW=gZoom==="month"?20:gZoom==="week"?28:36;
-  var raw=allProjects.filter(function(p){return showDone?true:p.status==="active";});
-  var projects=sortProjects(raw);
-  var sttMap=buildSttMap(projects);
+  var days  = getDaysArray(fmt(start),fmt(end));
+  var today = fmt(new Date());
+  var CW    = gZoom==="month"?20:gZoom==="week"?28:36;
+  var raw      = allProjects.filter(function(p){return showDone?true:p.status==="active";});
+  var projects = sortProjects(raw);
+  var sttMap   = buildSttMap(projects);
 
-  var hdr1='<th class="col-proj" rowspan="2" style="text-align:left;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">Project</th>'
+  var hdr1 = '<th class="col-proj" rowspan="2" style="text-align:left;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">Project</th>'
     +'<th rowspan="2" style="min-width:160px;text-align:right;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">備考</th>'
     +'<th rowspan="2" style="min-width:110px;text-align:right;padding:10px 14px;border-right:2px solid rgba(255,255,255,.3);">Staff担当</th>';
-  var hdr2="";
+  var hdr2 = "";
 
   if(gZoom==="month"){
     var months={};
@@ -406,38 +504,39 @@ function renderGantt(){
   }
 
   projects.forEach(function(p){
-    var color=projColorMap[p.id]||"#a8dadc";
-    var tasks=allTasks.filter(function(t){return t.project_id===p.id;});
-    var rs=Math.max(tasks.length,1);
-    var stt=sttMap[p.id]||"";
-    var code=getCode(p);
-    var name=p.project_name||p.name||"";
-    var meta=getMeta(p.id);
-    var pid=p.id;
-    var swHtml="";
+    var color  = projColorMap[p.id]||"#a8dadc";
+    var tasks  = allTasks.filter(function(t){return t.project_id===p.id;});
+    var rs     = Math.max(tasks.length,1);
+    var stt    = sttMap[p.id]||"";
+    var code   = getCode(p);
+    var name   = p.project_name||p.name||"";
+    var meta   = getMeta(p.id);
+    var swHtml = "";
     if(meta.software) swHtml+='<div class="g-software">'+meta.software+(meta.version?" "+meta.version:"")+'</div>';
     if(meta.koujou)   swHtml+='<div class="g-koujou">着工 '+meta.koujou+'</div>';
-    var noteVal=(meta.note||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
-    var staffVal=(meta.staff||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
-    var dc=days.map(function(d){
+    var noteVal  = (meta.note||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+    var staffVal = (meta.staff||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+    var dc = days.map(function(d){
       return '<td class="g-cell '+(isWeekend(d)?"we":"")+" "+(d===today?"tdy":"")+'" style="min-width:'+CW+'px;"></td>';
     }).join("");
-    var pCell='<td class="g-left" rowspan="'+rs+'" data-pid="'+pid+'" title="Click de nhap ghi chu">'
+    var pCell = '<td class="g-left" rowspan="'+rs+'" data-pid="'+p.id+'" title="Click de nhap ghi chu">'
       +'<div class="g-pname"><span class="stt-badge">'+stt+'</span><span class="pname-text">'+name+'</span></div>'
       +'<div class="g-pcode">'+code+'</div>'
       +swHtml+'</td>';
-    var bicoCell='<td class="g-bico" rowspan="'+rs+'">'+noteVal+'</td>';
-    var staffCell='<td class="g-staff" rowspan="'+rs+'">'+staffVal+'</td>';
+    var bicoCell  = '<td class="g-bico"  rowspan="'+rs+'">'+noteVal+'</td>';
+    var staffCell = '<td class="g-staff" rowspan="'+rs+'">'+staffVal+'</td>';
     if(!tasks.length){ rows+="<tr>"+pCell+bicoCell+staffCell+dc+"</tr>"; return; }
     tasks.forEach(function(t,ti){
       rows+='<tr data-tid="'+t.id+'">'+(ti===0?pCell+bicoCell+staffCell:"")+dc+"</tr>";
     });
   });
 
-  var thead=gZoom==="month"?"<thead><tr>"+hdr1+"</tr><tr>"+hdr2+"</tr></thead>":"<thead><tr>"+hdr1+"</tr></thead>";
+  var thead = gZoom==="month"
+    ? "<thead><tr>"+hdr1+"</tr><tr>"+hdr2+"</tr></thead>"
+    : "<thead><tr>"+hdr1+"</tr></thead>";
   document.getElementById("ganttCont").innerHTML='<table class="gantt">'+thead+"<tbody>"+rows+"</tbody></table>";
 
-  /* bind .g-left click */
+  /* bind .g-left */
   document.querySelectorAll(".g-left[data-pid]").forEach(function(td){
     td.addEventListener("click",function(e){
       e.stopPropagation();
@@ -445,18 +544,18 @@ function renderGantt(){
     });
   });
 
-  /* draw bars & dots */
+  /* draw bars & milestone dots */
   projects.forEach(function(p){
-    var color=projColorMap[p.id]||"#a8dadc";
+    var color = projColorMap[p.id]||"#a8dadc";
     allTasks.filter(function(t){return t.project_id===p.id;}).forEach(function(t){
-      var row=document.querySelector('tr[data-tid="'+t.id+'"]');
+      var row = document.querySelector('tr[data-tid="'+t.id+'"]');
       if(!row) return;
-      var cells=Array.from(row.querySelectorAll(".g-cell"));
-      var user=allUsers.find(function(u){return u.id===t.assigned_to;});
+      var cells = Array.from(row.querySelectorAll(".g-cell"));
+      var user  = allUsers.find(function(u){return u.id===t.assigned_to;});
 
       /* work bar */
       if(t.start_date&&t.end_date){
-        var si=days.indexOf(t.start_date),ei=days.indexOf(t.end_date);
+        var si=days.indexOf(t.start_date), ei=days.indexOf(t.end_date);
         if(si>=0&&si<cells.length){
           var rei=ei<0?days.length-1:Math.min(ei,days.length-1);
           var bar=document.createElement("div");
@@ -471,45 +570,78 @@ function renderGantt(){
         }
       }
 
-      /* receive dot — click to edit */
-      if(t.receive_date){
-        var ri=days.indexOf(t.receive_date);
-        if(ri>=0&&ri<cells.length){
-          var dot=document.createElement("div");
-          dot.className="g-dot g-dot-rcv";
-          dot.style.left="50%";
-          (function(task){
-            dot.addEventListener("mouseenter",function(ev){
-              showTooltip(ev,"📥 Nhan data: "+(task.receive_date||"-")+"<br><i>Click de sua</i>");
-            });
-            dot.addEventListener("mouseleave",hideTooltip);
-            dot.addEventListener("click",function(ev){
-              openDatePopup(ev,task,"receive_date");
-            });
-          })(t);
-          cells[ri].appendChild(dot);
-        }
+      /* milestone dots — each milestone has rcv (top) and send (bottom) */
+      var ms = getMilestonesForTask(t.id);
+
+      /* Yellow "manage" dot — always show on last cell of bar or first cell */
+      var anchorIdx = 0;
+      if(t.start_date){ var ai=days.indexOf(t.start_date); if(ai>=0) anchorIdx=ai; }
+      if(anchorIdx < cells.length){
+        var addDot = document.createElement("div");
+        addDot.className = "g-dot g-dot-add";
+        addDot.style.cssText = "left:50%;top:16px;width:10px;height:10px;";
+        (function(task){
+          addDot.addEventListener("mouseenter",function(ev){
+            var cnt = getMilestonesForTask(task.id).length;
+            showTooltip(ev,"🟡 "+cnt+" giai doan<br><i>Click de quan ly</i>");
+          });
+          addDot.addEventListener("mouseleave",hideTooltip);
+          addDot.addEventListener("click",function(ev){
+            ev.stopPropagation();
+            hideTooltip();
+            openMsPanel(task);
+          });
+        })(t);
+        cells[anchorIdx].appendChild(addDot);
       }
 
-      /* send dot — click to edit */
-      if(t.send_date){
-        var si2=days.indexOf(t.send_date);
-        if(si2>=0&&si2<cells.length){
-          var dot2=document.createElement("div");
-          dot2.className="g-dot g-dot-send";
-          dot2.style.left="50%";
-          (function(task){
-            dot2.addEventListener("mouseenter",function(ev){
-              showTooltip(ev,"📤 Ngay gui: "+(task.send_date||"-")+"<br><i>Click de sua</i>");
-            });
-            dot2.addEventListener("mouseleave",hideTooltip);
-            dot2.addEventListener("click",function(ev){
-              openDatePopup(ev,task,"send_date");
-            });
-          })(t);
-          cells[si2].appendChild(dot2);
+      /* draw rcv/send dots for each milestone */
+      ms.forEach(function(m, mi){
+        var topOffset = 4 + (mi * 2);   /* stagger multiple milestones slightly */
+        var botOffset = 24 + (mi * 2);
+
+        if(m.receive_date){
+          var ri = days.indexOf(m.receive_date);
+          if(ri>=0&&ri<cells.length){
+            var dot=document.createElement("div");
+            dot.className="g-dot g-dot-rcv";
+            dot.style.cssText="left:50%;top:"+topOffset+"px;";
+            (function(milestone, taskRef){
+              dot.addEventListener("mouseenter",function(ev){
+                showTooltip(ev,"📥 Nhan data #"+(mi+1)+": "+milestone.receive_date+(milestone.note?"<br>"+milestone.note:"")+"<br><i>Click de quan ly</i>");
+              });
+              dot.addEventListener("mouseleave",hideTooltip);
+              dot.addEventListener("click",function(ev){
+                ev.stopPropagation();
+                hideTooltip();
+                openMsPanel(taskRef);
+              });
+            })(m, t);
+            cells[ri].appendChild(dot);
+          }
         }
-      }
+
+        if(m.send_date){
+          var si2 = days.indexOf(m.send_date);
+          if(si2>=0&&si2<cells.length){
+            var dot2=document.createElement("div");
+            dot2.className="g-dot g-dot-send";
+            dot2.style.cssText="left:50%;top:"+botOffset+"px;";
+            (function(milestone, taskRef){
+              dot2.addEventListener("mouseenter",function(ev){
+                showTooltip(ev,"📤 Ngay gui #"+(mi+1)+": "+milestone.send_date+(milestone.note?"<br>"+milestone.note:"")+"<br><i>Click de quan ly</i>");
+              });
+              dot2.addEventListener("mouseleave",hideTooltip);
+              dot2.addEventListener("click",function(ev){
+                ev.stopPropagation();
+                hideTooltip();
+                openMsPanel(taskRef);
+              });
+            })(m, t);
+            cells[si2].appendChild(dot2);
+          }
+        }
+      });
     });
   });
 }
