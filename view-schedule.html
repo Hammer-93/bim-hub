@@ -31,19 +31,16 @@
     .toast.success { border-left:4px solid #52b788; }
     .toast.error   { border-left:4px solid #e63946; }
     .tooltip { position:fixed; background:#1a1a2e; color:#fff; padding:8px 12px; border-radius:8px; font-size:12px; z-index:9999; pointer-events:none; display:none; max-width:260px; line-height:1.6; box-shadow:0 4px 12px rgba(0,0,0,.2); }
-
     .controls { display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
     .zoom-btn { padding:7px 14px; border:1.5px solid #dde2ea; border-radius:7px; font-size:12.5px; font-weight:600; cursor:pointer; background:#fff; color:#555; transition:all .15s; }
     .zoom-btn:hover, .zoom-btn.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
     .filter-input { padding:8px 14px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; font-family:inherit; }
     .filter-input:focus { border-color:#0096c7; }
-
     .legend { display:flex; gap:18px; flex-wrap:wrap; margin-bottom:14px; font-size:12px; color:#555; align-items:center; }
     .legend-item { display:flex; align-items:center; gap:6px; }
     .legend-bar { width:28px; height:11px; border-radius:3px; }
     .legend-dot { width:11px; height:11px; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.2); }
     .legend-line { width:3px; height:16px; border-radius:2px; }
-
     .gantt-wrap { overflow-x:auto; background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); }
     table.gantt { width:100%; border-collapse:collapse; min-width:800px; }
     table.gantt thead tr:first-child th { padding:6px 8px; font-size:11px; font-weight:700; color:#fff; background:#1a1a2e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.1); }
@@ -51,24 +48,54 @@
     table.gantt thead th.today-hdr { background:#e63946 !important; }
     table.gantt tbody td { padding:0; border-bottom:1px solid #f0f0f0; }
 
-    /* LEFT CELL */
-    .g-left { padding:8px 14px; min-width:280px; max-width:280px; border-right:2px solid #e8e8e8; vertical-align:middle; background:#fff; }
+    /* LEFT CELLS */
+    .g-left { padding:8px 14px; min-width:200px; max-width:200px; border-right:1px solid #e8e8e8; vertical-align:middle; background:#fff; cursor:pointer; }
+    .g-left:hover { background:#f0f7ff; }
     .g-pname { font-size:13px; font-weight:700; color:#1a1a2e; display:flex; align-items:center; gap:8px; }
     .stt-badge { font-size:10px; font-weight:800; padding:1px 7px; border-radius:4px; background:#e8f4fe; color:#0077b6; flex-shrink:0; white-space:nowrap; }
     .pname-text { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .g-pcode { font-size:11px; color:#999; margin-top:2px; padding-left:30px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .g-pcode { font-size:10px; color:#aaa; margin-top:1px; padding-left:30px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .g-subinfo { font-size:10px; color:#0077b6; margin-top:2px; padding-left:30px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+    /* BICO & STAFF CELLS */
+    .g-bico { min-width:160px; max-width:200px; border-right:1px solid #e8e8e8; vertical-align:middle; background:#fff; padding:8px 10px; font-size:11px; color:#444; white-space:pre-wrap; word-break:break-word; }
+    .g-staff { min-width:100px; max-width:130px; border-right:2px solid #e8e8e8; vertical-align:middle; background:#fff; padding:8px 10px; font-size:11px; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
     .g-cell { position:relative; height:38px; border-right:1px solid #f0f0f0; vertical-align:middle; }
     .g-cell.we  { background:#f8f8f8; }
     .g-cell.tdy { background:#fff5f5; }
     .g-cell.tdy::before { content:''; position:absolute; top:0; bottom:0; left:50%; width:2px; background:#e63946; z-index:5; transform:translateX(-50%); }
-
     .g-bar { position:absolute; height:20px; border-radius:4px; top:9px; display:flex; align-items:center; padding:0 7px; font-size:10px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,.18); z-index:2; transition:opacity .2s,transform .15s; }
     .g-bar:hover { opacity:.85; transform:scaleY(1.08); }
     .g-dot { position:absolute; width:11px; height:11px; border-radius:50%; transform:translateX(-50%); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.25); z-index:4; cursor:pointer; }
     .g-dot:hover { transform:translateX(-50%) scale(1.3); }
     .g-dot-rcv  { background:#52b788; top:6px; }
     .g-dot-send { background:#e63946; top:21px; }
+
+    /* EDIT PANEL (slide-in từ phải) */
+    .edit-panel-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:800; }
+    .edit-panel-overlay.open { display:block; }
+    .edit-panel { position:fixed; top:0; right:-480px; width:460px; max-width:95vw; height:100vh; background:#fff; box-shadow:-4px 0 24px rgba(0,0,0,.15); z-index:900; transition:right .3s ease; overflow-y:auto; display:flex; flex-direction:column; }
+    .edit-panel.open { right:0; }
+    .ep-header { background:#1a1a2e; padding:18px 20px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+    .ep-header h2 { color:#fff; font-size:15px; font-weight:700; flex:1; }
+    .ep-close { background:none; border:none; color:#fff; font-size:20px; cursor:pointer; opacity:.7; }
+    .ep-close:hover { opacity:1; }
+    .ep-body { padding:20px; flex:1; }
+    .ep-section { margin-bottom:20px; }
+    .ep-section-title { font-size:11px; font-weight:700; color:#0077b6; text-transform:uppercase; letter-spacing:.6px; margin-bottom:10px; padding-bottom:6px; border-bottom:1.5px solid #e8f4fe; }
+    .ep-field { margin-bottom:12px; }
+    .ep-field label { display:block; font-size:11px; font-weight:600; color:#666; margin-bottom:4px; }
+    .ep-field input, .ep-field textarea, .ep-field select { width:100%; padding:8px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; resize:vertical; }
+    .ep-field input:focus, .ep-field textarea:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.1); }
+    .ep-row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .ep-footer { padding:16px 20px; border-top:1px solid #eee; display:flex; gap:10px; justify-content:flex-end; flex-shrink:0; }
+    .ep-btn-save { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:9px 22px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+    .ep-btn-save:hover { opacity:.9; }
+    .ep-btn-cancel { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:9px 18px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+    .ep-btn-cancel:hover { background:#f5f5f5; }
+    .ep-proj-name { font-size:13px; color:#aaa; margin-bottom:4px; }
+    .ep-proj-code { font-size:11px; color:#0077b6; font-weight:700; }
   </style>
 </head>
 <body>
@@ -82,295 +109,376 @@
     <div class="avatar" id="topAvatar">?</div>
     <span class="user-name" id="topName">...</span>
     <span class="role-badge" id="topRole"></span>
-    <a class="btn-top" href="my-tasks.html">📋 Lich cua toi</a>
-    <a class="btn-top admin-only" href="admin.html" style="display:none;">👥 Thanh vien</a>
+    <a class="btn-top" href="my-tasks.html">&#x1F4CB; Lich cua toi</a>
+    <a class="btn-top admin-only" href="admin.html" style="display:none;">&#x1F465; Thanh vien</a>
     <button class="btn-top" onclick="logout()">Dang xuat</button>
   </div>
 </nav>
 
 <div class="nav-tabs">
-  <a class="nav-tab" href="view-list.html">📋 Danh sach du an</a>
-  <a class="nav-tab" href="view-category.html">🗂️ Theo the loai</a>
-  <a class="nav-tab active" href="view-schedule.html">📅 Schedule du an</a>
-  <a class="nav-tab" href="view-staff.html">👥 Lich nhan vien</a>
+  <a class="nav-tab" href="view-list.html">&#x1F4CB; Danh sach du an</a>
+  <a class="nav-tab" href="view-category.html">&#x1F5C2;&#xFE0F; Theo the loai</a>
+  <a class="nav-tab active" href="view-schedule.html">&#x1F4C5; Schedule du an</a>
+  <a class="nav-tab" href="view-staff.html">&#x1F465; Lich nhan vien</a>
 </div>
 
 <div class="toast" id="toast"></div>
 <div class="tooltip" id="tooltip"></div>
 
+<!-- EDIT PANEL -->
+<div class="edit-panel-overlay" id="epOverlay" onclick="closePanel()"></div>
+<div class="edit-panel" id="editPanel">
+  <div class="ep-header">
+    <div style="flex:1;">
+      <div class="ep-proj-name" id="epProjName"></div>
+      <h2 id="epProjCode"></h2>
+    </div>
+    <button class="ep-close" onclick="closePanel()">&#x2715;</button>
+  </div>
+  <div class="ep-body">
+    <div class="ep-section">
+      <div class="ep-section-title">&#x1F4DD; Thong tin du an</div>
+      <div class="ep-field">
+        <label>&#x5099;&#x8003; — Ghi chu</label>
+        <textarea id="epNote" rows="3" placeholder="Nhan ghi chu..."></textarea>
+      </div>
+      <div class="ep-field">
+        <label>&#x1F464; Staff &#x62C5;&#x5F53; — Nguoi phu trach</label>
+        <input type="text" id="epStaff" placeholder="Ten nguoi phu trach..."/>
+      </div>
+    </div>
+    <div class="ep-section">
+      <div class="ep-section-title">&#x1F3D7;&#xFE0F; Thong tin thi cong</div>
+      <div class="ep-field">
+        <label>&#x5DE5;&#x4E8B;&#x7740;&#x5DE5; — Ngay khoi cong</label>
+        <input type="text" id="epKoujou" placeholder="Vi du: 2027/04..."/>
+      </div>
+      <div class="ep-row2">
+        <div class="ep-field">
+          <label>&#x30BD;&#x30D5;&#x30C8;&#x30A6;&#x30A7;&#x30A2; — Phan mem</label>
+          <input type="text" id="epSoftware" placeholder="Revit / ArchiCAD..."/>
+        </div>
+        <div class="ep-field">
+          <label>&#x30D0;&#x30FC;&#x30B8;&#x30E7;&#x30F3; — Phien ban</label>
+          <input type="text" id="epVersion" placeholder="2022 / 2024..."/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ep-footer">
+    <button class="ep-btn-cancel" onclick="closePanel()">Huy</button>
+    <button class="ep-btn-save" onclick="savePanel()">&#x1F4BE; Luu</button>
+  </div>
+</div>
+
 <div class="main">
   <div class="section-header">
-    <div class="section-title">📅 Schedule du an</div>
+    <div class="section-title">&#x1F4C5; Schedule du an</div>
   </div>
-
   <div class="controls">
     <button class="zoom-btn active" onclick="setZoom('day',this)">Ngay</button>
     <button class="zoom-btn" onclick="setZoom('week',this)">Tuan</button>
     <button class="zoom-btn" onclick="setZoom('month',this)">Thang</button>
     <input type="date" id="gStart" class="filter-input" onchange="renderGantt()"/>
-    <span style="color:#888;font-size:14px;">→</span>
+    <span style="color:#888;font-size:14px;">&#x2192;</span>
     <input type="date" id="gEnd" class="filter-input" onchange="renderGantt()"/>
     <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#555;cursor:pointer;">
       <input type="checkbox" id="showDone" onchange="renderGantt()"/> Hien thi da ket thuc
     </label>
   </div>
-
   <div class="legend">
     <div class="legend-item"><div class="legend-bar" style="background:#a8dadc;"></div><span>Khoan lam viec</span></div>
-    <div class="legend-item"><div class="legend-dot g-dot-rcv"></div><span>Nhan data (tren)</span></div>
-    <div class="legend-item"><div class="legend-dot g-dot-send"></div><span>Gui (duoi)</span></div>
-    <div class="legend-item"><div class="legend-line" style="background:#e63946;"></div><span>Hom nay</span></div>
+    <div class="legend-item"><div class="legend-dot g-dot-rcv"></div><span>Nhan data</span></div>
+    <div class="legend-item"><div class="legend-dot g-dot-send"></div><span>Gui</span></div>
+    <div class="legend-item"><div class="legend-line" style="background:#e63946;width:3px;height:16px;border-radius:2px;display:inline-block;"></div><span>Hom nay</span></div>
+    <div class="legend-item" style="margin-left:auto;font-size:11px;color:#0077b6;">&#x1F4DD; Click ten du an &#x2192; Nhap ghi chu / phu trach</div>
   </div>
-
   <div class="gantt-wrap">
-    <div id="ganttCont">
-      <div style="padding:40px;text-align:center;color:#aaa;">Dang tai...</div>
-    </div>
+    <div id="ganttCont"><div style="padding:40px;text-align:center;color:#aaa;">Dang tai...</div></div>
   </div>
 </div>
 
 <script src="js/config.js"></script>
 <script>
 let gZoom = 'day';
+let currentPanelId = null;
 
-// Thứ tự ưu tiên nhóm: A=0, B=1, C=2, D=3
+const LS_KEY = 'bimhub_proj_meta';
+
 const GROUP_ORDER = { A:0, B:1, C:2, D:3 };
-
-// Thứ tự ưu tiên task type
 const TASK_TYPE_ORDER = {
-  '意匠モデル':0,
-  '構造モデル':1,
-  '図面':2,
-  'パース・動画':3,
-  '動画・パース':3,
-  '施工ステップ':4,
-  '清算モデル':5
+  '意匠モデル':0, '構造モデル':1, '図面':2,
+  'パース・動画':3, '動画・パース':3, '施工ステップ':4, '清算モデル':5
 };
+
+function getMeta(projId) {
+  try {
+    var all = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+    return all[projId] || {};
+  } catch(e) { return {}; }
+}
+function saveMeta(projId, data) {
+  try {
+    var all = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+    all[projId] = Object.assign(all[projId] || {}, data);
+    localStorage.setItem(LS_KEY, JSON.stringify(all));
+  } catch(e) {}
+}
+
+function openPanel(p) {
+  currentPanelId = p.id;
+  var meta = getMeta(p.id);
+  document.getElementById('epProjName').textContent = p.project_name || '';
+  document.getElementById('epProjCode').textContent = getCode(p);
+  document.getElementById('epNote').value     = meta.note     || '';
+  document.getElementById('epStaff').value    = meta.staff    || '';
+  document.getElementById('epKoujou').value   = meta.koujou   || '';
+  document.getElementById('epSoftware').value = meta.software || '';
+  document.getElementById('epVersion').value  = meta.version  || '';
+  document.getElementById('epOverlay').classList.add('open');
+  document.getElementById('editPanel').classList.add('open');
+}
+function closePanel() {
+  document.getElementById('epOverlay').classList.remove('open');
+  document.getElementById('editPanel').classList.remove('open');
+  currentPanelId = null;
+}
+function savePanel() {
+  if (!currentPanelId) return;
+  saveMeta(currentPanelId, {
+    note:     document.getElementById('epNote').value.trim(),
+    staff:    document.getElementById('epStaff').value.trim(),
+    koujou:   document.getElementById('epKoujou').value.trim(),
+    software: document.getElementById('epSoftware').value.trim(),
+    version:  document.getElementById('epVersion').value.trim()
+  });
+  showToast('Da luu thong tin du an', 'success');
+  closePanel();
+  renderGantt();
+}
 
 function getGroup(p) {
   return (p.proj_group || p.project_group || p.group || '').toString().toUpperCase().trim();
 }
 function getCode(p) {
-  return p.project_code || p.code || '';
+  if (p.year && p.seq_number) return p.year + String(p.seq_number).padStart(3,'0');
+  return (p.code || p.project_code || '').split('_')[0] || '';
 }
-
-// Lấy số năm từ mã dự án (25xxx → 25, 26xxx → 26)
-function getCodeYear(p) {
-  const code = getCode(p);
-  const m = code.match(/^(\d+)/);
-  return m ? parseInt(m[1]) : 9999;
+function getCodeNum(p) {
+  if (p.year && p.seq_number) return parseInt(p.year)*1000 + parseInt(p.seq_number);
+  var c = p.code || p.project_code || '';
+  var m = c.match(/^(\d+)/);
+  return m ? parseInt(m[1]) : 99999;
 }
-
-// Lấy task type ưu tiên nhất của project
 function getBestTaskOrder(p) {
-  const tasks = allTasks.filter(t => t.project_id === p.id);
+  var tasks = allTasks.filter(function(t){ return t.project_id === p.id; });
   if (!tasks.length) return 99;
-  let best = 99;
-  tasks.forEach(t => {
-    const type = t.task_type || t.type || '';
-    const ord  = TASK_TYPE_ORDER.hasOwnProperty(type) ? TASK_TYPE_ORDER[type] : 98;
+  var best = 99;
+  tasks.forEach(function(t){
+    var ord = TASK_TYPE_ORDER.hasOwnProperty(t.task_type||'') ? TASK_TYPE_ORDER[t.task_type] : 98;
     if (ord < best) best = ord;
   });
   return best;
 }
-
-// Sắp xếp: Nhóm A>B>C>D → Task type → Mã số 25>26>...
 function sortProjects(projects) {
-  return [...projects].sort(function(a, b) {
-    const ga = GROUP_ORDER[getGroup(a)] !== undefined ? GROUP_ORDER[getGroup(a)] : 99;
-    const gb = GROUP_ORDER[getGroup(b)] !== undefined ? GROUP_ORDER[getGroup(b)] : 99;
+  return projects.slice().sort(function(a,b){
+    var ga = GROUP_ORDER[getGroup(a)] !== undefined ? GROUP_ORDER[getGroup(a)] : 99;
+    var gb = GROUP_ORDER[getGroup(b)] !== undefined ? GROUP_ORDER[getGroup(b)] : 99;
     if (ga !== gb) return ga - gb;
-
-    const ta = getBestTaskOrder(a);
-    const tb = getBestTaskOrder(b);
+    var ta = getBestTaskOrder(a), tb = getBestTaskOrder(b);
     if (ta !== tb) return ta - tb;
-
-    const ca = getCodeYear(a);
-    const cb = getCodeYear(b);
-    return ca - cb;
+    return getCodeNum(a) - getCodeNum(b);
   });
 }
-
-// Tạo STT map sau khi đã sắp xếp: A1,A2,... B1,B2,...
-function buildSttMap(sortedProjects) {
-  const counters = {};
-  const map = {};
-  sortedProjects.forEach(p => {
-    const grp = getGroup(p) || '?';
-    counters[grp] = (counters[grp] || 0) + 1;
-    map[p.id] = grp + counters[grp];
+function buildSttMap(sorted) {
+  var counters = {}, map = {};
+  sorted.forEach(function(p){
+    var g = getGroup(p) || '?';
+    counters[g] = (counters[g]||0) + 1;
+    map[p.id] = g + counters[g];
   });
   return map;
 }
 
-window.onload = async () => {
+window.onload = async function() {
   initTopbar();
-  const t = new Date(), y = t.getFullYear(), m = t.getMonth();
-  document.getElementById('gStart').value = fmt(new Date(y, m, 1));
-  document.getElementById('gEnd').value   = fmt(new Date(y, m+1, 0));
+  var t = new Date(), y = t.getFullYear(), m = t.getMonth();
+  document.getElementById('gStart').value = fmt(new Date(y,m,1));
+  document.getElementById('gEnd').value   = fmt(new Date(y,m+1,0));
   try {
     await loadAllData();
     renderGantt();
   } catch(e) {
-    showToast('❌ Loi tai du lieu: ' + e.message, 'error');
+    showToast('Loi tai du lieu: ' + e.message, 'error');
   }
 };
 
 function setZoom(z, btn) {
   gZoom = z;
-  document.querySelectorAll('.zoom-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.zoom-btn').forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
-  const t = new Date(), y = t.getFullYear(), m = t.getMonth(), d = t.getDate();
+  var t = new Date(), y = t.getFullYear(), m = t.getMonth(), d = t.getDate();
   if (z === 'day') {
-    document.getElementById('gStart').value = fmt(new Date(y, m, 1));
-    document.getElementById('gEnd').value   = fmt(new Date(y, m+1, 0));
+    document.getElementById('gStart').value = fmt(new Date(y,m,1));
+    document.getElementById('gEnd').value   = fmt(new Date(y,m+1,0));
   } else if (z === 'week') {
-    document.getElementById('gStart').value = fmt(new Date(y, m, d-14));
-    document.getElementById('gEnd').value   = fmt(new Date(y, m, d+42));
+    document.getElementById('gStart').value = fmt(new Date(y,m,d-14));
+    document.getElementById('gEnd').value   = fmt(new Date(y,m,d+42));
   } else {
-    document.getElementById('gStart').value = fmt(new Date(y, m-1, 1));
-    document.getElementById('gEnd').value   = fmt(new Date(y, m+5, 0));
+    document.getElementById('gStart').value = fmt(new Date(y,m-1,1));
+    document.getElementById('gEnd').value   = fmt(new Date(y,m+5,0));
   }
   renderGantt();
 }
 
 function renderGantt() {
-  const start    = new Date(document.getElementById('gStart').value);
-  const end      = new Date(document.getElementById('gEnd').value);
-  const showDone = document.getElementById('showDone').checked;
-  if (isNaN(start) || isNaN(end) || start > end) return;
+  var start    = new Date(document.getElementById('gStart').value);
+  var end      = new Date(document.getElementById('gEnd').value);
+  var showDone = document.getElementById('showDone').checked;
+  if (isNaN(start)||isNaN(end)||start>end) return;
 
-  const days  = getDaysArray(fmt(start), fmt(end));
-  const today = fmt(new Date());
-  const CW    = gZoom==='month' ? 20 : gZoom==='week' ? 28 : 36;
+  var days  = getDaysArray(fmt(start), fmt(end));
+  var today = fmt(new Date());
+  var CW    = gZoom==='month' ? 20 : gZoom==='week' ? 28 : 36;
 
-  // Lọc rồi sắp xếp
-  const rawProjects = allProjects.filter(p => showDone ? true : p.status === 'active');
-  const projects    = sortProjects(rawProjects);
-  const sttMap      = buildSttMap(projects);
+  var raw      = allProjects.filter(function(p){ return showDone ? true : p.status === 'active'; });
+  var projects = sortProjects(raw);
+  var sttMap   = buildSttMap(projects);
 
-  // ── Header ──────────────────────────────────────────────
-  let hdr1 = '<th rowspan="2" style="min-width:280px;text-align:left;padding:10px 14px;border-right:2px solid rgba(255,255,255,.2);">Project</th>';
-  let hdr2 = '';
+  /* ── HEADER ── */
+  /* 4 fixed cols: Project | 備考 | Staff担当 | [date cols] */
+  var fixedColspan = 3;
+  var hdr1 = '<th rowspan="2" style="min-width:200px;text-align:left;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">Project</th>'
+           + '<th rowspan="2" style="min-width:160px;text-align:left;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">&#x5099;&#x8003;</th>'
+           + '<th rowspan="2" style="min-width:100px;text-align:left;padding:10px 14px;border-right:2px solid rgba(255,255,255,.3);">Staff&#x62C5;&#x5F53;</th>';
+  var hdr2 = '';
 
   if (gZoom === 'month') {
-    const months = {};
-    days.forEach(d => { const k = d.substring(0,7); months[k] = (months[k]||0)+1; });
-    Object.entries(months).forEach(([mo, cnt]) => {
-      hdr1 += '<th colspan="'+cnt+'" style="min-width:'+(cnt*CW)+'px;border-right:1px solid rgba(255,255,255,.15);">'+mo+'</th>';
+    var months = {};
+    days.forEach(function(d){ var k=d.substring(0,7); months[k]=(months[k]||0)+1; });
+    Object.entries(months).forEach(function(e){
+      hdr1 += '<th colspan="'+e[1]+'" style="min-width:'+(e[1]*CW)+'px;border-right:1px solid rgba(255,255,255,.15);">'+e[0]+'</th>';
     });
-    days.forEach(d => {
-      const dt = new Date(d);
-      const we = isWeekend(d);
-      const td = d === today;
+    days.forEach(function(d){
+      var dt=new Date(d), we=isWeekend(d), td=d===today;
       hdr2 += '<th style="min-width:'+CW+'px;'+(we?'opacity:.45':'')+(td?';background:#e63946;':'')+'">'+dt.getDate()+'</th>';
     });
   } else {
-    days.forEach(d => {
-      const dt  = new Date(d);
-      const dow = ['日','月','火','水','木','金','土'][dt.getDay()];
-      const we  = isWeekend(d);
-      const td  = d === today;
-      hdr1 += '<th colspan="1" style="min-width:'+CW+'px;'+(we?'opacity:.45':'')+(td?'background:#e63946 !important;':'')+(td?'class="today-hdr"':'')+'">'
-        + dt.getDate()+'<br><span style="font-size:9px;opacity:.8;">'+dow+'</span></th>';
+    days.forEach(function(d){
+      var dt=new Date(d), dow=['日','月','火','水','木','金','土'][dt.getDay()], we=isWeekend(d), td=d===today;
+      hdr1 += '<th style="min-width:'+CW+'px;'+(we?'opacity:.45':'')+(td?'background:#e63946 !important;':'')+(td?' class="today-hdr"':'')+'">'
+        +dt.getDate()+'<br><span style="font-size:9px;opacity:.8;">'+dow+'</span></th>';
     });
   }
 
-  // ── Rows ────────────────────────────────────────────────
-  let rows = '';
+  /* ── ROWS ── */
+  var rows = '';
   if (!projects.length) {
-    rows = '<tr><td colspan="'+(days.length+1)+'" style="text-align:center;padding:40px;color:#aaa;">Khong co du an nao</td></tr>';
+    rows = '<tr><td colspan="'+(days.length+fixedColspan)+'" style="text-align:center;padding:40px;color:#aaa;">Khong co du an</td></tr>';
   }
 
-  projects.forEach(p => {
-    const color = projColorMap[p.id] || '#a8dadc';
-    const tasks = allTasks.filter(t => t.project_id === p.id);
-    const rs    = Math.max(tasks.length, 1);
-    const stt   = sttMap[p.id] || '';
-    const code  = getCode(p);
-    const name  = p.project_name || p.name || '';
+  projects.forEach(function(p) {
+    var color  = projColorMap[p.id] || '#a8dadc';
+    var tasks  = allTasks.filter(function(t){ return t.project_id === p.id; });
+    var rs     = Math.max(tasks.length, 1);
+    var stt    = sttMap[p.id] || '';
+    var code   = getCode(p);
+    var name   = p.project_name || p.name || '';
+    var meta   = getMeta(p.id);
 
-    // Left cell: STT + tên dự án + mã số nhỏ bên dưới
-    const pCell = '<td class="g-left" rowspan="'+rs+'">'
-      + '<div class="g-pname">'
-        + '<span class="stt-badge">'+stt+'</span>'
-        + '<span class="pname-text" title="'+name+'">'+name+'</span>'
-      + '</div>'
-      + (code ? '<div class="g-pcode">'+code+'</div>' : '')
+    /* Sub-info line */
+    var subParts = [];
+    if (meta.software) subParts.push(meta.software + (meta.version ? meta.version : ''));
+    if (meta.koujou)   subParts.push('着工' + meta.koujou);
+    var subHtml = subParts.length
+      ? '<div class="g-subinfo">' + subParts.join(' | ') + '</div>'
+      : '';
+
+    var pCell = '<td class="g-left" rowspan="'+rs+'" onclick="openPanel(projMap[\''+p.id+'\'])" title="Click de nhap ghi chu">'
+      + '<div class="g-pname"><span class="stt-badge">'+stt+'</span><span class="pname-text" title="'+name+'">'+name+'</span></div>'
+      + '<div class="g-pcode">'+code+'</div>'
+      + subHtml
       + '</td>';
 
+    var bicoCell  = '<td class="g-bico" rowspan="'+rs+'">' + (meta.note  || '') + '</td>';
+    var staffCell = '<td class="g-staff" rowspan="'+rs+'">' + (meta.staff || '') + '</td>';
+
     if (!tasks.length) {
-      rows += '<tr>'+pCell
-        + days.map(d=>'<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;"></td>').join('')
+      rows += '<tr>' + pCell + bicoCell + staffCell
+        + days.map(function(d){ return '<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;"></td>'; }).join('')
         + '</tr>';
       return;
     }
-
-    tasks.forEach((t, ti) => {
+    tasks.forEach(function(t, ti){
       rows += '<tr data-tid="'+t.id+'">'
-        + (ti === 0 ? pCell : '')
-        + days.map(d=>'<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;"></td>').join('')
+        + (ti===0 ? pCell + bicoCell + staffCell : '')
+        + days.map(function(d){ return '<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;"></td>'; }).join('')
         + '</tr>';
     });
   });
 
-  // ── Render ───────────────────────────────────────────────
-  const thead = gZoom === 'month'
+  /* ── RENDER ── */
+  var thead = gZoom==='month'
     ? '<thead><tr>'+hdr1+'</tr><tr>'+hdr2+'</tr></thead>'
     : '<thead><tr>'+hdr1+'</tr></thead>';
+
+  /* Build projMap for panel */
+  var projMapScript = 'var projMap={};';
+  projects.forEach(function(p){
+    projMapScript += 'projMap["'+p.id+'"]=allProjects.find(function(x){return x.id==="'+p.id+'";});';
+  });
 
   document.getElementById('ganttCont').innerHTML =
     '<table class="gantt">'+thead+'<tbody>'+rows+'</tbody></table>';
 
-  // ── Bars & dots ──────────────────────────────────────────
-  projects.forEach(p => {
-    const color = projColorMap[p.id] || '#a8dadc';
-    allTasks.filter(t => t.project_id === p.id).forEach(t => {
-      const row = document.querySelector('tr[data-tid="'+t.id+'"]');
+  /* eval projMap */
+  try { eval(projMapScript); } catch(e) {}
+
+  /* ── BARS & DOTS ── */
+  projects.forEach(function(p) {
+    var color = projColorMap[p.id] || '#a8dadc';
+    allTasks.filter(function(t){ return t.project_id===p.id; }).forEach(function(t){
+      var row = document.querySelector('tr[data-tid="'+t.id+'"]');
       if (!row) return;
-      const cells = [...row.querySelectorAll('.g-cell')];
-      const user  = allUsers.find(u => u.id === t.assigned_to);
+      var cells = Array.from(row.querySelectorAll('.g-cell'));
+      var user  = allUsers.find(function(u){ return u.id===t.assigned_to; });
 
       if (t.start_date && t.end_date) {
-        const si = days.indexOf(t.start_date);
-        const ei = days.indexOf(t.end_date);
-        if (si >= 0 && si < cells.length) {
-          const realEi = ei < 0 ? days.length-1 : Math.min(ei, days.length-1);
-          const barW   = (realEi - si + 1) * CW - 4;
-          const bar    = document.createElement('div');
+        var si = days.indexOf(t.start_date);
+        var ei = days.indexOf(t.end_date);
+        if (si>=0 && si<cells.length) {
+          var realEi = ei<0 ? days.length-1 : Math.min(ei, days.length-1);
+          var barW   = (realEi-si+1)*CW - 4;
+          var bar    = document.createElement('div');
           bar.className = 'g-bar';
-          bar.style.cssText = 'left:2px;width:'+Math.max(barW, CW-4)+'px;background:'+color+';';
-          bar.textContent   = t.task_type || '';
-          bar.addEventListener('mouseenter', e => showTooltip(e,
+          bar.style.cssText = 'left:2px;width:'+Math.max(barW,CW-4)+'px;background:'+color+';';
+          bar.textContent = t.task_type || '';
+          bar.addEventListener('mouseenter', function(e){ showTooltip(e,
             '<b>'+(t.task_type||'')+'</b>'
-            +'<br>担当: '+(user ? user.name : '未定')
+            +'<br>担当: '+(user?user.name:'未定')
             +'<br>'+t.start_date+' → '+t.end_date
-            +(t.note ? '<br>📝 '+t.note : '')
-          ));
+            +(t.note?'<br>📝 '+t.note:'')
+          ); });
           bar.addEventListener('mouseleave', hideTooltip);
           cells[si].appendChild(bar);
         }
       }
-
       if (t.receive_date) {
-        const ri = days.indexOf(t.receive_date);
-        if (ri >= 0 && ri < cells.length) {
-          const dot = document.createElement('div');
-          dot.className = 'g-dot g-dot-rcv';
-          dot.style.left = '50%';
-          dot.addEventListener('mouseenter', e => showTooltip(e, '📥 Nhan data<br>'+t.receive_date));
+        var ri = days.indexOf(t.receive_date);
+        if (ri>=0 && ri<cells.length) {
+          var dot = document.createElement('div');
+          dot.className='g-dot g-dot-rcv'; dot.style.left='50%';
+          dot.addEventListener('mouseenter', function(e){ showTooltip(e,'📥 Nhan data<br>'+t.receive_date); });
           dot.addEventListener('mouseleave', hideTooltip);
           cells[ri].appendChild(dot);
         }
       }
-
       if (t.send_date) {
-        const si2 = days.indexOf(t.send_date);
-        if (si2 >= 0 && si2 < cells.length) {
-          const dot2 = document.createElement('div');
-          dot2.className = 'g-dot g-dot-send';
-          dot2.style.left = '50%';
-          dot2.addEventListener('mouseenter', e => showTooltip(e, '📤 Gui<br>'+t.send_date));
+        var si2 = days.indexOf(t.send_date);
+        if (si2>=0 && si2<cells.length) {
+          var dot2 = document.createElement('div');
+          dot2.className='g-dot g-dot-send'; dot2.style.left='50%';
+          dot2.addEventListener('mouseenter', function(e){ showTooltip(e,'📤 Gui<br>'+t.send_date); });
           dot2.addEventListener('mouseleave', hideTooltip);
           cells[si2].appendChild(dot2);
         }
