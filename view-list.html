@@ -248,10 +248,7 @@
           <span class="g-label">M&amp;F</span>
         </div>
       </div>
-      <div class="stt-preview">
-        Est. No. <b id="sttVal" style="color:#0077b6;">1</b>
-        <span style="color:#aaa;font-size:11px;">(annual reset)</span>
-      </div>
+      
     </div>
     <div class="form-grid">
       <div class="form-group">
@@ -264,7 +261,7 @@
       <div class="form-group">
         <label>Project number <span class="req">*</span></label>
         <input type="text" id="numInput" value="001" maxlength="3" oninput="updatePreview()" style="max-width:90px;"/>
-        <div class="field-hint" id="numHint">Next Number: <b style="color:#0096c7;">001</b></div>
+        
       </div>
       <div class="form-group">
         <label>&#x652F;&#x5E97;&#x540D; <span class="req">*</span></label>
@@ -294,13 +291,13 @@
       <div class="form-group"><label>&#x7D42;&#x4E86;&#x4E88;&#x5B9A;&#x65E5;</label><input type="date" id="projEnd"/></div>
     </div>
     <div class="tasks-section">
-      <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:10px;">&#x1F4CB; &#x5DE5;&#x7A0B;&#x30FB;&#x30BF;&#x30B9;&#x30AF;&#x5165;&#x529B;</div>
+      <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:10px;">Type of Work</div>
       <div id="taskRows"></div>
-      <button class="btn-add-task" onclick="addTaskRow()">&#x2795; &#x30BF;&#x30B9;&#x30AF;&#x3092;&#x8FFD;&#x52A0;</button>
+      <button class="btn-add-task" onclick="addTaskRow()"> Add Task</button>
     </div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeModal()">&#x30AD;&#x30E3;&#x30F3;&#x30BB;&#x30EB;</button>
-      <button class="btn-primary"   onclick="createProject()">&#x2705; &#x4F5C;&#x6210;&#x3059;&#x308B;</button>
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary"   onclick="createProject()">OK</button>
     </div>
   </div>
 </div>
