@@ -176,7 +176,7 @@
     <button class="btn-primary admin-only" onclick="openModal()" style="display:none;">&#x2795; Add New Project</button>
   </div>
   <div class="filters">
-    <input class="filter-input" id="searchProj" placeholder="&#x1F50D; Tim ten du an..." oninput="renderList()" style="min-width:220px;"/>
+    <input class="filter-input" id="searchProj" placeholder="&#x1F50D; Find Project..." oninput="renderList()" style="min-width:220px;"/>
     <button class="filter-btn active" id="fAll"    onclick="setFilter('all')">All</button>
     <button class="filter-btn"        id="fActive" onclick="setFilter('active')">&#x1F7E2; Running</button>
     <button class="filter-btn"        id="fDone"   onclick="setFilter('done')">&#x2B1C; Ended</button>
@@ -582,31 +582,31 @@ function buildExpandInner(projId, projColor) {
       +'</div>'
       +'</div>';
   }
-  if(!tasks.length) cardsHtml='<div class="no-task-msg">&#x1F4AD; Khong co task dang hoat dong</div>';
+  if(!tasks.length) cardsHtml='<div class="no-task-msg">&#x1F4AD; No active tasks</div>';
   var addCardHtml='<div class="add-task-card" id="add-card-'+projId+'">'
-    +'<button class="add-task-btn" id="add-btn-'+projId+'">&#x2795; Them task moi</button>'
+    +'<button class="add-task-btn" id="add-btn-'+projId+'">&#x2795; Add new task </button>'
     +'<div class="add-task-form" id="add-form-'+projId+'">'
-      +'<div class="add-task-title"><span>&#x2795; Them task moi</span>'
+      +'<div class="add-task-title"><span>&#x2795; Add new task</span>'
       +'<button class="btn-close-add" id="add-close-'+projId+'">&#x2715;</button></div>'
-      +'<div class="task-field"><span class="task-field-icon">&#x1F4CB;</span><span class="task-field-label">Loai CV:</span>'
+      +'<div class="task-field"><span class="task-field-icon">&#x1F4CB;</span><span class="task-field-label">Type of Work:</span>'
       +'<select class="edit-select" id="an-type-'+projId+'">'+buildTypeOptions('')+'</select></div>'
-      +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span>'
+      +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Person in Charge:</span>'
       +'<select class="edit-select" id="an-user-'+projId+'">'+buildUserOptions('')+'</select></div>'
-      +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Nhan data:</span>'
+      +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Receive:</span>'
       +'<input type="date" class="edit-input" id="an-rcv-'+projId+'"/></div>'
-      +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Bat dau:</span>'
+      +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Start:</span>'
       +'<input type="date" class="edit-input" id="an-st-'+projId+'"/></div>'
-      +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">Ket thuc:</span>'
+      +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">End:</span>'
       +'<input type="date" class="edit-input" id="an-en-'+projId+'"/></div>'
-      +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Ngay gui:</span>'
+      +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Send:</span>'
       +'<input type="date" class="edit-input" id="an-snd-'+projId+'"/></div>'
       +'<div class="edit-btn-wrap">'
-      +'<button class="btn-save-task" id="an-save-'+projId+'">&#x1F4BE; Luu task</button>'
-      +'<button class="btn-cancel-task" id="an-cancel-'+projId+'">Huy</button>'
+      +'<button class="btn-save-task" id="an-save-'+projId+'">&#x1F4BE; Save task</button>'
+      +'<button class="btn-cancel-task" id="an-cancel-'+projId+'">Cancel</button>'
       +'</div>'
     +'</div>'
     +'</div>';
-  return '<div class="task-expand-title">&#x1F4CB; Task dang hoat dong</div>'
+  return '<div class="task-expand-title">&#x1F4CB; Active task</div>'
     +'<div class="task-cards">'+cardsHtml+addCardHtml+'</div>';
 }
 
