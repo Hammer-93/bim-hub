@@ -3,28 +3,48 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>BIM Hub - Lich nhan vien</title>
+  <title>VINADECO BIM Hub - Staff Schedule</title>
   <style>
     * { box-sizing:border-box; margin:0; padding:0; }
     body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f4f8; min-height:100vh; }
 
     .topbar { display:flex; align-items:center; justify-content:space-between; background:#1a1a2e; padding:0 24px; height:52px; position:sticky; top:0; z-index:200; }
     .topbar-left { display:flex; align-items:center; gap:10px; }
-    .topbar-logo { width:30px; height:30px; background:linear-gradient(135deg,#00b4d8,#0077b6); border-radius:7px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:15px; }
     .topbar-title { color:#fff; font-size:16px; font-weight:700; }
     .topbar-right { display:flex; align-items:center; gap:12px; }
-    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#00b4d8,#0096c7); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:12px; }
-    .user-name { color:#ddd; font-size:13px; }
-    .role-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; }
-    .role-admin { background:#e63946; color:#fff; }
-    .role-staff { background:#0096c7; color:#fff; }
     .btn-top { background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; text-decoration:none; transition:background .2s; font-family:inherit; }
     .btn-top:hover { background:rgba(255,255,255,.22); }
+    .dropdown-wrap { position:relative; }
+    .dropdown-trigger { display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; font-family:inherit; transition:background .2s; }
+    .dropdown-trigger:hover { background:rgba(255,255,255,.22); }
+    .dropdown-trigger .user-name { font-weight:600; }
+    .dropdown-arrow { font-size:10px; opacity:.7; }
+    .dropdown-menu { position:absolute; top:calc(100% + 8px); right:0; background:#fff; border-radius:10px; box-shadow:0 8px 28px rgba(0,0,0,.18); min-width:160px; z-index:999; overflow:hidden; display:none; }
+    .dropdown-menu.open { display:block; }
+    .dropdown-item { display:flex; align-items:center; gap:9px; padding:11px 16px; font-size:13px; color:#333; cursor:pointer; transition:background .15s; text-decoration:none; border:none; background:none; width:100%; font-family:inherit; }
+    .dropdown-item:hover { background:#f0f7ff; color:#0077b6; }
+    .dropdown-item.danger { color:#e63946; }
+    .dropdown-item.danger:hover { background:#fff0f0; color:#e63946; }
+    .dropdown-divider { height:1px; background:#f0f0f0; margin:4px 0; }
 
+    /* NAV TABS */
     .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; position:sticky; top:52px; z-index:150; }
     .nav-tab { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; text-decoration:none; display:flex; align-items:center; gap:7px; }
     .nav-tab:hover { color:#0096c7; }
     .nav-tab.active { color:#0077b6; border-bottom-color:#0077b6; }
+
+    /* NAV DROPDOWN */
+    .nav-drop { position:relative; }
+    .nav-drop-trigger { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; display:flex; align-items:center; gap:7px; transition:all .2s; white-space:nowrap; user-select:none; }
+    .nav-drop-trigger:hover { color:#0096c7; }
+    .nav-drop-trigger.active { color:#0077b6; border-bottom-color:#0077b6; }
+    .nav-drop-arrow { font-size:10px; opacity:.6; transition:transform .2s; }
+    .nav-drop-trigger.open .nav-drop-arrow { transform:rotate(180deg); }
+    .nav-drop-menu { position:absolute; top:calc(100% + 2px); left:0; background:#fff; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,.13); min-width:190px; z-index:300; display:none; overflow:hidden; border:1px solid #eee; }
+    .nav-drop-menu.open { display:block; }
+    .nav-drop-item { display:flex; align-items:center; gap:9px; padding:11px 18px; font-size:13px; font-weight:600; color:#555; text-decoration:none; transition:background .15s; }
+    .nav-drop-item:hover { background:#f0f7ff; color:#0077b6; }
+    .nav-drop-item.active { color:#0077b6; background:#e8f4fe; }
 
     .main { padding:28px 32px; }
     .section-title { font-size:18px; font-weight:700; color:#1a1a2e; margin-bottom:16px; }
@@ -49,177 +69,97 @@
     .legend-bar { width:28px; height:11px; border-radius:3px; }
     .legend-line { width:3px; height:16px; border-radius:2px; }
 
-    /* STAFF WRAP */
-    .staff-wrap {
-      overflow:auto;
-      max-height:calc(100vh - 230px);
-      background:#fff;
-      border-radius:14px;
-      box-shadow:0 2px 12px rgba(0,0,0,.07);
-    }
-
-    /* TABLE — width:100%, table-layout:fixed để fill hết */
-    table.staff {
-      border-collapse:collapse;
-      width:100%;
-      table-layout:fixed;
-    }
-
-    table.staff thead th {
-      position:sticky;
-      top:0;
-      z-index:20;
-      padding:8px 4px;
-      font-size:11px;
-      font-weight:700;
-      color:#fff;
-      background:#1a1a2e;
-      text-align:center;
-      white-space:nowrap;
-      border-right:1px solid rgba(255,255,255,.1);
-      overflow:hidden;
-    }
+    .staff-wrap { overflow:auto; max-height:calc(100vh - 230px); background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); }
+    table.staff { border-collapse:collapse; width:100%; table-layout:fixed; }
+    table.staff thead th { position:sticky; top:0; z-index:20; padding:8px 4px; font-size:11px; font-weight:700; color:#fff; background:#1a1a2e; text-align:center; white-space:nowrap; border-right:1px solid rgba(255,255,255,.1); overflow:hidden; }
     table.staff thead th.today-hdr { background:#e63946; }
-    table.staff thead th:first-child {
-      position:sticky;
-      top:0;
-      left:0;
-      z-index:30;
-      text-align:left;
-      padding:10px 14px;
-      width:200px;
-      min-width:200px;
-      max-width:200px;
-      border-right:2px solid rgba(255,255,255,.2);
-    }
-
+    table.staff thead th:first-child { position:sticky; top:0; left:0; z-index:30; text-align:left; padding:10px 14px; width:200px; min-width:200px; max-width:200px; border-right:2px solid rgba(255,255,255,.2); }
     table.staff tbody td { padding:0; border-bottom:1px solid #eee; }
-
-    /* NAME CELL */
-    .s-name-cell {
-      padding:10px 14px;
-      width:200px;
-      min-width:200px;
-      max-width:200px;
-      border-right:2px solid #e8e8e8;
-      vertical-align:top;
-      background:#fff;
-      position:sticky;
-      left:0;
-      z-index:10;
-      box-shadow:2px 0 5px rgba(0,0,0,.05);
-    }
+    .s-name-cell { padding:10px 14px; width:200px; min-width:200px; max-width:200px; border-right:2px solid #e8e8e8; vertical-align:top; background:#fff; position:sticky; left:0; z-index:10; box-shadow:2px 0 5px rgba(0,0,0,.05); }
     .s-name { font-size:13px; font-weight:700; color:#1a1a2e; margin-bottom:3px; }
-
     .role-pill { display:inline-block; font-size:10px; font-weight:700; padding:1px 7px; border-radius:20px; }
     .role-pill.Manager    { background:#e63946; color:#fff; }
     .role-pill.SubManager { background:#f4a261; color:#fff; }
     .role-pill.Leader     { background:#2a9d8f; color:#fff; }
     .role-pill.Staff      { background:#adb5bd; color:#fff; }
-
-    .s-cell {
-      position:relative;
-      height:36px;
-      border-right:1px solid #f0f0f0;
-      vertical-align:middle;
-      overflow:visible;
-    }
+    .s-cell { position:relative; height:36px; border-right:1px solid #f0f0f0; vertical-align:middle; overflow:visible; }
     .s-cell.we  { background:#f8f8f8; }
     .s-cell.tdy { background:#fff5f5; }
     .s-cell.tdy::before { content:""; position:absolute; top:0; bottom:0; left:50%; width:2px; background:#e63946; z-index:5; transform:translateX(-50%); }
-
-    .lane-first .s-cell,
-    .lane-first .s-name-cell { border-top:2px solid #dde2ea; }
-    .lane-last  .s-cell      { border-bottom:2px solid #dde2ea !important; }
-
-    .s-bar {
-      position:absolute;
-      height:22px;
-      border-radius:3px;
-      top:7px;
-      display:flex;
-      align-items:center;
-      padding:0 6px;
-      font-size:9.5px;
-      font-weight:700;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      cursor:pointer;
-      box-shadow:0 1px 4px rgba(0,0,0,.15);
-      z-index:2;
-      transition:opacity .2s,transform .15s;
-    }
+    .lane-first .s-cell, .lane-first .s-name-cell { border-top:2px solid #dde2ea; }
+    .lane-last  .s-cell { border-bottom:2px solid #dde2ea !important; }
+    .s-bar { position:absolute; height:22px; border-radius:3px; top:7px; display:flex; align-items:center; padding:0 6px; font-size:9.5px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.15); z-index:2; transition:opacity .2s,transform .15s; }
     .s-bar:hover { opacity:.82; transform:scaleY(1.08); }
-
-    .grp-hdr td {
-      background:linear-gradient(90deg,#f0f4f8,#f8fbff);
-      padding:8px 16px;
-      font-size:12px;
-      font-weight:700;
-      color:#0077b6;
-      border-bottom:1.5px solid #dde2ea;
-      border-top:2px solid #c8d8e8;
-      position:sticky;
-      left:0;
-    }
+    .grp-hdr td { background:linear-gradient(90deg,#f0f4f8,#f8fbff); padding:8px 16px; font-size:12px; font-weight:700; color:#0077b6; border-bottom:1.5px solid #dde2ea; border-top:2px solid #c8d8e8; position:sticky; left:0; }
   </style>
 </head>
 <body>
 
 <nav class="topbar">
   <div class="topbar-left">
-    <div class="topbar-logo">B</div>
-    <span class="topbar-title">BIM Hub</span>
+    <span class="topbar-title">VINADECO BIM Hub</span>
   </div>
   <div class="topbar-right">
-    <div class="avatar" id="topAvatar">?</div>
-    <span class="user-name" id="topName">...</span>
-    <span class="role-badge" id="topRole"></span>
-    <a class="btn-top" href="my-tasks.html">📋 Lich cua toi</a>
-    <a class="btn-top admin-only" href="admin.html" style="display:none;">👥 Thanh vien</a>
-    <button class="btn-top" onclick="logout()">Dang xuat</button>
+    <a class="btn-top" href="my-tasks.html">&#x1F4CB; My Task</a>
+    <div class="dropdown-wrap" id="userDropWrap">
+      <button class="dropdown-trigger" id="userDropBtn">
+        <span class="user-name" id="topName">...</span>
+        <span class="dropdown-arrow">&#x25BC;</span>
+      </button>
+      <div class="dropdown-menu" id="userDropMenu">
+        <a class="dropdown-item admin-only" href="admin.html" style="display:none;">&#x1F465; Member</a>
+        <div class="dropdown-divider admin-only" style="display:none;"></div>
+        <button class="dropdown-item danger" onclick="logout()">&#x1F6AA; Sign Out</button>
+      </div>
+    </div>
   </div>
 </nav>
 
 <div class="nav-tabs">
-  <a class="nav-tab" href="view-list.html">📋 Danh sach du an</a>
-  <a class="nav-tab" href="view-category.html">🗂️ Theo the loai</a>
-  <a class="nav-tab" href="view-schedule.html">📅 Schedule du an</a>
-  <a class="nav-tab active" href="view-staff.html">👥 Lich nhan vien</a>
+  <div class="nav-drop" id="scheduleNavDrop">
+    <div class="nav-drop-trigger" id="scheduleNavTrigger">
+      &#x1F4C5; Project Schedule <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="scheduleNavMenu">
+      <a class="nav-drop-item" href="view-list.html">&#x1F4CB; List of Project</a>
+      <a class="nav-drop-item" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
+      <a class="nav-drop-item" href="view-schedule.html">&#x1F4C5; Gantt Schedule</a>
+    </div>
+  </div>
+  <a class="nav-tab active" href="view-staff.html">&#x1F465; Staff Schedule</a>
 </div>
 
 <div class="toast" id="toast"></div>
 <div class="tooltip" id="tooltip"></div>
 
 <div class="main">
-  <div class="section-title">👥 Lich lam viec nhan vien</div>
+  <div class="section-title">&#x1F465; Staff Schedule</div>
 
   <div class="controls">
     <div class="grp-tabs">
-      <button class="grp-tab active" onclick="setGroup('all',this)">Tat ca</button>
-      <button class="grp-tab" onclick="setGroup('sekkei',this)">🏛️ 設計BIM</button>
-      <button class="grp-tab" onclick="setGroup('sekou',this)">🏗️ 施工BIM</button>
+      <button class="grp-tab active" onclick="setGroup('all',this)">All</button>
+      <button class="grp-tab" onclick="setGroup('sekkei',this)">&#x1F3DB;&#xFE0F; &#x8A2D;&#x8A08;BIM</button>
+      <button class="grp-tab" onclick="setGroup('sekou',this)">&#x1F3D7;&#xFE0F; &#x65BD;&#x5DE5;BIM</button>
     </div>
     <div style="display:flex;gap:6px;margin-left:auto;">
-      <button class="zoom-btn active" onclick="setZoom('day',this)">Ngay</button>
-      <button class="zoom-btn" onclick="setZoom('week',this)">Tuan</button>
-      <button class="zoom-btn" onclick="setZoom('month',this)">Thang</button>
+      <button class="zoom-btn active" onclick="setZoom('day',this)">Day</button>
+      <button class="zoom-btn" onclick="setZoom('week',this)">Week</button>
+      <button class="zoom-btn" onclick="setZoom('month',this)">Month</button>
     </div>
     <input type="date" id="sStart" class="filter-input" onchange="renderStaff()"/>
-    <span style="color:#888;font-size:14px;">→</span>
+    <span style="color:#888;font-size:14px;">&#x2192;</span>
     <input type="date" id="sEnd" class="filter-input" onchange="renderStaff()"/>
   </div>
 
   <div class="legend">
-    <div class="legend-item"><div class="legend-bar" style="background:#a8dadc;"></div><span>Khoang lam viec (mau theo du an)</span></div>
-    <div class="legend-item"><div class="legend-line" style="background:#e63946;"></div><span>Hom nay</span></div>
-    <span style="color:#aaa;font-size:11px;">💡 Mau giong nhau = cung du an | Moi task = 1 dong rieng</span>
+    <div class="legend-item"><div class="legend-bar" style="background:#a8dadc;"></div><span>Work Period (color by project)</span></div>
+    <div class="legend-item"><div class="legend-line" style="background:#e63946;"></div><span>Today</span></div>
+    <span style="color:#aaa;font-size:11px;">&#x1F4A1; Same color = same project | Each task = 1 row</span>
   </div>
 
   <div class="staff-wrap" id="staffWrap">
     <div id="staffCont">
-      <div style="padding:40px;text-align:center;color:#aaa;">Dang tai...</div>
+      <div style="padding:40px;text-align:center;color:#aaa;">Loading...</div>
     </div>
   </div>
 </div>
@@ -227,16 +167,49 @@
 <script src="js/config.js"></script>
 <script>
 const ROLE_ORDER = { 'Manager':0, 'Sub Manager':1, 'Leader':2, 'Staff':3 };
-const ROLE_PILL_CLASS = {
-  'Manager':'Manager','Sub Manager':'SubManager','Leader':'Leader','Staff':'Staff'
-};
-const NAME_COL_W = 200; // px, phải khớp CSS
+const ROLE_PILL_CLASS = { 'Manager':'Manager','Sub Manager':'SubManager','Leader':'Leader','Staff':'Staff' };
+const NAME_COL_W = 200;
 
 let sZoom  = 'day';
 let sGroup = 'all';
 
+function initTopbar() {
+  var role = localStorage.getItem('user_role') || 'Staff';
+  var name = localStorage.getItem('user_name') || 'User';
+  if (!localStorage.getItem('user_email')) { window.location.href='index.html'; return; }
+  document.getElementById('topName').textContent = name;
+  if (role === 'Admin') {
+    var els = document.querySelectorAll('.admin-only');
+    for (var i=0;i<els.length;i++) els[i].style.display='flex';
+  }
+  var dropBtn  = document.getElementById('userDropBtn');
+  var dropMenu = document.getElementById('userDropMenu');
+  dropBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    dropMenu.classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    dropMenu.classList.remove('open');
+  });
+}
+
+function initNavDrop() {
+  var trigger = document.getElementById('scheduleNavTrigger');
+  var menu    = document.getElementById('scheduleNavMenu');
+  trigger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    trigger.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    trigger.classList.remove('open');
+    menu.classList.remove('open');
+  });
+}
+
 window.onload = async () => {
   initTopbar();
+  initNavDrop();
   const t = new Date(), y = t.getFullYear(), m = t.getMonth();
   document.getElementById('sStart').value = fmt(new Date(y, m, 1));
   document.getElementById('sEnd').value   = fmt(new Date(y, m+1, 0));
@@ -244,11 +217,10 @@ window.onload = async () => {
     await loadAllData();
     renderStaff();
   } catch(e) {
-    showToast('❌ Loi tai du lieu: ' + e.message, 'error');
+    showToast('Error loading data: ' + e.message, 'error');
   }
 };
 
-// Re-render on window resize to recalculate CW
 window.addEventListener('resize', () => renderStaff());
 
 function visibleUsers(list) { return list.filter(u => u.role !== 'Admin'); }
@@ -264,9 +236,8 @@ function sortUsers(list) {
 
 function calcCW(dayCount) {
   const wrapW = document.getElementById('staffWrap').clientWidth || window.innerWidth - 64;
-  const avail = wrapW - NAME_COL_W - 2; // 2px border
+  const avail = wrapW - NAME_COL_W - 2;
   const cw    = Math.floor(avail / dayCount);
-  // clamp: min 18px (month), max 60px
   return Math.min(60, Math.max(18, cw));
 }
 
@@ -302,14 +273,12 @@ function renderStaff() {
 
   const days  = getDaysArray(fmt(start), fmt(end));
   const today = fmt(new Date());
-  // CW tính động theo chiều rộng thực tế của wrap
-  const CW = calcCW(days.length);
+  const CW    = calcCW(days.length);
 
-  const sekkeiUsers = sortUsers(visibleUsers(allUsers.filter(u => u.group_name==='設計BIM')));
-  const sekouUsers  = sortUsers(visibleUsers(allUsers.filter(u => u.group_name==='施工BIM')));
+  const sekkeiUsers = sortUsers(visibleUsers(allUsers.filter(u => u.group_name==='\u8a2d\u8a08BIM')));
+  const sekouUsers  = sortUsers(visibleUsers(allUsers.filter(u => u.group_name==='\u65bd\u5de5BIM')));
 
-  // ── Header ────────────────────────────────────────────────────────
-  let hdr = '<th style="width:200px;min-width:200px;">Nhan vien</th>';
+  let hdr = '<th style="width:200px;min-width:200px;">Staff</th>';
 
   if (sZoom === 'month') {
     const months = {};
@@ -320,7 +289,7 @@ function renderStaff() {
   } else {
     days.forEach(d => {
       const dt  = new Date(d+'T00:00:00');
-      const dow = ['日','月','火','水','木','金','土'][dt.getDay()];
+      const dow = ['\u65e5','\u6708','\u706b','\u6c34','\u6728','\u91d1','\u571f'][dt.getDay()];
       const we  = isWeekend(d);
       const td  = d===today;
       hdr += '<th style="'+(we?'opacity:.45;':'')+(td?'background:#e63946;':'')+'"'+(td?' class="today-hdr"':'')+'>'+
@@ -328,21 +297,20 @@ function renderStaff() {
     });
   }
 
-  // ── Rows ──────────────────────────────────────────────────────────
   let rows = '';
   if (sGroup==='all') {
     if (sekkeiUsers.length) {
-      rows += buildGroupHeader('🏛️','設計BIM',sekkeiUsers.length,days.length);
+      rows += buildGroupHeader('\u1F3DB\uFE0F','\u8a2d\u8a08BIM',sekkeiUsers.length,days.length);
       sekkeiUsers.forEach(u => { rows += buildUserRows(u,days,today,CW); });
     }
     if (sekouUsers.length) {
-      rows += buildGroupHeader('🏗️','施工BIM',sekouUsers.length,days.length);
+      rows += buildGroupHeader('\u1F3D7\uFE0F','\u65bd\u5de5BIM',sekouUsers.length,days.length);
       sekouUsers.forEach(u => { rows += buildUserRows(u,days,today,CW); });
     }
   } else {
     const users = sGroup==='sekkei' ? sekkeiUsers : sekouUsers;
     if (!users.length) {
-      rows = '<tr><td colspan="'+(days.length+1)+'" style="text-align:center;padding:40px;color:#aaa;">Khong co nhan vien</td></tr>';
+      rows = '<tr><td colspan="'+(days.length+1)+'" style="text-align:center;padding:40px;color:#aaa;">No staff found.</td></tr>';
     } else {
       users.forEach(u => { rows += buildUserRows(u,days,today,CW); });
     }
@@ -358,7 +326,7 @@ function renderStaff() {
 }
 
 function buildGroupHeader(icon, label, count, dayCount) {
-  return '<tr class="grp-hdr"><td colspan="'+(dayCount+1)+'">'+icon+' '+label+'（'+count+' nhan vien）</td></tr>';
+  return '<tr class="grp-hdr"><td colspan="'+(dayCount+1)+'">'+icon+' '+label+' ('+count+' members)</td></tr>';
 }
 
 function buildUserRows(u, days, today, CW) {
@@ -366,25 +334,20 @@ function buildUserRows(u, days, today, CW) {
   const laneCount = Math.max(1, tasks.length);
   const pillClass = ROLE_PILL_CLASS[u.role] || 'Staff';
   let html = '';
-
   for (let lane=0; lane<laneCount; lane++) {
     const isFirst = lane===0;
     const isLast  = lane===laneCount-1;
     const rowClass= (isFirst?'lane-first ':'')+(isLast?'lane-last':'');
-
     const nameCell = isFirst
       ? '<td class="s-name-cell" rowspan="'+laneCount+'">'
           +'<div class="s-name">'+(u.name||u.email)+'</div>'
           +'<span class="role-pill '+pillClass+'">'+(u.role||'Staff')+'</span>'
         +'</td>'
       : '';
-
-    // Không set min-width vì dùng table-layout:fixed, CW được set qua colgroup
     const cells = days.map(d =>
       '<td class="s-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" '+
       'data-uid="'+u.id+'" data-lane="'+lane+'" data-date="'+d+'"></td>'
     ).join('');
-
     html += '<tr class="'+rowClass+'" data-uid="'+u.id+'" data-lane="'+lane+'">'+nameCell+cells+'</tr>';
   }
   return html;
@@ -393,35 +356,29 @@ function buildUserRows(u, days, today, CW) {
 function drawBarsMultiLane(u, days, CW) {
   const tasks = allTasks.filter(t => t.assigned_to===u.id && t.start_date && t.end_date);
   if (!tasks.length) return;
-
   tasks.forEach((task, lane) => {
     const proj = allProjects.find(p => p.id===task.project_id);
     if (!proj) return;
-
     const color = projColorMap[proj.id] || '#a8dadc';
     const si    = days.indexOf(task.start_date);
     const ei    = days.indexOf(task.end_date);
     if (si<0||si>=days.length) return;
-
     const row = document.querySelector('tr[data-uid="'+u.id+'"][data-lane="'+lane+'"]');
     if (!row) return;
     const cells = [...row.querySelectorAll('.s-cell')];
     if (!cells[si]) return;
-
     const realEi = ei<0 ? days.length-1 : Math.min(ei, days.length-1);
     const barW   = Math.max((realEi-si+1)*CW-4, CW-4);
-
     const bar = document.createElement('div');
     bar.className = 's-bar';
     bar.style.cssText = 'left:2px;width:'+barW+'px;background:'+color+';color:'+(isLight(color)?'#333':'#fff')+';';
-    const code = (proj.project_code||'').split('_')[0];
+    const code = (proj.project_code||proj.code||'').split('_')[0];
     bar.textContent = (code?'['+code+'] ':'')+proj.project_name;
-
     bar.addEventListener('mouseenter', e => showTooltip(e,
       '<b>'+proj.project_name+'</b>'+
       '<br>'+(task.task_type||'')+
-      '<br>'+task.start_date+' → '+task.end_date+
-      (task.note?'<br>📝 '+task.note:'')
+      '<br>'+task.start_date+' \u2192 '+task.end_date+
+      (task.note?'<br>&#x1F4DD; '+task.note:'')
     ));
     bar.addEventListener('mouseleave', hideTooltip);
     cells[si].appendChild(bar);
@@ -436,6 +393,7 @@ function isLight(hex) {
   const b=parseInt(c.substring(4,6),16);
   return (r*299+g*587+b*114)/1000>160;
 }
+function logout(){ if(confirm('Sign out?')){ localStorage.clear(); window.location.href='index.html'; } }
 </script>
 </body>
 </html>
