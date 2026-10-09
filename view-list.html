@@ -72,7 +72,6 @@
     .tag:hover, .tag.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
     .num-wrap { display:flex; align-items:center; gap:8px; }
     .num-prefix { font-size:13px; font-weight:700; color:#0077b6; background:#e8f4fe; padding:9px 11px; border-radius:8px; border:1.5px solid #b8dff5; white-space:nowrap; }
-    .field-hint { font-size:11px; color:#aaa; margin-top:2px; }
     .preview-box { background:linear-gradient(135deg,#0077b6,#00b4d8); border-radius:10px; padding:14px 18px; color:#fff; margin-bottom:16px; }
     .preview-label { font-size:10px; opacity:.7; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
     .preview-code { font-size:17px; font-weight:800; word-break:break-all; }
@@ -138,7 +137,6 @@
     .g-key { font-size:18px; font-weight:800; }
     .g-icon { font-size:20px; }
     .g-label { font-size:10px; color:#666; text-align:center; font-weight:600; }
-    .stt-preview { display:inline-flex; align-items:center; gap:6px; background:#f0f4f8; border-radius:8px; padding:6px 12px; font-size:13px; font-weight:700; color:#555; margin-top:6px; }
     .btn-del-proj { border:1.5px solid #ffb3b3; color:#e63946; background:#fff; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:600; }
     .btn-del-proj:hover { background:#fff0f0; }
   </style>
@@ -248,7 +246,6 @@
           <span class="g-label">M&amp;F</span>
         </div>
       </div>
-      
     </div>
     <div class="form-grid">
       <div class="form-group">
@@ -261,7 +258,6 @@
       <div class="form-group">
         <label>Project number <span class="req">*</span></label>
         <input type="text" id="numInput" value="001" maxlength="3" oninput="updatePreview()" style="max-width:90px;"/>
-        
       </div>
       <div class="form-group">
         <label>&#x652F;&#x5E97;&#x540D; <span class="req">*</span></label>
@@ -291,13 +287,13 @@
       <div class="form-group"><label>&#x7D42;&#x4E86;&#x4E88;&#x5B9A;&#x65E5;</label><input type="date" id="projEnd"/></div>
     </div>
     <div class="tasks-section">
-      <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:10px;">Type of Work</div>
+      <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:10px;">&#x1F4CB; Type of Work</div>
       <div id="taskRows"></div>
-      <button class="btn-add-task" onclick="addTaskRow()"> Add Task</button>
+      <button class="btn-add-task" onclick="addTaskRow()">&#x2795; Add Task</button>
     </div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn-primary"   onclick="createProject()">OK</button>
+      <button class="btn-primary"   onclick="createProject()">&#x2705; OK</button>
     </div>
   </div>
 </div>
@@ -352,25 +348,14 @@ function selectGroup(g) {
     var el=document.getElementById('grp'+keys[i]);
     if (keys[i]===g) el.classList.add('active'); else el.classList.remove('active');
   }
-  updateSttPreview();
 }
 
-function updateSttPreview() {
-  /* STT preview trong modal: chỉ là số thứ tự toàn bộ dự án theo mã số */
-  var sorted = getProjectsSorted();
-  var el = document.getElementById('sttVal');
-  el.textContent = sorted.length + 1;
-  el.style.color = '#0077b6';
-}
-
-/* ── HÀM SẮP XẾP DỰ ÁN: theo mã số 25xxx → 26xxx → 27xxx ── */
 function getCodeNum(p) {
-  /* Lấy số đầu của code: "26001_..." → 26001, ưu tiên year+seq */
   if (p.year && p.seq_number) {
     return parseInt(p.year) * 1000 + parseInt(p.seq_number);
   }
   var code = p.code || p.project_code || '';
-  var m = code.match(/^(\d+)/);
+  var m = code.match(/^(\\d+)/);
   return m ? parseInt(m[1]) : 99999;
 }
 
@@ -633,19 +618,11 @@ function bindExpandEvents(projId) {
   })(projId);
 }
 
-/* ── RENDER LIST ──
-   STT: số thứ tự đơn giản (1, 2, 3...) không kèm nhóm
-   Sắp xếp: theo mã số 25xxx → 26xxx → 27xxx
-*/
 function renderList() {
   var q=(document.getElementById('searchProj').value||'').toLowerCase();
   var grpF=document.getElementById('fGroup').value;
   var prevExp=expandedId; expandedId=null;
-
-  /* Sắp xếp tất cả projects theo mã số tăng dần */
   var sortedAll = getProjectsSorted();
-
-  /* Lọc theo filter */
   var data=[];
   for(var i=0;i<sortedAll.length;i++){
     var p=sortedAll[i], as=calcStatus(p);
@@ -656,21 +633,16 @@ function renderList() {
     var mG=!grpF||p.proj_group===grpF;
     if(mQ&&mS&&mG) data.push(p);
   }
-
   var tbody=document.getElementById('listBody');
   if(!data.length){
     tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">No projects</td></tr>';
     return;
   }
-
   var html='';
   for(var d=0;d<data.length;d++){
     var p=data[d], color=projColorMap[p.id]||'#a8dadc';
     var grp2=p.proj_group||'A', cfg=GROUP_CFG[grp2]||GROUP_CFG['A'];
-
-    /* STT: số thứ tự đơn giản trong danh sách đã lọc+sắp xếp */
     var sttNum = d + 1;
-
     var autoSt=calcStatus(p);
     var stBadge=autoSt==='done'
       ?'<span class="status-badge status-done">&#x2B1C; Ended</span>'
@@ -682,7 +654,6 @@ function renderList() {
     var delBtn=currentUserRole==='Admin'
       ?'<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Delete</button>':'';
     var expandInner=buildExpandInner(p.id,color);
-
     html+='<tr class="proj-row" id="proj-row-'+p.id+'">'
       +'<td style="text-align:center;"><div class="stt-badge">'+sttNum+'</div></td>'
       +'<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>'+projId2+'</span></td>'
@@ -699,7 +670,6 @@ function renderList() {
       +'</tr>';
   }
   tbody.innerHTML=html;
-
   for(var d2=0;d2<data.length;d2++){
     var p2=data[d2];
     (function(pid){
@@ -813,8 +783,7 @@ function suggestNextNum(){
   for(var i=0;i<allProjects.length;i++){if((allProjects[i].code||'').startsWith(y))count++;}
   var n=String(count+1).padStart(3,'0');
   document.getElementById('numInput').value=n;
-  document.getElementById('numHint').innerHTML='次番号: <b style="color:#0096c7;">'+n+'</b>';
-  updatePreview();updateSttPreview();
+  updatePreview();
 }
 function onYearChange(v){document.getElementById('yearDisp').textContent=String(v).padStart(2,'0');suggestNextNum();}
 function updatePreview(){
