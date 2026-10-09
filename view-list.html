@@ -161,8 +161,8 @@
 </nav>
 
 <div class="nav-tabs">
-  <a class="nav-tab active" href="view-list.html">&#x1F4CB; Project List</a>
-  <a class="nav-tab" href="view-category.html">&#x1F5C2;&#xFE0F; Work Task</a>
+  <a class="nav-tab active" href="view-list.html">&#x1F4CB; List of Project</a>
+  <a class="nav-tab" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
   <a class="nav-tab" href="view-schedule.html">&#x1F4C5; Project Schedule</a>
   <a class="nav-tab" href="view-staff.html">&#x1F465; Staff Schedule</a>
 </div>
@@ -172,12 +172,12 @@
 
 <div class="main">
   <div class="section-header">
-    <div class="section-title">&#x1F3D7;&#xFE0F; Project List</div>
+    <div class="section-title">&#x1F3D7;&#xFE0F; List of Project</div>
     <button class="btn-primary admin-only" onclick="openModal()" style="display:none;">&#x2795; Add New Project</button>
   </div>
   <div class="filters">
     <input class="filter-input" id="searchProj" placeholder="&#x1F50D; Tim ten du an..." oninput="renderList()" style="min-width:220px;"/>
-    <button class="filter-btn active" id="fAll"    onclick="setFilter('all')">Tat ca</button>
+    <button class="filter-btn active" id="fAll"    onclick="setFilter('all')">All</button>
     <button class="filter-btn"        id="fActive" onclick="setFilter('active')">&#x1F7E2; Running</button>
     <button class="filter-btn"        id="fDone"   onclick="setFilter('done')">&#x2B1C; Ended</button>
     <select class="filter-select" id="fGroup" onchange="renderList()">
@@ -216,7 +216,7 @@
       <button class="modal-close" onclick="closeModal()">&#x2715;</button>
     </div>
     <div class="preview-box">
-      <div class="preview-label">Project Name Preview</div>
+      <div class="preview-label">Project Preview</div>
       <div class="preview-code">
         <span id="pYear">26</span><span id="pNum">001</span>
         <span class="dim">_</span><span id="pBranch" class="dim">&#x652F;&#x5E97;</span>
@@ -247,6 +247,10 @@
           <span class="g-icon">&#x1F527;</span>
           <span class="g-label">M&amp;F</span>
         </div>
+      </div>
+      <div class="stt-preview">
+        STT du kien: <b id="sttVal" style="color:#0077b6;">1</b>
+        <span style="color:#aaa;font-size:11px;">(reset theo nam)</span>
       </div>
     </div>
     <div class="form-grid">
@@ -672,8 +676,8 @@ function renderList() {
 
     var autoSt=calcStatus(p);
     var stBadge=autoSt==='done'
-      ?'<span class="status-badge status-done">&#x2B1C; Da ket thuc</span>'
-      :'<span class="status-badge status-active">&#x1F7E2; Dang hoat dong</span>';
+      ?'<span class="status-badge status-done">&#x2B1C; Ended</span>'
+      :'<span class="status-badge status-active">&#x1F7E2; Running</span>';
     var date=p.created_at?new Date(p.created_at).toLocaleDateString('vi-VN'):'-';
     var projId2=p.year&&p.seq_number?p.year+String(p.seq_number).padStart(3,'0'):(p.code||'-').split('_')[0];
     var activeCnt=getActiveTasks(p.id).length;
