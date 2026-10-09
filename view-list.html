@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>BIM Hub - Danh sach du an</title>
+  <title>VINADECO BIM Hub - Project List</title>
   <style>
     * { box-sizing:border-box; margin:0; padding:0; }
     body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f4f8; min-height:100vh; }
@@ -147,24 +147,24 @@
 
 <nav class="topbar">
   <div class="topbar-left">
-    <div class="topbar-logo">B</div>
-    <span class="topbar-title">BIM Hub</span>
+    <div class="topbar-logo">VNDC</div>
+    <span class="topbar-title">VINADECO BIM Hub</span>
   </div>
   <div class="topbar-right">
     <div class="avatar" id="topAvatar">?</div>
     <span class="user-name" id="topName">...</span>
     <span class="role-badge" id="topRole"></span>
-    <a class="btn-top" href="my-tasks.html">&#x1F4CB; Lich cua toi</a>
-    <a class="btn-top admin-only" href="admin.html" style="display:none;">&#x1F465; Thanh vien</a>
-    <button class="btn-top" onclick="logout()">Dang xuat</button>
+    <a class="btn-top" href="my-tasks.html">&#x1F4CB; My Task</a>
+    <a class="btn-top admin-only" href="admin.html" style="display:none;">&#x1F465; Member</a>
+    <button class="btn-top" onclick="logout()">Sign Out</button>
   </div>
 </nav>
 
 <div class="nav-tabs">
-  <a class="nav-tab active" href="view-list.html">&#x1F4CB; Danh sach du an</a>
-  <a class="nav-tab" href="view-category.html">&#x1F5C2;&#xFE0F; Theo the loai</a>
-  <a class="nav-tab" href="view-schedule.html">&#x1F4C5; Schedule du an</a>
-  <a class="nav-tab" href="view-staff.html">&#x1F465; Lich nhan vien</a>
+  <a class="nav-tab active" href="view-list.html">&#x1F4CB; Project List</a>
+  <a class="nav-tab" href="view-category.html">&#x1F5C2;&#xFE0F; Work Task</a>
+  <a class="nav-tab" href="view-schedule.html">&#x1F4C5; Project Schedule</a>
+  <a class="nav-tab" href="view-staff.html">&#x1F465; Staff Schedule</a>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -172,16 +172,16 @@
 
 <div class="main">
   <div class="section-header">
-    <div class="section-title">&#x1F3D7;&#xFE0F; Danh sach du an</div>
-    <button class="btn-primary admin-only" onclick="openModal()" style="display:none;">&#x2795; Tao du an moi</button>
+    <div class="section-title">&#x1F3D7;&#xFE0F; Project List</div>
+    <button class="btn-primary admin-only" onclick="openModal()" style="display:none;">&#x2795; Add New Project</button>
   </div>
   <div class="filters">
     <input class="filter-input" id="searchProj" placeholder="&#x1F50D; Tim ten du an..." oninput="renderList()" style="min-width:220px;"/>
     <button class="filter-btn active" id="fAll"    onclick="setFilter('all')">Tat ca</button>
-    <button class="filter-btn"        id="fActive" onclick="setFilter('active')">&#x1F7E2; Dang hoat dong</button>
-    <button class="filter-btn"        id="fDone"   onclick="setFilter('done')">&#x2B1C; Da ket thuc</button>
+    <button class="filter-btn"        id="fActive" onclick="setFilter('active')">&#x1F7E2; Running</button>
+    <button class="filter-btn"        id="fDone"   onclick="setFilter('done')">&#x2B1C; Ended</button>
     <select class="filter-select" id="fGroup" onchange="renderList()">
-      <option value="">Tat ca nhom</option>
+      <option value="">All Group</option>
       <option value="A">A - &#x8A2D;&#x8A08;BIM</option>
       <option value="B">B - &#x65BD;&#x5DE5;BIM</option>
       <option value="C">C - &#x6E05;&#x7B97;</option>
@@ -191,19 +191,19 @@
   <table class="proj-table">
     <thead>
       <tr>
-        <th style="width:60px;text-align:center;">STT</th>
-        <th>Ma du an</th>
-        <th>Ten du an</th>
-        <th>Chi nhanh</th>
+        <th style="width:60px;text-align:center;">No.</th>
+        <th>Project Code</th>
+        <th>Project Name</th>
+        <th>Branch</th>
         <th>&#x8A2D;&#x8A08;&#x533A;&#x5206;</th>
-        <th>Nhom</th>
-        <th>Trang thai</th>
-        <th>Ngay tao</th>
+        <th>Group</th>
+        <th>Status</th>
+        <th>Creation Date</th>
         <th></th>
       </tr>
     </thead>
     <tbody id="listBody">
-      <tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">Dang tai...</td></tr>
+      <tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">Loading...</td></tr>
     </tbody>
   </table>
 </div>
@@ -212,7 +212,7 @@
 <div class="modal-overlay" id="createModal" onclick="if(event.target.id==='createModal')closeModal()">
   <div class="modal">
     <div class="modal-title">
-      &#x1F3D7;&#xFE0F; Tao du an moi
+      &#x1F3D7;&#xFE0F; Add New Project
       <button class="modal-close" onclick="closeModal()">&#x2715;</button>
     </div>
     <div class="preview-box">
@@ -225,7 +225,7 @@
       </div>
     </div>
     <div class="form-group" style="margin-bottom:16px;">
-      <label>Nhom du an <span class="req">*</span></label>
+      <label>Project Group<span class="req">*</span></label>
       <div class="group-selector">
         <div class="group-opt active" id="grpA" onclick="selectGroup('A')">
           <span class="g-key" style="color:#0077b6;">A</span>
