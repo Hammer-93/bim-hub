@@ -474,14 +474,14 @@ async function saveTask(tid) {
       method:'PATCH',headers:HDRS,
       body:JSON.stringify({assigned_to:uid,receive_date:rcv,start_date:st,end_date:en,send_date:snd})
     });
-    if(!res.ok){showToast('Loi luu task','error');if(mask)mask.style.display='none';return;}
+    if(!res.ok){showToast('Loi Save task','error');if(mask)mask.style.display='none';return;}
     for (var i=0;i<allTasks.length;i++){
       if(allTasks[i].id===tid){
         allTasks[i].assigned_to=uid;allTasks[i].receive_date=rcv;
         allTasks[i].start_date=st;allTasks[i].end_date=en;allTasks[i].send_date=snd;break;
       }
     }
-    showToast('Da luu task','success');
+    showToast('Da Save task','success');
     var projId=null;
     for (var j=0;j<allTasks.length;j++){if(allTasks[j].id===tid){projId=allTasks[j].project_id;break;}}
     if(projId) refreshExpand(projId);
@@ -489,16 +489,16 @@ async function saveTask(tid) {
   } catch(e){showToast('Loi: '+e.message,'error');if(mask)mask.style.display='none';}
 }
 async function deleteTask(tid, projId) {
-  if(!confirm('Xac nhan xoa task nay?')) return;
+  if(!confirm('Xac nhan Delete task nay?')) return;
   try {
     await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+tid,{method:'DELETE',headers:HDRS});
     var nl=[];
     for(var i=0;i<allTasks.length;i++){if(allTasks[i].id!==tid)nl.push(allTasks[i]);}
     allTasks=nl;
-    showToast('Da xoa task','success');
+    showToast('Da Delete task','success');
     refreshExpand(projId);
     renderList();
-  } catch(e){showToast('Loi xoa task: '+e.message,'error');}
+  } catch(e){showToast('Loi Delete task: '+e.message,'error');}
 }
 function toggleAddTask(projId) {
   var btn  = document.getElementById('add-btn-'+projId);
@@ -553,7 +553,7 @@ function buildExpandInner(projId, projColor) {
     cardsHtml+='<div class="task-card" id="tc-'+tid+'">'
       +'<div class="saving-mask" id="mask-'+tid+'">&#x1F4BE; Saving...</div>'
       +'<div class="task-card-actions">'
-      +'<button class="btn-edit-task" id="editbtn-'+tid+'">&#x270F;&#xFE0F; Sua</button>'
+      +'<button class="btn-edit-task" id="editbtn-'+tid+'">&#x270F;&#xFE0F; Edit</button>'
       +'<button class="btn-del-task"  id="delbtn-'+tid+'">&#x1F5D1;&#xFE0F;</button>'
       +'</div>'
       +'<div class="task-card-type" style="background:'+tc+';">'+(t.task_type||'Task')+'</div>'
@@ -576,8 +576,8 @@ function buildExpandInner(projId, projColor) {
         +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Send:</span>'
         +'<input type="date" class="edit-input" id="eg-'+tid+'" value="'+(t.send_date||'')+'"/></div>'
         +'<div class="edit-btn-wrap">'
-        +'<button class="btn-save-task" id="savebtn-'+tid+'">&#x1F4BE; Luu</button>'
-        +'<button class="btn-cancel-task" id="cancelbtn-'+tid+'">Huy</button>'
+        +'<button class="btn-save-task" id="savebtn-'+tid+'">&#x1F4BE; Save</button>'
+        +'<button class="btn-cancel-task" id="cancelbtn-'+tid+'">Cancel</button>'
         +'</div>'
       +'</div>'
       +'</div>';
@@ -683,7 +683,7 @@ function renderList() {
     var activeCnt=getActiveTasks(p.id).length;
     var cntBadge=activeCnt>0?'<span style="background:#e63946;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:5px;">'+activeCnt+'</span>':'';
     var delBtn=currentUserRole==='Admin'
-      ?'<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Xoa</button>':'';
+      ?'<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Delete</button>':'';
     var expandInner=buildExpandInner(p.id,color);
 
     html+='<tr class="proj-row" id="proj-row-'+p.id+'">'
@@ -799,15 +799,15 @@ async function createProject(){
 }
 
 async function deleteProject(id,name){
-  if(!confirm('Xac nhan xoa du an:\\n'+name+'?')) return;
+  if(!confirm('Xac nhan Delete du an:\\n'+name+'?')) return;
   try{
     await fetch(SUPABASE_URL+'/rest/v1/project_tasks?project_id=eq.'+id,{method:'DELETE',headers:HDRS});
     await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+id,{method:'DELETE',headers:HDRS});
     var nl=[];
     for(var i=0;i<allProjects.length;i++){if(allProjects[i].id!==id)nl.push(allProjects[i]);}
     allProjects=nl;delete projColorMap[id];expandedId=null;
-    renderList();showToast('Da xoa: '+name,'success');
-  }catch(e){showToast('Loi xoa: '+e.message,'error');}
+    renderList();showToast('Da Delete: '+name,'success');
+  }catch(e){showToast('Loi Delete: '+e.message,'error');}
 }
 
 function suggestNextNum(){
