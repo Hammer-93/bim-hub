@@ -828,7 +828,7 @@ function updatePreview(){
   var nm=document.getElementById('nameInput').value.trim();
   function se(id,v,ph){var el=document.getElementById(id);el.textContent=v||ph;el.className=v?'':'dim';}
   document.getElementById('pYear').textContent=y;document.getElementById('pNum').textContent=n;
-  se('pBranch',b,'支店');se('pDesign',d,'設計区分');se('pName',nm,'物件名');
+  se('pBranch',b,'支店');se('pDesign',d,'Design classification');se('pName',nm,'物件名');
 }
 function onCombo(k){renderDD(k);updatePreview();}
 function openDD(k){renderDD(k);}
