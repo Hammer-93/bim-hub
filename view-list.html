@@ -9,7 +9,6 @@
     body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f4f8; min-height:100vh; }
     .topbar { display:flex; align-items:center; justify-content:space-between; background:#1a1a2e; padding:0 24px; height:52px; position:sticky; top:0; z-index:200; }
     .topbar-left { display:flex; align-items:center; gap:10px; }
-    .topbar-logo { width:30px; height:30px; background:linear-gradient(135deg,#00b4d8,#0077b6); border-radius:7px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:15px; }
     .topbar-title { color:#fff; font-size:16px; font-weight:700; }
     .topbar-right { display:flex; align-items:center; gap:12px; }
     .btn-top { background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; text-decoration:none; transition:background .2s; font-family:inherit; }
@@ -26,10 +25,26 @@
     .dropdown-item.danger { color:#e63946; }
     .dropdown-item.danger:hover { background:#fff0f0; color:#e63946; }
     .dropdown-divider { height:1px; background:#f0f0f0; margin:4px 0; }
-    .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; }
+
+    /* NAV TABS */
+    .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; position:relative; z-index:100; }
     .nav-tab { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; text-decoration:none; display:flex; align-items:center; gap:7px; }
     .nav-tab:hover { color:#0096c7; }
     .nav-tab.active { color:#0077b6; border-bottom-color:#0077b6; }
+
+    /* NAV DROPDOWN */
+    .nav-drop { position:relative; }
+    .nav-drop-trigger { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; display:flex; align-items:center; gap:7px; transition:all .2s; white-space:nowrap; user-select:none; }
+    .nav-drop-trigger:hover { color:#0096c7; }
+    .nav-drop-trigger.active { color:#0077b6; border-bottom-color:#0077b6; }
+    .nav-drop-arrow { font-size:10px; opacity:.6; transition:transform .2s; }
+    .nav-drop-trigger.open .nav-drop-arrow { transform:rotate(180deg); }
+    .nav-drop-menu { position:absolute; top:calc(100% + 2px); left:0; background:#fff; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,.13); min-width:190px; z-index:300; display:none; overflow:hidden; border:1px solid #eee; }
+    .nav-drop-menu.open { display:block; }
+    .nav-drop-item { display:flex; align-items:center; gap:9px; padding:11px 18px; font-size:13px; font-weight:600; color:#555; text-decoration:none; transition:background .15s; }
+    .nav-drop-item:hover { background:#f0f7ff; color:#0077b6; }
+    .nav-drop-item.active { color:#0077b6; background:#e8f4fe; }
+
     .main { padding:28px 32px; }
     .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
     .section-title { font-size:18px; font-weight:700; color:#1a1a2e; }
@@ -171,9 +186,16 @@
 </nav>
 
 <div class="nav-tabs">
-  <a class="nav-tab active" href="view-list.html">&#x1F4CB; List of Project</a>
-  <a class="nav-tab" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
-  <a class="nav-tab" href="view-schedule.html">&#x1F4C5; Project Schedule</a>
+  <div class="nav-drop" id="scheduleNavDrop">
+    <div class="nav-drop-trigger active" id="scheduleNavTrigger">
+      &#x1F4C5; Project Schedule <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="scheduleNavMenu">
+      <a class="nav-drop-item active" href="view-list.html">&#x1F4CB; List of Project</a>
+      <a class="nav-drop-item" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
+      <a class="nav-drop-item" href="view-schedule.html">&#x1F4C5; Gantt Schedule</a>
+    </div>
+  </div>
   <a class="nav-tab" href="view-staff.html">&#x1F465; Staff Schedule</a>
 </div>
 
@@ -319,10 +341,10 @@ var currentUserRole = 'Staff';
 var expandedId      = null;
 
 var GROUP_CFG = {
-  A: { label:'設計BIM', icon:'🏛️', cls:'stt-a' },
-  B: { label:'施工BIM', icon:'🏗️', cls:'stt-b' },
-  C: { label:'清算',    icon:'💰', cls:'stt-c' },
-  D: { label:'M&F',    icon:'🔧', cls:'stt-d' }
+  A: { label:'設計BIM', icon:'🏛️' },
+  B: { label:'施工BIM', icon:'🏗️' },
+  C: { label:'清算',    icon:'💰' },
+  D: { label:'M&F',    icon:'🔧' }
 };
 var TYPE_COLOR = {
   'パース・動画':'#f4a261','意匠モデル':'#4cc9f0','構造モデル':'#52b788',
@@ -331,22 +353,12 @@ var TYPE_COLOR = {
 
 window.onload = function() {
   initTopbar();
+  initNavDrop();
   loadAllData().then(function() {
     renderList(); suggestNextNum();
     renderTags('branch'); renderTags('design');
     updatePreview(); selectGroup('A');
   }).catch(function(e) { showToast('Error loading data: '+e.message,'error'); });
-
-  /* Dropdown toggle */
-  var dropBtn  = document.getElementById('userDropBtn');
-  var dropMenu = document.getElementById('userDropMenu');
-  dropBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    dropMenu.classList.toggle('open');
-  });
-  document.addEventListener('click', function() {
-    dropMenu.classList.remove('open');
-  });
 };
 
 function initTopbar() {
@@ -359,96 +371,111 @@ function initTopbar() {
     var els = document.querySelectorAll('.admin-only');
     for (var i=0;i<els.length;i++) els[i].style.display='flex';
   }
+  var dropBtn  = document.getElementById('userDropBtn');
+  var dropMenu = document.getElementById('userDropMenu');
+  dropBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    dropMenu.classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    dropMenu.classList.remove('open');
+  });
+}
+
+function initNavDrop() {
+  var trigger = document.getElementById('scheduleNavTrigger');
+  var menu    = document.getElementById('scheduleNavMenu');
+  trigger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    trigger.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    trigger.classList.remove('open');
+    menu.classList.remove('open');
+  });
 }
 
 function selectGroup(g) {
-  selectedGroup=g;
-  var keys=['A','B','C','D'];
-  for (var i=0;i<keys.length;i++) {
-    var el=document.getElementById('grp'+keys[i]);
-    if (keys[i]===g) el.classList.add('active'); else el.classList.remove('active');
-  }
+  selectedGroup = g;
+  ['A','B','C','D'].forEach(function(k) {
+    var el = document.getElementById('grp'+k);
+    if (k===g) el.classList.add('active'); else el.classList.remove('active');
+  });
 }
 
 function getCodeNum(p) {
   if (p.year && p.seq_number) return parseInt(p.year)*1000+parseInt(p.seq_number);
-  var code=p.code||p.project_code||'';
-  var m=code.match(/^(\\d+)/);
-  return m?parseInt(m[1]):99999;
+  var code = p.code||p.project_code||'';
+  var m = code.match(/^(\\d+)/);
+  return m ? parseInt(m[1]) : 99999;
 }
 function getProjectsSorted() {
-  return allProjects.slice().sort(function(a,b){return getCodeNum(a)-getCodeNum(b);});
+  return allProjects.slice().sort(function(a,b){ return getCodeNum(a)-getCodeNum(b); });
 }
 
 function setFilter(f) {
   filterStatus=f;
-  var ids=['fAll','fActive','fDone'];
-  for(var i=0;i<ids.length;i++) document.getElementById(ids[i]).classList.remove('active');
-  var map={all:'fAll',active:'fActive',done:'fDone'};
-  document.getElementById(map[f]).classList.add('active');
+  ['fAll','fActive','fDone'].forEach(function(id){ document.getElementById(id).classList.remove('active'); });
+  document.getElementById({all:'fAll',active:'fActive',done:'fDone'}[f]).classList.add('active');
   renderList();
 }
 function calcStatus(p) {
   var today=new Date(); today.setHours(0,0,0,0);
-  var pt=[];
-  for(var i=0;i<allTasks.length;i++){if(allTasks[i].project_id===p.id)pt.push(allTasks[i]);}
-  if(!pt.length) return 'active';
+  var pt=allTasks.filter(function(t){ return t.project_id===p.id; });
+  if (!pt.length) return 'active';
   var hasNoSend=false, allPast=true;
-  for(var j=0;j<pt.length;j++){
-    if(!pt[j].send_date){hasNoSend=true;allPast=false;break;}
-    var sd=new Date(pt[j].send_date);sd.setHours(0,0,0,0);
-    if(sd>=today) allPast=false;
+  for (var j=0;j<pt.length;j++) {
+    if (!pt[j].send_date) { hasNoSend=true; allPast=false; break; }
+    var sd=new Date(pt[j].send_date); sd.setHours(0,0,0,0);
+    if (sd>=today) allPast=false;
   }
-  if(hasNoSend) return 'active';
+  if (hasNoSend) return 'active';
   return allPast?'done':'active';
 }
 function getActiveTasks(projId) {
   var today=new Date(); today.setHours(0,0,0,0);
-  var result=[];
-  for(var i=0;i<allTasks.length;i++){
-    var t=allTasks[i];
-    if(t.project_id!==projId) continue;
-    if(!t.send_date){result.push(t);continue;}
-    var sd=new Date(t.send_date);sd.setHours(0,0,0,0);
-    if(sd>=today) result.push(t);
-  }
-  return result;
+  return allTasks.filter(function(t) {
+    if (t.project_id!==projId) return false;
+    if (!t.send_date) return true;
+    var sd=new Date(t.send_date); sd.setHours(0,0,0,0);
+    return sd>=today;
+  });
 }
 
 function toggleExpand(projId) {
-  if(expandedId===projId){collapseRow(projId);expandedId=null;}
-  else{if(expandedId)collapseRow(expandedId);expandRow(projId);expandedId=projId;}
+  if (expandedId===projId) { collapseRow(projId); expandedId=null; }
+  else { if(expandedId) collapseRow(expandedId); expandRow(projId); expandedId=projId; }
 }
 function expandRow(id) {
   var pr=document.getElementById('proj-row-'+id);
   var tr=document.getElementById('task-row-'+id);
   var ch=document.getElementById('chev-'+id);
-  if(pr)pr.classList.add('expanded');
-  if(tr)tr.classList.add('open');
-  if(ch)ch.classList.add('open');
+  if(pr) pr.classList.add('expanded');
+  if(tr) tr.classList.add('open');
+  if(ch) ch.classList.add('open');
 }
 function collapseRow(id) {
   var pr=document.getElementById('proj-row-'+id);
   var tr=document.getElementById('task-row-'+id);
   var ch=document.getElementById('chev-'+id);
-  if(pr)pr.classList.remove('expanded');
-  if(tr)tr.classList.remove('open');
-  if(ch)ch.classList.remove('open');
+  if(pr) pr.classList.remove('expanded');
+  if(tr) tr.classList.remove('open');
+  if(ch) ch.classList.remove('open');
 }
-
 function buildUserOptions(selectedId) {
   var ALLOWED=['Leader','Sub Manager','Manager','Admin'];
   var html='<option value="">- Not yet assigned -</option>';
-  for(var i=0;i<allUsers.length;i++){
+  for (var i=0;i<allUsers.length;i++) {
     var u=allUsers[i];
-    if(ALLOWED.indexOf(u.role)===-1) continue;
+    if (ALLOWED.indexOf(u.role)===-1) continue;
     html+='<option value="'+u.id+'"'+(u.id===selectedId?' selected':'')+'>'+( u.name||u.email)+'</option>';
   }
   return html;
 }
 function buildTypeOptions(sel) {
   var html='';
-  for(var i=0;i<TASK_TYPES.length;i++){
+  for (var i=0;i<TASK_TYPES.length;i++) {
     html+='<option value="'+TASK_TYPES[i]+'"'+(TASK_TYPES[i]===sel?' selected':'')+'>'+TASK_TYPES[i]+'</option>';
   }
   return html;
@@ -468,14 +495,14 @@ async function saveTask(tid) {
   var en=document.getElementById('ee-'+tid).value||null;
   var snd=document.getElementById('eg-'+tid).value||null;
   var mask=document.getElementById('mask-'+tid);
-  if(mask)mask.style.display='flex';
-  try{
+  if(mask) mask.style.display='flex';
+  try {
     var res=await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+tid,{
       method:'PATCH',headers:HDRS,
       body:JSON.stringify({assigned_to:uid,receive_date:rcv,start_date:st,end_date:en,send_date:snd})
     });
     if(!res.ok){showToast('Error saving task','error');if(mask)mask.style.display='none';return;}
-    for(var i=0;i<allTasks.length;i++){
+    for (var i=0;i<allTasks.length;i++){
       if(allTasks[i].id===tid){
         allTasks[i].assigned_to=uid;allTasks[i].receive_date=rcv;
         allTasks[i].start_date=st;allTasks[i].end_date=en;allTasks[i].send_date=snd;break;
@@ -483,21 +510,19 @@ async function saveTask(tid) {
     }
     showToast('Task saved','success');
     var projId=null;
-    for(var j=0;j<allTasks.length;j++){if(allTasks[j].id===tid){projId=allTasks[j].project_id;break;}}
-    if(projId)refreshExpand(projId);
+    for (var j=0;j<allTasks.length;j++){if(allTasks[j].id===tid){projId=allTasks[j].project_id;break;}}
+    if(projId) refreshExpand(projId);
     renderList();
-  }catch(e){showToast('Error: '+e.message,'error');if(mask)mask.style.display='none';}
+  } catch(e){showToast('Error: '+e.message,'error');if(mask)mask.style.display='none';}
 }
-async function deleteTask(tid,projId) {
+async function deleteTask(tid, projId) {
   if(!confirm('Confirm delete this task?')) return;
-  try{
+  try {
     await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+tid,{method:'DELETE',headers:HDRS});
-    var nl=[];
-    for(var i=0;i<allTasks.length;i++){if(allTasks[i].id!==tid)nl.push(allTasks[i]);}
-    allTasks=nl;
+    allTasks=allTasks.filter(function(t){return t.id!==tid;});
     showToast('Task deleted','success');
-    refreshExpand(projId);renderList();
-  }catch(e){showToast('Error: '+e.message,'error');}
+    refreshExpand(projId); renderList();
+  } catch(e){showToast('Error: '+e.message,'error');}
 }
 function toggleAddTask(projId) {
   var btn=document.getElementById('add-btn-'+projId);
@@ -513,7 +538,7 @@ async function saveNewTask(projId) {
   var st=document.getElementById('an-st-'+projId).value||null;
   var en=document.getElementById('an-en-'+projId).value||null;
   var snd=document.getElementById('an-snd-'+projId).value||null;
-  try{
+  try {
     var res=await fetch(SUPABASE_URL+'/rest/v1/project_tasks',{
       method:'POST',headers:HDRS,
       body:JSON.stringify({project_id:projId,task_type:ttype,assigned_to:uid,
@@ -521,20 +546,20 @@ async function saveNewTask(projId) {
     });
     if(!res.ok){showToast('Error adding task','error');return;}
     var arr=await res.json();
-    if(arr&&arr[0])allTasks.push(arr[0]);
+    if(arr&&arr[0]) allTasks.push(arr[0]);
     showToast('Task added: '+ttype,'success');
-    refreshExpand(projId);renderList();
-  }catch(e){showToast('Error: '+e.message,'error');}
+    refreshExpand(projId); renderList();
+  } catch(e){showToast('Error: '+e.message,'error');}
 }
 function refreshExpand(projId) {
   var inner=document.querySelector('#task-row-'+projId+' .task-expand-inner');
-  if(!inner)return;
+  if(!inner) return;
   var color=projColorMap[projId]||'#a8dadc';
   inner.innerHTML=buildExpandInner(projId,color);
-  if(expandedId===projId)expandRow(projId);
+  if(expandedId===projId) expandRow(projId);
   bindExpandEvents(projId);
 }
-function buildExpandInner(projId,projColor) {
+function buildExpandInner(projId, projColor) {
   var tasks=getActiveTasks(projId);
   var cardsHtml='';
   for(var i=0;i<tasks.length;i++){
@@ -603,7 +628,6 @@ function buildExpandInner(projId,projColor) {
   return '<div class="task-expand-title">&#x1F4CB; Active task</div>'
     +'<div class="task-cards">'+cardsHtml+addCardHtml+'</div>';
 }
-
 function bindExpandEvents(projId) {
   var tasks=getActiveTasks(projId);
   for(var i=0;i<tasks.length;i++){
@@ -629,7 +653,6 @@ function bindExpandEvents(projId) {
     if(addCancel) addCancel.onclick=function(e){e.stopPropagation();toggleAddTask(pid);};
   })(projId);
 }
-
 function renderList() {
   var q=(document.getElementById('searchProj').value||'').toLowerCase();
   var grpF=document.getElementById('fGroup').value;
@@ -640,10 +663,10 @@ function renderList() {
     var p=sortedAll[i], as=calcStatus(p);
     var mQ=!q||p.project_name.toLowerCase().indexOf(q)>=0||(p.code||'').toLowerCase().indexOf(q)>=0;
     var mS=true;
-    if(filterStatus==='active')mS=(as==='active');
-    if(filterStatus==='done')mS=(as==='done');
+    if(filterStatus==='active') mS=(as==='active');
+    if(filterStatus==='done')   mS=(as==='done');
     var mG=!grpF||p.proj_group===grpF;
-    if(mQ&&mS&&mG)data.push(p);
+    if(mQ&&mS&&mG) data.push(p);
   }
   var tbody=document.getElementById('listBody');
   if(!data.length){
@@ -686,7 +709,7 @@ function renderList() {
     (function(pid){
       var row=document.getElementById('proj-row-'+pid);
       if(row) row.onclick=function(e){
-        if(e.target.tagName==='BUTTON'||e.target.closest('button'))return;
+        if(e.target.tagName==='BUTTON'||e.target.closest('button')) return;
         toggleExpand(pid);
       };
       var dpb=document.getElementById('delprojbtn-'+pid);
@@ -694,17 +717,15 @@ function renderList() {
         e.stopPropagation();
         var proj=null;
         for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){proj=allProjects[i];break;}}
-        if(proj)deleteProject(pid,proj.project_name);
+        if(proj) deleteProject(pid,proj.project_name);
       };
     })(p2.id);
     bindExpandEvents(p2.id);
   }
   if(prevExp){expandRow(prevExp);expandedId=prevExp;}
 }
-
 function openModal(){suggestNextNum();selectGroup('A');document.getElementById('createModal').classList.add('open');}
 function closeModal(){document.getElementById('createModal').classList.remove('open');}
-
 function addTaskRow(){
   taskRowCount++;
   var id='task_'+taskRowCount;
@@ -715,7 +736,7 @@ function addTaskRow(){
   var ALLOWED=['Leader','Sub Manager','Manager','Admin'];
   var userOpts='';
   for(var j=0;j<allUsers.length;j++){
-    if(ALLOWED.indexOf(allUsers[j].role)===-1)continue;
+    if(ALLOWED.indexOf(allUsers[j].role)===-1) continue;
     userOpts+='<option value="'+allUsers[j].id+'">'+(allUsers[j].name||allUsers[j].email)+'</option>';
   }
   div.innerHTML='<button class="btn-remove-task" onclick="document.getElementById(\''+id+'\').remove()">&#x2715;</button>'
@@ -732,7 +753,6 @@ function addTaskRow(){
     +'</div>';
   document.getElementById('taskRows').appendChild(div);
 }
-
 async function createProject(){
   var year=(document.getElementById('yearInput').value||'26').padStart(2,'0');
   var num=(document.getElementById('numInput').value||'001').padStart(3,'0');
@@ -771,27 +791,25 @@ async function createProject(){
     await Promise.all(promises);
     await loadAllData();
     renderList();closeModal();
-    var ids2=['nameInput','branchInput','designInput','projStart','projEnd'];
-    for(var k=0;k<ids2.length;k++) document.getElementById(ids2[k]).value='';
+    ['nameInput','branchInput','designInput','projStart','projEnd'].forEach(function(id){
+      document.getElementById(id).value='';
+    });
     document.getElementById('taskRows').innerHTML='';
     taskRowCount=0;addTaskRow();
     renderTags('branch');renderTags('design');updatePreview();suggestNextNum();
     showToast('Project created: '+name,'success');
   }catch(e){showToast('Error: '+e.message,'error');}
 }
-
 async function deleteProject(id,name){
   if(!confirm('Confirm delete project:\\n'+name+'?')) return;
   try{
     await fetch(SUPABASE_URL+'/rest/v1/project_tasks?project_id=eq.'+id,{method:'DELETE',headers:HDRS});
     await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+id,{method:'DELETE',headers:HDRS});
-    var nl=[];
-    for(var i=0;i<allProjects.length;i++){if(allProjects[i].id!==id)nl.push(allProjects[i]);}
-    allProjects=nl;delete projColorMap[id];expandedId=null;
+    allProjects=allProjects.filter(function(p){return p.id!==id;});
+    delete projColorMap[id];expandedId=null;
     renderList();showToast('Deleted: '+name,'success');
   }catch(e){showToast('Error: '+e.message,'error');}
 }
-
 function suggestNextNum(){
   var y=document.getElementById('yearInput').value||'26';
   var count=0;
