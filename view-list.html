@@ -219,7 +219,7 @@
         <span id="pYear">26</span><span id="pNum">001</span>
         <span class="dim">_</span><span id="pBranch" class="dim">&#x652F;&#x5E97;</span>
         <span class="dim">_</span><span id="pDesign" class="dim">&#x8A2D;&#x8A08;&#x533A;&#x5206;</span>
-        <span class="dim">_</span><span id="pName"   class="dim">&#x7269;&#x4EF6;&#x540D;</span>
+        <span class="dim">_</span><span id="pName" class="dim">&#x7269;&#x4EF6;&#x540D;</span>
       </div>
     </div>
     <div class="form-group" style="margin-bottom:16px;">
@@ -280,11 +280,11 @@
         <div class="tag-wrap" id="designTags"></div>
       </div>
       <div class="form-group full">
-        <label>&#x7269;&#x4EF6;&#x540D;&#x30FB;&#x5DE5;&#x4E8B;&#x540D;&#x79F0; <span class="req">*</span></label>
-        <input type="text" id="nameInput" placeholder="&#x4F8B;: NewSAMPLE..." oninput="updatePreview()"/>
+        <label>Name of Project <span class="req">*</span></label>
+        <input type="text" id="nameInput" placeholder="Ex: NewSAMPLE..." oninput="updatePreview()"/>
       </div>
-      <div class="form-group"><label>&#x958B;&#x59CB;&#x65E5;</label><input type="date" id="projStart"/></div>
-      <div class="form-group"><label>&#x7D42;&#x4E86;&#x4E88;&#x5B9A;&#x65E5;</label><input type="date" id="projEnd"/></div>
+      <div class="form-group"><label>Start Project</label><input type="date" id="projStart"/></div>
+      <div class="form-group"><label>End Project</label><input type="date" id="projEnd"/></div>
     </div>
     <div class="tasks-section">
       <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:10px;">&#x1F4CB; Type of Work</div>
@@ -566,7 +566,7 @@ function buildExpandInner(projId, projColor) {
   }
   if(!tasks.length) cardsHtml='<div class="no-task-msg">&#x1F4AD; No active tasks</div>';
   var addCardHtml='<div class="add-task-card" id="add-card-'+projId+'">'
-    +'<button class="add-task-btn" id="add-btn-'+projId+'">&#x2795; Add new task </button>'
+    +'<button class="add-task-btn" id="add-btn-'+projId+'">&#x2795; Add new task</button>'
     +'<div class="add-task-form" id="add-form-'+projId+'">'
       +'<div class="add-task-title"><span>&#x2795; Add new task</span>'
       +'<button class="btn-close-add" id="add-close-'+projId+'">&#x2715;</button></div>'
@@ -705,15 +705,15 @@ function addTaskRow(){
   for(var j=0;j<allUsers.length;j++) userOpts+='<option value="'+allUsers[j].id+'">'+(allUsers[j].name||allUsers[j].email)+'</option>';
   div.innerHTML='<button class="btn-remove-task" onclick="document.getElementById(\''+id+'\').remove()">&#x2715;</button>'
     +'<div class="task-grid">'
-    +'<div class="form-group"><label>&#x5DE5;&#x7A2E;</label><select class="task-type">'+typeOpts+'</select></div>'
-    +'<div class="form-group"><label>&#x62C5;&#x5F53;&#x8005;</label><select class="task-user"><option value="">- &#x672A;&#x5B9A; -</option>'+userOpts+'</select></div>'
-    +'<div class="form-group"><label>&#x30E1;&#x30E2;</label><input type="text" class="task-note" placeholder="&#x5099;&#x8003;..."/></div>'
+    +'<div class="form-group"><label>Type of Work</label><select class="task-type">'+typeOpts+'</select></div>'
+    +'<div class="form-group"><label>Person in Charge</label><select class="task-user"><option value="">- Not yet assigned -</option>'+userOpts+'</select></div>'
+    +'<div class="form-group"><label>Memo</label><input type="text" class="task-note" placeholder="Note..."/></div>'
     +'</div>'
     +'<div class="task-dates">'
-    +'<div class="form-group"><label>&#x53D7;&#x4FE1;&#x65E5;</label><input type="date" class="task-receive"/></div>'
-    +'<div class="form-group"><label>&#x4F5C;&#x696D;&#x958B;&#x59CB;</label><input type="date" class="task-start"/></div>'
-    +'<div class="form-group"><label>&#x4F5C;&#x696D;&#x7D42;&#x4E86;</label><input type="date" class="task-end"/></div>'
-    +'<div class="form-group"><label>&#x9001;&#x4FE1;&#x65E5;</label><input type="date" class="task-send"/></div>'
+    +'<div class="form-group"><label>Receive</label><input type="date" class="task-receive"/></div>'
+    +'<div class="form-group"><label>Start Work</label><input type="date" class="task-start"/></div>'
+    +'<div class="form-group"><label>End Work</label><input type="date" class="task-end"/></div>'
+    +'<div class="form-group"><label>Send</label><input type="date" class="task-send"/></div>'
     +'</div>';
   document.getElementById('taskRows').appendChild(div);
 }
@@ -726,8 +726,8 @@ async function createProject(){
   var name=document.getElementById('nameInput').value.trim();
   var pStart=document.getElementById('projStart').value;
   var pEnd=document.getElementById('projEnd').value;
-  if(!branch){showToast('支店名を入力してください','error');return;}
-  if(!name){showToast('物件名を入力してください','error');return;}
+  if(!branch){showToast('Please enter branch name','error');return;}
+  if(!name){showToast('Please enter project name','error');return;}
   var parts=[year+num,branch]; if(design)parts.push(design); parts.push(name);
   var code=parts.join('_');
   var color=PASTEL_COLORS[allProjects.length%PASTEL_COLORS.length];
@@ -761,20 +761,20 @@ async function createProject(){
     document.getElementById('taskRows').innerHTML='';
     taskRowCount=0;addTaskRow();
     renderTags('branch');renderTags('design');updatePreview();suggestNextNum();
-    showToast('Da tao du an: '+name,'success');
-  }catch(e){showToast('Loi: '+e.message,'error');}
+    showToast('Project created: '+name,'success');
+  }catch(e){showToast('Error: '+e.message,'error');}
 }
 
 async function deleteProject(id,name){
-  if(!confirm('Xac nhan Delete du an:\\n'+name+'?')) return;
+  if(!confirm('Confirm delete project:\\n'+name+'?')) return;
   try{
     await fetch(SUPABASE_URL+'/rest/v1/project_tasks?project_id=eq.'+id,{method:'DELETE',headers:HDRS});
     await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+id,{method:'DELETE',headers:HDRS});
     var nl=[];
     for(var i=0;i<allProjects.length;i++){if(allProjects[i].id!==id)nl.push(allProjects[i]);}
     allProjects=nl;delete projColorMap[id];expandedId=null;
-    renderList();showToast('Da Delete: '+name,'success');
-  }catch(e){showToast('Loi Delete: '+e.message,'error');}
+    renderList();showToast('Deleted: '+name,'success');
+  }catch(e){showToast('Error: '+e.message,'error');}
 }
 
 function suggestNextNum(){
@@ -808,8 +808,8 @@ function renderDD(k){
   for(var i=0;i<filt.length;i++) html+='<div class="combo-item" onmousedown="selectCombo(\''+k+'\',\''+filt[i]+'\')">'+filt[i]+'</div>';
   var found=false;
   for(var j=0;j<data.length;j++){if(data[j].toLowerCase()===val.toLowerCase()){found=true;break;}}
-  if(val&&!found) html+='<div class="combo-item combo-new" onmousedown="selectCombo(\''+k+'\',\''+val+'\')">+ 新規: '+val+'</div>';
-  if(!html) html='<div class="combo-item" style="color:#aaa;cursor:default;">候補なし</div>';
+  if(val&&!found) html+='<div class="combo-item combo-new" onmousedown="selectCombo(\''+k+'\',\''+val+'\')">+ New: '+val+'</div>';
+  if(!html) html='<div class="combo-item" style="color:#aaa;cursor:default;">No options</div>';
   dd.innerHTML=html;dd.classList.add('open');renderTags(k);
 }
 function selectCombo(k,v){
@@ -824,7 +824,7 @@ function renderTags(k){
   for(var i=0;i<data.length;i++) html+='<span class="tag '+(cur===data[i]?'active':'')+'" onclick="selectCombo(\''+k+'\',\''+data[i]+'\')">'+data[i]+'</span>';
   document.getElementById(k+'Tags').innerHTML=html;
 }
-function logout(){if(confirm('Dang xuat?')){localStorage.clear();window.location.href='index.html';}}
+function logout(){if(confirm('Sign out?')){localStorage.clear();window.location.href='index.html';}}
 </script>
 </body>
 </html>
