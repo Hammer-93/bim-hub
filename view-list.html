@@ -421,9 +421,11 @@ function collapseRow(id) {
   if(ch) ch.classList.remove('open');
 }
 function buildUserOptions(selectedId) {
+  var ALLOWED = ['Leader','Sub Manager','Manager','Admin'];
   var html='<option value="">- Not yet assigned -</option>';
   for (var i=0;i<allUsers.length;i++) {
     var u=allUsers[i];
+    if (ALLOWED.indexOf(u.role) === -1) continue;
     html+='<option value="'+u.id+'"'+(u.id===selectedId?' selected':'')+'>'+( u.name||u.email)+'</option>';
   }
   return html;
@@ -701,8 +703,12 @@ function addTaskRow(){
   div.className='task-row';div.id=id;
   var typeOpts='';
   for(var i=0;i<TASK_TYPES.length;i++) typeOpts+='<option value="'+TASK_TYPES[i]+'">'+TASK_TYPES[i]+'</option>';
-  var userOpts='';
-  for(var j=0;j<allUsers.length;j++) userOpts+='<option value="'+allUsers[j].id+'">'+(allUsers[j].name||allUsers[j].email)+'</option>';
+  var ALLOWED = ['Leader','Sub Manager','Manager','Admin'];
+var userOpts='';
+for(var j=0;j<allUsers.length;j++){
+  if(ALLOWED.indexOf(allUsers[j].role)===-1) continue;
+  userOpts+='<option value="'+allUsers[j].id+'">'+(allUsers[j].name||allUsers[j].email)+'</option>';
+}
   div.innerHTML='<button class="btn-remove-task" onclick="document.getElementById(\''+id+'\').remove()">&#x2715;</button>'
     +'<div class="task-grid">'
     +'<div class="form-group"><label>Type of Work</label><select class="task-type">'+typeOpts+'</select></div>'
