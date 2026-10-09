@@ -12,13 +12,20 @@
     .topbar-logo { width:30px; height:30px; background:linear-gradient(135deg,#00b4d8,#0077b6); border-radius:7px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:15px; }
     .topbar-title { color:#fff; font-size:16px; font-weight:700; }
     .topbar-right { display:flex; align-items:center; gap:12px; }
-    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#00b4d8,#0096c7); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:12px; }
-    .user-name { color:#ddd; font-size:13px; }
-    .role-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; }
-    .role-admin { background:#e63946; color:#fff; }
-    .role-staff { background:#0096c7; color:#fff; }
     .btn-top { background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; text-decoration:none; transition:background .2s; font-family:inherit; }
     .btn-top:hover { background:rgba(255,255,255,.22); }
+    .dropdown-wrap { position:relative; }
+    .dropdown-trigger { display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; font-family:inherit; transition:background .2s; }
+    .dropdown-trigger:hover { background:rgba(255,255,255,.22); }
+    .dropdown-trigger .user-name { font-weight:600; }
+    .dropdown-arrow { font-size:10px; opacity:.7; }
+    .dropdown-menu { position:absolute; top:calc(100% + 8px); right:0; background:#fff; border-radius:10px; box-shadow:0 8px 28px rgba(0,0,0,.18); min-width:160px; z-index:999; overflow:hidden; display:none; }
+    .dropdown-menu.open { display:block; }
+    .dropdown-item { display:flex; align-items:center; gap:9px; padding:11px 16px; font-size:13px; color:#333; cursor:pointer; transition:background .15s; text-decoration:none; border:none; background:none; width:100%; font-family:inherit; }
+    .dropdown-item:hover { background:#f0f7ff; color:#0077b6; }
+    .dropdown-item.danger { color:#e63946; }
+    .dropdown-item.danger:hover { background:#fff0f0; color:#e63946; }
+    .dropdown-divider { height:1px; background:#f0f0f0; margin:4px 0; }
     .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; }
     .nav-tab { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; text-decoration:none; display:flex; align-items:center; gap:7px; }
     .nav-tab:hover { color:#0096c7; }
@@ -145,16 +152,21 @@
 
 <nav class="topbar">
   <div class="topbar-left">
-    <div class="topbar-logo">VNDC</div>
     <span class="topbar-title">VINADECO BIM Hub</span>
   </div>
   <div class="topbar-right">
-    <div class="avatar" id="topAvatar">?</div>
-    <span class="user-name" id="topName">...</span>
-    <span class="role-badge" id="topRole"></span>
     <a class="btn-top" href="my-tasks.html">&#x1F4CB; My Task</a>
-    <a class="btn-top admin-only" href="admin.html" style="display:none;">&#x1F465; Member</a>
-    <button class="btn-top" onclick="logout()">Sign Out</button>
+    <div class="dropdown-wrap" id="userDropWrap">
+      <button class="dropdown-trigger" id="userDropBtn">
+        <span class="user-name" id="topName">...</span>
+        <span class="dropdown-arrow">&#x25BC;</span>
+      </button>
+      <div class="dropdown-menu" id="userDropMenu">
+        <a class="dropdown-item admin-only" href="admin.html" style="display:none;">&#x1F465; Member</a>
+        <div class="dropdown-divider admin-only" style="display:none;"></div>
+        <button class="dropdown-item danger" onclick="logout()">&#x1F6AA; Sign Out</button>
+      </div>
+    </div>
   </div>
 </nav>
 
@@ -323,20 +335,28 @@ window.onload = function() {
     renderList(); suggestNextNum();
     renderTags('branch'); renderTags('design');
     updatePreview(); selectGroup('A');
-  }).catch(function(e) { showToast('Loi tai du lieu: '+e.message,'error'); });
+  }).catch(function(e) { showToast('Error loading data: '+e.message,'error'); });
+
+  /* Dropdown toggle */
+  var dropBtn  = document.getElementById('userDropBtn');
+  var dropMenu = document.getElementById('userDropMenu');
+  dropBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    dropMenu.classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    dropMenu.classList.remove('open');
+  });
 };
 
 function initTopbar() {
-  var role=localStorage.getItem('user_role')||'Staff';
-  var name=localStorage.getItem('user_name')||'User';
-  currentUserRole=role;
+  var role = localStorage.getItem('user_role') || 'Staff';
+  var name = localStorage.getItem('user_name') || 'User';
+  currentUserRole = role;
   if (!localStorage.getItem('user_email')) { window.location.href='index.html'; return; }
-  document.getElementById('topName').textContent=name;
-  document.getElementById('topAvatar').textContent=name.substring(0,2).toUpperCase();
-  var rb=document.getElementById('topRole');
-  rb.textContent=role; rb.className='role-badge '+(role==='Admin'?'role-admin':'role-staff');
-  if (role==='Admin') {
-    var els=document.querySelectorAll('.admin-only');
+  document.getElementById('topName').textContent = name;
+  if (role === 'Admin') {
+    var els = document.querySelectorAll('.admin-only');
     for (var i=0;i<els.length;i++) els[i].style.display='flex';
   }
 }
@@ -351,24 +371,19 @@ function selectGroup(g) {
 }
 
 function getCodeNum(p) {
-  if (p.year && p.seq_number) {
-    return parseInt(p.year) * 1000 + parseInt(p.seq_number);
-  }
-  var code = p.code || p.project_code || '';
-  var m = code.match(/^(\\d+)/);
-  return m ? parseInt(m[1]) : 99999;
+  if (p.year && p.seq_number) return parseInt(p.year)*1000+parseInt(p.seq_number);
+  var code=p.code||p.project_code||'';
+  var m=code.match(/^(\\d+)/);
+  return m?parseInt(m[1]):99999;
 }
-
 function getProjectsSorted() {
-  return allProjects.slice().sort(function(a, b) {
-    return getCodeNum(a) - getCodeNum(b);
-  });
+  return allProjects.slice().sort(function(a,b){return getCodeNum(a)-getCodeNum(b);});
 }
 
 function setFilter(f) {
   filterStatus=f;
   var ids=['fAll','fActive','fDone'];
-  for (var i=0;i<ids.length;i++) document.getElementById(ids[i]).classList.remove('active');
+  for(var i=0;i<ids.length;i++) document.getElementById(ids[i]).classList.remove('active');
   var map={all:'fAll',active:'fActive',done:'fDone'};
   document.getElementById(map[f]).classList.add('active');
   renderList();
@@ -376,63 +391,64 @@ function setFilter(f) {
 function calcStatus(p) {
   var today=new Date(); today.setHours(0,0,0,0);
   var pt=[];
-  for (var i=0;i<allTasks.length;i++) { if(allTasks[i].project_id===p.id) pt.push(allTasks[i]); }
-  if (!pt.length) return 'active';
+  for(var i=0;i<allTasks.length;i++){if(allTasks[i].project_id===p.id)pt.push(allTasks[i]);}
+  if(!pt.length) return 'active';
   var hasNoSend=false, allPast=true;
-  for (var j=0;j<pt.length;j++) {
-    if (!pt[j].send_date) { hasNoSend=true; allPast=false; break; }
-    var sd=new Date(pt[j].send_date); sd.setHours(0,0,0,0);
-    if (sd>=today) allPast=false;
+  for(var j=0;j<pt.length;j++){
+    if(!pt[j].send_date){hasNoSend=true;allPast=false;break;}
+    var sd=new Date(pt[j].send_date);sd.setHours(0,0,0,0);
+    if(sd>=today) allPast=false;
   }
-  if (hasNoSend) return 'active';
+  if(hasNoSend) return 'active';
   return allPast?'done':'active';
 }
 function getActiveTasks(projId) {
   var today=new Date(); today.setHours(0,0,0,0);
   var result=[];
-  for (var i=0;i<allTasks.length;i++) {
+  for(var i=0;i<allTasks.length;i++){
     var t=allTasks[i];
-    if (t.project_id!==projId) continue;
-    if (!t.send_date) { result.push(t); continue; }
-    var sd=new Date(t.send_date); sd.setHours(0,0,0,0);
-    if (sd>=today) result.push(t);
+    if(t.project_id!==projId) continue;
+    if(!t.send_date){result.push(t);continue;}
+    var sd=new Date(t.send_date);sd.setHours(0,0,0,0);
+    if(sd>=today) result.push(t);
   }
   return result;
 }
 
 function toggleExpand(projId) {
-  if (expandedId===projId) { collapseRow(projId); expandedId=null; }
-  else { if(expandedId) collapseRow(expandedId); expandRow(projId); expandedId=projId; }
+  if(expandedId===projId){collapseRow(projId);expandedId=null;}
+  else{if(expandedId)collapseRow(expandedId);expandRow(projId);expandedId=projId;}
 }
 function expandRow(id) {
   var pr=document.getElementById('proj-row-'+id);
   var tr=document.getElementById('task-row-'+id);
   var ch=document.getElementById('chev-'+id);
-  if(pr) pr.classList.add('expanded');
-  if(tr) tr.classList.add('open');
-  if(ch) ch.classList.add('open');
+  if(pr)pr.classList.add('expanded');
+  if(tr)tr.classList.add('open');
+  if(ch)ch.classList.add('open');
 }
 function collapseRow(id) {
   var pr=document.getElementById('proj-row-'+id);
   var tr=document.getElementById('task-row-'+id);
   var ch=document.getElementById('chev-'+id);
-  if(pr) pr.classList.remove('expanded');
-  if(tr) tr.classList.remove('open');
-  if(ch) ch.classList.remove('open');
+  if(pr)pr.classList.remove('expanded');
+  if(tr)tr.classList.remove('open');
+  if(ch)ch.classList.remove('open');
 }
+
 function buildUserOptions(selectedId) {
-  var ALLOWED = ['Leader','Sub Manager','Manager','Admin'];
+  var ALLOWED=['Leader','Sub Manager','Manager','Admin'];
   var html='<option value="">- Not yet assigned -</option>';
-  for (var i=0;i<allUsers.length;i++) {
+  for(var i=0;i<allUsers.length;i++){
     var u=allUsers[i];
-    if (ALLOWED.indexOf(u.role) === -1) continue;
+    if(ALLOWED.indexOf(u.role)===-1) continue;
     html+='<option value="'+u.id+'"'+(u.id===selectedId?' selected':'')+'>'+( u.name||u.email)+'</option>';
   }
   return html;
 }
 function buildTypeOptions(sel) {
   var html='';
-  for (var i=0;i<TASK_TYPES.length;i++) {
+  for(var i=0;i<TASK_TYPES.length;i++){
     html+='<option value="'+TASK_TYPES[i]+'"'+(TASK_TYPES[i]===sel?' selected':'')+'>'+TASK_TYPES[i]+'</option>';
   }
   return html;
@@ -446,85 +462,79 @@ function cancelEdit(tid) {
   document.getElementById('view-'+tid).style.display='block';
 }
 async function saveTask(tid) {
-  var uid  = document.getElementById('eu-'+tid).value||null;
-  var rcv  = document.getElementById('er-'+tid).value||null;
-  var st   = document.getElementById('es-'+tid).value||null;
-  var en   = document.getElementById('ee-'+tid).value||null;
-  var snd  = document.getElementById('eg-'+tid).value||null;
-  var mask = document.getElementById('mask-'+tid);
-  if(mask) mask.style.display='flex';
-  try {
+  var uid=document.getElementById('eu-'+tid).value||null;
+  var rcv=document.getElementById('er-'+tid).value||null;
+  var st=document.getElementById('es-'+tid).value||null;
+  var en=document.getElementById('ee-'+tid).value||null;
+  var snd=document.getElementById('eg-'+tid).value||null;
+  var mask=document.getElementById('mask-'+tid);
+  if(mask)mask.style.display='flex';
+  try{
     var res=await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+tid,{
       method:'PATCH',headers:HDRS,
       body:JSON.stringify({assigned_to:uid,receive_date:rcv,start_date:st,end_date:en,send_date:snd})
     });
-    if(!res.ok){showToast('Loi Save task','error');if(mask)mask.style.display='none';return;}
-    for (var i=0;i<allTasks.length;i++){
+    if(!res.ok){showToast('Error saving task','error');if(mask)mask.style.display='none';return;}
+    for(var i=0;i<allTasks.length;i++){
       if(allTasks[i].id===tid){
         allTasks[i].assigned_to=uid;allTasks[i].receive_date=rcv;
         allTasks[i].start_date=st;allTasks[i].end_date=en;allTasks[i].send_date=snd;break;
       }
     }
-    showToast('Da Save task','success');
+    showToast('Task saved','success');
     var projId=null;
-    for (var j=0;j<allTasks.length;j++){if(allTasks[j].id===tid){projId=allTasks[j].project_id;break;}}
-    if(projId) refreshExpand(projId);
+    for(var j=0;j<allTasks.length;j++){if(allTasks[j].id===tid){projId=allTasks[j].project_id;break;}}
+    if(projId)refreshExpand(projId);
     renderList();
-  } catch(e){showToast('Loi: '+e.message,'error');if(mask)mask.style.display='none';}
+  }catch(e){showToast('Error: '+e.message,'error');if(mask)mask.style.display='none';}
 }
-async function deleteTask(tid, projId) {
-  if(!confirm('Xac nhan Delete task nay?')) return;
-  try {
+async function deleteTask(tid,projId) {
+  if(!confirm('Confirm delete this task?')) return;
+  try{
     await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+tid,{method:'DELETE',headers:HDRS});
     var nl=[];
     for(var i=0;i<allTasks.length;i++){if(allTasks[i].id!==tid)nl.push(allTasks[i]);}
     allTasks=nl;
-    showToast('Da Delete task','success');
-    refreshExpand(projId);
-    renderList();
-  } catch(e){showToast('Loi Delete task: '+e.message,'error');}
+    showToast('Task deleted','success');
+    refreshExpand(projId);renderList();
+  }catch(e){showToast('Error: '+e.message,'error');}
 }
 function toggleAddTask(projId) {
-  var btn  = document.getElementById('add-btn-'+projId);
-  var form = document.getElementById('add-form-'+projId);
+  var btn=document.getElementById('add-btn-'+projId);
+  var form=document.getElementById('add-form-'+projId);
   if(!btn||!form) return;
-  if(form.classList.contains('open')) {
-    form.classList.remove('open');
-    btn.style.display='flex';
-  } else {
-    form.classList.add('open');
-    btn.style.display='none';
-  }
+  if(form.classList.contains('open')){form.classList.remove('open');btn.style.display='flex';}
+  else{form.classList.add('open');btn.style.display='none';}
 }
 async function saveNewTask(projId) {
-  var ttype = document.getElementById('an-type-'+projId).value;
-  var uid   = document.getElementById('an-user-'+projId).value||null;
-  var rcv   = document.getElementById('an-rcv-'+projId).value||null;
-  var st    = document.getElementById('an-st-'+projId).value||null;
-  var en    = document.getElementById('an-en-'+projId).value||null;
-  var snd   = document.getElementById('an-snd-'+projId).value||null;
-  try {
+  var ttype=document.getElementById('an-type-'+projId).value;
+  var uid=document.getElementById('an-user-'+projId).value||null;
+  var rcv=document.getElementById('an-rcv-'+projId).value||null;
+  var st=document.getElementById('an-st-'+projId).value||null;
+  var en=document.getElementById('an-en-'+projId).value||null;
+  var snd=document.getElementById('an-snd-'+projId).value||null;
+  try{
     var res=await fetch(SUPABASE_URL+'/rest/v1/project_tasks',{
       method:'POST',headers:HDRS,
       body:JSON.stringify({project_id:projId,task_type:ttype,assigned_to:uid,
         receive_date:rcv,start_date:st,end_date:en,send_date:snd,status:'active'})
     });
-    if(!res.ok){showToast('Loi them task','error');return;}
+    if(!res.ok){showToast('Error adding task','error');return;}
     var arr=await res.json();
-    if(arr&&arr[0]) allTasks.push(arr[0]);
-    showToast('Da them task: '+ttype,'success');
-    refreshExpand(projId);
-    renderList();
-  } catch(e){showToast('Loi: '+e.message,'error');}
+    if(arr&&arr[0])allTasks.push(arr[0]);
+    showToast('Task added: '+ttype,'success');
+    refreshExpand(projId);renderList();
+  }catch(e){showToast('Error: '+e.message,'error');}
 }
 function refreshExpand(projId) {
   var inner=document.querySelector('#task-row-'+projId+' .task-expand-inner');
-  if(!inner) return;
+  if(!inner)return;
   var color=projColorMap[projId]||'#a8dadc';
   inner.innerHTML=buildExpandInner(projId,color);
-  if(expandedId===projId) expandRow(projId);
+  if(expandedId===projId)expandRow(projId);
+  bindExpandEvents(projId);
 }
-function buildExpandInner(projId, projColor) {
+function buildExpandInner(projId,projColor) {
   var tasks=getActiveTasks(projId);
   var cardsHtml='';
   for(var i=0;i<tasks.length;i++){
@@ -538,7 +548,7 @@ function buildExpandInner(projId, projColor) {
       +'<div class="saving-mask" id="mask-'+tid+'">&#x1F4BE; Saving...</div>'
       +'<div class="task-card-actions">'
       +'<button class="btn-edit-task" id="editbtn-'+tid+'">&#x270F;&#xFE0F; Edit</button>'
-      +'<button class="btn-del-task"  id="delbtn-'+tid+'">&#x1F5D1;&#xFE0F;</button>'
+      +'<button class="btn-del-task" id="delbtn-'+tid+'">&#x1F5D1;&#xFE0F;</button>'
       +'</div>'
       +'<div class="task-card-type" style="background:'+tc+';">'+(t.task_type||'Task')+'</div>'
       +'<div id="view-'+tid+'">'
@@ -597,26 +607,26 @@ function buildExpandInner(projId, projColor) {
 function bindExpandEvents(projId) {
   var tasks=getActiveTasks(projId);
   for(var i=0;i<tasks.length;i++){
-    (function(tid, pid){
-      var editBtn   = document.getElementById('editbtn-'+tid);
-      var delBtn    = document.getElementById('delbtn-'+tid);
-      var saveBtn   = document.getElementById('savebtn-'+tid);
-      var cancelBtn = document.getElementById('cancelbtn-'+tid);
-      if(editBtn)   editBtn.onclick   = function(e){e.stopPropagation();editTask(tid);};
-      if(delBtn)    delBtn.onclick    = function(e){e.stopPropagation();deleteTask(tid,pid);};
-      if(saveBtn)   saveBtn.onclick   = function(e){e.stopPropagation();saveTask(tid);};
-      if(cancelBtn) cancelBtn.onclick = function(e){e.stopPropagation();cancelEdit(tid);};
-    })(tasks[i].id, projId);
+    (function(tid,pid){
+      var editBtn=document.getElementById('editbtn-'+tid);
+      var delBtn=document.getElementById('delbtn-'+tid);
+      var saveBtn=document.getElementById('savebtn-'+tid);
+      var cancelBtn=document.getElementById('cancelbtn-'+tid);
+      if(editBtn)   editBtn.onclick=function(e){e.stopPropagation();editTask(tid);};
+      if(delBtn)    delBtn.onclick=function(e){e.stopPropagation();deleteTask(tid,pid);};
+      if(saveBtn)   saveBtn.onclick=function(e){e.stopPropagation();saveTask(tid);};
+      if(cancelBtn) cancelBtn.onclick=function(e){e.stopPropagation();cancelEdit(tid);};
+    })(tasks[i].id,projId);
   }
   (function(pid){
-    var addBtn    = document.getElementById('add-btn-'+pid);
-    var addClose  = document.getElementById('add-close-'+pid);
-    var addSave   = document.getElementById('an-save-'+pid);
-    var addCancel = document.getElementById('an-cancel-'+pid);
-    if(addBtn)    addBtn.onclick    = function(e){e.stopPropagation();toggleAddTask(pid);};
-    if(addClose)  addClose.onclick  = function(e){e.stopPropagation();toggleAddTask(pid);};
-    if(addSave)   addSave.onclick   = function(e){e.stopPropagation();saveNewTask(pid);};
-    if(addCancel) addCancel.onclick = function(e){e.stopPropagation();toggleAddTask(pid);};
+    var addBtn=document.getElementById('add-btn-'+pid);
+    var addClose=document.getElementById('add-close-'+pid);
+    var addSave=document.getElementById('an-save-'+pid);
+    var addCancel=document.getElementById('an-cancel-'+pid);
+    if(addBtn)    addBtn.onclick=function(e){e.stopPropagation();toggleAddTask(pid);};
+    if(addClose)  addClose.onclick=function(e){e.stopPropagation();toggleAddTask(pid);};
+    if(addSave)   addSave.onclick=function(e){e.stopPropagation();saveNewTask(pid);};
+    if(addCancel) addCancel.onclick=function(e){e.stopPropagation();toggleAddTask(pid);};
   })(projId);
 }
 
@@ -624,16 +634,16 @@ function renderList() {
   var q=(document.getElementById('searchProj').value||'').toLowerCase();
   var grpF=document.getElementById('fGroup').value;
   var prevExp=expandedId; expandedId=null;
-  var sortedAll = getProjectsSorted();
+  var sortedAll=getProjectsSorted();
   var data=[];
   for(var i=0;i<sortedAll.length;i++){
     var p=sortedAll[i], as=calcStatus(p);
     var mQ=!q||p.project_name.toLowerCase().indexOf(q)>=0||(p.code||'').toLowerCase().indexOf(q)>=0;
     var mS=true;
-    if(filterStatus==='active') mS=(as==='active');
-    if(filterStatus==='done')   mS=(as==='done');
+    if(filterStatus==='active')mS=(as==='active');
+    if(filterStatus==='done')mS=(as==='done');
     var mG=!grpF||p.proj_group===grpF;
-    if(mQ&&mS&&mG) data.push(p);
+    if(mQ&&mS&&mG)data.push(p);
   }
   var tbody=document.getElementById('listBody');
   if(!data.length){
@@ -644,7 +654,7 @@ function renderList() {
   for(var d=0;d<data.length;d++){
     var p=data[d], color=projColorMap[p.id]||'#a8dadc';
     var grp2=p.proj_group||'A', cfg=GROUP_CFG[grp2]||GROUP_CFG['A'];
-    var sttNum = d + 1;
+    var sttNum=d+1;
     var autoSt=calcStatus(p);
     var stBadge=autoSt==='done'
       ?'<span class="status-badge status-done">&#x2B1C; Ended</span>'
@@ -653,8 +663,7 @@ function renderList() {
     var projId2=p.year&&p.seq_number?p.year+String(p.seq_number).padStart(3,'0'):(p.code||'-').split('_')[0];
     var activeCnt=getActiveTasks(p.id).length;
     var cntBadge=activeCnt>0?'<span style="background:#e63946;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:5px;">'+activeCnt+'</span>':'';
-    var delBtn=currentUserRole==='Admin'
-      ?'<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Delete</button>':'';
+    var delBtn=currentUserRole==='Admin'?'<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Delete</button>':'';
     var expandInner=buildExpandInner(p.id,color);
     html+='<tr class="proj-row" id="proj-row-'+p.id+'">'
       +'<td style="text-align:center;"><div class="stt-badge">'+sttNum+'</div></td>'
@@ -677,7 +686,7 @@ function renderList() {
     (function(pid){
       var row=document.getElementById('proj-row-'+pid);
       if(row) row.onclick=function(e){
-        if(e.target.tagName==='BUTTON'||e.target.closest('button')) return;
+        if(e.target.tagName==='BUTTON'||e.target.closest('button'))return;
         toggleExpand(pid);
       };
       var dpb=document.getElementById('delprojbtn-'+pid);
@@ -685,7 +694,7 @@ function renderList() {
         e.stopPropagation();
         var proj=null;
         for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){proj=allProjects[i];break;}}
-        if(proj) deleteProject(pid,proj.project_name);
+        if(proj)deleteProject(pid,proj.project_name);
       };
     })(p2.id);
     bindExpandEvents(p2.id);
@@ -703,12 +712,12 @@ function addTaskRow(){
   div.className='task-row';div.id=id;
   var typeOpts='';
   for(var i=0;i<TASK_TYPES.length;i++) typeOpts+='<option value="'+TASK_TYPES[i]+'">'+TASK_TYPES[i]+'</option>';
-  var ALLOWED = ['Leader','Sub Manager','Manager','Admin'];
-var userOpts='';
-for(var j=0;j<allUsers.length;j++){
-  if(ALLOWED.indexOf(allUsers[j].role)===-1) continue;
-  userOpts+='<option value="'+allUsers[j].id+'">'+(allUsers[j].name||allUsers[j].email)+'</option>';
-}
+  var ALLOWED=['Leader','Sub Manager','Manager','Admin'];
+  var userOpts='';
+  for(var j=0;j<allUsers.length;j++){
+    if(ALLOWED.indexOf(allUsers[j].role)===-1)continue;
+    userOpts+='<option value="'+allUsers[j].id+'">'+(allUsers[j].name||allUsers[j].email)+'</option>';
+  }
   div.innerHTML='<button class="btn-remove-task" onclick="document.getElementById(\''+id+'\').remove()">&#x2715;</button>'
     +'<div class="task-grid">'
     +'<div class="form-group"><label>Type of Work</label><select class="task-type">'+typeOpts+'</select></div>'
