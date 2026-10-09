@@ -27,10 +27,24 @@
   .dropdown-item.danger:hover { background:#fff0f0; color:#e63946; }
   .dropdown-divider { height:1px; background:#f0f0f0; margin:4px 0; }
 
-  .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; }
+  /* NAV TABS */
+  .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; position:relative; z-index:100; }
   .nav-tab { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; text-decoration:none; display:flex; align-items:center; gap:7px; }
   .nav-tab:hover { color:#0096c7; }
   .nav-tab.active { color:#0077b6; border-bottom-color:#0077b6; }
+
+  /* NAV DROPDOWN */
+  .nav-drop { position:relative; }
+  .nav-drop-trigger { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; display:flex; align-items:center; gap:7px; transition:all .2s; white-space:nowrap; user-select:none; }
+  .nav-drop-trigger:hover { color:#0096c7; }
+  .nav-drop-trigger.active { color:#0077b6; border-bottom-color:#0077b6; }
+  .nav-drop-arrow { font-size:10px; opacity:.6; transition:transform .2s; }
+  .nav-drop-trigger.open .nav-drop-arrow { transform:rotate(180deg); }
+  .nav-drop-menu { position:absolute; top:calc(100% + 2px); left:0; background:#fff; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,.13); min-width:190px; z-index:300; display:none; overflow:hidden; border:1px solid #eee; }
+  .nav-drop-menu.open { display:block; }
+  .nav-drop-item { display:flex; align-items:center; gap:9px; padding:11px 18px; font-size:13px; font-weight:600; color:#555; text-decoration:none; transition:background .15s; }
+  .nav-drop-item:hover { background:#f0f7ff; color:#0077b6; }
+  .nav-drop-item.active { color:#0077b6; background:#e8f4fe; }
 
   .stats-bar { display:flex; gap:16px; padding:20px 24px 0; }
   .stat-card { background:#fff; border-radius:12px; padding:16px 28px; text-align:center; flex:1; box-shadow:0 1px 6px #0001; }
@@ -111,9 +125,16 @@
 </nav>
 
 <div class="nav-tabs">
-  <a class="nav-tab" href="view-list.html">&#x1F4CB; List of Project</a>
-  <a class="nav-tab active" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
-  <a class="nav-tab" href="view-schedule.html">&#x1F4C5; Project Schedule</a>
+  <div class="nav-drop" id="scheduleNavDrop">
+    <div class="nav-drop-trigger active" id="scheduleNavTrigger">
+      &#x1F4C5; Project Schedule <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="scheduleNavMenu">
+      <a class="nav-drop-item" href="view-list.html">&#x1F4CB; List of Project</a>
+      <a class="nav-drop-item active" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
+      <a class="nav-drop-item" href="view-schedule.html">&#x1F4C5; Gantt Schedule</a>
+    </div>
+  </div>
   <a class="nav-tab" href="view-staff.html">&#x1F465; Staff Schedule</a>
 </div>
 
@@ -174,6 +195,7 @@ function getName(p)  { return p.project_name || p.name || ''; }
 
 window.onload = async function() {
   initTopbar();
+  initNavDrop();
   try {
     await loadAllData();
     render();
@@ -200,6 +222,20 @@ function initTopbar() {
   });
   document.addEventListener('click', function() {
     dropMenu.classList.remove('open');
+  });
+}
+
+function initNavDrop() {
+  var trigger = document.getElementById('scheduleNavTrigger');
+  var menu    = document.getElementById('scheduleNavMenu');
+  trigger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    trigger.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    trigger.classList.remove('open');
+    menu.classList.remove('open');
   });
 }
 
@@ -292,9 +328,7 @@ function openModal(p) {
   var code   = getCode(p);
   var tasks  = allTasks.filter(function(t) { return t.project_id === p.id; });
   var active = tasks.filter(isActiveTask);
-
   document.getElementById('modalTitle').textContent = code;
-
   var body = '';
   if (active.length > 0) {
     body += '<div class="task-list-title">Active Tasks (' + active.length + ')</div>';
@@ -311,7 +345,6 @@ function openModal(p) {
   } else {
     body = '<div style="text-align:center;color:#bbb;padding:20px;">No active tasks.</div>';
   }
-
   document.getElementById('modalBody').innerHTML = body;
   document.getElementById('modalOverlay').classList.add('open');
 }
