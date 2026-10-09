@@ -1,19 +1,48 @@
-my_tasks_html = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BIM Hub – Lịch của tôi</title>
+  <title>VINADECO BIM Hub – My Tasks</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;min-height:100vh;}
     .topbar{display:flex;align-items:center;justify-content:space-between;background:#1a1a2e;padding:0 24px;height:52px;position:sticky;top:0;z-index:200;}
     .topbar-left{display:flex;align-items:center;gap:10px;}
-    .topbar-logo{width:30px;height:30px;background:linear-gradient(135deg,#00b4d8,#0077b6);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:15px;}
     .topbar-title{color:#fff;font-size:16px;font-weight:700;}
     .topbar-right{display:flex;align-items:center;gap:12px;}
     .btn-top{background:rgba(255,255,255,.12);border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;text-decoration:none;transition:background .2s;font-family:inherit;}
     .btn-top:hover{background:rgba(255,255,255,.22);}
+    .dropdown-wrap{position:relative;}
+    .dropdown-trigger{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-family:inherit;transition:background .2s;}
+    .dropdown-trigger:hover{background:rgba(255,255,255,.22);}
+    .dropdown-trigger .user-name{font-weight:600;}
+    .dropdown-arrow{font-size:10px;opacity:.7;}
+    .dropdown-menu{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.18);min-width:160px;z-index:999;overflow:hidden;display:none;}
+    .dropdown-menu.open{display:block;}
+    .dropdown-item{display:flex;align-items:center;gap:9px;padding:11px 16px;font-size:13px;color:#333;cursor:pointer;transition:background .15s;text-decoration:none;border:none;background:none;width:100%;font-family:inherit;}
+    .dropdown-item:hover{background:#f0f7ff;color:#0077b6;}
+    .dropdown-item.danger{color:#e63946;}
+    .dropdown-item.danger:hover{background:#fff0f0;color:#e63946;}
+    .dropdown-divider{height:1px;background:#f0f0f0;margin:4px 0;}
+
+    /* NAV TABS */
+    .nav-tabs{background:#fff;border-bottom:2px solid #e8e8e8;display:flex;align-items:center;padding:0 24px;gap:4px;position:sticky;top:52px;z-index:150;}
+    .nav-tab{padding:14px 20px;font-size:13.5px;font-weight:600;color:#888;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;white-space:nowrap;text-decoration:none;display:flex;align-items:center;gap:7px;}
+    .nav-tab:hover{color:#0096c7;}
+    .nav-tab.active{color:#0077b6;border-bottom-color:#0077b6;}
+    .nav-drop{position:relative;}
+    .nav-drop-trigger{padding:14px 20px;font-size:13.5px;font-weight:600;color:#888;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;display:flex;align-items:center;gap:7px;transition:all .2s;white-space:nowrap;user-select:none;}
+    .nav-drop-trigger:hover{color:#0096c7;}
+    .nav-drop-trigger.active{color:#0077b6;border-bottom-color:#0077b6;}
+    .nav-drop-arrow{font-size:10px;opacity:.6;transition:transform .2s;}
+    .nav-drop-trigger.open .nav-drop-arrow{transform:rotate(180deg);}
+    .nav-drop-menu{position:absolute;top:calc(100% + 2px);left:0;background:#fff;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.13);min-width:190px;z-index:300;display:none;overflow:hidden;border:1px solid #eee;}
+    .nav-drop-menu.open{display:block;}
+    .nav-drop-item{display:flex;align-items:center;gap:9px;padding:11px 18px;font-size:13px;font-weight:600;color:#555;text-decoration:none;transition:background .15s;}
+    .nav-drop-item:hover{background:#f0f7ff;color:#0077b6;}
+    .nav-drop-item.active{color:#0077b6;background:#e8f4fe;}
+
     .main{max-width:1100px;margin:28px auto;padding:0 24px;}
     .page-title{font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:4px;}
     .page-sub{font-size:13px;color:#888;margin-bottom:24px;}
@@ -21,7 +50,8 @@ my_tasks_html = """<!DOCTYPE html>
     .card-title{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:16px;padding-bottom:12px;border-bottom:1.5px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;gap:8px;}
     table{width:100%;border-collapse:collapse;}
     thead th{padding:11px 14px;text-align:left;font-size:11.5px;font-weight:700;color:#fff;background:#0077b6;}
-    thead th:first-child{border-radius:8px 0 0 0;}thead th:last-child{border-radius:0 8px 0 0;}
+    thead th:first-child{border-radius:8px 0 0 0;}
+    thead th:last-child{border-radius:0 8px 0 0;}
     tbody td{padding:12px 14px;font-size:13px;color:#333;border-bottom:1px solid #f0f0f0;}
     tbody tr:hover td{background:#f8fbff;}
     .type-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;}
@@ -56,78 +86,105 @@ my_tasks_html = """<!DOCTYPE html>
   </style>
 </head>
 <body>
+
 <nav class="topbar">
   <div class="topbar-left">
-    <div class="topbar-logo">B</div>
-    <span class="topbar-title">BIM Hub</span>
+    <span class="topbar-title">VINADECO BIM Hub</span>
   </div>
   <div class="topbar-right">
-    <a class="btn-top" href="dashboard.html">🏠 Dashboard</a>
-    <button class="btn-top" onclick="logout()">Đăng xuất</button>
+    <div class="dropdown-wrap" id="userDropWrap">
+      <button class="dropdown-trigger" id="userDropBtn">
+        <span class="user-name" id="topName">...</span>
+        <span class="dropdown-arrow">&#x25BC;</span>
+      </button>
+      <div class="dropdown-menu" id="userDropMenu">
+        <a class="dropdown-item admin-only" href="admin.html" style="display:none;">&#x1F465; Member</a>
+        <div class="dropdown-divider admin-only" style="display:none;"></div>
+        <button class="dropdown-item danger" onclick="logout()">&#x1F6AA; Sign Out</button>
+      </div>
+    </div>
   </div>
 </nav>
 
+<div class="nav-tabs">
+  <div class="nav-drop" id="scheduleNavDrop">
+    <div class="nav-drop-trigger" id="scheduleNavTrigger">
+      &#x1F4C5; Project Schedule <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="scheduleNavMenu">
+      <a class="nav-drop-item" href="view-list.html">&#x1F4CB; List of Project</a>
+      <a class="nav-drop-item" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
+      <a class="nav-drop-item" href="view-schedule.html">&#x1F4C5; Gantt Schedule</a>
+    </div>
+  </div>
+  <a class="nav-tab" href="view-staff.html">&#x1F465; Staff Schedule</a>
+  <a class="nav-tab active" href="my-tasks.html">&#x1F4CB; My Tasks</a>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <div class="main">
-  <div class="page-title">📋 Lịch công việc của tôi</div>
-  <div class="page-sub" id="mySubTitle">Xem và cập nhật tiến độ công việc</div>
+  <div class="page-title">&#x1F4CB; My Task Schedule</div>
+  <div class="page-sub" id="mySubTitle">View and update your task progress</div>
 
   <div class="card">
     <div class="card-title">
-      <span>🗂️ Danh sách task được phân công</span>
-      <button class="btn-primary" onclick="openAddModal()">➕ Thêm task</button>
+      <span>&#x1F5C2;&#xFE0F; Assigned Task List</span>
+      <button class="btn-primary" onclick="openAddModal()">&#x2795; Add Task</button>
     </div>
     <table>
       <thead>
         <tr>
-          <th>Dự án</th>
-          <th>Loại công việc</th>
-          <th>Nhận data</th>
-          <th>Bắt đầu</th>
-          <th>Kết thúc</th>
-          <th>Ngày gửi</th>
-          <th>Trạng thái</th>
-          <th>Hành động</th>
+          <th>Project</th>
+          <th>Type of Work</th>
+          <th>Receive</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Send</th>
+          <th>Status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody id="myTaskTable">
-        <tr><td colspan="8" class="empty-msg">Đang tải...</td></tr>
+        <tr><td colspan="8" class="empty-msg">Loading...</td></tr>
       </tbody>
     </table>
   </div>
 </div>
 
-<!-- MODAL THÊM/SỬA TASK -->
+<!-- MODAL ADD / EDIT TASK -->
 <div class="modal-overlay" id="taskModal" onclick="closeModalOutside(event,'taskModal')">
   <div class="modal">
     <div class="modal-title">
-      📋 <span id="modalTaskTitle">Thêm task mới</span>
-      <button class="modal-close" onclick="closeModal('taskModal')">✕</button>
+      &#x1F4CB; <span id="modalTaskTitle">Add New Task</span>
+      <button class="modal-close" onclick="closeModal('taskModal')">&#x2715;</button>
     </div>
     <div class="form-group">
-      <label>Dự án</label>
+      <label>Project</label>
       <select id="taskProjSel"></select>
     </div>
     <div class="form-group">
-      <label>Loại công việc</label>
+      <label>Type of Work</label>
       <select id="taskTypeSel">
-        <option>パース・動画</option><option>意匠モデル</option>
-        <option>構造モデル</option><option>清算モデル</option>
-        <option>図面</option><option>施工ステップ</option>
+        <option>&#x30D1;&#x30FC;&#x30B9;&#x30FB;&#x52D5;&#x753B;</option>
+        <option>&#x610F;&#x5320;&#x30E2;&#x30C7;&#x30EB;</option>
+        <option>&#x69CB;&#x9020;&#x30E2;&#x30C7;&#x30EB;</option>
+        <option>&#x6E05;&#x7B97;&#x30E2;&#x30C7;&#x30EB;</option>
+        <option>&#x56F3;&#x9762;</option>
+        <option>&#x65BD;&#x5DE5;&#x30B9;&#x30C6;&#x30C3;&#x30D7;</option>
       </select>
     </div>
-    <div class="form-group"><label>Ngày nhận data</label><input type="date" id="taskRcv"/></div>
-    <div class="form-group"><label>Ngày bắt đầu</label><input type="date" id="taskStart"/></div>
-    <div class="form-group"><label>Ngày kết thúc</label><input type="date" id="taskEnd"/></div>
-    <div class="form-group"><label>Ngày gửi</label><input type="date" id="taskSend"/></div>
-    <div class="form-group"><label>Ghi chú</label><textarea id="taskNote" rows="2" placeholder="Ghi chú thêm..."></textarea></div>
+    <div class="form-group"><label>Receive Date</label><input type="date" id="taskRcv"/></div>
+    <div class="form-group"><label>Start Date</label><input type="date" id="taskStart"/></div>
+    <div class="form-group"><label>End Date</label><input type="date" id="taskEnd"/></div>
+    <div class="form-group"><label>Send Date</label><input type="date" id="taskSend"/></div>
+    <div class="form-group"><label>Note</label><textarea id="taskNote" rows="2" placeholder="Additional notes..."></textarea></div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeModal('taskModal')">Hủy</button>
-      <button class="btn-primary" onclick="saveTask()">💾 Lưu</button>
+      <button class="btn-secondary" onclick="closeModal('taskModal')">Cancel</button>
+      <button class="btn-primary" onclick="saveTask()">&#x1F4BE; Save</button>
     </div>
   </div>
 </div>
-
-<div class="toast" id="toast"></div>
 
 <script>
   const SUPABASE_URL = 'https://oyvwattigkqnimlmrqnj.supabase.co';
@@ -137,18 +194,54 @@ my_tasks_html = """<!DOCTYPE html>
     'Content-Type':'application/json','Prefer':'return=representation'
   };
   const PASTEL = ['#a8dadc','#b5ead7','#ffdac1','#c7ceea','#ffb7b2','#e2f0cb','#bee5eb','#d4b8e0','#f7c59f','#a0c4ff'];
-  const TASK_TYPES = ['パース・動画','意匠モデル','構造モデル','清算モデル','図面','施工ステップ'];
-  const TYPE_COLORS = {'パース・動画':'#f4a261','意匠モデル':'#4cc9f0','構造モデル':'#52b788','清算モデル':'#9b5de5','図面':'#e63946','施工ステップ':'#ffd166'};
+  const TASK_TYPES = ['\u30d1\u30fc\u30b9\u30fb\u52d5\u753b','\u610f\u5320\u30e2\u30c7\u30eb','\u69cb\u9020\u30e2\u30c7\u30eb','\u6e05\u7b97\u30e2\u30c7\u30eb','\u56f3\u9762','\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7'];
+  const TYPE_COLORS = {'\u30d1\u30fc\u30b9\u30fb\u52d5\u753b':'#f4a261','\u610f\u5320\u30e2\u30c7\u30eb':'#4cc9f0','\u69cb\u9020\u30e2\u30c7\u30eb':'#52b788','\u6e05\u7b97\u30e2\u30c7\u30eb':'#9b5de5','\u56f3\u9762':'#e63946','\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7':'#ffd166'};
 
   let myUserId   = null;
   let allProjects= [];
   let myTasks    = [];
   let editTaskId = null;
 
+  function initTopbar() {
+    var role = localStorage.getItem('user_role') || 'Staff';
+    var name = localStorage.getItem('user_name') || 'User';
+    var email = localStorage.getItem('user_email') || '';
+    if (!email) { window.location.href='index.html'; return; }
+    document.getElementById('topName').textContent = name;
+    document.getElementById('mySubTitle').textContent = name + ' \u2013 ' + email;
+    if (role === 'Admin') {
+      var els = document.querySelectorAll('.admin-only');
+      for (var i=0;i<els.length;i++) els[i].style.display='flex';
+    }
+    var dropBtn  = document.getElementById('userDropBtn');
+    var dropMenu = document.getElementById('userDropMenu');
+    dropBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropMenu.classList.toggle('open');
+    });
+    document.addEventListener('click', function() {
+      dropMenu.classList.remove('open');
+    });
+  }
+
+  function initNavDrop() {
+    var trigger = document.getElementById('scheduleNavTrigger');
+    var menu    = document.getElementById('scheduleNavMenu');
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      trigger.classList.toggle('open');
+      menu.classList.toggle('open');
+    });
+    document.addEventListener('click', function() {
+      trigger.classList.remove('open');
+      menu.classList.remove('open');
+    });
+  }
+
   window.onload = async () => {
-    const name  = localStorage.getItem('user_name')||'User';
-    const email = localStorage.getItem('user_email')||'';
-    document.getElementById('mySubTitle').textContent = name + ' – ' + email;
+    initTopbar();
+    initNavDrop();
+    const email = localStorage.getItem('user_email') || '';
     await loadMyUserId(email);
     await loadData();
   };
@@ -172,65 +265,67 @@ my_tasks_html = """<!DOCTYPE html>
       myTasks     = await tRes.json();
       renderMyTasks();
       populateProjSelect();
-    } catch(e) { showToast('❌ Lỗi tải dữ liệu','error'); }
+    } catch(e) { showToast('Error loading data','error'); }
   }
 
   function renderMyTasks() {
     const tbody = document.getElementById('myTaskTable');
     if (!myTasks.length) {
-      tbody.innerHTML='<tr><td colspan="8" class="empty-msg">Chưa có task nào được phân công</td></tr>';
+      tbody.innerHTML='<tr><td colspan="8" class="empty-msg">No tasks assigned yet.</td></tr>';
       return;
     }
-    tbody.innerHTML = myTasks.map(t=>{
-      const proj  = allProjects.find(p=>p.id===t.project_id);
+    tbody.innerHTML = myTasks.map(t => {
+      const proj  = allProjects.find(p => p.id===t.project_id);
       const color = proj ? (PASTEL[allProjects.indexOf(proj)%PASTEL.length]) : '#aaa';
-      const tc    = TYPE_COLORS[t.task_type]||'#888';
+      const tc    = TYPE_COLORS[t.task_type] || '#888';
       const stBadge = t.status==='done'
-        ? '<span class="status-badge st-done">✅ Hoàn thành</span>'
-        : '<span class="status-badge st-active">🔨 Đang làm</span>';
-      return `<tr>
-        <td>${proj?`<span class="proj-chip" style="background:${color};color:#333;">${proj.code?proj.code.split('_')[0]:''}</span>${proj.project_name}`:'–'}</td>
-        <td><span class="type-badge" style="background:${tc};">${t.task_type||'–'}</span></td>
-        <td>${t.receive_date||'–'}</td>
-        <td>${t.start_date||'–'}</td>
-        <td>${t.end_date||'–'}</td>
-        <td>${t.send_date||'–'}</td>
-        <td>${stBadge}</td>
-        <td>
-          <div style="display:flex;gap:6px;">
-            <button class="btn-sm btn-edit" onclick="openEditModal('${t.id}')">✏️ Sửa</button>
-            ${t.status!=='done'?`<button class="btn-sm btn-done" onclick="markDone('${t.id}')">✅ Xong</button>`:''}
-          </div>
-        </td>
-      </tr>`;
+        ? '<span class="status-badge st-done">&#x2705; Done</span>'
+        : '<span class="status-badge st-active">&#x1F528; In Progress</span>';
+      const projCode = proj ? (proj.code ? proj.code.split('_')[0] : '') : '';
+      const projName = proj ? proj.project_name : '\u2013';
+      return '<tr>'
+        +'<td>'+(proj?'<span class="proj-chip" style="background:'+color+';color:#333;">'+projCode+'</span>'+projName:'\u2013')+'</td>'
+        +'<td><span class="type-badge" style="background:'+tc+';">'+(t.task_type||'\u2013')+'</span></td>'
+        +'<td>'+(t.receive_date||'\u2013')+'</td>'
+        +'<td>'+(t.start_date||'\u2013')+'</td>'
+        +'<td>'+(t.end_date||'\u2013')+'</td>'
+        +'<td>'+(t.send_date||'\u2013')+'</td>'
+        +'<td>'+stBadge+'</td>'
+        +'<td><div style="display:flex;gap:6px;">'
+        +'<button class="btn-sm btn-edit" onclick="openEditModal(\''+t.id+'\')">&#x270F;&#xFE0F; Edit</button>'
+        +(t.status!=='done'?'<button class="btn-sm btn-done" onclick="markDone(\''+t.id+'\')">&#x2705; Done</button>':'')
+        +'</div></td>'
+        +'</tr>';
     }).join('');
   }
 
   function populateProjSelect() {
     const sel = document.getElementById('taskProjSel');
-    sel.innerHTML = allProjects.map(p=>`<option value="${p.id}">${p.project_name} (${p.code||''})</option>`).join('');
+    sel.innerHTML = allProjects.map(p =>
+      '<option value="'+p.id+'">'+p.project_name+' ('+(p.code||'')+')</option>'
+    ).join('');
   }
 
   function openAddModal() {
     editTaskId = null;
-    document.getElementById('modalTaskTitle').textContent='Thêm task mới';
-    ['taskRcv','taskStart','taskEnd','taskSend'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('taskNote').value='';
+    document.getElementById('modalTaskTitle').textContent = 'Add New Task';
+    ['taskRcv','taskStart','taskEnd','taskSend'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('taskNote').value = '';
     document.getElementById('taskModal').classList.add('open');
   }
 
   function openEditModal(id) {
-    const t = myTasks.find(x=>x.id===id);
+    const t = myTasks.find(x => x.id===id);
     if (!t) return;
     editTaskId = id;
-    document.getElementById('modalTaskTitle').textContent='Cập nhật task';
-    document.getElementById('taskProjSel').value = t.project_id||'';
-    document.getElementById('taskTypeSel').value = t.task_type||TASK_TYPES[0];
-    document.getElementById('taskRcv').value   = t.receive_date||'';
-    document.getElementById('taskStart').value = t.start_date||'';
-    document.getElementById('taskEnd').value   = t.end_date||'';
-    document.getElementById('taskSend').value  = t.send_date||'';
-    document.getElementById('taskNote').value  = t.note||'';
+    document.getElementById('modalTaskTitle').textContent = 'Edit Task';
+    document.getElementById('taskProjSel').value  = t.project_id||'';
+    document.getElementById('taskTypeSel').value  = t.task_type||TASK_TYPES[0];
+    document.getElementById('taskRcv').value      = t.receive_date||'';
+    document.getElementById('taskStart').value    = t.start_date||'';
+    document.getElementById('taskEnd').value      = t.end_date||'';
+    document.getElementById('taskSend').value     = t.send_date||'';
+    document.getElementById('taskNote').value     = t.note||'';
     document.getElementById('taskModal').classList.add('open');
   }
 
@@ -242,43 +337,43 @@ my_tasks_html = """<!DOCTYPE html>
     const te       = document.getElementById('taskEnd').value||null;
     const snd      = document.getElementById('taskSend').value||null;
     const note     = document.getElementById('taskNote').value.trim()||null;
-    if (!projId) { showToast('❌ Vui lòng chọn dự án','error'); return; }
+    if (!projId) { showToast('Please select a project','error'); return; }
     try {
       if (editTaskId) {
         await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+editTaskId,{
           method:'PATCH',headers:HDRS,
-          body:JSON.stringify({task_type:taskType,receive_date:rcv,start_date:ts,end_date:te,send_date:snd,note})
+          body:JSON.stringify({task_type:taskType,receive_date:rcv,start_date:ts,end_date:te,send_date:snd,note:note})
         });
-        showToast('✅ Đã cập nhật task','success');
+        showToast('Task updated!','success');
       } else {
         await fetch(SUPABASE_URL+'/rest/v1/project_tasks',{
           method:'POST',headers:HDRS,
-          body:JSON.stringify({project_id:projId,task_type:taskType,assigned_to:myUserId,receive_date:rcv,start_date:ts,end_date:te,send_date:snd,note,status:'active'})
+          body:JSON.stringify({project_id:projId,task_type:taskType,assigned_to:myUserId,receive_date:rcv,start_date:ts,end_date:te,send_date:snd,note:note,status:'active'})
         });
-        showToast('✅ Đã thêm task mới','success');
+        showToast('Task added!','success');
       }
       closeModal('taskModal');
       await loadData();
-    } catch(e) { showToast('❌ Lỗi lưu task','error'); }
+    } catch(e) { showToast('Error saving task','error'); }
   }
 
   async function markDone(id) {
-    if (!confirm('Đánh dấu task này là hoàn thành?')) return;
+    if (!confirm('Mark this task as done?')) return;
     await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+id,{
       method:'PATCH',headers:HDRS,body:JSON.stringify({status:'done'})
     });
-    showToast('✅ Đã hoàn thành!','success');
+    showToast('Task completed!','success');
     await loadData();
   }
 
   function closeModal(id) { document.getElementById(id).classList.remove('open'); }
   function closeModalOutside(e,id) { if(e.target.id===id) closeModal(id); }
-  function logout() { if(confirm('Đăng xuất?')){ localStorage.clear(); window.location.href='index.html'; } }
-  function showToast(msg,type='success') {
-    const t=document.getElementById('toast');
-    t.textContent=msg; t.className='toast '+type+' show';
-    setTimeout(()=>t.classList.remove('show'),3200);
+  function logout() { if(confirm('Sign out?')){ localStorage.clear(); window.location.href='index.html'; } }
+  function showToast(msg,type) {
+    var t=document.getElementById('toast');
+    t.textContent=msg; t.className='toast '+(type||'success')+' show';
+    setTimeout(function(){t.classList.remove('show');},3200);
   }
 </script>
 </body>
-</html>"""
+</html>
