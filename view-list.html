@@ -439,7 +439,7 @@ function collapseRow(id) {
   if(ch) ch.classList.remove('open');
 }
 function buildUserOptions(selectedId) {
-  var html='<option value="">- Chua phan cong -</option>';
+  var html='<option value="">- Not yet assigned -</option>';
   for (var i=0;i<allUsers.length;i++) {
     var u=allUsers[i];
     html+='<option value="'+u.id+'"'+(u.id===selectedId?' selected':'')+'>'+( u.name||u.email)+'</option>';
@@ -548,32 +548,32 @@ function buildExpandInner(projId, projColor) {
     var user=null;
     for(var j=0;j<allUsers.length;j++){if(allUsers[j].id===t.assigned_to){user=allUsers[j];break;}}
     var tc=TYPE_COLOR[t.task_type]||projColor||'#a8dadc';
-    var uname=user?(user.name||user.email):'- Chua phan cong -';
+    var uname=user?(user.name||user.email):'- Not yet assigned -';
     var tid=t.id;
     cardsHtml+='<div class="task-card" id="tc-'+tid+'">'
-      +'<div class="saving-mask" id="mask-'+tid+'">&#x1F4BE; Dang luu...</div>'
+      +'<div class="saving-mask" id="mask-'+tid+'">&#x1F4BE; Saving...</div>'
       +'<div class="task-card-actions">'
       +'<button class="btn-edit-task" id="editbtn-'+tid+'">&#x270F;&#xFE0F; Sua</button>'
       +'<button class="btn-del-task"  id="delbtn-'+tid+'">&#x1F5D1;&#xFE0F;</button>'
       +'</div>'
       +'<div class="task-card-type" style="background:'+tc+';">'+(t.task_type||'Task')+'</div>'
       +'<div id="view-'+tid+'">'
-        +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span><span class="task-field-val">'+uname+'</span></div>'
-        +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Nhan data:</span><span class="task-field-val">'+(t.receive_date||'-')+'</span></div>'
-        +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Bat dau:</span><span class="task-field-val">'+(t.start_date||'-')+'</span></div>'
-        +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">Ket thuc:</span><span class="task-field-val">'+(t.end_date||'-')+'</span></div>'
-        +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Ngay gui:</span><span class="task-field-val">'+(t.send_date||'-')+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Person in Charge:</span><span class="task-field-val">'+uname+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Receive:</span><span class="task-field-val">'+(t.receive_date||'-')+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Start:</span><span class="task-field-val">'+(t.start_date||'-')+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">End:</span><span class="task-field-val">'+(t.end_date||'-')+'</span></div>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Send:</span><span class="task-field-val">'+(t.send_date||'-')+'</span></div>'
       +'</div>'
       +'<div id="edit-'+tid+'" style="display:none;">'
-        +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Phu trach:</span>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F464;</span><span class="task-field-label">Person in Charge:</span>'
         +'<select class="edit-select" id="eu-'+tid+'">'+buildUserOptions(t.assigned_to)+'</select></div>'
-        +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Nhan data:</span>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4E5;</span><span class="task-field-label">Receive:</span>'
         +'<input type="date" class="edit-input" id="er-'+tid+'" value="'+(t.receive_date||'')+'"/></div>'
-        +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Bat dau:</span>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4C5;</span><span class="task-field-label">Start:</span>'
         +'<input type="date" class="edit-input" id="es-'+tid+'" value="'+(t.start_date||'')+'"/></div>'
-        +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">Ket thuc:</span>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F3C1;</span><span class="task-field-label">End:</span>'
         +'<input type="date" class="edit-input" id="ee-'+tid+'" value="'+(t.end_date||'')+'"/></div>'
-        +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Ngay gui:</span>'
+        +'<div class="task-field"><span class="task-field-icon">&#x1F4E4;</span><span class="task-field-label">Send:</span>'
         +'<input type="date" class="edit-input" id="eg-'+tid+'" value="'+(t.send_date||'')+'"/></div>'
         +'<div class="edit-btn-wrap">'
         +'<button class="btn-save-task" id="savebtn-'+tid+'">&#x1F4BE; Luu</button>'
@@ -662,7 +662,7 @@ function renderList() {
 
   var tbody=document.getElementById('listBody');
   if(!data.length){
-    tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">Khong co du an nao</td></tr>';
+    tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">No projects</td></tr>';
     return;
   }
 
