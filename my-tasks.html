@@ -91,7 +91,6 @@
     .proj-combo-item .proj-code-tag{font-weight:700;color:#0077b6;margin-right:6px;}
     .proj-combo-item .proj-name-tag{color:#333;}
     .proj-selected-display{font-size:12px;color:#0077b6;font-weight:600;margin-top:5px;min-height:18px;}
-    /* Year group for done tab */
     .year-group{margin-bottom:12px;border:1.5px solid #e8e8e8;border-radius:10px;overflow:hidden;}
     .year-group-header{display:flex;align-items:center;gap:10px;padding:11px 16px;background:#f0f4f8;cursor:pointer;user-select:none;font-weight:700;font-size:14px;color:#1a1a2e;transition:background .15s;}
     .year-group-header:hover{background:#e8f4fe;}
@@ -158,7 +157,6 @@
       <button class="tab-switch-btn" id="tabDoneBtn" onclick="switchTab('done')">&#x2705; Done Tasks</button>
     </div>
 
-    <!-- Active Tasks Table -->
     <div id="activeSection">
       <table>
         <thead>
@@ -176,7 +174,6 @@
       </table>
     </div>
 
-    <!-- Done Tasks grouped by year -->
     <div id="doneSection" style="display:none;">
       <div id="doneYearGroups"><div class="empty-msg">Loading...</div></div>
     </div>
@@ -236,6 +233,14 @@
     'Prefer': 'return=representation'
   };
   var PASTEL = ['#a8dadc','#b5ead7','#ffdac1','#c7ceea','#ffb7b2','#e2f0cb','#bee5eb','#d4b8e0','#f7c59f','#a0c4ff'];
+  var TASK_TYPES = [
+    '\u30d1\u30fc\u30b9\u30fb\u52d5\u753b',
+    '\u610f\u5320\u30e2\u30c7\u30eb',
+    '\u69cb\u9020\u30e2\u30c7\u30eb',
+    '\u6e05\u7b97\u30e2\u30c7\u30eb',
+    '\u56f3\u9762',
+    '\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7'
+  ];
   var TYPE_COLORS = {
     '\u30d1\u30fc\u30b9\u30fb\u52d5\u753b': '#f4a261',
     '\u610f\u5320\u30e2\u30c7\u30eb': '#4cc9f0',
@@ -259,7 +264,7 @@
 
   function getYearFromCode(code) {
     if (!code) return 'Unknown';
-    var m = code.match(/^(\d{2})/);
+    var m = code.match(/^(\\d{2})/);
     if (m) return '20' + m[1];
     return 'Unknown';
   }
@@ -427,8 +432,6 @@
       container.innerHTML = '<div class="empty-msg">No completed tasks yet.</div>';
       return;
     }
-
-    // group by year
     var groups = {};
     tasks.forEach(function(t) {
       var proj = allProjects.find(function(p) { return p.id === t.project_id; });
@@ -437,17 +440,13 @@
       if (!groups[yr]) groups[yr] = [];
       groups[yr].push(t);
     });
-
-    var currentYear = '20' + new Date().getFullYear().toString().slice(-2);
+    var thisYear = String(new Date().getFullYear());
     var years = Object.keys(groups).sort(function(a, b) { return b - a; });
-
-    // default: expand current year
     years.forEach(function(yr) {
       if (!(yr in expandedYears)) {
-        expandedYears[yr] = (yr === currentYear);
+        expandedYears[yr] = (yr === thisYear);
       }
     });
-
     var html = '';
     years.forEach(function(yr) {
       var yearTasks = groups[yr];
@@ -466,7 +465,6 @@
           + '<td><button class="btn-sm btn-undone" onclick="markActive(\'' + t.id + '\')">&#x21A9;&#xFE0F; Revert</button></td>'
           + '</tr>';
       }).join('');
-
       html += '<div class="year-group">'
         + '<div class="year-group-header" onclick="toggleYearGroup(\'' + yr + '\')">'
         + '<span class="year-group-arrow' + (isOpen ? ' open' : '') + '" id="yarrow-' + yr + '">&#x25B6;</span>'
@@ -479,7 +477,6 @@
         + '</div>'
         + '</div>';
     });
-
     container.innerHTML = html;
   }
 
