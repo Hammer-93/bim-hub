@@ -299,18 +299,6 @@ var TASK_TYPE_ORDER = {
   "\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7":4,
   "\u6e05\u7b97\u30e2\u30c7\u30eb":5
 };
-
-// Valid task types defined in view-list (project tasks only)
-var VALID_TASK_TYPES = [
-  "\u610f\u5320\u30e2\u30c7\u30eb",
-  "\u69cb\u9020\u30e2\u30c7\u30eb",
-  "\u56f3\u9762",
-  "\u30d1\u30fc\u30b9\u30fb\u52d5\u753b",
-  "\u52d5\u753b\u30fb\u30d1\u30fc\u30b9",
-  "\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7",
-  "\u6e05\u7b97\u30e2\u30c7\u30eb"
-];
-
 var projColWidth = 200;
 
 // ─── AUTO-FIT PROJECT COLUMN ──────────────────────────────────────────────────
@@ -339,22 +327,22 @@ function autoFitProjCol() {
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Filter tasks: only show tasks that belong to a project (project_id exists in allProjects)
-// and have a task_type that is one of the VALID_TASK_TYPES defined in view-list.
-// This excludes personal tasks added via my-tasks.html (which may have no project_id
-// matching any project, or have task_type values not in the official list).
+// ─── FILTER: only tasks created from view-list (task_source = 'task_manager') ─
+// Tasks added by staff via my-tasks.html have task_source = 'task_working'
+// and must NOT appear in view-schedule.
+// For backward compatibility: tasks with no task_source field (null/undefined)
+// are treated as 'task_manager' because the default value set in Supabase is
+// 'task_manager' and all existing tasks created before this field was added
+// should be shown in the schedule.
 function getProjectTasks(projectId) {
-  var validProjectIds = allProjects.map(function(p) { return p.id; });
   return allTasks.filter(function(t) {
-    // Must belong to a known project
-    if (!t.project_id || validProjectIds.indexOf(t.project_id) === -1) return false;
-    // Must match the requested project
     if (t.project_id !== projectId) return false;
-    // Must have a valid official task type (not a personal/my-task entry)
-    if (t.task_type && VALID_TASK_TYPES.indexOf(t.task_type) === -1) return false;
+    // Exclude tasks explicitly marked as personal (my-tasks)
+    if (t.task_source === "task_working") return false;
     return true;
   });
 }
+// ─────────────────────────────────────────────────────────────────────────────
 
 function getMeta(id) {
   try { return JSON.parse(localStorage.getItem(LS_KEY) || "{}")[id] || {}; } catch(e) { return {}; }
@@ -751,7 +739,7 @@ function renderGantt() {
   }
 
   projects.forEach(function(p) {
-    // Use getProjectTasks() to exclude my-tasks personal entries
+    // Only show tasks created from view-list (task_source = 'task_manager' or null/undefined)
     var tasks = getProjectTasks(p.id);
     var rs = Math.max(tasks.length, 1);
     var stt = sttMap[p.id] || "";
@@ -791,7 +779,6 @@ function renderGantt() {
 
   projects.forEach(function(p) {
     var color = projColorMap[p.id] || "#a8dadc";
-    // Use getProjectTasks() to render only official project tasks
     getProjectTasks(p.id).forEach(function(t) {
       var row = document.querySelector('tr[data-tid="' + t.id + '"]');
       if (!row) return;
