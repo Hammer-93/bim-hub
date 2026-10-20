@@ -47,14 +47,15 @@
     .btn-primary:hover { box-shadow:0 6px 18px rgba(0,119,182,.35); transform:translateY(-1px); }
     .btn-secondary { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:9px 20px; border-radius:8px; font-size:13.5px; font-weight:600; cursor:pointer; }
     .btn-secondary:hover { background:#f5f5f5; }
-    .filters { display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+    .tab-switcher { display:flex; gap:0; border:1.5px solid #dde2ea; border-radius:9px; overflow:hidden; margin-bottom:18px; max-width:360px; }
+    .tab-switch-btn { flex:1; padding:9px 0; font-size:13px; font-weight:600; border:none; cursor:pointer; background:#f8fbff; color:#888; transition:all .15s; }
+    .tab-switch-btn.active { background:#0077b6; color:#fff; }
+    .filters { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
     .filter-input { padding:8px 14px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; font-family:inherit; }
     .filter-input:focus { border-color:#0096c7; }
-    .filter-btn { padding:8px 16px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; cursor:pointer; background:#fff; font-weight:600; color:#555; transition:all .15s; font-family:inherit; }
-    .filter-btn:hover, .filter-btn.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
     .filter-select { padding:8px 12px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; font-family:inherit; color:#333; cursor:pointer; }
-    input[type=text], input[type=date], select, textarea { width:100%; padding:9px 12px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; transition:border-color .2s; font-family:inherit; color:#222; }
-    input:focus, select:focus, textarea:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.1); }
+    input[type=text],input[type=date],select,textarea { width:100%; padding:9px 12px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; transition:border-color .2s; font-family:inherit; color:#222; }
+    input:focus,select:focus,textarea:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.1); }
     .form-group { display:flex; flex-direction:column; gap:5px; margin-bottom:12px; }
     .form-group.full { grid-column:1/-1; }
     .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px 20px; }
@@ -74,8 +75,9 @@
     .toast.error   { border-left:4px solid #e63946; }
     .tooltip { position:fixed; background:#1a1a2e; color:#fff; padding:8px 12px; border-radius:8px; font-size:12px; z-index:9999; pointer-events:none; display:none; max-width:260px; line-height:1.6; }
     .status-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
-    .status-active { background:#d4edda; color:#1a7c3a; }
-    .status-done   { background:#f0f0f0; color:#666; }
+    .status-running { background:#d4edda; color:#1a7c3a; }
+    .status-ended   { background:#f0f0f0; color:#666; }
+    .status-finish  { background:#d4edff; color:#0044aa; }
     .color-dot { width:11px; height:11px; border-radius:50%; display:inline-block; margin-right:5px; vertical-align:middle; }
     .combo-wrap { position:relative; }
     .combo-arrow { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#aaa; pointer-events:none; font-size:12px; }
@@ -86,7 +88,7 @@
     .combo-new { color:#0096c7; font-style:italic; }
     .tag-wrap { display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; }
     .tag { font-size:11px; background:#f0f4f8; border:1px solid #dde2ea; color:#555; padding:2px 9px; border-radius:20px; cursor:pointer; }
-    .tag:hover, .tag.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
+    .tag:hover,.tag.active { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
     .num-wrap { display:flex; align-items:center; gap:8px; }
     .num-prefix { font-size:13px; font-weight:700; color:#0077b6; background:#e8f4fe; padding:9px 11px; border-radius:8px; border:1.5px solid #b8dff5; white-space:nowrap; }
     .preview-box { background:linear-gradient(135deg,#0077b6,#00b4d8); border-radius:10px; padding:14px 18px; color:#fff; margin-bottom:16px; }
@@ -148,14 +150,26 @@
     .btn-close-add { background:none; border:none; color:#aaa; cursor:pointer; font-size:16px; line-height:1; }
     .btn-close-add:hover { color:#e63946; }
     .group-selector { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:6px; }
-    .group-opt { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:12px 8px; border:2px solid #dde2ea; border-radius:10px; cursor:pointer; transition:all .15px; background:#fff; }
+    .group-opt { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:12px 8px; border:2px solid #dde2ea; border-radius:10px; cursor:pointer; transition:all .15s; background:#fff; }
     .group-opt:hover { border-color:#0096c7; background:#f0f7ff; }
     .group-opt.active { border-color:#0096c7; background:#e8f4fe; }
     .g-key { font-size:18px; font-weight:800; }
     .g-icon { font-size:20px; }
     .g-label { font-size:10px; color:#666; text-align:center; font-weight:600; }
-    .btn-del-proj { border:1.5px solid #ffb3b3; color:#e63946; background:#fff; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:600; }
+    .btn-del-proj    { border:1.5px solid #ffb3b3; color:#e63946; background:#fff; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:600; }
     .btn-del-proj:hover { background:#fff0f0; }
+    .btn-finish-proj { border:1.5px solid #b8dff5; color:#0077b6; background:#fff; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:600; }
+    .btn-finish-proj:hover { background:#e8f4fe; }
+    .btn-revert-proj { border:1.5px solid #ffd166; color:#856404; background:#fff; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:600; }
+    .btn-revert-proj:hover { background:#fff9e6; }
+    .year-group { margin-bottom:12px; }
+    .year-group-header { display:flex; align-items:center; gap:10px; padding:10px 16px; background:#f0f4f8; cursor:pointer; user-select:none; font-weight:700; font-size:14px; color:#1a1a2e; border-radius:10px; transition:background .15s; margin-bottom:4px; }
+    .year-group-header:hover { background:#e8f4fe; }
+    .year-group-arrow { font-size:11px; transition:transform .2s; color:#0077b6; }
+    .year-group-arrow.open { transform:rotate(90deg); }
+    .year-group-count { font-size:11px; font-weight:600; background:#0077b6; color:#fff; padding:2px 8px; border-radius:10px; margin-left:auto; }
+    .year-group-body { display:none; }
+    .year-group-body.open { display:block; }
   </style>
 </head>
 <body>
@@ -204,9 +218,6 @@
   </div>
   <div class="filters">
     <input class="filter-input" id="searchProj" placeholder="&#x1F50D; Find Project..." oninput="renderList()" style="min-width:220px;"/>
-    <button class="filter-btn active" id="fAll"    onclick="setFilter('all')">All</button>
-    <button class="filter-btn"        id="fActive" onclick="setFilter('active')">&#x1F7E2; Running</button>
-    <button class="filter-btn"        id="fDone"   onclick="setFilter('done')">&#x2B1C; Ended</button>
     <select class="filter-select" id="fGroup" onchange="renderList()">
       <option value="">All Group</option>
       <option value="A">A - &#x8A2D;&#x8A08;BIM</option>
@@ -215,24 +226,33 @@
       <option value="D">D - M&amp;F</option>
     </select>
   </div>
-  <table class="proj-table">
-    <thead>
-      <tr>
-        <th style="width:60px;text-align:center;">No.</th>
-        <th>Project Code</th>
-        <th>Project Name</th>
-        <th>Branch</th>
-        <th>Design classification</th>
-        <th>Group</th>
-        <th>Status</th>
-        <th>Creation Date</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="listBody">
-      <tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">Loading...</td></tr>
-    </tbody>
-  </table>
+  <div class="tab-switcher">
+    <button class="tab-switch-btn active" id="tabRunningBtn" onclick="switchMainTab('running')">&#x1F7E2; Running</button>
+    <button class="tab-switch-btn" id="tabFinishBtn" onclick="switchMainTab('finish')">&#x2705; Finish</button>
+  </div>
+  <div id="runningSection">
+    <table class="proj-table">
+      <thead>
+        <tr>
+          <th style="width:60px;text-align:center;">No.</th>
+          <th>Project Code</th>
+          <th>Project Name</th>
+          <th>Branch</th>
+          <th>Design classification</th>
+          <th>Group</th>
+          <th>Status</th>
+          <th>Creation Date</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="runningBody">
+        <tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="finishSection" style="display:none;">
+    <div id="finishYearGroups"><div style="text-align:center;padding:32px;color:#aaa;">Loading...</div></div>
+  </div>
 </div>
 
 <!-- MODAL TAO DU AN -->
@@ -246,9 +266,9 @@
       <div class="preview-label">Project Preview</div>
       <div class="preview-code">
         <span id="pYear">26</span><span id="pNum">001</span>
-        <span class="dim">_</span><span id="pBranch" class="dim">&#x652F;&#x5E97;</span>
-        <span class="dim">_</span><span id="pDesign" class="dim">&#x8A2D;&#x8A08;&#x533A;&#x5206;</span>
-        <span class="dim">_</span><span id="pName" class="dim">&#x7269;&#x4EF6;&#x540D;</span>
+        <span class="dim">_</span><span id="pBranch" class="dim">支店</span>
+        <span class="dim">_</span><span id="pDesign" class="dim">設計区分</span>
+        <span class="dim">_</span><span id="pName" class="dim">物件名</span>
       </div>
     </div>
     <div class="form-group" style="margin-bottom:16px;">
@@ -257,17 +277,17 @@
         <div class="group-opt active" id="grpA" onclick="selectGroup('A')">
           <span class="g-key" style="color:#0077b6;">A</span>
           <span class="g-icon">&#x1F3DB;&#xFE0F;</span>
-          <span class="g-label">&#x8A2D;&#x8A08;BIM</span>
+          <span class="g-label">設計BIM</span>
         </div>
         <div class="group-opt" id="grpB" onclick="selectGroup('B')">
           <span class="g-key" style="color:#1a7c3a;">B</span>
           <span class="g-icon">&#x1F3D7;&#xFE0F;</span>
-          <span class="g-label">&#x65BD;&#x5DE5;BIM</span>
+          <span class="g-label">施工BIM</span>
         </div>
         <div class="group-opt" id="grpC" onclick="selectGroup('C')">
           <span class="g-key" style="color:#856404;">C</span>
           <span class="g-icon">&#x1F4B0;</span>
-          <span class="g-label">&#x6E05;&#x7B97;</span>
+          <span class="g-label">清算</span>
         </div>
         <div class="group-opt" id="grpD" onclick="selectGroup('D')">
           <span class="g-key" style="color:#7b2d8b;">D</span>
@@ -289,9 +309,9 @@
         <input type="text" id="numInput" value="001" maxlength="3" oninput="updatePreview()" style="max-width:90px;"/>
       </div>
       <div class="form-group">
-        <label>&#x652F;&#x5E97;&#x540D; <span class="req">*</span></label>
+        <label>支店名 <span class="req">*</span></label>
         <div class="combo-wrap">
-          <input type="text" id="branchInput" placeholder="&#x652F;&#x5E97;&#x3092;&#x9078;&#x629E;..." autocomplete="off"
+          <input type="text" id="branchInput" placeholder="支店を選択..." autocomplete="off"
             oninput="onCombo('branch')" onfocus="openDD('branch')" onblur="closeDD('branch')"/>
           <span class="combo-arrow">&#x25BC;</span>
           <div class="combo-dd" id="branchDD"></div>
@@ -299,9 +319,9 @@
         <div class="tag-wrap" id="branchTags"></div>
       </div>
       <div class="form-group">
-        <label>&#x8A2D;&#x8A08;&#x533A;&#x5206; <span style="color:#aaa;font-weight:400;font-size:11px;">&#xFF08;&#x7069;&#x7565;&#x53EF;&#xFF09;</span></label>
+        <label>設計区分 <span style="color:#aaa;font-weight:400;font-size:11px;">（略可）</span></label>
         <div class="combo-wrap">
-          <input type="text" id="designInput" placeholder="&#x8A2D;&#x8A08;&#x533A;&#x5206;&#x3092;&#x9078;&#x629E;..." autocomplete="off"
+          <input type="text" id="designInput" placeholder="設計区分を選択..." autocomplete="off"
             oninput="onCombo('design')" onfocus="openDD('design')" onblur="closeDD('design')"/>
           <span class="combo-arrow">&#x25BC;</span>
           <div class="combo-dd" id="designDD"></div>
@@ -322,32 +342,33 @@
     </div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn-primary"   onclick="createProject()">&#x2705; OK</button>
+      <button class="btn-primary" onclick="createProject()">&#x2705; OK</button>
     </div>
   </div>
 </div>
 
 <script src="js/config.js"></script>
 <script>
-var filterStatus    = 'all';
 var taskRowCount    = 0;
 var selectedGroup   = 'A';
 var currentUserRole = 'Staff';
 var expandedId      = null;
+var mainTab         = 'running';
+var expandedFinishYears = {};
 
 var GROUP_CFG = {
-  A: { label:'\u8a2d\u8a08BIM', icon:'\ud83c\udffb\ufe0f' },
-  B: { label:'\u65bd\u5de5BIM', icon:'\ud83c\udfd7\ufe0f' },
-  C: { label:'\u6e05\u7b97',    icon:'\ud83d\udcb0' },
-  D: { label:'M&F',             icon:'\ud83d\udd27' }
+  A: { label:'設計BIM', icon:'🏛️' },
+  B: { label:'施工BIM', icon:'🏗️' },
+  C: { label:'清算',    icon:'💰' },
+  D: { label:'M&F',    icon:'🔧' }
 };
 var TYPE_COLOR = {
-  '\u30d1\u30fc\u30b9\u30fb\u52d5\u753b':'#f4a261',
-  '\u610f\u5320\u30e2\u30c7\u30eb':'#4cc9f0',
-  '\u69cb\u9020\u30e2\u30c7\u30eb':'#52b788',
-  '\u6e05\u7b97\u30e2\u30c7\u30eb':'#9b5de5',
-  '\u56f3\u9762':'#e63946',
-  '\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7':'#ffd166'
+  'パース・動画':'#f4a261',
+  '意匠モデル':'#4cc9f0',
+  '構造モデル':'#52b788',
+  '清算モデル':'#9b5de5',
+  '図面':'#e63946',
+  '施工ステップ':'#ffd166'
 };
 
 window.onload = function() {
@@ -372,27 +393,15 @@ function initTopbar() {
   }
   var dropBtn  = document.getElementById('userDropBtn');
   var dropMenu = document.getElementById('userDropMenu');
-  dropBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    dropMenu.classList.toggle('open');
-  });
-  document.addEventListener('click', function() {
-    dropMenu.classList.remove('open');
-  });
+  dropBtn.addEventListener('click', function(e) { e.stopPropagation(); dropMenu.classList.toggle('open'); });
+  document.addEventListener('click', function() { dropMenu.classList.remove('open'); });
 }
 
 function initNavDrop() {
   var trigger = document.getElementById('scheduleNavTrigger');
   var menu    = document.getElementById('scheduleNavMenu');
-  trigger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    trigger.classList.toggle('open');
-    menu.classList.toggle('open');
-  });
-  document.addEventListener('click', function() {
-    trigger.classList.remove('open');
-    menu.classList.remove('open');
-  });
+  trigger.addEventListener('click', function(e) { e.stopPropagation(); trigger.classList.toggle('open'); menu.classList.toggle('open'); });
+  document.addEventListener('click', function() { trigger.classList.remove('open'); menu.classList.remove('open'); });
 }
 
 function selectGroup(g) {
@@ -401,6 +410,15 @@ function selectGroup(g) {
     var el = document.getElementById('grp'+k);
     if (k===g) el.classList.add('active'); else el.classList.remove('active');
   });
+}
+
+function switchMainTab(tab) {
+  mainTab = tab;
+  document.getElementById('runningSection').style.display = tab==='running' ? '' : 'none';
+  document.getElementById('finishSection').style.display  = tab==='finish'  ? '' : 'none';
+  document.getElementById('tabRunningBtn').className = 'tab-switch-btn'+(tab==='running'?' active':'');
+  document.getElementById('tabFinishBtn').className  = 'tab-switch-btn'+(tab==='finish'?' active':'');
+  renderList();
 }
 
 function getCodeNum(p) {
@@ -412,26 +430,32 @@ function getCodeNum(p) {
 function getProjectsSorted() {
   return allProjects.slice().sort(function(a,b){ return getCodeNum(a)-getCodeNum(b); });
 }
-
-function setFilter(f) {
-  filterStatus=f;
-  ['fAll','fActive','fDone'].forEach(function(id){ document.getElementById(id).classList.remove('active'); });
-  document.getElementById({all:'fAll',active:'fActive',done:'fDone'}[f]).classList.add('active');
-  renderList();
+function getProjCode(p) {
+  if (p.year && p.seq_number) return p.year+String(p.seq_number).padStart(3,'0');
+  return (p.code||'').split('_')[0]||'';
 }
+function getYearFromCode(code) {
+  if (!code) return 'Unknown';
+  var m = code.match(/^(\d{2})/);
+  if (m) return '20'+m[1];
+  return 'Unknown';
+}
+
 function calcStatus(p) {
+  if (p.finish_status === 'finish') return 'finish';
   var today=new Date(); today.setHours(0,0,0,0);
   var pt=allTasks.filter(function(t){ return t.project_id===p.id; });
-  if (!pt.length) return 'active';
+  if (!pt.length) return 'running';
   var hasNoSend=false, allPast=true;
   for (var j=0;j<pt.length;j++) {
     if (!pt[j].send_date) { hasNoSend=true; allPast=false; break; }
     var sd=new Date(pt[j].send_date); sd.setHours(0,0,0,0);
     if (sd>=today) allPast=false;
   }
-  if (hasNoSend) return 'active';
-  return allPast?'done':'active';
+  if (hasNoSend) return 'running';
+  return allPast?'ended':'running';
 }
+
 function getActiveTasks(projId) {
   var today=new Date(); today.setHours(0,0,0,0);
   return allTasks.filter(function(t) {
@@ -462,13 +486,14 @@ function collapseRow(id) {
   if(tr) tr.classList.remove('open');
   if(ch) ch.classList.remove('open');
 }
+
 function buildUserOptions(selectedId) {
   var ALLOWED=['Leader','Sub Manager','Manager','Admin'];
   var html='<option value="">- Not yet assigned -</option>';
   for (var i=0;i<allUsers.length;i++) {
     var u=allUsers[i];
     if (ALLOWED.indexOf(u.role)===-1) continue;
-    html+='<option value="'+u.id+'"'+(u.id===selectedId?' selected':'')+'>'+( u.name||u.email)+'</option>';
+    html+='<option value="'+u.id+'"'+(u.id===selectedId?' selected':'')+'>'+(u.name||u.email)+'</option>';
   }
   return html;
 }
@@ -530,8 +555,6 @@ function toggleAddTask(projId) {
   if(form.classList.contains('open')){form.classList.remove('open');btn.style.display='flex';}
   else{form.classList.add('open');btn.style.display='none';}
 }
-
-// ─── SAVE NEW TASK: thêm task_source = 'task_manager' ─────────────────────────
 async function saveNewTask(projId) {
   var ttype=document.getElementById('an-type-'+projId).value;
   var uid=document.getElementById('an-user-'+projId).value||null;
@@ -543,15 +566,9 @@ async function saveNewTask(projId) {
     var res=await fetch(SUPABASE_URL+'/rest/v1/project_tasks',{
       method:'POST',headers:HDRS,
       body:JSON.stringify({
-        project_id:projId,
-        task_type:ttype,
-        assigned_to:uid,
-        receive_date:rcv,
-        start_date:st,
-        end_date:en,
-        send_date:snd,
-        status:'active',
-        task_source:'task_manager'
+        project_id:projId,task_type:ttype,assigned_to:uid,
+        receive_date:rcv,start_date:st,end_date:en,send_date:snd,
+        status:'active',task_source:'task_manager'
       })
     });
     if(!res.ok){showToast('Error adding task','error');return;}
@@ -561,7 +578,23 @@ async function saveNewTask(projId) {
     refreshExpand(projId); renderList();
   } catch(e){showToast('Error: '+e.message,'error');}
 }
-// ─────────────────────────────────────────────────────────────────────────────
+
+async function markProjectFinish(pid) {
+  if(!confirm('Mark this project as Finish?')) return;
+  try {
+    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+pid,{method:'PATCH',headers:HDRS,body:JSON.stringify({finish_status:'finish'})});
+    for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){allProjects[i].finish_status='finish';break;}}
+    showToast('Project marked as Finish!','success'); renderList();
+  } catch(e){showToast('Error: '+e.message,'error');}
+}
+async function revertProjectFinish(pid) {
+  if(!confirm('Revert this project to Running?')) return;
+  try {
+    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+pid,{method:'PATCH',headers:HDRS,body:JSON.stringify({finish_status:'active'})});
+    for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){allProjects[i].finish_status='active';break;}}
+    showToast('Project reverted to Running!','success'); renderList();
+  } catch(e){showToast('Error: '+e.message,'error');}
+}
 
 function refreshExpand(projId) {
   var inner=document.querySelector('#task-row-'+projId+' .task-expand-inner');
@@ -665,77 +698,143 @@ function bindExpandEvents(projId) {
     if(addCancel) addCancel.onclick=function(e){e.stopPropagation();toggleAddTask(pid);};
   })(projId);
 }
+
+function buildProjectRow(p, sttNum, color, cfg, autoSt, isFinishTab) {
+  var date=p.created_at?new Date(p.created_at).toLocaleDateString('vi-VN'):'-';
+  var projId2=getProjCode(p)||'-';
+  var activeCnt=getActiveTasks(p.id).length;
+  var cntBadge=activeCnt>0?'<span style="background:#e63946;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:5px;">'+activeCnt+'</span>':'';
+  var stBadge='';
+  if(autoSt==='running') stBadge='<span class="status-badge status-running">&#x1F7E2; Running</span>';
+  else if(autoSt==='ended') stBadge='<span class="status-badge status-ended">&#x2B1C; Ended</span>';
+  else stBadge='<span class="status-badge status-finish">&#x2705; Finish</span>';
+  var actionBtns='';
+  if(!isFinishTab){
+    actionBtns+='<button class="btn-finish-proj" id="finbtn-'+p.id+'">&#x2705; Finish</button> ';
+    if(currentUserRole==='Admin') actionBtns+='<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Delete</button>';
+  } else {
+    actionBtns='<button class="btn-revert-proj" id="revbtn-'+p.id+'">&#x21A9;&#xFE0F; Revert</button>';
+  }
+  var expandInner=buildExpandInner(p.id,color);
+  return '<tr class="proj-row" id="proj-row-'+p.id+'">'
+    +'<td style="text-align:center;"><div class="stt-badge">'+sttNum+'</div></td>'
+    +'<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>'+projId2+'</span></td>'
+    +'<td style="font-weight:600;">'+p.project_name+'<span class="chevron" id="chev-'+p.id+'">&#x25B6;</span>'+cntBadge+'</td>'
+    +'<td>'+(p.branch||'-')+'</td>'
+    +'<td>'+(p.design_type||'-')+'</td>'
+    +'<td><span style="font-size:12px;">'+cfg.icon+' '+cfg.label+'</span></td>'
+    +'<td>'+stBadge+'</td>'
+    +'<td style="color:#888;">'+date+'</td>'
+    +'<td>'+actionBtns+'</td>'
+    +'</tr>'
+    +'<tr class="task-expand-row" id="task-row-'+p.id+'">'
+    +'<td class="task-expand-cell" colspan="9"><div class="task-expand-inner">'+expandInner+'</div></td>'
+    +'</tr>';
+}
+
 function renderList() {
   var q=(document.getElementById('searchProj').value||'').toLowerCase();
   var grpF=document.getElementById('fGroup').value;
   var prevExp=expandedId; expandedId=null;
   var sortedAll=getProjectsSorted();
-  var data=[];
+  var runningProjects=[], finishProjects=[];
   for(var i=0;i<sortedAll.length;i++){
-    var p=sortedAll[i], as=calcStatus(p);
+    var p=sortedAll[i];
     var mQ=!q||p.project_name.toLowerCase().indexOf(q)>=0||(p.code||'').toLowerCase().indexOf(q)>=0;
-    var mS=true;
-    if(filterStatus==='active') mS=(as==='active');
-    if(filterStatus==='done')   mS=(as==='done');
     var mG=!grpF||p.proj_group===grpF;
-    if(mQ&&mS&&mG) data.push(p);
+    if(!mQ||!mG) continue;
+    if(p.finish_status==='finish') finishProjects.push(p);
+    else runningProjects.push(p);
   }
-  var tbody=document.getElementById('listBody');
-  if(!data.length){
-    tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">No projects</td></tr>';
-    return;
-  }
-  var html='';
-  for(var d=0;d<data.length;d++){
-    var p=data[d], color=projColorMap[p.id]||'#a8dadc';
-    var grp2=p.proj_group||'A', cfg=GROUP_CFG[grp2]||GROUP_CFG['A'];
-    var sttNum=d+1;
-    var autoSt=calcStatus(p);
-    var stBadge=autoSt==='done'
-      ?'<span class="status-badge status-done">&#x2B1C; Ended</span>'
-      :'<span class="status-badge status-active">&#x1F7E2; Running</span>';
-    var date=p.created_at?new Date(p.created_at).toLocaleDateString('vi-VN'):'-';
-    var projId2=p.year&&p.seq_number?p.year+String(p.seq_number).padStart(3,'0'):(p.code||'-').split('_')[0];
-    var activeCnt=getActiveTasks(p.id).length;
-    var cntBadge=activeCnt>0?'<span style="background:#e63946;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:5px;">'+activeCnt+'</span>':'';
-    var delBtn=currentUserRole==='Admin'?'<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Delete</button>':'';
-    var expandInner=buildExpandInner(p.id,color);
-    html+='<tr class="proj-row" id="proj-row-'+p.id+'">'
-      +'<td style="text-align:center;"><div class="stt-badge">'+sttNum+'</div></td>'
-      +'<td><span class="proj-code"><span class="color-dot" style="background:'+color+';"></span>'+projId2+'</span></td>'
-      +'<td style="font-weight:600;">'+p.project_name+'<span class="chevron" id="chev-'+p.id+'">&#x25B6;</span>'+cntBadge+'</td>'
-      +'<td>'+(p.branch||'-')+'</td>'
-      +'<td>'+(p.design_type||'-')+'</td>'
-      +'<td><span style="font-size:12px;">'+cfg.icon+' '+cfg.label+'</span></td>'
-      +'<td>'+stBadge+'</td>'
-      +'<td style="color:#888;">'+date+'</td>'
-      +'<td>'+delBtn+'</td>'
-      +'</tr>'
-      +'<tr class="task-expand-row" id="task-row-'+p.id+'">'
-      +'<td class="task-expand-cell" colspan="9"><div class="task-expand-inner">'+expandInner+'</div></td>'
-      +'</tr>';
-  }
-  tbody.innerHTML=html;
-  for(var d2=0;d2<data.length;d2++){
-    var p2=data[d2];
-    (function(pid){
-      var row=document.getElementById('proj-row-'+pid);
-      if(row) row.onclick=function(e){
-        if(e.target.tagName==='BUTTON'||e.target.closest('button')) return;
-        toggleExpand(pid);
-      };
-      var dpb=document.getElementById('delprojbtn-'+pid);
-      if(dpb) dpb.onclick=function(e){
-        e.stopPropagation();
-        var proj=null;
-        for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){proj=allProjects[i];break;}}
-        if(proj) deleteProject(pid,proj.project_name);
-      };
-    })(p2.id);
-    bindExpandEvents(p2.id);
+  if(mainTab==='running'){
+    var tbody=document.getElementById('runningBody');
+    if(!runningProjects.length){
+      tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">No projects</td></tr>';
+    } else {
+      var html='';
+      for(var d=0;d<runningProjects.length;d++){
+        var rp=runningProjects[d];
+        var color=projColorMap[rp.id]||'#a8dadc';
+        var grp2=rp.proj_group||'A';
+        var cfg=GROUP_CFG[grp2]||GROUP_CFG['A'];
+        html+=buildProjectRow(rp,d+1,color,cfg,calcStatus(rp),false);
+      }
+      tbody.innerHTML=html;
+      for(var d2=0;d2<runningProjects.length;d2++){
+        (function(pid){
+          var row=document.getElementById('proj-row-'+pid);
+          if(row) row.onclick=function(e){if(e.target.tagName==='BUTTON'||e.target.closest('button'))return;toggleExpand(pid);};
+          var finBtn=document.getElementById('finbtn-'+pid);
+          if(finBtn) finBtn.onclick=function(e){e.stopPropagation();markProjectFinish(pid);};
+          var dpb=document.getElementById('delprojbtn-'+pid);
+          if(dpb) dpb.onclick=function(e){e.stopPropagation();var proj=null;for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){proj=allProjects[i];break;}}if(proj)deleteProject(pid,proj.project_name);};
+        })(runningProjects[d2].id);
+        bindExpandEvents(runningProjects[d2].id);
+      }
+    }
+  } else {
+    var container=document.getElementById('finishYearGroups');
+    if(!finishProjects.length){
+      container.innerHTML='<div style="text-align:center;padding:32px;color:#aaa;">No finished projects</div>';
+    } else {
+      var groups={};
+      finishProjects.forEach(function(p){
+        var yr=getYearFromCode(getProjCode(p));
+        if(!groups[yr]) groups[yr]=[];
+        groups[yr].push(p);
+      });
+      var thisYear=String(new Date().getFullYear());
+      var years=Object.keys(groups).sort(function(a,b){return b-a;});
+      years.forEach(function(yr){if(!(yr in expandedFinishYears))expandedFinishYears[yr]=(yr===thisYear);});
+      var outerHtml=''; var sttOffset=0;
+      years.forEach(function(yr){
+        var yProjects=groups[yr];
+        var isOpen=expandedFinishYears[yr];
+        var tableRows='';
+        yProjects.forEach(function(p,idx){
+          var color=projColorMap[p.id]||'#a8dadc';
+          var cfg=GROUP_CFG[p.proj_group||'A']||GROUP_CFG['A'];
+          tableRows+=buildProjectRow(p,sttOffset+idx+1,color,cfg,calcStatus(p),true);
+        });
+        sttOffset+=yProjects.length;
+        outerHtml+='<div class="year-group">'
+          +'<div class="year-group-header" onclick="toggleFinishYear(\''+yr+'\')">'
+          +'<span class="year-group-arrow'+(isOpen?' open':'')+'" id="fyarrow-'+yr+'">&#x25B6;</span>'
+          +'<span>&#x1F4C5; '+yr+'</span>'
+          +'<span class="year-group-count">'+yProjects.length+' projects</span>'
+          +'</div>'
+          +'<div class="year-group-body'+(isOpen?' open':'')+'" id="fybody-'+yr+'">'
+          +'<table class="proj-table"><thead><tr>'
+          +'<th style="width:60px;text-align:center;">No.</th>'
+          +'<th>Project Code</th><th>Project Name</th><th>Branch</th>'
+          +'<th>Design classification</th><th>Group</th><th>Status</th>'
+          +'<th>Creation Date</th><th></th>'
+          +'</tr></thead><tbody>'+tableRows+'</tbody></table>'
+          +'</div></div>';
+      });
+      container.innerHTML=outerHtml;
+      finishProjects.forEach(function(p){
+        (function(pid){
+          var row=document.getElementById('proj-row-'+pid);
+          if(row) row.onclick=function(e){if(e.target.tagName==='BUTTON'||e.target.closest('button'))return;toggleExpand(pid);};
+          var revBtn=document.getElementById('revbtn-'+pid);
+          if(revBtn) revBtn.onclick=function(e){e.stopPropagation();revertProjectFinish(pid);};
+        })(p.id);
+        bindExpandEvents(p.id);
+      });
+    }
   }
   if(prevExp){expandRow(prevExp);expandedId=prevExp;}
 }
+
+function toggleFinishYear(yr){
+  expandedFinishYears[yr]=!expandedFinishYears[yr];
+  var body=document.getElementById('fybody-'+yr);
+  var arrow=document.getElementById('fyarrow-'+yr);
+  if(body)body.className='year-group-body'+(expandedFinishYears[yr]?' open':'');
+  if(arrow)arrow.className='year-group-arrow'+(expandedFinishYears[yr]?' open':'');
+}
+
 function openModal(){suggestNextNum();selectGroup('A');document.getElementById('createModal').classList.add('open');}
 function closeModal(){document.getElementById('createModal').classList.remove('open');}
 function addTaskRow(){
@@ -765,8 +864,6 @@ function addTaskRow(){
     +'</div>';
   document.getElementById('taskRows').appendChild(div);
 }
-
-// ─── CREATE PROJECT: thêm task_source = 'task_manager' vào tất cả tasks ──────
 async function createProject(){
   var year=(document.getElementById('yearInput').value||'26').padStart(2,'0');
   var num=(document.getElementById('numInput').value||'001').padStart(3,'0');
@@ -784,8 +881,8 @@ async function createProject(){
   try{
     var res=await fetch(SUPABASE_URL+'/rest/v1/projects',{method:'POST',headers:HDRS,
       body:JSON.stringify({code:code,year:year,seq_number:parseInt(num),branch:branch,
-        design_type:design||null,project_name:name,status:'active',color:color,
-        proj_group:selectedGroup,start_date:pStart||null,end_date:pEnd||null,created_by:createdBy})});
+        design_type:design||null,project_name:name,status:'active',finish_status:'active',
+        color:color,proj_group:selectedGroup,start_date:pStart||null,end_date:pEnd||null,created_by:createdBy})});
     if(!res.ok){var e=await res.json();showToast(e.message||'Error','error');return;}
     var arr=await res.json();var proj=arr[0];
     allProjects.push(proj);projColorMap[proj.id]=color;
@@ -795,32 +892,26 @@ async function createProject(){
       var d2=taskDivs[i];
       promises.push(fetch(SUPABASE_URL+'/rest/v1/project_tasks',{method:'POST',headers:HDRS,
         body:JSON.stringify({
-          project_id:proj.id,
-          task_type:d2.querySelector('.task-type').value,
+          project_id:proj.id,task_type:d2.querySelector('.task-type').value,
           assigned_to:d2.querySelector('.task-user').value||null,
           note:d2.querySelector('.task-note').value.trim()||null,
           receive_date:d2.querySelector('.task-receive').value||null,
           start_date:d2.querySelector('.task-start').value||null,
           end_date:d2.querySelector('.task-end').value||null,
           send_date:d2.querySelector('.task-send').value||null,
-          status:'active',
-          task_source:'task_manager'
+          status:'active',task_source:'task_manager'
         })}));
     }
     await Promise.all(promises);
     await loadAllData();
     renderList();closeModal();
-    ['nameInput','branchInput','designInput','projStart','projEnd'].forEach(function(id){
-      document.getElementById(id).value='';
-    });
+    ['nameInput','branchInput','designInput','projStart','projEnd'].forEach(function(id){document.getElementById(id).value='';});
     document.getElementById('taskRows').innerHTML='';
     taskRowCount=0;addTaskRow();
     renderTags('branch');renderTags('design');updatePreview();suggestNextNum();
     showToast('Project created: '+name,'success');
   }catch(e){showToast('Error: '+e.message,'error');}
 }
-// ─────────────────────────────────────────────────────────────────────────────
-
 async function deleteProject(id,name){
   if(!confirm('Confirm delete project:\n'+name+'?')) return;
   try{
@@ -835,8 +926,7 @@ function suggestNextNum(){
   var y=document.getElementById('yearInput').value||'26';
   var count=0;
   for(var i=0;i<allProjects.length;i++){if((allProjects[i].code||'').startsWith(y))count++;}
-  var n=String(count+1).padStart(3,'0');
-  document.getElementById('numInput').value=n;
+  document.getElementById('numInput').value=String(count+1).padStart(3,'0');
   updatePreview();
 }
 function onYearChange(v){document.getElementById('yearDisp').textContent=String(v).padStart(2,'0');suggestNextNum();}
@@ -848,7 +938,7 @@ function updatePreview(){
   var nm=document.getElementById('nameInput').value.trim();
   function se(id,v,ph){var el=document.getElementById(id);el.textContent=v||ph;el.className=v?'':'dim';}
   document.getElementById('pYear').textContent=y;document.getElementById('pNum').textContent=n;
-  se('pBranch',b,'\u652f\u5e97');se('pDesign',d,'\u8a2d\u8a08\u533a\u5206');se('pName',nm,'\u7269\u4ef6\u540d');
+  se('pBranch',b,'支店');se('pDesign',d,'設計区分');se('pName',nm,'物件名');
 }
 function onCombo(k){renderDD(k);updatePreview();}
 function openDD(k){renderDD(k);}
