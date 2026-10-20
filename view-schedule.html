@@ -152,8 +152,8 @@
     .ep-f textarea { resize:vertical; min-height:80px; }
     .ep-row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     .ep-sw-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
-    .ep-sw-name { flex:1; padding:7px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; }
-    .ep-sw-ver  { width:90px; padding:7px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; }
+    .ep-sw-name { flex:2; padding:7px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; }
+    .ep-sw-ver  { flex:1; min-width:80px; max-width:120px; padding:7px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; }
     .ep-sw-name:focus,.ep-sw-ver:focus { border-color:#0096c7; }
     .ep-sw-del { background:none; border:1.5px solid #ffb3b3; color:#e63946; padding:5px 9px; border-radius:6px; cursor:pointer; font-size:12px; flex-shrink:0; }
     .ep-sw-del:hover { background:#fff0f0; }
@@ -278,7 +278,6 @@
     <div class="legend-item"><div class="legend-bar" style="background:#a8dadc;"></div><span>Work Period</span></div>
     <div class="legend-item"><div class="legend-dot" style="background:#52b788;"></div><span>Receive Date (click to edit)</span></div>
     <div class="legend-item"><div class="legend-dot" style="background:#e63946;"></div><span>Send Date (click to edit)</span></div>
-    <span style="margin-left:auto;font-size:11px;color:#0077b6;font-style:italic;">&#x270F; Click project name to add notes | &#x2194; Drag Project column to resize</span>
   </div>
   <div class="gantt-wrap">
     <div id="ganttCont"><div style="padding:40px;text-align:center;color:#aaa;">Loading...</div></div>
