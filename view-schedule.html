@@ -74,19 +74,21 @@
     .g-software { font-size:10px; color:#0077b6; margin-top:3px; }
     .g-koujou { font-size:10px; color:#e63946; margin-top:1px; }
     .g-bico { min-width:160px; max-width:220px; border-right:1px solid #e8e8e8; vertical-align:top; background:#fff; padding:8px 10px; font-size:11px; color:#444; white-space:pre-wrap; word-break:break-word; text-align:right; }
-    .g-staff { min-width:110px; max-width:150px; border-right:2px solid #e8e8e8; vertical-align:top; background:#fff; padding:8px 10px; font-size:11px; color:#333; text-align:right; }
-    .g-cell { position:relative; height:44px; border-right:1px solid #f0f0f0; vertical-align:middle; overflow:visible; }
+    .g-staff { min-width:130px; max-width:180px; border-right:2px solid #e8e8e8; vertical-align:top; background:#fff; padding:0; font-size:11px; color:#333; }
+    .g-staff-adhzm { padding:6px 10px; font-size:11px; font-weight:700; color:#333; border-bottom:1px solid #f0f0f0; text-align:left; min-height:28px; }
+    .g-staff-vndc { padding:4px 10px; font-size:11px; color:#555; text-align:right; min-height:28px; }
+    .g-cell { position:relative; height:28px; border-right:1px solid #f0f0f0; vertical-align:middle; overflow:visible; }
     .g-cell.we { background:#f8f8f8; }
     .g-cell.tdy { background:#fff5f5; }
     .g-cell.tdy::before { content:""; position:absolute; top:0; bottom:0; left:50%; width:2px; background:#e63946; z-index:5; transform:translateX(-50%); }
-    .g-bar { position:absolute; height:18px; border-radius:4px; top:4px; display:flex; align-items:center; padding:0 7px; font-size:10px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,.18); z-index:2; }
+    .g-bar { position:absolute; height:16px; border-radius:4px; top:6px; display:flex; align-items:center; padding:0 7px; font-size:10px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,.18); z-index:2; }
     .g-bar:hover { opacity:.85; }
-    .g-dot { position:absolute; width:12px; height:12px; border-radius:50%; transform:translateX(-50%); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3); z-index:7; cursor:pointer; transition:transform .15s; }
+    .g-dot { position:absolute; width:12px; height:12px; border-radius:50%; transform:translateX(-50%); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.3); z-index:7; cursor:pointer; transition:transform .15s; top:8px; }
     .g-dot:hover { transform:translateX(-50%) scale(1.4); }
-    .g-dot-rcv     { background:#52b788; top:4px; }
-    .g-dot-send    { background:#e63946; top:26px; }
-    .g-dot-ms-rcv  { background:#52b788; opacity:.5; top:4px; }
-    .g-dot-ms-send { background:#e63946; opacity:.5; top:26px; }
+    .g-dot-rcv  { background:#52b788; }
+    .g-dot-send { background:#e63946; }
+    .g-dot-ms-rcv  { background:#52b788; opacity:.5; }
+    .g-dot-ms-send { background:#e63946; opacity:.5; }
     .th-proj-inner { display:flex; align-items:center; justify-content:space-between; user-select:none; }
     .col-resize-handle { width:6px; cursor:col-resize; height:100%; position:absolute; right:0; top:0; background:rgba(255,255,255,.15); border-radius:2px; }
     .col-resize-handle:hover { background:rgba(255,255,255,.4); }
@@ -98,8 +100,9 @@
     .tq-body { padding:14px 16px; }
     .tq-field { margin-bottom:10px; }
     .tq-field label { display:block; font-size:11px; font-weight:600; color:#666; margin-bottom:4px; }
-    .tq-field input { width:100%; padding:7px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; }
-    .tq-field input:focus { border-color:#0096c7; }
+    .tq-field input, .tq-field textarea { width:100%; padding:7px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; }
+    .tq-field textarea { resize:vertical; min-height:60px; }
+    .tq-field input:focus, .tq-field textarea:focus { border-color:#0096c7; }
     .tq-actions { display:flex; gap:8px; margin-top:4px; }
     .tq-save { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:7px 18px; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; flex:1; }
     .tq-cancel { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:7px 12px; border-radius:7px; font-size:12px; cursor:pointer; }
@@ -148,6 +151,14 @@
     .ep-f input:focus,.ep-f textarea:focus { border-color:#0096c7; }
     .ep-f textarea { resize:vertical; min-height:80px; }
     .ep-row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .ep-sw-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+    .ep-sw-name { flex:1; padding:7px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; }
+    .ep-sw-ver  { width:90px; padding:7px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:13px; outline:none; font-family:inherit; color:#222; }
+    .ep-sw-name:focus,.ep-sw-ver:focus { border-color:#0096c7; }
+    .ep-sw-del { background:none; border:1.5px solid #ffb3b3; color:#e63946; padding:5px 9px; border-radius:6px; cursor:pointer; font-size:12px; flex-shrink:0; }
+    .ep-sw-del:hover { background:#fff0f0; }
+    .ep-add-sw { background:#e8f4fe; color:#0077b6; border:1.5px solid #b8dff5; padding:6px 14px; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; width:100%; margin-top:4px; }
+    .ep-add-sw:hover { background:#d0eaf8; }
     .ep-foot { padding:14px 20px; border-top:1px solid #eee; display:flex; gap:10px; justify-content:flex-end; flex-shrink:0; }
     .ep-save { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:9px 24px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
     .ep-cancel { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:9px 18px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
@@ -195,19 +206,10 @@
 <!-- TASK QUICK EDIT POPUP -->
 <div class="tq-popup" id="tqPopup">
   <div class="tq-head">
-    <span class="tq-head-label" id="tqLabel">Receive / Send Date</span>
+    <span class="tq-head-label" id="tqLabel">Date</span>
     <button class="tq-head-x" id="tqClose">&#x2715;</button>
   </div>
-  <div class="tq-body">
-    <div class="tq-field"><label>&#x1F4E5; Receive Date</label><input type="date" id="tqRcv"/></div>
-    <div class="tq-field"><label>&#x1F4E4; Send Date</label><input type="date" id="tqSnd"/></div>
-    <div class="tq-actions">
-      <button class="tq-cancel" id="tqCancel">Cancel</button>
-      <button class="tq-save" id="tqSave">&#x1F4BE; Save</button>
-    </div>
-    <hr class="tq-divider"/>
-    <button class="tq-ms-btn" id="tqMsBtn">&#x1F7E1; Manage Milestones</button>
-  </div>
+  <div class="tq-body" id="tqBody"></div>
 </div>
 
 <!-- MILESTONE PANEL -->
@@ -240,15 +242,19 @@
   <div class="ep-body">
     <div class="ep-sec">
       <div class="ep-sec-title">&#x1F4DD; Notes &amp; Person in Charge</div>
-      <div class="ep-f"><label>&#x5099;&#x8003; - Notes</label><textarea id="epNote" placeholder="Enter notes..."></textarea></div>
-      <div class="ep-f"><label>Staff &#x62C5;&#x5F53; - Person in Charge</label><input type="text" id="epStaff"/></div>
+      <div class="ep-f"><label>備考 - Notes</label><textarea id="epNote" placeholder="Enter notes..."></textarea></div>
+      <div class="ep-row2">
+        <div class="ep-f"><label>ADHZM 担当</label><input type="text" id="epStaffAdhzm"/></div>
+        <div class="ep-f"><label>VNDC 担当</label><input type="text" id="epStaffVndc"/></div>
+      </div>
     </div>
     <div class="ep-sec">
       <div class="ep-sec-title">&#x1F3D7;&#xFE0F; Construction Info</div>
-      <div class="ep-f"><label>&#x7740;&#x5DE5; - Construction Start</label><input type="text" id="epKoujou" placeholder="e.g. 2027/04"/></div>
-      <div class="ep-row2">
-        <div class="ep-f"><label>Main Software</label><input type="text" id="epSoftware"/></div>
-        <div class="ep-f"><label>Version</label><input type="text" id="epVersion"/></div>
+      <div class="ep-f"><label>着工 - Construction Start</label><input type="text" id="epKoujou" placeholder="e.g. 2027/04"/></div>
+      <div class="ep-f">
+        <label>Main Software &amp; Version</label>
+        <div id="epSoftwareList"></div>
+        <button class="ep-add-sw" id="epAddSwBtn">&#x2795; Add Software</button>
       </div>
     </div>
   </div>
@@ -267,9 +273,6 @@
     <input type="date" id="gStart" class="filter-input" onchange="renderGantt()"/>
     <span style="color:#888;font-size:14px;">&#x2192;</span>
     <input type="date" id="gEnd" class="filter-input" onchange="renderGantt()"/>
-    <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#555;cursor:pointer;">
-      <input type="checkbox" id="showDone" onchange="renderGantt()"/> Show Ended
-    </label>
   </div>
   <div class="legend">
     <div class="legend-item"><div class="legend-bar" style="background:#a8dadc;"></div><span>Work Period</span></div>
@@ -284,40 +287,35 @@
 
 <script src="js/config.js"></script>
 <script>
-var gZoom = "day";
+var gZoom = 'day';
 var currentProjId = null;
 var currentTqTask = null;
+var currentTqType = null;
 var allMilestones = [];
-var LS_KEY = "bimhub_proj_meta";
+var LS_KEY = 'bimhub_proj_meta';
 var GROUP_ORDER = {A:0,B:1,C:2,D:3};
 var TASK_TYPE_ORDER = {
-  "\u610f\u5320\u30e2\u30c7\u30eb":0,
-  "\u69cb\u9020\u30e2\u30c7\u30eb":1,
-  "\u56f3\u9762":2,
-  "\u30d1\u30fc\u30b9\u30fb\u52d5\u753b":3,
-  "\u52d5\u753b\u30fb\u30d1\u30fc\u30b9":3,
-  "\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7":4,
-  "\u6e05\u7b97\u30e2\u30c7\u30eb":5
+  'パース・動画':0,
+  '意匠モデル':1,
+  '構造モデル':2,
+  '清算モデル':3,
+  '図面':4,
+  '施工ステップ':5
 };
 var projColWidth = 200;
 
-// ─── AUTO-FIT PROJECT COLUMN ──────────────────────────────────────────────────
 function measureTextWidth(text, font) {
-  if (!measureTextWidth._canvas) {
-    measureTextWidth._canvas = document.createElement("canvas");
-  }
-  var ctx = measureTextWidth._canvas.getContext("2d");
+  if (!measureTextWidth._canvas) measureTextWidth._canvas = document.createElement('canvas');
+  var ctx = measureTextWidth._canvas.getContext('2d');
   ctx.font = font;
   return ctx.measureText(text).width;
 }
-
 function autoFitProjCol() {
   var nameFont = "700 13px 'Segoe UI',Arial,sans-serif";
   var codeFont = "400 10px 'Segoe UI',Arial,sans-serif";
-  var maxW = 160;
-  var PADDING = 28;
+  var maxW = 160; var PADDING = 28;
   allProjects.forEach(function(p) {
-    var nameW = measureTextWidth(p.project_name || p.name || "", nameFont);
+    var nameW = measureTextWidth(p.project_name || p.name || '', nameFont);
     var codeW = measureTextWidth(getCode(p), codeFont);
     var w = Math.max(nameW, codeW) + PADDING;
     if (w > maxW) maxW = w;
@@ -325,31 +323,21 @@ function autoFitProjCol() {
   maxW = Math.min(maxW, Math.floor(window.innerWidth * 0.35));
   projColWidth = Math.ceil(maxW);
 }
-// ─────────────────────────────────────────────────────────────────────────────
 
-// ─── FILTER: only tasks created from view-list (task_source = 'task_manager') ─
-// Tasks added by staff via my-tasks.html have task_source = 'task_working'
-// and must NOT appear in view-schedule.
-// For backward compatibility: tasks with no task_source field (null/undefined)
-// are treated as 'task_manager' because the default value set in Supabase is
-// 'task_manager' and all existing tasks created before this field was added
-// should be shown in the schedule.
 function getProjectTasks(projectId) {
   return allTasks.filter(function(t) {
     if (t.project_id !== projectId) return false;
-    // Exclude tasks explicitly marked as personal (my-tasks)
-    if (t.task_source === "task_working") return false;
+    if (t.task_source === 'task_working') return false;
     return true;
   });
 }
-// ─────────────────────────────────────────────────────────────────────────────
 
 function getMeta(id) {
-  try { return JSON.parse(localStorage.getItem(LS_KEY) || "{}")[id] || {}; } catch(e) { return {}; }
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}')[id] || {}; } catch(e) { return {}; }
 }
 function setMeta(id, data) {
   try {
-    var a = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
+    var a = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
     a[id] = Object.assign(a[id] || {}, data);
     localStorage.setItem(LS_KEY, JSON.stringify(a));
   } catch(e) {}
@@ -357,7 +345,7 @@ function setMeta(id, data) {
 
 async function loadMilestones() {
   try {
-    var r = await fetch(SUPABASE_URL + "/rest/v1/task_milestones?select=*&order=created_at.asc", {headers: HDRS});
+    var r = await fetch(SUPABASE_URL + '/rest/v1/task_milestones?select=*&order=created_at.asc', {headers: HDRS});
     var d = await r.json();
     allMilestones = Array.isArray(d) ? d : [];
   } catch(e) { allMilestones = []; }
@@ -367,264 +355,263 @@ function getMsForTask(tid) {
 }
 
 function initColResize() {
-  var handle = document.getElementById("projResizeHandle");
+  var handle = document.getElementById('projResizeHandle');
   if (!handle) return;
   var startX, startW;
-  handle.addEventListener("mousedown", function(e) {
-    e.preventDefault();
-    startX = e.clientX;
-    startW = projColWidth;
-    document.body.style.cursor = "col-resize";
-    document.body.style.userSelect = "none";
-    function onMove(ev) {
-      projColWidth = Math.max(120, startW + (ev.clientX - startX));
-      applyProjColWidth();
-    }
-    function onUp() {
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-      document.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mouseup", onUp);
-    }
-    document.addEventListener("mousemove", onMove);
-    document.addEventListener("mouseup", onUp);
+  handle.addEventListener('mousedown', function(e) {
+    e.preventDefault(); startX = e.clientX; startW = projColWidth;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    function onMove(ev) { projColWidth = Math.max(120, startW + (ev.clientX - startX)); applyProjColWidth(); }
+    function onUp() { document.body.style.cursor = ''; document.body.style.userSelect = ''; document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); }
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
   });
 }
-
 function applyProjColWidth() {
-  var th = document.getElementById("thProj");
-  if (th) th.style.width = projColWidth + "px";
-  document.querySelectorAll(".g-left").forEach(function(td) {
-    td.style.width = projColWidth + "px";
-    td.style.minWidth = projColWidth + "px";
-    td.style.maxWidth = projColWidth + "px";
+  var th = document.getElementById('thProj');
+  if (th) th.style.width = projColWidth + 'px';
+  document.querySelectorAll('.g-left').forEach(function(td) {
+    td.style.width = projColWidth + 'px'; td.style.minWidth = projColWidth + 'px'; td.style.maxWidth = projColWidth + 'px';
   });
 }
 
-function openTqPopup(e, task) {
-  e.stopPropagation();
-  hideTooltip();
-  currentTqTask = task;
+function openTqPopupRcv(e, task) {
+  e.stopPropagation(); hideTooltip();
+  currentTqTask = task; currentTqType = 'rcv';
   var p = allProjects.find(function(x) { return x.id === task.project_id; });
-  document.getElementById("tqLabel").textContent = (task.task_type || "Task") + (p ? " \u00b7 " + getCode(p) : "");
-  document.getElementById("tqRcv").value = task.receive_date || "";
-  document.getElementById("tqSnd").value = task.send_date || "";
-  var popup = document.getElementById("tqPopup");
-  popup.classList.add("open");
+  document.getElementById('tqLabel').textContent = (task.task_type || 'Task') + (p ? ' · ' + getCode(p) : '') + ' — Receive';
+  document.getElementById('tqBody').innerHTML =
+    '<div class="tq-field"><label>&#x1F4E5; Receive Date</label><input type="date" id="tqRcv" value="' + (task.receive_date||'') + '"/></div>'
+    + '<div class="tq-field"><label>&#x1F4DD; Content</label><textarea id="tqRcvNote" placeholder="Enter content...">' + (task.receive_note||'') + '</textarea></div>'
+    + '<div class="tq-actions"><button class="tq-cancel" id="tqCancel">Cancel</button><button class="tq-save" id="tqSave">&#x1F4BE; Save</button></div>'
+    + '<hr class="tq-divider"/><button class="tq-ms-btn" id="tqMsBtn">&#x1F7E1; Manage Milestones</button>';
+  document.getElementById('tqCancel').addEventListener('click', closeTqPopup);
+  document.getElementById('tqSave').addEventListener('click', saveTqPopup);
+  document.getElementById('tqMsBtn').addEventListener('click', function() { if (currentTqTask) openMsPanel(currentTqTask); });
+  _showTqPopup(e);
+}
+function openTqPopupSnd(e, task) {
+  e.stopPropagation(); hideTooltip();
+  currentTqTask = task; currentTqType = 'snd';
+  var p = allProjects.find(function(x) { return x.id === task.project_id; });
+  document.getElementById('tqLabel').textContent = (task.task_type || 'Task') + (p ? ' · ' + getCode(p) : '') + ' — Send';
+  document.getElementById('tqBody').innerHTML =
+    '<div class="tq-field"><label>&#x1F4E4; Send Date</label><input type="date" id="tqSnd" value="' + (task.send_date||'') + '"/></div>'
+    + '<div class="tq-field"><label>&#x1F4DD; Content</label><textarea id="tqSndNote" placeholder="Enter content...">' + (task.send_note||'') + '</textarea></div>'
+    + '<div class="tq-actions"><button class="tq-cancel" id="tqCancel">Cancel</button><button class="tq-save" id="tqSave">&#x1F4BE; Save</button></div>'
+    + '<hr class="tq-divider"/><button class="tq-ms-btn" id="tqMsBtn">&#x1F7E1; Manage Milestones</button>';
+  document.getElementById('tqCancel').addEventListener('click', closeTqPopup);
+  document.getElementById('tqSave').addEventListener('click', saveTqPopup);
+  document.getElementById('tqMsBtn').addEventListener('click', function() { if (currentTqTask) openMsPanel(currentTqTask); });
+  _showTqPopup(e);
+}
+function _showTqPopup(e) {
+  var popup = document.getElementById('tqPopup');
+  popup.classList.add('open');
   var x = e.clientX, y = e.clientY;
   if (x + 290 > window.innerWidth) x = window.innerWidth - 295;
-  if (y + 240 > window.innerHeight) y = window.innerHeight - 245;
-  popup.style.left = x + "px";
-  popup.style.top = y + "px";
+  if (y + 280 > window.innerHeight) y = window.innerHeight - 285;
+  popup.style.left = x + 'px'; popup.style.top = y + 'px';
 }
-function closeTqPopup() {
-  document.getElementById("tqPopup").classList.remove("open");
-  currentTqTask = null;
-}
+function closeTqPopup() { document.getElementById('tqPopup').classList.remove('open'); currentTqTask = null; currentTqType = null; }
 async function saveTqPopup() {
   if (!currentTqTask) return;
-  var rcv = document.getElementById("tqRcv").value || null;
-  var snd = document.getElementById("tqSnd").value || null;
+  var body = {};
+  if (currentTqType === 'rcv') {
+    var rcvEl = document.getElementById('tqRcv'); var rcvNoteEl = document.getElementById('tqRcvNote');
+    if (rcvEl) body.receive_date = rcvEl.value || null;
+    if (rcvNoteEl) body.receive_note = rcvNoteEl.value.trim() || null;
+  } else {
+    var sndEl = document.getElementById('tqSnd'); var sndNoteEl = document.getElementById('tqSndNote');
+    if (sndEl) body.send_date = sndEl.value || null;
+    if (sndNoteEl) body.send_note = sndNoteEl.value.trim() || null;
+  }
   try {
-    var res = await fetch(SUPABASE_URL + "/rest/v1/project_tasks?id=eq." + currentTqTask.id, {
-      method: "PATCH", headers: HDRS, body: JSON.stringify({receive_date: rcv, send_date: snd})
-    });
-    if (!res.ok) { showToast("Error saving", "error"); return; }
-    currentTqTask.receive_date = rcv;
-    currentTqTask.send_date = snd;
-    showToast("Saved!", "success");
-    closeTqPopup();
-    renderGantt();
-  } catch(e) { showToast("Error: " + e.message, "error"); }
+    var res = await fetch(SUPABASE_URL + '/rest/v1/project_tasks?id=eq.' + currentTqTask.id, {method: 'PATCH', headers: HDRS, body: JSON.stringify(body)});
+    if (!res.ok) { showToast('Error saving', 'error'); return; }
+    Object.assign(currentTqTask, body);
+    showToast('Saved!', 'success'); closeTqPopup(); renderGantt();
+  } catch(e) { showToast('Error: ' + e.message, 'error'); }
 }
 
 function openMsPanel(task) {
-  closeTqPopup();
-  window._msPanelTask = task;
+  closeTqPopup(); window._msPanelTask = task;
   var p = allProjects.find(function(x) { return x.id === task.project_id; });
-  document.getElementById("msPanelSub").textContent = task.task_type || "Task";
-  document.getElementById("msPanelTitle").textContent = p ? (p.project_name || p.name || "") : "";
+  document.getElementById('msPanelSub').textContent = task.task_type || 'Task';
+  document.getElementById('msPanelTitle').textContent = p ? (p.project_name || p.name || '') : '';
   renderMsBody(task);
-  document.getElementById("msOverlay").classList.add("open");
-  document.getElementById("msPanel").classList.add("open");
+  document.getElementById('msOverlay').classList.add('open');
+  document.getElementById('msPanel').classList.add('open');
 }
 function closeMsPanel() {
-  document.getElementById("msOverlay").classList.remove("open");
-  document.getElementById("msPanel").classList.remove("open");
+  document.getElementById('msOverlay').classList.remove('open');
+  document.getElementById('msPanel').classList.remove('open');
   window._msPanelTask = null;
 }
 function renderMsBody(task) {
-  var t = task || window._msPanelTask;
-  if (!t) return;
+  var t = task || window._msPanelTask; if (!t) return;
   var ms = getMsForTask(t.id);
-  var body = document.getElementById("msBody");
-  if (!ms.length) {
-    body.innerHTML = '<div class="ms-empty">No milestones yet.<br>Click "Add Milestone" to add one.</div>';
-    return;
-  }
-  var html = "";
+  var body = document.getElementById('msBody');
+  if (!ms.length) { body.innerHTML = '<div class="ms-empty">No milestones yet.<br>Click "Add Milestone" to add one.</div>'; return; }
+  var html = '';
   ms.forEach(function(m, i) {
     html += '<div class="ms-item">'
       + '<div class="ms-item-head"><span class="ms-item-num">Milestone ' + (i+1) + '</span>'
       + '<button class="ms-item-del" data-id="' + m.id + '">&#x1F5D1; Delete</button></div>'
       + '<div class="ms-row2">'
-      + '<div class="ms-field"><label>&#x1F4E5; Receive Date</label><input type="date" id="ms-rcv-' + m.id + '" value="' + (m.receive_date || "") + '"/></div>'
-      + '<div class="ms-field"><label>&#x1F4E4; Send Date</label><input type="date" id="ms-snd-' + m.id + '" value="' + (m.send_date || "") + '"/></div>'
+      + '<div class="ms-field"><label>&#x1F4E5; Receive Date</label><input type="date" id="ms-rcv-' + m.id + '" value="' + (m.receive_date||'') + '"/></div>'
+      + '<div class="ms-field"><label>&#x1F4E4; Send Date</label><input type="date" id="ms-snd-' + m.id + '" value="' + (m.send_date||'') + '"/></div>'
       + '</div>'
-      + '<div class="ms-field"><label>&#x1F4DD; Note</label><input type="text" id="ms-note-' + m.id + '" value="' + (m.note || "").replace(/"/g, "&quot;") + '"/></div>'
+      + '<div class="ms-field"><label>&#x1F4DD; Note</label><input type="text" id="ms-note-' + m.id + '" value="' + (m.note||'').replace(/"/g,'&quot;') + '"/></div>'
       + '<div class="ms-save-row"><button class="ms-item-save" data-id="' + m.id + '">&#x1F4BE; Save</button></div></div>';
   });
   body.innerHTML = html;
-  body.querySelectorAll(".ms-item-save").forEach(function(b) {
-    b.addEventListener("click", function() { saveMilestone(b.getAttribute("data-id")); });
-  });
-  body.querySelectorAll(".ms-item-del").forEach(function(b) {
-    b.addEventListener("click", function() { deleteMilestone(b.getAttribute("data-id")); });
-  });
+  body.querySelectorAll('.ms-item-save').forEach(function(b) { b.addEventListener('click', function() { saveMilestone(b.getAttribute('data-id')); }); });
+  body.querySelectorAll('.ms-item-del').forEach(function(b) { b.addEventListener('click', function() { deleteMilestone(b.getAttribute('data-id')); }); });
 }
 async function addMilestone() {
-  var task = window._msPanelTask;
-  if (!task) return;
+  var task = window._msPanelTask; if (!task) return;
   try {
-    var res = await fetch(SUPABASE_URL + "/rest/v1/task_milestones", {
-      method: "POST",
-      headers: Object.assign({}, HDRS, {"Prefer": "return=representation"}),
-      body: JSON.stringify({task_id: task.id})
-    });
-    if (!res.ok) { showToast("Error adding milestone", "error"); return; }
-    var arr = await res.json();
-    if (arr && arr.length) allMilestones.push(arr[0]);
-    renderMsBody(task);
-    renderGantt();
-    showToast("Added!", "success");
-  } catch(e) { showToast("Error: " + e.message, "error"); }
+    var res = await fetch(SUPABASE_URL + '/rest/v1/task_milestones', {method:'POST', headers:Object.assign({},HDRS,{'Prefer':'return=representation'}), body:JSON.stringify({task_id:task.id})});
+    if (!res.ok) { showToast('Error adding milestone','error'); return; }
+    var arr = await res.json(); if (arr&&arr.length) allMilestones.push(arr[0]);
+    renderMsBody(task); renderGantt(); showToast('Added!','success');
+  } catch(e) { showToast('Error: '+e.message,'error'); }
 }
 async function saveMilestone(msId) {
-  var rcv = document.getElementById("ms-rcv-" + msId).value || null;
-  var snd = document.getElementById("ms-snd-" + msId).value || null;
-  var note = document.getElementById("ms-note-" + msId).value.trim() || null;
+  var rcv=document.getElementById('ms-rcv-'+msId).value||null;
+  var snd=document.getElementById('ms-snd-'+msId).value||null;
+  var note=document.getElementById('ms-note-'+msId).value.trim()||null;
   try {
-    var res = await fetch(SUPABASE_URL + "/rest/v1/task_milestones?id=eq." + msId, {
-      method: "PATCH", headers: HDRS,
-      body: JSON.stringify({receive_date: rcv, send_date: snd, note: note})
-    });
-    if (!res.ok) { showToast("Error saving", "error"); return; }
-    var m = allMilestones.find(function(x) { return x.id === msId; });
-    if (m) { m.receive_date = rcv; m.send_date = snd; m.note = note; }
-    showToast("Saved!", "success");
-    renderGantt();
-  } catch(e) { showToast("Error: " + e.message, "error"); }
+    var res=await fetch(SUPABASE_URL+'/rest/v1/task_milestones?id=eq.'+msId,{method:'PATCH',headers:HDRS,body:JSON.stringify({receive_date:rcv,send_date:snd,note:note})});
+    if(!res.ok){showToast('Error saving','error');return;}
+    var m=allMilestones.find(function(x){return x.id===msId;});
+    if(m){m.receive_date=rcv;m.send_date=snd;m.note=note;}
+    showToast('Saved!','success'); renderGantt();
+  } catch(e){showToast('Error: '+e.message,'error');}
 }
 async function deleteMilestone(msId) {
-  if (!confirm("Confirm delete?")) return;
+  if(!confirm('Confirm delete?')) return;
   try {
-    await fetch(SUPABASE_URL + "/rest/v1/task_milestones?id=eq." + msId, {method: "DELETE", headers: HDRS});
-    allMilestones = allMilestones.filter(function(x) { return x.id !== msId; });
-    showToast("Deleted!", "success");
-    renderMsBody();
-    renderGantt();
-  } catch(e) { showToast("Error: " + e.message, "error"); }
+    await fetch(SUPABASE_URL+'/rest/v1/task_milestones?id=eq.'+msId,{method:'DELETE',headers:HDRS});
+    allMilestones=allMilestones.filter(function(x){return x.id!==msId;});
+    showToast('Deleted!','success'); renderMsBody(); renderGantt();
+  } catch(e){showToast('Error: '+e.message,'error');}
+}
+
+function renderSoftwareList() {
+  var m = getMeta(currentProjId);
+  var softwares = m.softwares || (m.software ? [{name:m.software,version:m.version||''}] : []);
+  var container = document.getElementById('epSoftwareList');
+  if (!container) return;
+  container.innerHTML = softwares.map(function(sw, idx) {
+    return '<div class="ep-sw-row" data-idx="' + idx + '">'
+      + '<input type="text" class="ep-sw-name" placeholder="Software name" value="' + (sw.name||'').replace(/"/g,'&quot;') + '"/>'
+      + '<input type="text" class="ep-sw-ver" placeholder="Version" value="' + (sw.version||'').replace(/"/g,'&quot;') + '"/>'
+      + '<button class="ep-sw-del" data-idx="' + idx + '">&#x1F5D1;</button>'
+      + '</div>';
+  }).join('');
+  container.querySelectorAll('.ep-sw-del').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(btn.getAttribute('data-idx'));
+      var m2 = getMeta(currentProjId);
+      var sws = m2.softwares || [];
+      sws.splice(idx, 1);
+      setMeta(currentProjId, {softwares: sws});
+      renderSoftwareList();
+    });
+  });
 }
 
 function openPanel(pid) {
-  var p = allProjects.find(function(x) { return x.id === pid; });
-  if (!p) return;
+  var p = allProjects.find(function(x) { return x.id === pid; }); if (!p) return;
   currentProjId = pid;
   var m = getMeta(pid);
-  document.getElementById("epCode").textContent = getCode(p);
-  document.getElementById("epName").textContent = p.project_name || p.name || "";
-  document.getElementById("epNote").value = m.note || "";
-  document.getElementById("epStaff").value = m.staff || "";
-  document.getElementById("epKoujou").value = m.koujou || "";
-  document.getElementById("epSoftware").value = m.software || "";
-  document.getElementById("epVersion").value = m.version || "";
-  document.getElementById("epOverlay").classList.add("open");
-  document.getElementById("epPanel").classList.add("open");
+  document.getElementById('epCode').textContent = getCode(p);
+  document.getElementById('epName').textContent = p.project_name || p.name || '';
+  document.getElementById('epNote').value = m.note || '';
+  document.getElementById('epStaffAdhzm').value = m.staffAdhzm || '';
+  document.getElementById('epStaffVndc').value = m.staffVndc || '';
+  document.getElementById('epKoujou').value = m.koujou || '';
+  renderSoftwareList();
+  document.getElementById('epOverlay').classList.add('open');
+  document.getElementById('epPanel').classList.add('open');
 }
 function closePanel() {
-  document.getElementById("epOverlay").classList.remove("open");
-  document.getElementById("epPanel").classList.remove("open");
+  document.getElementById('epOverlay').classList.remove('open');
+  document.getElementById('epPanel').classList.remove('open');
   currentProjId = null;
 }
 function savePanel() {
   if (!currentProjId) return;
-  setMeta(currentProjId, {
-    note: document.getElementById("epNote").value.trim(),
-    staff: document.getElementById("epStaff").value.trim(),
-    koujou: document.getElementById("epKoujou").value.trim(),
-    software: document.getElementById("epSoftware").value.trim(),
-    version: document.getElementById("epVersion").value.trim()
+  var rows = document.querySelectorAll('#epSoftwareList .ep-sw-row');
+  var softwares = [];
+  rows.forEach(function(row) {
+    var n = row.querySelector('.ep-sw-name').value.trim();
+    var v = row.querySelector('.ep-sw-ver').value.trim();
+    if (n) softwares.push({name:n, version:v});
   });
-  showToast("Saved!", "success");
-  closePanel();
-  renderGantt();
+  setMeta(currentProjId, {
+    note: document.getElementById('epNote').value.trim(),
+    staffAdhzm: document.getElementById('epStaffAdhzm').value.trim(),
+    staffVndc: document.getElementById('epStaffVndc').value.trim(),
+    koujou: document.getElementById('epKoujou').value.trim(),
+    softwares: softwares
+  });
+  showToast('Saved!','success'); closePanel(); renderGantt();
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-  document.getElementById("tqClose").addEventListener("click", closeTqPopup);
-  document.getElementById("tqCancel").addEventListener("click", closeTqPopup);
-  document.getElementById("tqSave").addEventListener("click", saveTqPopup);
-  document.getElementById("tqMsBtn").addEventListener("click", function() {
-    if (currentTqTask) openMsPanel(currentTqTask);
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('tqClose').addEventListener('click', closeTqPopup);
+  document.addEventListener('click', function(e) {
+    var pop = document.getElementById('tqPopup');
+    if (pop.classList.contains('open') && !pop.contains(e.target)) closeTqPopup();
   });
-  document.addEventListener("click", function(e) {
-    var p = document.getElementById("tqPopup");
-    if (p.classList.contains("open") && !p.contains(e.target)) closeTqPopup();
-  });
-  document.getElementById("msClose").addEventListener("click", closeMsPanel);
-  document.getElementById("msCloseBtn").addEventListener("click", closeMsPanel);
-  document.getElementById("msAddBtn").addEventListener("click", addMilestone);
-  document.getElementById("msOverlay").addEventListener("click", function(e) {
-    if (e.target === this) closeMsPanel();
-  });
-  document.getElementById("epClose").addEventListener("click", closePanel);
-  document.getElementById("epCancelBtn").addEventListener("click", closePanel);
-  document.getElementById("epSaveBtn").addEventListener("click", savePanel);
-  document.getElementById("epOverlay").addEventListener("click", function(e) {
-    if (e.target === this) closePanel();
+  document.getElementById('msClose').addEventListener('click', closeMsPanel);
+  document.getElementById('msCloseBtn').addEventListener('click', closeMsPanel);
+  document.getElementById('msAddBtn').addEventListener('click', addMilestone);
+  document.getElementById('msOverlay').addEventListener('click', function(e) { if (e.target===this) closeMsPanel(); });
+  document.getElementById('epClose').addEventListener('click', closePanel);
+  document.getElementById('epCancelBtn').addEventListener('click', closePanel);
+  document.getElementById('epSaveBtn').addEventListener('click', savePanel);
+  document.getElementById('epOverlay').addEventListener('click', function(e) { if (e.target===this) closePanel(); });
+  document.getElementById('epAddSwBtn').addEventListener('click', function() {
+    if (!currentProjId) return;
+    var m = getMeta(currentProjId);
+    var sws = m.softwares || [];
+    sws.push({name:'', version:''});
+    setMeta(currentProjId, {softwares: sws});
+    renderSoftwareList();
   });
 });
 
 function initTopbar() {
-  var role = localStorage.getItem("user_role") || "Staff";
-  var name = localStorage.getItem("user_name") || "User";
-  if (!localStorage.getItem("user_email")) { window.location.href = "index.html"; return; }
-  document.getElementById("topName").textContent = name;
-  if (role === "Admin") {
-    var els = document.querySelectorAll(".admin-only");
-    for (var i = 0; i < els.length; i++) els[i].style.display = "flex";
-  }
-  var dropBtn = document.getElementById("userDropBtn");
-  var dropMenu = document.getElementById("userDropMenu");
-  dropBtn.addEventListener("click", function(e) { e.stopPropagation(); dropMenu.classList.toggle("open"); });
-  document.addEventListener("click", function() { dropMenu.classList.remove("open"); });
+  var role = localStorage.getItem('user_role') || 'Staff';
+  var name = localStorage.getItem('user_name') || 'User';
+  if (!localStorage.getItem('user_email')) { window.location.href = 'index.html'; return; }
+  document.getElementById('topName').textContent = name;
+  if (role === 'Admin') { var els = document.querySelectorAll('.admin-only'); for (var i=0;i<els.length;i++) els[i].style.display='flex'; }
+  var dropBtn = document.getElementById('userDropBtn');
+  var dropMenu = document.getElementById('userDropMenu');
+  dropBtn.addEventListener('click', function(e) { e.stopPropagation(); dropMenu.classList.toggle('open'); });
+  document.addEventListener('click', function() { dropMenu.classList.remove('open'); });
 }
-
 function initNavDrop() {
-  var trigger = document.getElementById("scheduleNavTrigger");
-  var menu = document.getElementById("scheduleNavMenu");
-  trigger.addEventListener("click", function(e) {
-    e.stopPropagation();
-    trigger.classList.toggle("open");
-    menu.classList.toggle("open");
-  });
-  document.addEventListener("click", function() {
-    trigger.classList.remove("open");
-    menu.classList.remove("open");
-  });
+  var trigger = document.getElementById('scheduleNavTrigger');
+  var menu = document.getElementById('scheduleNavMenu');
+  trigger.addEventListener('click', function(e) { e.stopPropagation(); trigger.classList.toggle('open'); menu.classList.toggle('open'); });
+  document.addEventListener('click', function() { trigger.classList.remove('open'); menu.classList.remove('open'); });
 }
 
-function getGroup(p) {
-  return (p.proj_group || p.project_group || p.group || "").toString().toUpperCase().trim();
-}
+function getGroup(p) { return (p.proj_group||p.project_group||p.group||'').toString().toUpperCase().trim(); }
 function getCode(p) {
-  if (p.year && p.seq_number) return p.year + String(p.seq_number).padStart(3, "0");
-  return (p.code || p.project_code || "").split("_")[0] || "";
+  if (p.year && p.seq_number) return p.year + String(p.seq_number).padStart(3,'0');
+  return (p.code||p.project_code||'').split('_')[0]||'';
 }
 function getCodeNum(p) {
-  if (p.year && p.seq_number) return parseInt(p.year) * 1000 + parseInt(p.seq_number);
-  var n = parseInt(p.code || p.project_code || "");
-  return isNaN(n) ? 99999 : n;
+  if (p.year && p.seq_number) return parseInt(p.year)*1000+parseInt(p.seq_number);
+  var n = parseInt(p.code||p.project_code||''); return isNaN(n)?99999:n;
 }
 function getBestTaskOrder(p) {
   var best = 99;
@@ -635,239 +622,222 @@ function getBestTaskOrder(p) {
   return best;
 }
 function sortProjects(list) {
-  return list.slice().sort(function(a, b) {
-    var ga = GROUP_ORDER[getGroup(a)] !== undefined ? GROUP_ORDER[getGroup(a)] : 99;
-    var gb = GROUP_ORDER[getGroup(b)] !== undefined ? GROUP_ORDER[getGroup(b)] : 99;
-    if (ga !== gb) return ga - gb;
-    var ta = getBestTaskOrder(a), tb = getBestTaskOrder(b);
-    if (ta !== tb) return ta - tb;
-    return getCodeNum(a) - getCodeNum(b);
+  return list.slice().sort(function(a,b) {
+    var ga=GROUP_ORDER[getGroup(a)]!==undefined?GROUP_ORDER[getGroup(a)]:99;
+    var gb=GROUP_ORDER[getGroup(b)]!==undefined?GROUP_ORDER[getGroup(b)]:99;
+    if (ga!==gb) return ga-gb;
+    var ta=getBestTaskOrder(a), tb=getBestTaskOrder(b);
+    if (ta!==tb) return ta-tb;
+    return getCodeNum(a)-getCodeNum(b);
   });
 }
 function buildSttMap(sorted) {
-  var c = {}, m = {};
-  sorted.forEach(function(p) {
-    var g = getGroup(p) || "?";
-    c[g] = (c[g] || 0) + 1;
-    m[p.id] = g + c[g];
-  });
+  var c={},m={};
+  sorted.forEach(function(p){var g=getGroup(p)||'?';c[g]=(c[g]||0)+1;m[p.id]=g+c[g];});
   return m;
 }
 
 window.onload = async function() {
-  initTopbar();
-  initNavDrop();
-  var t = new Date(), y = t.getFullYear(), mo = t.getMonth();
-  document.getElementById("gStart").value = fmt(new Date(y, mo, 1));
-  document.getElementById("gEnd").value = fmt(new Date(y, mo + 1, 0));
+  initTopbar(); initNavDrop();
+  var t=new Date(),y=t.getFullYear(),mo=t.getMonth();
+  document.getElementById('gStart').value = fmt(new Date(y,mo,1));
+  document.getElementById('gEnd').value   = fmt(new Date(y,mo+1,0));
   try {
-    await loadAllData();
-    await loadMilestones();
-    autoFitProjCol();
-    renderGantt();
-  } catch(e) { showToast("Error: " + e.message, "error"); }
+    await loadAllData(); await loadMilestones();
+    autoFitProjCol(); renderGantt();
+  } catch(e) { showToast('Error: '+e.message,'error'); }
 };
 
-function setZoom(z, btn) {
-  gZoom = z;
-  document.querySelectorAll(".zoom-btn").forEach(function(b) { b.classList.remove("active"); });
-  btn.classList.add("active");
-  var t = new Date(), y = t.getFullYear(), mo = t.getMonth(), d = t.getDate();
-  if (z === "day") {
-    document.getElementById("gStart").value = fmt(new Date(y, mo, 1));
-    document.getElementById("gEnd").value = fmt(new Date(y, mo + 1, 0));
-  } else if (z === "week") {
-    document.getElementById("gStart").value = fmt(new Date(y, mo, d - 14));
-    document.getElementById("gEnd").value = fmt(new Date(y, mo, d + 42));
-  } else {
-    document.getElementById("gStart").value = fmt(new Date(y, mo - 1, 1));
-    document.getElementById("gEnd").value = fmt(new Date(y, mo + 5, 0));
-  }
+function setZoom(z,btn) {
+  gZoom=z;
+  document.querySelectorAll('.zoom-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  var t=new Date(),y=t.getFullYear(),mo=t.getMonth(),d=t.getDate();
+  if(z==='day'){document.getElementById('gStart').value=fmt(new Date(y,mo,1));document.getElementById('gEnd').value=fmt(new Date(y,mo+1,0));}
+  else if(z==='week'){document.getElementById('gStart').value=fmt(new Date(y,mo,d-14));document.getElementById('gEnd').value=fmt(new Date(y,mo,d+42));}
+  else{document.getElementById('gStart').value=fmt(new Date(y,mo-1,1));document.getElementById('gEnd').value=fmt(new Date(y,mo+5,0));}
   renderGantt();
 }
 
 function renderGantt() {
-  var start = new Date(document.getElementById("gStart").value);
-  var end = new Date(document.getElementById("gEnd").value);
-  var showDone = document.getElementById("showDone").checked;
-  if (isNaN(start) || isNaN(end) || start > end) return;
-  var days = getDaysArray(fmt(start), fmt(end));
-  var today = fmt(new Date());
-  var CW = gZoom === "month" ? 20 : gZoom === "week" ? 28 : 36;
-  var raw = allProjects.filter(function(p) { return showDone ? true : p.status === "active"; });
-  var projects = sortProjects(raw);
-  var sttMap = buildSttMap(projects);
-  var pw = projColWidth;
+  var start=new Date(document.getElementById('gStart').value);
+  var end=new Date(document.getElementById('gEnd').value);
+  if(isNaN(start)||isNaN(end)||start>end) return;
+  var days=getDaysArray(fmt(start),fmt(end));
+  var today=fmt(new Date());
+  var CW=gZoom==='month'?20:gZoom==='week'?28:36;
+  var projects=sortProjects(allProjects);
+  var sttMap=buildSttMap(projects);
+  var pw=projColWidth;
 
-  var hdr1 =
+  var hdr1=
     '<th class="col-stt" rowspan="2" style="text-align:center;padding:10px 6px;border-right:1px solid rgba(255,255,255,.2);">No.</th>'
-    + '<th id="thProj" class="col-proj" rowspan="2" style="width:' + pw + 'px;min-width:' + pw + 'px;text-align:left;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);position:relative;">'
-    + '<div class="th-proj-inner">Project</div>'
-    + '<div class="col-resize-handle" id="projResizeHandle" title="Drag to resize"></div>'
-    + '</th>'
-    + '<th rowspan="2" style="min-width:160px;text-align:right;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">Notes</th>'
-    + '<th rowspan="2" style="min-width:110px;text-align:right;padding:10px 14px;border-right:2px solid rgba(255,255,255,.3);">Person in Charge</th>';
-  var hdr2 = "";
+    +'<th id="thProj" class="col-proj" rowspan="2" style="width:'+pw+'px;min-width:'+pw+'px;text-align:left;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);position:relative;">'
+    +'<div class="th-proj-inner">Project</div>'
+    +'<div class="col-resize-handle" id="projResizeHandle" title="Drag to resize"></div>'
+    +'</th>'
+    +'<th rowspan="2" style="min-width:160px;text-align:right;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">Notes</th>'
+    +'<th rowspan="2" style="min-width:130px;text-align:left;padding:10px 14px;border-right:2px solid rgba(255,255,255,.3);">Staff 担当</th>';
+  var hdr2='';
 
-  if (gZoom === "month") {
-    var months = {};
-    days.forEach(function(d) {
-      var k = d.substring(0, 7);
-      months[k] = (months[k] || 0) + 1;
-    });
-    Object.entries(months).forEach(function(en) {
-      hdr1 += '<th colspan="' + en[1] + '" style="min-width:' + (en[1] * CW) + 'px;border-right:1px solid rgba(255,255,255,.15);">' + en[0] + '</th>';
-    });
-    days.forEach(function(d) {
-      var we = isWeekend(d), td = d === today;
-      hdr2 += '<th style="min-width:' + CW + 'px;' + (we ? "opacity:.45" : "") + (td ? ";background:#e63946;" : "") + '">' + (new Date(d)).getDate() + '</th>';
+  if(gZoom==='month'){
+    var months={};
+    days.forEach(function(d){var k=d.substring(0,7);months[k]=(months[k]||0)+1;});
+    Object.entries(months).forEach(function(en){hdr1+='<th colspan="'+en[1]+'" style="min-width:'+(en[1]*CW)+'px;border-right:1px solid rgba(255,255,255,.15);">'+en[0]+'</th>';});
+    days.forEach(function(d){
+      var we=isWeekend(d),td=d===today;
+      hdr2+='<th style="min-width:'+CW+'px;'+(we?'opacity:.45':'')+(td?';background:#e63946;':'')+'">'+new Date(d).getDate()+'</th>';
     });
   } else {
-    days.forEach(function(d) {
-      var dt = new Date(d);
-      var dow = ["\u65e5","\u6708","\u706b","\u6c34","\u6728","\u91d1","\u571f"][dt.getDay()];
-      var we = isWeekend(d), td = d === today;
-      hdr1 += '<th style="min-width:' + CW + 'px;' + (we ? "opacity:.45" : "") + (td ? "background:#e63946 !important;" : "") + (td ? ' class="today-hdr"' : "") + '">'
-        + dt.getDate() + '<br><span style="font-size:9px;opacity:.8;">' + dow + '</span></th>';
+    days.forEach(function(d){
+      var dt=new Date(d);
+      var dow=['日','月','火','水','木','金','土'][dt.getDay()];
+      var we=isWeekend(d),td=d===today;
+      hdr1+='<th style="min-width:'+CW+'px;'+(we?'opacity:.45':'')+(td?'background:#e63946 !important;':'')+'"'+(td?' class="today-hdr"':'')+'>'+dt.getDate()+'<br><span style="font-size:9px;opacity:.8;">'+dow+'</span></th>';
     });
   }
 
-  var rows = "";
-  var totalCols = days.length + 4;
-  if (!projects.length) {
-    rows = '<tr><td colspan="' + totalCols + '" style="text-align:center;padding:40px;color:#aaa;">No projects</td></tr>';
-  }
+  var rows='';
+  var totalCols=days.length+4;
+  if(!projects.length) rows='<tr><td colspan="'+totalCols+'" style="text-align:center;padding:40px;color:#aaa;">No projects</td></tr>';
 
-  projects.forEach(function(p) {
-    // Only show tasks created from view-list (task_source = 'task_manager' or null/undefined)
-    var tasks = getProjectTasks(p.id);
-    var rs = Math.max(tasks.length, 1);
-    var stt = sttMap[p.id] || "";
-    var meta = getMeta(p.id);
-    var swHtml = "";
-    if (meta.software) swHtml += '<div class="g-software">' + meta.software + (meta.version ? " " + meta.version : "") + '</div>';
-    if (meta.koujou)   swHtml += '<div class="g-koujou">\u7740\u5de5 ' + meta.koujou + '</div>';
-    var noteVal = (meta.note || "").replace(/&/g, "&amp;").replace(/</g, "&lt;");
-    var staffVal = (meta.staff || "").replace(/&/g, "&amp;").replace(/</g, "&lt;");
-    var dc = days.map(function(d) {
-      return '<td class="g-cell ' + (isWeekend(d) ? "we" : "") + " " + (d === today ? "tdy" : "") + '" style="min-width:' + CW + 'px;"></td>';
-    }).join("");
-    var sttCell = '<td class="g-stt" rowspan="' + rs + '"><span class="stt-badge">' + stt + '</span></td>';
-    var pCell = '<td class="g-left" rowspan="' + rs + '" data-pid="' + p.id + '" style="width:' + pw + 'px;min-width:' + pw + 'px;max-width:' + pw + 'px;">'
-      + '<div class="g-pname">' + (p.project_name || p.name || "") + '</div>'
-      + '<div class="g-pcode">' + getCode(p) + '</div>' + swHtml + '</td>';
-    var bicoCell = '<td class="g-bico" rowspan="' + rs + '">' + noteVal + '</td>';
-    var staffCell = '<td class="g-staff" rowspan="' + rs + '">' + staffVal + '</td>';
-    if (!tasks.length) { rows += "<tr>" + sttCell + pCell + bicoCell + staffCell + dc + "</tr>"; return; }
-    tasks.forEach(function(t, ti) {
-      rows += '<tr data-tid="' + t.id + '">' + (ti === 0 ? sttCell + pCell + bicoCell + staffCell : "") + dc + "</tr>";
-    });
+  projects.forEach(function(p){
+    var tasks=getProjectTasks(p.id);
+    var stt=sttMap[p.id]||'';
+    var meta=getMeta(p.id);
+    var swHtml='';
+    var softwares=meta.softwares||(meta.software?[{name:meta.software,version:meta.version||''}]:[]);
+    softwares.forEach(function(sw){if(sw.name)swHtml+='<div class="g-software">'+sw.name+(sw.version?' '+sw.version:'')+'</div>';});
+    if(meta.koujou) swHtml+='<div class="g-koujou">着工 '+meta.koujou+'</div>';
+    var noteVal=(meta.note||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    var staffAdhzm=(meta.staffAdhzm||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    var staffVndc=(meta.staffVndc||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    var numTasks=Math.max(tasks.length,1);
+    var rs=numTasks+1;
+
+    var sttCell='<td class="g-stt" rowspan="'+rs+'"><span class="stt-badge">'+stt+'</span></td>';
+    var pCell='<td class="g-left" rowspan="'+rs+'" data-pid="'+p.id+'" style="width:'+pw+'px;min-width:'+pw+'px;max-width:'+pw+'px;">'
+      +'<div class="g-pname">'+(p.project_name||p.name||'')+'</div>'
+      +'<div class="g-pcode">'+getCode(p)+'</div>'+swHtml+'</td>';
+    var bicoCell='<td class="g-bico" rowspan="'+rs+'">'+noteVal+'</td>';
+    var adhzmStaffCell='<td class="g-staff" style="min-width:130px;max-width:180px;vertical-align:top;border-right:2px solid #e8e8e8;"><div class="g-staff-adhzm">'+staffAdhzm+'</div></td>';
+    var dcAdhzm=days.map(function(d){
+      return '<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;"></td>';
+    }).join('');
+    rows+='<tr>'+sttCell+pCell+bicoCell+adhzmStaffCell+dcAdhzm+'</tr>';
+
+    if(!tasks.length){
+      var dcBlank=days.map(function(d){return '<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;"></td>';}).join('');
+      rows+='<tr><td class="g-staff" style="min-width:130px;max-width:180px;vertical-align:top;border-right:2px solid #e8e8e8;"><div class="g-staff-vndc"></div></td>'+dcBlank+'</tr>';
+    } else {
+      tasks.forEach(function(t){
+        var dc=days.map(function(d){return '<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;" data-tid="'+t.id+'" data-day="'+d+'"></td>';}).join('');
+        rows+='<tr data-tid="'+t.id+'"><td class="g-staff" style="min-width:130px;max-width:180px;vertical-align:top;border-right:2px solid #e8e8e8;"><div class="g-staff-vndc">'+staffVndc+'</div></td>'+dc+'</tr>';
+      });
+    }
   });
 
-  var thead = gZoom === "month"
-    ? "<thead><tr>" + hdr1 + "</tr><tr>" + hdr2 + "</tr></thead>"
-    : "<thead><tr>" + hdr1 + "</tr></thead>";
-  document.getElementById("ganttCont").innerHTML = '<table class="gantt">' + thead + "<tbody>" + rows + "</tbody></table>";
+  var thead=gZoom==='month'
+    ?'<thead><tr>'+hdr1+'</tr><tr>'+hdr2+'</tr></thead>'
+    :'<thead><tr>'+hdr1+'</tr></thead>';
+  document.getElementById('ganttCont').innerHTML='<table class="gantt">'+thead+'<tbody>'+rows+'</tbody></table>';
 
   initColResize();
-  document.querySelectorAll(".g-left[data-pid]").forEach(function(td) {
-    td.addEventListener("click", function(e) {
-      e.stopPropagation();
-      openPanel(td.getAttribute("data-pid"));
-    });
+  document.querySelectorAll('.g-left[data-pid]').forEach(function(td){
+    td.addEventListener('click',function(e){e.stopPropagation();openPanel(td.getAttribute('data-pid'));});
   });
 
-  projects.forEach(function(p) {
-    var color = projColorMap[p.id] || "#a8dadc";
-    getProjectTasks(p.id).forEach(function(t) {
-      var row = document.querySelector('tr[data-tid="' + t.id + '"]');
-      if (!row) return;
-      var cells = Array.from(row.querySelectorAll(".g-cell"));
-      var user = allUsers.find(function(u) { return u.id === t.assigned_to; });
+  projects.forEach(function(p){
+    var color=projColorMap[p.id]||'#a8dadc';
+    getProjectTasks(p.id).forEach(function(t){
+      var taskRow=document.querySelector('tr[data-tid="'+t.id+'"]');
+      if(!taskRow) return;
+      var cells=Array.from(taskRow.querySelectorAll('.g-cell'));
+      var user=allUsers.find(function(u){return u.id===t.assigned_to;});
 
-      if (t.start_date && t.end_date) {
-        var si = days.indexOf(t.start_date), ei = days.indexOf(t.end_date);
-        if (si >= 0 && si < cells.length) {
-          var rei = ei < 0 ? days.length - 1 : Math.min(ei, days.length - 1);
-          var bar = document.createElement("div");
-          bar.className = "g-bar";
-          bar.style.cssText = "left:2px;width:" + Math.max((rei - si + 1) * CW - 4, CW - 4) + "px;background:" + color + ";";
-          bar.textContent = t.task_type || "";
-          bar.addEventListener("mouseenter", function(ev) {
-            showTooltip(ev, "<b>" + (t.task_type || "") + "</b><br>" + (user ? user.name : "Not assigned") + "<br>" + t.start_date + " \u2192 " + t.end_date);
-          });
-          bar.addEventListener("mouseleave", hideTooltip);
+      if(t.start_date&&t.end_date){
+        var si=days.indexOf(t.start_date),ei=days.indexOf(t.end_date);
+        if(si>=0&&si<cells.length){
+          var rei=ei<0?days.length-1:Math.min(ei,days.length-1);
+          var bar=document.createElement('div');
+          bar.className='g-bar';
+          bar.style.cssText='left:2px;width:'+Math.max((rei-si+1)*CW-4,CW-4)+'px;background:'+color+';';
+          bar.textContent=t.task_type||'';
+          bar.addEventListener('mouseenter',function(ev){showTooltip(ev,'<b>'+(t.task_type||'')+'</b><br>'+(user?user.name:'Not assigned')+'<br>'+t.start_date+' → '+t.end_date);});
+          bar.addEventListener('mouseleave',hideTooltip);
           cells[si].appendChild(bar);
         }
       }
 
-      if (t.receive_date) {
-        var ri = days.indexOf(t.receive_date);
-        if (ri >= 0 && ri < cells.length) {
-          var dot = document.createElement("div");
-          dot.className = "g-dot g-dot-rcv";
-          dot.style.left = "50%";
-          (function(task) {
-            dot.addEventListener("mouseenter", function(ev) {
-              showTooltip(ev, "&#x1F4E5; Receive: " + task.receive_date + "<br>&#x1F4E4; Send: " + (task.send_date || "\u2014") + "<br><i>Click to edit</i>");
+      var adhzmRow=taskRow.previousElementSibling;
+      var adhzmCells=adhzmRow?Array.from(adhzmRow.querySelectorAll('.g-cell')):[];
+
+      if(t.receive_date){
+        var ri=days.indexOf(t.receive_date);
+        if(ri>=0&&adhzmCells.length>ri){
+          var dot=document.createElement('div');
+          dot.className='g-dot g-dot-rcv';
+          dot.style.left='50%';
+          (function(task){
+            dot.addEventListener('mouseenter',function(ev){
+              var tt=['&#x1F4E5; Receive: '+task.receive_date];
+              if(task.receive_note) tt.push(task.receive_note);
+              tt.push('<i>Click to edit</i>');
+              showTooltip(ev,tt.join('<br>'));
             });
-            dot.addEventListener("mouseleave", hideTooltip);
-            dot.addEventListener("click", function(ev) { openTqPopup(ev, task); });
+            dot.addEventListener('mouseleave',hideTooltip);
+            dot.addEventListener('click',function(ev){openTqPopupRcv(ev,task);});
           })(t);
-          cells[ri].appendChild(dot);
+          adhzmCells[ri].appendChild(dot);
+        }
+      }
+      if(t.send_date){
+        var si2=days.indexOf(t.send_date);
+        if(si2>=0&&adhzmCells.length>si2){
+          var dot2=document.createElement('div');
+          dot2.className='g-dot g-dot-send';
+          dot2.style.left='50%';
+          (function(task){
+            dot2.addEventListener('mouseenter',function(ev){
+              var tt=['&#x1F4E4; Send: '+task.send_date];
+              if(task.send_note) tt.push(task.send_note);
+              tt.push('<i>Click to edit</i>');
+              showTooltip(ev,tt.join('<br>'));
+            });
+            dot2.addEventListener('mouseleave',hideTooltip);
+            dot2.addEventListener('click',function(ev){openTqPopupSnd(ev,task);});
+          })(t);
+          adhzmCells[si2].appendChild(dot2);
         }
       }
 
-      if (t.send_date) {
-        var si2 = days.indexOf(t.send_date);
-        if (si2 >= 0 && si2 < cells.length) {
-          var dot2 = document.createElement("div");
-          dot2.className = "g-dot g-dot-send";
-          dot2.style.left = "50%";
-          (function(task) {
-            dot2.addEventListener("mouseenter", function(ev) {
-              showTooltip(ev, "&#x1F4E4; Send: " + task.send_date + "<br>&#x1F4E5; Receive: " + (task.receive_date || "\u2014") + "<br><i>Click to edit</i>");
-            });
-            dot2.addEventListener("mouseleave", hideTooltip);
-            dot2.addEventListener("click", function(ev) { openTqPopup(ev, task); });
-          })(t);
-          cells[si2].appendChild(dot2);
-        }
-      }
-
-      getMsForTask(t.id).forEach(function(m, mi) {
-        if (m.receive_date) {
-          var mri = days.indexOf(m.receive_date);
-          if (mri >= 0 && mri < cells.length) {
-            var md = document.createElement("div");
-            md.className = "g-dot g-dot-ms-rcv";
-            md.style.left = "50%";
-            md.style.top = (4 + mi * 5) + "px";
-            (function(ms, idx) {
-              md.addEventListener("mouseenter", function(ev) {
-                showTooltip(ev, "Milestone " + (idx+1) + ": " + ms.receive_date + (ms.note ? "<br>" + ms.note : ""));
-              });
-              md.addEventListener("mouseleave", hideTooltip);
-              md.addEventListener("click", function(ev) { ev.stopPropagation(); openTqPopup(ev, t); });
-            })(m, mi);
-            cells[mri].appendChild(md);
+      getMsForTask(t.id).forEach(function(m,mi){
+        if(m.receive_date){
+          var mri=days.indexOf(m.receive_date);
+          if(mri>=0&&adhzmCells.length>mri){
+            var md=document.createElement('div');
+            md.className='g-dot g-dot-ms-rcv';
+            md.style.left='50%';
+            (function(ms,idx){
+              md.addEventListener('mouseenter',function(ev){showTooltip(ev,'Milestone '+(idx+1)+': '+ms.receive_date+(ms.note?'<br>'+ms.note:''));});
+              md.addEventListener('mouseleave',hideTooltip);
+              md.addEventListener('click',function(ev){ev.stopPropagation();openTqPopupRcv(ev,t);});
+            })(m,mi);
+            adhzmCells[mri].appendChild(md);
           }
         }
-        if (m.send_date) {
-          var msi = days.indexOf(m.send_date);
-          if (msi >= 0 && msi < cells.length) {
-            var md2 = document.createElement("div");
-            md2.className = "g-dot g-dot-ms-send";
-            md2.style.left = "50%";
-            md2.style.top = (26 + mi * 5) + "px";
-            (function(ms, idx) {
-              md2.addEventListener("mouseenter", function(ev) {
-                showTooltip(ev, "Milestone " + (idx+1) + " Send: " + ms.send_date + (ms.note ? "<br>" + ms.note : ""));
-              });
-              md2.addEventListener("mouseleave", hideTooltip);
-              md2.addEventListener("click", function(ev) { ev.stopPropagation(); openTqPopup(ev, t); });
-            })(m, mi);
-            cells[msi].appendChild(md2);
+        if(m.send_date){
+          var msi=days.indexOf(m.send_date);
+          if(msi>=0&&adhzmCells.length>msi){
+            var md2=document.createElement('div');
+            md2.className='g-dot g-dot-ms-send';
+            md2.style.left='50%';
+            (function(ms,idx){
+              md2.addEventListener('mouseenter',function(ev){showTooltip(ev,'Milestone '+(idx+1)+' Send: '+ms.send_date+(ms.note?'<br>'+ms.note:''));});
+              md2.addEventListener('mouseleave',hideTooltip);
+              md2.addEventListener('click',function(ev){ev.stopPropagation();openTqPopupSnd(ev,t);});
+            })(m,mi);
+            adhzmCells[msi].appendChild(md2);
           }
         }
       });
@@ -875,9 +845,7 @@ function renderGantt() {
   });
 }
 
-function logout() {
-  if (confirm("Sign out?")) { localStorage.clear(); window.location.href = "index.html"; }
-}
+function logout(){if(confirm('Sign out?')){localStorage.clear();window.location.href='index.html';}}
 </script>
 </body>
 </html>
