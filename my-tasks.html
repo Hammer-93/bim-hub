@@ -136,8 +136,24 @@
       <a class="nav-drop-item" href="view-schedule.html">&#x1F4C5; Project Schedule</a>
     </div>
   </div>
-  <a class="nav-tab" href="view-staff.html">&#x1F465; Staff Schedule</a>
-  <a class="nav-tab active" href="my-tasks.html">&#x1F4CB; My Tasks</a>
+  <div class="nav-drop" id="staffNavDrop">
+    <div class="nav-drop-trigger" id="staffNavTrigger">
+      &#x1F465; Staff <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="staffNavMenu">
+      <a class="nav-drop-item" href="view-staff.html">&#x1F4C5; Staff Schedule</a>
+      <a class="nav-drop-item" href="view-track.html?mode=view">&#x1F4CA; Project Track</a>
+    </div>
+  </div>
+  <div class="nav-drop" id="myTaskNavDrop">
+    <div class="nav-drop-trigger active" id="myTaskNavTrigger">
+      &#x1F4CB; My Tasks <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="myTaskNavMenu">
+      <a class="nav-drop-item active" href="my-tasks.html">&#x1F5C2;&#xFE0F; Task List</a>
+      <a class="nav-drop-item" href="view-track.html?mode=edit">&#x1F4CA; Project Track</a>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
