@@ -111,7 +111,8 @@
     <span class="topbar-title">VINADECO BIM Hub</span>
   </div>
   <div class="topbar-right">
-    <div class="dropdown-wrap" id="userDropWrap">
+  <a class="btn-top" href="view-list.html">&#x1F4C5; Schedule</a>
+  <div class="dropdown-wrap" id="userDropWrap">
       <button class="dropdown-trigger" id="userDropBtn">
         <span class="user-name" id="topName">...</span>
         <span class="dropdown-arrow">&#x25BC;</span>
@@ -126,25 +127,7 @@
 </nav>
 
 <div class="nav-tabs-bar">
-  <div class="nav-drop" id="scheduleNavDrop">
-    <div class="nav-drop-trigger" id="scheduleNavTrigger">
-      &#x1F4C5; Project Schedule <span class="nav-drop-arrow">&#x25BC;</span>
-    </div>
-    <div class="nav-drop-menu" id="scheduleNavMenu">
-      <a class="nav-drop-item" href="view-list.html">&#x1F4CB; List of Project</a>
-      <a class="nav-drop-item" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
-      <a class="nav-drop-item" href="view-schedule.html">&#x1F4C5; Project Schedule</a>
-    </div>
-  </div>
-  <div class="nav-drop" id="staffNavDrop">
-    <div class="nav-drop-trigger" id="staffNavTrigger">
-      &#x1F465; Staff <span class="nav-drop-arrow">&#x25BC;</span>
-    </div>
-    <div class="nav-drop-menu" id="staffNavMenu">
-      <a class="nav-drop-item" href="view-staff.html">&#x1F4C5; Staff Schedule</a>
-      <a class="nav-drop-item" href="view-track.html?mode=view">&#x1F4CA; Project Track</a>
-    </div>
-  </div>
+  
   <div class="nav-drop" id="myTaskNavDrop">
     <div class="nav-drop-trigger active" id="myTaskNavTrigger">
       &#x1F4CB; My Tasks <span class="nav-drop-arrow">&#x25BC;</span>
@@ -314,31 +297,16 @@
     document.addEventListener('click',function(){dropMenu.classList.remove('open');});
   }
   function initNavDrop() {
-  var trigger  = document.getElementById('scheduleNavTrigger');
-  var menu     = document.getElementById('scheduleNavMenu');
-  var strigger = document.getElementById('staffNavTrigger');
-  var smenu    = document.getElementById('staffNavMenu');
   var mtrigger = document.getElementById('myTaskNavTrigger');
   var mmenu    = document.getElementById('myTaskNavMenu');
-  trigger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    trigger.classList.toggle('open');
-    menu.classList.toggle('open');
-  });
-  strigger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    strigger.classList.toggle('open');
-    smenu.classList.toggle('open');
-  });
   mtrigger.addEventListener('click', function(e) {
     e.stopPropagation();
     mtrigger.classList.toggle('open');
     mmenu.classList.toggle('open');
   });
   document.addEventListener('click', function() {
-    trigger.classList.remove('open');  menu.classList.remove('open');
-    strigger.classList.remove('open'); smenu.classList.remove('open');
-    mtrigger.classList.remove('open'); mmenu.classList.remove('open');
+    mtrigger.classList.remove('open');
+    mmenu.classList.remove('open');
   });
 }
 window.onload = async function() {
