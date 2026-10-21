@@ -162,6 +162,7 @@
     .ep-foot { padding:14px 20px; border-top:1px solid #eee; display:flex; gap:10px; justify-content:flex-end; flex-shrink:0; }
     .ep-save { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:9px 24px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
     .ep-cancel { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:9px 18px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+    .ep-saving { opacity:.6; pointer-events:none; }
   </style>
 </head>
 <body>
@@ -291,7 +292,6 @@ var currentProjId = null;
 var currentTqTask = null;
 var currentTqType = null;
 var allMilestones = [];
-var LS_KEY = 'bimhub_proj_meta';
 var GROUP_ORDER = {A:0,B:1,C:2,D:3};
 var TASK_TYPE_ORDER = {
   'パース・動画':0,
@@ -331,17 +331,6 @@ function getProjectTasks(projectId) {
   });
 }
 
-function getMeta(id) {
-  try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}')[id] || {}; } catch(e) { return {}; }
-}
-function setMeta(id, data) {
-  try {
-    var a = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
-    a[id] = Object.assign(a[id] || {}, data);
-    localStorage.setItem(LS_KEY, JSON.stringify(a));
-  } catch(e) {}
-}
-
 async function loadMilestones() {
   try {
     var r = await fetch(SUPABASE_URL + '/rest/v1/task_milestones?select=*&order=created_at.asc', {headers: HDRS});
@@ -379,7 +368,7 @@ function openTqPopupRcv(e, task) {
   e.stopPropagation(); hideTooltip();
   currentTqTask = task; currentTqType = 'rcv';
   var p = allProjects.find(function(x) { return x.id === task.project_id; });
-  document.getElementById('tqLabel').textContent = (task.task_type || 'Task') + (p ? ' · ' + getCode(p) : '') + ' — Receive';
+  document.getElementById('tqLabel').textContent = (task.task_type||'Task') + (p ? ' · ' + getCode(p) : '') + ' — Receive';
   document.getElementById('tqBody').innerHTML =
     '<div class="tq-field"><label>&#x1F4E5; Receive Date</label><input type="date" id="tqRcv" value="' + (task.receive_date||'') + '"/></div>'
     + '<div class="tq-field"><label>&#x1F4DD; Content</label><textarea id="tqRcvNote" placeholder="Enter content...">' + (task.receive_note||'') + '</textarea></div>'
@@ -394,7 +383,7 @@ function openTqPopupSnd(e, task) {
   e.stopPropagation(); hideTooltip();
   currentTqTask = task; currentTqType = 'snd';
   var p = allProjects.find(function(x) { return x.id === task.project_id; });
-  document.getElementById('tqLabel').textContent = (task.task_type || 'Task') + (p ? ' · ' + getCode(p) : '') + ' — Send';
+  document.getElementById('tqLabel').textContent = (task.task_type||'Task') + (p ? ' · ' + getCode(p) : '') + ' — Send';
   document.getElementById('tqBody').innerHTML =
     '<div class="tq-field"><label>&#x1F4E4; Send Date</label><input type="date" id="tqSnd" value="' + (task.send_date||'') + '"/></div>'
     + '<div class="tq-field"><label>&#x1F4DD; Content</label><textarea id="tqSndNote" placeholder="Enter content...">' + (task.send_note||'') + '</textarea></div>'
@@ -427,11 +416,11 @@ async function saveTqPopup() {
     if (sndNoteEl) body.send_note = sndNoteEl.value.trim() || null;
   }
   try {
-    var res = await fetch(SUPABASE_URL + '/rest/v1/project_tasks?id=eq.' + currentTqTask.id, {method: 'PATCH', headers: HDRS, body: JSON.stringify(body)});
-    if (!res.ok) { showToast('Error saving', 'error'); return; }
+    var res = await fetch(SUPABASE_URL + '/rest/v1/project_tasks?id=eq.' + currentTqTask.id, {method:'PATCH', headers:HDRS, body:JSON.stringify(body)});
+    if (!res.ok) { showToast('Error saving','error'); return; }
     Object.assign(currentTqTask, body);
-    showToast('Saved!', 'success'); closeTqPopup(); renderGantt();
-  } catch(e) { showToast('Error: ' + e.message, 'error'); }
+    showToast('Saved!','success'); closeTqPopup(); renderGantt();
+  } catch(e) { showToast('Error: ' + e.message,'error'); }
 }
 
 function openMsPanel(task) {
@@ -499,12 +488,11 @@ async function deleteMilestone(msId) {
   } catch(e){showToast('Error: '+e.message,'error');}
 }
 
-function renderSoftwareList() {
-  var m = getMeta(currentProjId);
-  var softwares = m.softwares || (m.software ? [{name:m.software,version:m.version||''}] : []);
+function renderSoftwareList(softwares) {
   var container = document.getElementById('epSoftwareList');
   if (!container) return;
-  container.innerHTML = softwares.map(function(sw, idx) {
+  var sws = softwares || [];
+  container.innerHTML = sws.map(function(sw, idx) {
     return '<div class="ep-sw-row" data-idx="' + idx + '">'
       + '<input type="text" class="ep-sw-name" placeholder="Software name" value="' + (sw.name||'').replace(/"/g,'&quot;') + '"/>'
       + '<input type="text" class="ep-sw-ver" placeholder="Version" value="' + (sw.version||'').replace(/"/g,'&quot;') + '"/>'
@@ -514,11 +502,12 @@ function renderSoftwareList() {
   container.querySelectorAll('.ep-sw-del').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var idx = parseInt(btn.getAttribute('data-idx'));
-      var m2 = getMeta(currentProjId);
-      var sws = m2.softwares || [];
-      sws.splice(idx, 1);
-      setMeta(currentProjId, {softwares: sws});
-      renderSoftwareList();
+      var rows = Array.from(document.querySelectorAll('#epSoftwareList .ep-sw-row'));
+      var newSws = [];
+      rows.forEach(function(row, i) {
+        if (i !== idx) newSws.push({name:row.querySelector('.ep-sw-name').value, version:row.querySelector('.ep-sw-ver').value});
+      });
+      renderSoftwareList(newSws);
     });
   });
 }
@@ -526,14 +515,17 @@ function renderSoftwareList() {
 function openPanel(pid) {
   var p = allProjects.find(function(x) { return x.id === pid; }); if (!p) return;
   currentProjId = pid;
-  var m = getMeta(pid);
   document.getElementById('epCode').textContent = getCode(p);
   document.getElementById('epName').textContent = p.project_name || p.name || '';
-  document.getElementById('epNote').value = m.note || '';
-  document.getElementById('epStaffAdhzm').value = m.staffAdhzm || '';
-  document.getElementById('epStaffVndc').value = m.staffVndc || '';
-  document.getElementById('epKoujou').value = m.koujou || '';
-  renderSoftwareList();
+  document.getElementById('epNote').value = p.note || '';
+  document.getElementById('epStaffAdhzm').value = p.staff_adhzm || '';
+  document.getElementById('epStaffVndc').value = p.staff_vndc || '';
+  document.getElementById('epKoujou').value = p.koujou || '';
+  var sws = [];
+  if (p.softwares) {
+    try { sws = typeof p.softwares === 'string' ? JSON.parse(p.softwares) : p.softwares; } catch(e) { sws = []; }
+  }
+  renderSoftwareList(sws);
   document.getElementById('epOverlay').classList.add('open');
   document.getElementById('epPanel').classList.add('open');
 }
@@ -542,8 +534,10 @@ function closePanel() {
   document.getElementById('epPanel').classList.remove('open');
   currentProjId = null;
 }
-function savePanel() {
+async function savePanel() {
   if (!currentProjId) return;
+  var saveBtn = document.getElementById('epSaveBtn');
+  saveBtn.classList.add('ep-saving'); saveBtn.textContent = 'Saving...';
   var rows = document.querySelectorAll('#epSoftwareList .ep-sw-row');
   var softwares = [];
   rows.forEach(function(row) {
@@ -551,14 +545,21 @@ function savePanel() {
     var v = row.querySelector('.ep-sw-ver').value.trim();
     if (n) softwares.push({name:n, version:v});
   });
-  setMeta(currentProjId, {
-    note: document.getElementById('epNote').value.trim(),
-    staffAdhzm: document.getElementById('epStaffAdhzm').value.trim(),
-    staffVndc: document.getElementById('epStaffVndc').value.trim(),
-    koujou: document.getElementById('epKoujou').value.trim(),
+  var payload = {
+    note: document.getElementById('epNote').value.trim() || null,
+    staff_adhzm: document.getElementById('epStaffAdhzm').value.trim() || null,
+    staff_vndc: document.getElementById('epStaffVndc').value.trim() || null,
+    koujou: document.getElementById('epKoujou').value.trim() || null,
     softwares: softwares
-  });
-  showToast('Saved!','success'); closePanel(); renderGantt();
+  };
+  try {
+    var res = await fetch(SUPABASE_URL + '/rest/v1/projects?id=eq.' + currentProjId, {method:'PATCH', headers:HDRS, body:JSON.stringify(payload)});
+    if (!res.ok) { showToast('Error saving','error'); saveBtn.classList.remove('ep-saving'); saveBtn.innerHTML='&#x1F4BE; Save'; return; }
+    var p = allProjects.find(function(x) { return x.id === currentProjId; });
+    if (p) Object.assign(p, payload);
+    showToast('Saved!','success'); closePanel(); renderGantt();
+  } catch(e) { showToast('Error: '+e.message,'error'); }
+  saveBtn.classList.remove('ep-saving'); saveBtn.innerHTML = '&#x1F4BE; Save';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -576,31 +577,29 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('epSaveBtn').addEventListener('click', savePanel);
   document.getElementById('epOverlay').addEventListener('click', function(e) { if (e.target===this) closePanel(); });
   document.getElementById('epAddSwBtn').addEventListener('click', function() {
-    if (!currentProjId) return;
-    var m = getMeta(currentProjId);
-    var sws = m.softwares || [];
-    sws.push({name:'', version:''});
-    setMeta(currentProjId, {softwares: sws});
-    renderSoftwareList();
+    var rows = Array.from(document.querySelectorAll('#epSoftwareList .ep-sw-row'));
+    var cur = rows.map(function(row) { return {name:row.querySelector('.ep-sw-name').value, version:row.querySelector('.ep-sw-ver').value}; });
+    cur.push({name:'', version:''});
+    renderSoftwareList(cur);
   });
 });
 
 function initTopbar() {
   var role = localStorage.getItem('user_role') || 'Staff';
   var name = localStorage.getItem('user_name') || 'User';
-  if (!localStorage.getItem('user_email')) { window.location.href = 'index.html'; return; }
+  if (!localStorage.getItem('user_email')) { window.location.href='index.html'; return; }
   document.getElementById('topName').textContent = name;
-  if (role === 'Admin') { var els = document.querySelectorAll('.admin-only'); for (var i=0;i<els.length;i++) els[i].style.display='flex'; }
-  var dropBtn = document.getElementById('userDropBtn');
-  var dropMenu = document.getElementById('userDropMenu');
-  dropBtn.addEventListener('click', function(e) { e.stopPropagation(); dropMenu.classList.toggle('open'); });
-  document.addEventListener('click', function() { dropMenu.classList.remove('open'); });
+  if (role==='Admin') { var els=document.querySelectorAll('.admin-only'); for(var i=0;i<els.length;i++) els[i].style.display='flex'; }
+  var dropBtn=document.getElementById('userDropBtn');
+  var dropMenu=document.getElementById('userDropMenu');
+  dropBtn.addEventListener('click',function(e){e.stopPropagation();dropMenu.classList.toggle('open');});
+  document.addEventListener('click',function(){dropMenu.classList.remove('open');});
 }
 function initNavDrop() {
-  var trigger = document.getElementById('scheduleNavTrigger');
-  var menu = document.getElementById('scheduleNavMenu');
-  trigger.addEventListener('click', function(e) { e.stopPropagation(); trigger.classList.toggle('open'); menu.classList.toggle('open'); });
-  document.addEventListener('click', function() { trigger.classList.remove('open'); menu.classList.remove('open'); });
+  var trigger=document.getElementById('scheduleNavTrigger');
+  var menu=document.getElementById('scheduleNavMenu');
+  trigger.addEventListener('click',function(e){e.stopPropagation();trigger.classList.toggle('open');menu.classList.toggle('open');});
+  document.addEventListener('click',function(){trigger.classList.remove('open');menu.classList.remove('open');});
 }
 
 function getGroup(p) { return (p.proj_group||p.project_group||p.group||'').toString().toUpperCase().trim(); }
@@ -610,23 +609,23 @@ function getCode(p) {
 }
 function getCodeNum(p) {
   if (p.year && p.seq_number) return parseInt(p.year)*1000+parseInt(p.seq_number);
-  var n = parseInt(p.code||p.project_code||''); return isNaN(n)?99999:n;
+  var n=parseInt(p.code||p.project_code||''); return isNaN(n)?99999:n;
 }
 function getBestTaskOrder(p) {
-  var best = 99;
-  getProjectTasks(p.id).forEach(function(t) {
-    var o = TASK_TYPE_ORDER.hasOwnProperty(t.task_type) ? TASK_TYPE_ORDER[t.task_type] : 98;
-    if (o < best) best = o;
+  var best=99;
+  getProjectTasks(p.id).forEach(function(t){
+    var o=TASK_TYPE_ORDER.hasOwnProperty(t.task_type)?TASK_TYPE_ORDER[t.task_type]:98;
+    if(o<best) best=o;
   });
   return best;
 }
 function sortProjects(list) {
-  return list.slice().sort(function(a,b) {
+  return list.slice().sort(function(a,b){
     var ga=GROUP_ORDER[getGroup(a)]!==undefined?GROUP_ORDER[getGroup(a)]:99;
     var gb=GROUP_ORDER[getGroup(b)]!==undefined?GROUP_ORDER[getGroup(b)]:99;
-    if (ga!==gb) return ga-gb;
-    var ta=getBestTaskOrder(a), tb=getBestTaskOrder(b);
-    if (ta!==tb) return ta-tb;
+    if(ga!==gb) return ga-gb;
+    var ta=getBestTaskOrder(a),tb=getBestTaskOrder(b);
+    if(ta!==tb) return ta-tb;
     return getCodeNum(a)-getCodeNum(b);
   });
 }
@@ -639,8 +638,8 @@ function buildSttMap(sorted) {
 window.onload = async function() {
   initTopbar(); initNavDrop();
   var t=new Date(),y=t.getFullYear(),mo=t.getMonth();
-  document.getElementById('gStart').value = fmt(new Date(y,mo,1));
-  document.getElementById('gEnd').value   = fmt(new Date(y,mo+1,0));
+  document.getElementById('gStart').value=fmt(new Date(y,mo,1));
+  document.getElementById('gEnd').value=fmt(new Date(y,mo+1,0));
   try {
     await loadAllData(); await loadMilestones();
     autoFitProjCol(); renderGantt();
@@ -673,7 +672,7 @@ function renderGantt() {
     '<th class="col-stt" rowspan="2" style="text-align:center;padding:10px 6px;border-right:1px solid rgba(255,255,255,.2);">No.</th>'
     +'<th id="thProj" class="col-proj" rowspan="2" style="width:'+pw+'px;min-width:'+pw+'px;text-align:left;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);position:relative;">'
     +'<div class="th-proj-inner">Project</div>'
-    +'<div class="col-resize-handle" id="projResizeHandle" title="Drag to resize"></div>'
+    +'<div class="col-resize-handle" id="projResizeHandle"></div>'
     +'</th>'
     +'<th rowspan="2" style="min-width:160px;text-align:right;padding:10px 14px;border-right:1px solid rgba(255,255,255,.2);">Notes</th>'
     +'<th rowspan="2" style="min-width:130px;text-align:left;padding:10px 14px;border-right:2px solid rgba(255,255,255,.3);">Staff 担当</th>';
@@ -703,14 +702,14 @@ function renderGantt() {
   projects.forEach(function(p){
     var tasks=getProjectTasks(p.id);
     var stt=sttMap[p.id]||'';
-    var meta=getMeta(p.id);
     var swHtml='';
-    var softwares=meta.softwares||(meta.software?[{name:meta.software,version:meta.version||''}]:[]);
+    var softwares=[];
+    if(p.softwares){try{softwares=typeof p.softwares==='string'?JSON.parse(p.softwares):p.softwares;}catch(e){softwares=[];}}
     softwares.forEach(function(sw){if(sw.name)swHtml+='<div class="g-software">'+sw.name+(sw.version?' '+sw.version:'')+'</div>';});
-    if(meta.koujou) swHtml+='<div class="g-koujou">着工 '+meta.koujou+'</div>';
-    var noteVal=(meta.note||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
-    var staffAdhzm=(meta.staffAdhzm||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
-    var staffVndc=(meta.staffVndc||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    if(p.koujou) swHtml+='<div class="g-koujou">着工 '+p.koujou+'</div>';
+    var noteVal=(p.note||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    var staffAdhzm=(p.staff_adhzm||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    var staffVndc=(p.staff_vndc||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
     var numTasks=Math.max(tasks.length,1);
     var rs=numTasks+1;
 
@@ -720,9 +719,7 @@ function renderGantt() {
       +'<div class="g-pcode">'+getCode(p)+'</div>'+swHtml+'</td>';
     var bicoCell='<td class="g-bico" rowspan="'+rs+'">'+noteVal+'</td>';
     var adhzmStaffCell='<td class="g-staff" style="min-width:130px;max-width:180px;vertical-align:top;border-right:2px solid #e8e8e8;"><div class="g-staff-adhzm">'+staffAdhzm+'</div></td>';
-    var dcAdhzm=days.map(function(d){
-      return '<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;"></td>';
-    }).join('');
+    var dcAdhzm=days.map(function(d){return '<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;"></td>';}).join('');
     rows+='<tr>'+sttCell+pCell+bicoCell+adhzmStaffCell+dcAdhzm+'</tr>';
 
     if(!tasks.length){
@@ -815,8 +812,7 @@ function renderGantt() {
           var mri=days.indexOf(m.receive_date);
           if(mri>=0&&adhzmCells.length>mri){
             var md=document.createElement('div');
-            md.className='g-dot g-dot-ms-rcv';
-            md.style.left='50%';
+            md.className='g-dot g-dot-ms-rcv'; md.style.left='50%';
             (function(ms,idx){
               md.addEventListener('mouseenter',function(ev){showTooltip(ev,'Milestone '+(idx+1)+': '+ms.receive_date+(ms.note?'<br>'+ms.note:''));});
               md.addEventListener('mouseleave',hideTooltip);
@@ -829,8 +825,7 @@ function renderGantt() {
           var msi=days.indexOf(m.send_date);
           if(msi>=0&&adhzmCells.length>msi){
             var md2=document.createElement('div');
-            md2.className='g-dot g-dot-ms-send';
-            md2.style.left='50%';
+            md2.className='g-dot g-dot-ms-send'; md2.style.left='50%';
             (function(ms,idx){
               md2.addEventListener('mouseenter',function(ev){showTooltip(ev,'Milestone '+(idx+1)+' Send: '+ms.send_date+(ms.note?'<br>'+ms.note:''));});
               md2.addEventListener('mouseleave',hideTooltip);
