@@ -52,7 +52,7 @@
     .toast { position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:9999; transform:translateY(80px); opacity:0; transition:all .35s; }
     .toast.show { transform:translateY(0); opacity:1; }
     .toast.success { border-left:4px solid #52b788; }
-    .toast.error   { border-left:4px solid #e63946; }
+    .toast.error { border-left:4px solid #e63946; }
     .tooltip { position:fixed; background:#1a1a2e; color:#fff; padding:8px 12px; border-radius:8px; font-size:12px; z-index:9999; pointer-events:none; display:none; max-width:260px; line-height:1.6; box-shadow:0 4px 12px rgba(0,0,0,.2); }
     .main { padding:24px 32px; }
     .track-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
@@ -90,9 +90,7 @@
     .task-type-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
     .task-name { font-size:12px; font-weight:600; color:#333; }
     .task-meta { display:flex; align-items:center; gap:10px; font-size:11px; color:#aaa; margin-top:2px; flex-wrap:wrap; }
-    .progress-badge { display:inline-flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; padding:1px 7px; border-radius:10px; background:#e8f4fe; color:#0077b6; }
-    .progress-badge.done { background:#d4edda; color:#1a7c3a; }
-    .hours-badge { font-size:10px; color:#888; }
+    .days-badge { font-size:10px; color:#888; }
     tr.detail-row td.t-label-cell { background:#f5f5f5; }
     .detail-label { padding-left:28px; display:flex; align-items:center; gap:6px; }
     .detail-name { font-size:11.5px; color:#444; }
@@ -104,7 +102,7 @@
     .t-bar.detail-bar { height:12px; top:10px; opacity:.75; border-radius:2px; }
     .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:500; display:none; align-items:center; justify-content:center; padding:20px; }
     .modal-overlay.open { display:flex; }
-    .modal { background:#fff; border-radius:16px; padding:28px 32px; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:slideIn .3s ease; }
+    .modal { background:#fff; border-radius:16px; padding:28px 32px; width:100%; max-width:480px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:slideIn .3s ease; }
     @keyframes slideIn { from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);} }
     .modal-title { font-size:16px; font-weight:700; color:#1a1a2e; margin-bottom:18px; padding-bottom:12px; border-bottom:1.5px solid #f0f0f0; display:flex; align-items:center; gap:10px; }
     .modal-close { margin-left:auto; background:none; border:none; font-size:20px; cursor:pointer; color:#aaa; }
@@ -121,8 +119,6 @@
     .btn-secondary:hover { background:#f5f5f5; }
     .btn-danger { background:#fff; color:#e63946; border:1.5px solid #ffb3b3; padding:8px 14px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
     .btn-danger:hover { background:#fff0f0; }
-    .progress-bar-wrap { background:#e8e8e8; border-radius:10px; height:8px; overflow:hidden; margin-top:4px; }
-    .progress-bar-fill { height:100%; border-radius:10px; background:linear-gradient(90deg,#0096c7,#52b788); transition:width .3s; }
   </style>
 </head>
 <body>
@@ -213,15 +209,10 @@
     <div class="form-grid2">
       <div class="form-group"><label>Start Date</label><input type="date" id="dtStart"/></div>
       <div class="form-group"><label>End Date</label><input type="date" id="dtEnd"/></div>
-      <div class="form-group"><label>Planned Hours</label><input type="number" id="dtPlanned" min="0" step="0.5" placeholder="0"/></div>
-      <div class="form-group"><label>Actual Hours</label><input type="number" id="dtActual" min="0" step="0.5" placeholder="0"/></div>
     </div>
     <div class="form-group">
-      <label>Progress (%)</label>
-      <input type="number" id="dtProgress" min="0" max="100" placeholder="0"/>
-      <div class="progress-bar-wrap" style="margin-top:6px;">
-        <div class="progress-bar-fill" id="dtProgressBar" style="width:0%;"></div>
-      </div>
+      <label>Planned Days</label>
+      <input type="number" id="dtPlannedDays" min="0" step="0.5" placeholder="0"/>
     </div>
     <div class="modal-actions">
       <button class="btn-danger" id="dtDeleteBtn" style="display:none;" onclick="deleteDetail()">&#x1F5D1;&#xFE0F; Delete</button>
@@ -272,11 +263,6 @@ window.onload = function() {
   document.getElementById('trackStart').value = fmt(new Date(y,m,1));
   document.getElementById('trackEnd').value   = fmt(new Date(y,m+1,0));
   document.getElementById('todayBadge').textContent = '\u4eca\u65e5: '+fmt(new Date());
-  var prog=document.getElementById('dtProgress');
-  if (prog) prog.addEventListener('input',function(){
-    var v=Math.min(100,Math.max(0,parseInt(this.value)||0));
-    document.getElementById('dtProgressBar').style.width=v+'%';
-  });
   loadAllData().then(function(){
     initTopbar();
     loadDetails().then(function(){ renderTrack(); });
@@ -291,12 +277,12 @@ function initTopbar() {
   if (!email) { window.location.href='index.html'; return; }
   document.getElementById('topName').textContent=name;
   var me=null;
-  for (var i=0;i<allUsers.length;i++) { if(allUsers[i].email===email){me=allUsers[i];break;} }
-  if (!me) { for (var j=0;j<allUsers.length;j++) { if(allUsers[j].name===name){me=allUsers[j];break;} } }
+  for (var i=0;i<allUsers.length;i++){if(allUsers[i].email===email){me=allUsers[i];break;}}
+  if (!me){for(var j=0;j<allUsers.length;j++){if(allUsers[j].name===name){me=allUsers[j];break;}}}
   currentUserId = me ? me.id : null;
-  if (role==='Admin') {
+  if (role==='Admin'){
     var els=document.querySelectorAll('.admin-only');
-    for (var k=0;k<els.length;k++) els[k].style.display='flex';
+    for(var k=0;k<els.length;k++) els[k].style.display='flex';
   }
   if (pageMode==='edit') {
     isReadOnly=false; viewingUserId=currentUserId;
@@ -308,8 +294,8 @@ function initTopbar() {
     isReadOnly=true;
     document.getElementById('readonlyNotice').style.display='inline-block';
     var viewableRoles=getViewableRoles(role);
-    allViewableUsers=allUsers.filter(function(u){ return viewableRoles.indexOf(u.role)>=0; });
-    if (role==='Staff') {
+    allViewableUsers=allUsers.filter(function(u){return viewableRoles.indexOf(u.role)>=0;});
+    if (role==='Staff'){
       viewingUserId=currentUserId;
       document.getElementById('groupFilterWrap').style.display='none';
       document.getElementById('staffSelectorWrap').style.display='none';
@@ -338,23 +324,23 @@ function populateStaffDropdown(groupFilter) {
     opt.textContent=(u.name||u.email)+' ('+(u.role||'')+')';
     sel.appendChild(opt);
   });
-  if (filtered.length>0) { viewingUserId=filtered[0].id; sel.value=viewingUserId; }
-  else { viewingUserId=null; }
+  if (filtered.length>0){viewingUserId=filtered[0].id;sel.value=viewingUserId;}
+  else{viewingUserId=null;}
 }
 
-function setGroupFilter(group,btn) {
+function setGroupFilter(group,btn){
   activeGroupFilter=group;
   document.querySelectorAll('.group-filter-btn').forEach(function(b){
     b.classList.remove('active');
-    b.style.background='#fff'; b.style.color='#555'; b.style.borderColor='#dde2ea';
+    b.style.background='#fff';b.style.color='#555';b.style.borderColor='#dde2ea';
   });
   btn.classList.add('active');
-  btn.style.background='#1a1a2e'; btn.style.color='#fff'; btn.style.borderColor='transparent';
+  btn.style.background='#1a1a2e';btn.style.color='#fff';btn.style.borderColor='transparent';
   populateStaffDropdown(group);
-  loadDetails().then(function(){ renderTrack(); });
+  loadDetails().then(function(){renderTrack();});
 }
 
-function initNavDrops() {
+function initNavDrops(){
   var trigger=document.getElementById('scheduleNavTrigger');
   var menu=document.getElementById('scheduleNavMenu');
   trigger.addEventListener('click',function(e){e.stopPropagation();trigger.classList.toggle('open');menu.classList.toggle('open');});
@@ -367,20 +353,20 @@ function initNavDrops() {
   });
 }
 
-function onStaffChange() {
+function onStaffChange(){
   viewingUserId=document.getElementById('staffSelect').value||null;
-  loadDetails().then(function(){ renderTrack(); });
+  loadDetails().then(function(){renderTrack();});
 }
 
-async function loadDetails() {
-  if (!viewingUserId){allDetails=[];return;}
-  try {
+async function loadDetails(){
+  if(!viewingUserId){allDetails=[];return;}
+  try{
     var taskIds=allTasks
       .filter(function(t){return t.assigned_to===viewingUserId&&t.task_source==='task_manager';})
       .map(function(t){return t.id;});
-    if (!taskIds.length){allDetails=[];return;}
+    if(!taskIds.length){allDetails=[];return;}
     var res=await fetch(SUPABASE_URL+'/rest/v1/task_details?task_id=in.('+taskIds.join(',')+')',{headers:HDRS});
-    if (res.ok){allDetails=await res.json();}else{allDetails=[];}
+    if(res.ok){allDetails=await res.json();}else{allDetails=[];}
   }catch(e){allDetails=[];}
 }
 
@@ -416,7 +402,7 @@ function renderTrack(){
   if(!s||!e)return;
   var days=getDays(s,e); var today=fmt(new Date()); var CW=calcCW(days.length);
   var myTasks=allTasks.filter(function(t){
-    return t.assigned_to===viewingUserId && t.task_source==='task_manager';
+    return t.assigned_to===viewingUserId&&t.task_source==='task_manager';
   });
   var projMap={};
   myTasks.forEach(function(t){
@@ -447,16 +433,12 @@ function renderTrack(){
       rows+='<tr class="proj-hdr" id="phdr-'+projId+'" onclick="toggleProj(\''+projId+'\')">'
         +'<td colspan="'+(days.length+1)+'" style="padding:0;background:'+color+';">'
         +'<div class="proj-hdr-inner" style="color:'+textColor+';">'
-        +'<span class="proj-hdr-arrow'+(isOpen?' open':'')+'" id="parrow-'+projId+'">&#x25B6;</span>'+projLabel+'</div></td></tr>';
+        +'<span class="proj-hdr-arrow'+(isOpen?' open':'')+'" id="parrow-'+projId+'">&#x25B6;</span>'
+        +projLabel+'</div></td></tr>';
       projMap[projId].forEach(function(task){
         var details=allDetails.filter(function(d){return d.task_id===task.id;});
-        var sumPlanned=0,sumActual=0,sumProgress=0;
-        details.forEach(function(d){
-          sumPlanned+=parseFloat(d.planned_hours||0);
-          sumActual+=parseFloat(d.actual_hours||0);
-          sumProgress+=parseInt(d.progress||0);
-        });
-        var avgProgress=details.length?Math.round(sumProgress/details.length):0;
+        var sumDays=0;
+        details.forEach(function(d){sumDays+=parseFloat(d.planned_days||0);});
         var tc=TYPE_COLOR[task.task_type]||color;
         var dispStyle=isOpen?'':'display:none;';
         var taskCells=days.map(function(d){
@@ -468,8 +450,7 @@ function renderTrack(){
           +'<div class="task-type-dot" style="background:'+tc+';"></div>'
           +'<div><div class="task-name">'+(task.task_type||'Task')+'</div>'
           +'<div class="task-meta">'
-          +'<span class="progress-badge'+(avgProgress>=100?' done':'')+'">'+(details.length?avgProgress+'%':'--')+'</span>'
-          +(sumPlanned?'<span class="hours-badge">'+sumActual.toFixed(1)+'/'+sumPlanned.toFixed(1)+'h</span>':'')
+          +(sumDays?'<span class="days-badge">'+sumDays.toFixed(1)+' days planned</span>':'')
           +(task.start_date&&task.end_date?'<span style="font-size:10px;color:#bbb;">'+task.start_date+' ~ '+task.end_date+'</span>':'')
           +'</div></div></div></td>'+taskCells+'</tr>';
         details.forEach(function(det){
@@ -481,8 +462,9 @@ function renderTrack(){
             +'<td class="t-label-cell" style="background:#f5f5f5;"><div class="detail-label">'
             +(!isReadOnly?'<button onclick="openEditDetail(\''+det.id+'\',event)" style="background:none;border:1.5px solid #dde2ea;color:#888;padding:1px 6px;border-radius:5px;font-size:10px;cursor:pointer;font-family:inherit;">&#x270F;</button>':'')
             +'<div><div class="detail-name">'+(det.title||'Detail')+'</div>'
-            +'<div class="task-meta"><span class="progress-badge'+(parseInt(det.progress||0)>=100?' done':'')+'">'+(det.progress||0)+'%</span>'
-            +(det.planned_hours?'<span class="hours-badge">'+parseFloat(det.actual_hours||0).toFixed(1)+'/'+parseFloat(det.planned_hours||0).toFixed(1)+'h</span>':'')
+            +'<div class="task-meta">'
+            +(det.planned_days?'<span class="days-badge">'+parseFloat(det.planned_days).toFixed(1)+' days</span>':'')
+            +(det.start_date&&det.end_date?'<span style="font-size:10px;color:#bbb;">'+det.start_date+' ~ '+det.end_date+'</span>':'')
             +'</div></div></div></td>'+detCells+'</tr>';
         });
         if(!isReadOnly){
@@ -508,15 +490,15 @@ function drawBars(days,CW){
   myTasks.forEach(function(task){
     if(!task.start_date||!task.end_date)return;
     var color=projColorMap[task.project_id]||'#a8dadc';
-    var si=days.indexOf(task.start_date); var ei=days.indexOf(task.end_date);
+    var si=days.indexOf(task.start_date);var ei=days.indexOf(task.end_date);
     if(si<0||si>=days.length)return;
     var realEi=ei<0?days.length-1:Math.min(ei,days.length-1);
     var barW=Math.max((realEi-si+1)*CW-4,CW-4);
     var anchor=document.querySelector('td[data-tid="'+task.id+'"][data-d="'+days[si]+'"]');
     if(!anchor)return;
-    var bar=document.createElement('div'); bar.className='t-bar';
+    var bar=document.createElement('div');bar.className='t-bar';
     bar.style.cssText='left:2px;width:'+barW+'px;background:'+color+';color:'+(isLight(color)?'#333':'#fff')+';';
-    bar.textContent=task.task_type||'Task'; anchor.appendChild(bar);
+    bar.textContent=task.task_type||'Task';anchor.appendChild(bar);
   });
   allDetails.forEach(function(det){
     if(!det.start_date||!det.end_date)return;
@@ -524,15 +506,15 @@ function drawBars(days,CW){
     for(var i=0;i<allTasks.length;i++){if(allTasks[i].id===det.task_id){task=allTasks[i];break;}}
     if(!task)return;
     var color=projColorMap[task.project_id]||'#a8dadc';
-    var si=days.indexOf(det.start_date); var ei=days.indexOf(det.end_date);
+    var si=days.indexOf(det.start_date);var ei=days.indexOf(det.end_date);
     if(si<0||si>=days.length)return;
     var realEi=ei<0?days.length-1:Math.min(ei,days.length-1);
     var barW=Math.max((realEi-si+1)*CW-4,CW-4);
     var anchor=document.querySelector('td[data-det="'+det.id+'"][data-d="'+days[si]+'"]');
     if(!anchor)return;
-    var bar=document.createElement('div'); bar.className='t-bar detail-bar';
+    var bar=document.createElement('div');bar.className='t-bar detail-bar';
     bar.style.cssText='left:2px;width:'+barW+'px;background:'+color+';color:'+(isLight(color)?'#333':'#fff')+';';
-    bar.textContent=det.title||'Detail'; anchor.appendChild(bar);
+    bar.textContent=det.title||'Detail';anchor.appendChild(bar);
   });
 }
 
@@ -545,52 +527,44 @@ function toggleProj(projId){
 }
 
 function openAddDetail(taskId,taskStart,taskEnd,e){
-  if(e)e.stopPropagation(); if(isReadOnly)return;
-  editingDetailId=null; editingTaskId=taskId;
+  if(e)e.stopPropagation();if(isReadOnly)return;
+  editingDetailId=null;editingTaskId=taskId;
   document.getElementById('detailModalTitle').innerHTML='&#x2795; Add Detail Task <button class="modal-close" onclick="closeDetailModal()">&#x2715;</button>';
   document.getElementById('dtTitle').value='';
   document.getElementById('dtStart').value=taskStart||'';
   document.getElementById('dtEnd').value=taskEnd||'';
-  document.getElementById('dtPlanned').value='';
-  document.getElementById('dtActual').value='';
-  document.getElementById('dtProgress').value='0';
-  document.getElementById('dtProgressBar').style.width='0%';
+  document.getElementById('dtPlannedDays').value='';
   document.getElementById('dtDeleteBtn').style.display='none';
   document.getElementById('detailModal').classList.add('open');
 }
 
 function openEditDetail(detId,e){
-  if(e)e.stopPropagation(); if(isReadOnly)return;
+  if(e)e.stopPropagation();if(isReadOnly)return;
   var det=null;
   for(var i=0;i<allDetails.length;i++){if(allDetails[i].id===detId){det=allDetails[i];break;}}
   if(!det)return;
-  editingDetailId=detId; editingTaskId=det.task_id;
+  editingDetailId=detId;editingTaskId=det.task_id;
   document.getElementById('detailModalTitle').innerHTML='&#x270F;&#xFE0F; Edit Detail Task <button class="modal-close" onclick="closeDetailModal()">&#x2715;</button>';
   document.getElementById('dtTitle').value=det.title||'';
   document.getElementById('dtStart').value=det.start_date||'';
   document.getElementById('dtEnd').value=det.end_date||'';
-  document.getElementById('dtPlanned').value=det.planned_hours||'';
-  document.getElementById('dtActual').value=det.actual_hours||'';
-  document.getElementById('dtProgress').value=det.progress||0;
-  document.getElementById('dtProgressBar').style.width=(det.progress||0)+'%';
+  document.getElementById('dtPlannedDays').value=det.planned_days||'';
   document.getElementById('dtDeleteBtn').style.display='inline-flex';
   document.getElementById('detailModal').classList.add('open');
 }
 
 function closeDetailModal(){
   document.getElementById('detailModal').classList.remove('open');
-  editingDetailId=null; editingTaskId=null;
+  editingDetailId=null;editingTaskId=null;
 }
 
 async function saveDetail(){
   var title=document.getElementById('dtTitle').value.trim();
   var st=document.getElementById('dtStart').value||null;
   var en=document.getElementById('dtEnd').value||null;
-  var planned=parseFloat(document.getElementById('dtPlanned').value)||0;
-  var actual=parseFloat(document.getElementById('dtActual').value)||0;
-  var progress=parseInt(document.getElementById('dtProgress').value)||0;
+  var plannedDays=parseFloat(document.getElementById('dtPlannedDays').value)||0;
   if(!title){showToast('Please enter a title','error');return;}
-  var body={title:title,start_date:st,end_date:en,planned_hours:planned,actual_hours:actual,progress:progress};
+  var body={title:title,start_date:st,end_date:en,planned_days:plannedDays};
   try{
     if(editingDetailId){
       var res=await fetch(SUPABASE_URL+'/rest/v1/task_details?id=eq.'+editingDetailId,{method:'PATCH',headers:HDRS,body:JSON.stringify(body)});
@@ -600,12 +574,12 @@ async function saveDetail(){
     }else{
       body.task_id=editingTaskId;
       var res2=await fetch(SUPABASE_URL+'/rest/v1/task_details',{method:'POST',headers:HDRS,body:JSON.stringify(body)});
-      if(!res2.ok){showToast('Error saving','error');return;}
+      if(!res2.ok){var errText=await res2.text();showToast('Error: '+errText,'error');return;}
       var arr=await res2.json();
       if(arr&&arr[0])allDetails.push(arr[0]);
       showToast('Detail added','success');
     }
-    closeDetailModal(); renderTrack();
+    closeDetailModal();renderTrack();
   }catch(e){showToast('Error: '+e.message,'error');}
 }
 
@@ -615,7 +589,7 @@ async function deleteDetail(){
   try{
     await fetch(SUPABASE_URL+'/rest/v1/task_details?id=eq.'+editingDetailId,{method:'DELETE',headers:HDRS});
     allDetails=allDetails.filter(function(d){return d.id!==editingDetailId;});
-    showToast('Deleted','success'); closeDetailModal(); renderTrack();
+    showToast('Deleted','success');closeDetailModal();renderTrack();
   }catch(e){showToast('Error: '+e.message,'error');}
 }
 
