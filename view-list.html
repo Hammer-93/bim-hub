@@ -388,9 +388,10 @@ function initTopbar() {
   if (!localStorage.getItem('user_email')) { window.location.href='index.html'; return; }
   document.getElementById('topName').textContent = name;
   if (role === 'Admin') {
-    var els = document.querySelectorAll('.admin-only');
-    for (var i=0;i<els.length;i++) els[i].style.display='flex';
-  if (role !== 'Staff') {
+  var els = document.querySelectorAll('.admin-only');
+  for (var i=0;i<els.length;i++) els[i].style.display='flex';
+}
+if (role !== 'Staff') {
   document.getElementById('btnAddProject').style.display = 'flex';
 }
   }
