@@ -57,6 +57,10 @@
     .main { padding:24px 32px; }
     .track-header { display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
     .track-title { font-size:18px; font-weight:700; color:#1a1a2e; }
+    .group-filter-wrap { display:flex; align-items:center; gap:6px; }
+    .group-filter-btn { padding:5px 13px; border:1.5px solid #dde2ea; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer; background:#fff; color:#555; transition:all .15s; font-family:inherit; white-space:nowrap; }
+    .group-filter-btn:hover { border-color:#0096c7; color:#0077b6; background:#f0f7ff; }
+    .group-filter-btn.active { background:#1a1a2e; color:#fff; border-color:transparent; }
     .staff-selector-wrap { display:flex; align-items:center; gap:8px; }
     .staff-selector-wrap label { font-size:12px; font-weight:600; color:#555; white-space:nowrap; }
     .staff-selector { padding:7px 12px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; font-family:inherit; color:#333; cursor:pointer; }
@@ -66,10 +70,6 @@
     .date-nav input { padding:6px 10px; border:1.5px solid #dde2ea; border-radius:7px; font-size:12px; outline:none; font-family:inherit; }
     .date-nav input:focus { border-color:#0096c7; }
     .today-badge { background:#e63946; color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:6px; white-space:nowrap; }
-    .controls-row { display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
-    .type-filter-btn { display:flex; align-items:center; gap:5px; padding:5px 12px; border:1.5px solid #dde2ea; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer; background:#fff; color:#555; transition:all .15s; white-space:nowrap; font-family:inherit; }
-    .type-filter-btn:hover { border-color:#0096c7; color:#0077b6; background:#f0f7ff; }
-    .type-dot-sm { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
     .track-wrap { overflow:auto; background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); max-height:calc(100vh - 230px); }
     table.track { border-collapse:collapse; width:100%; table-layout:fixed; }
     table.track thead th { background:#1a1a2e; color:#fff; font-size:11px; font-weight:700; text-align:center; padding:8px 4px; border-right:1px solid rgba(255,255,255,.1); position:sticky; top:0; z-index:30; white-space:nowrap; }
@@ -175,6 +175,11 @@
 <div class="main">
   <div class="track-header">
     <div class="track-title" id="trackTitle">&#x1F4CA; Project Track</div>
+    <div class="group-filter-wrap" id="groupFilterWrap" style="display:none;">
+      <button class="group-filter-btn active" onclick="setGroupFilter('all',this)">All</button>
+      <button class="group-filter-btn" onclick="setGroupFilter('&#x8A2D;&#x8A08;BIM',this)">&#x1F3DB;&#xFE0F; &#x8A2D;&#x8A08;BIM</button>
+      <button class="group-filter-btn" onclick="setGroupFilter('&#x65BD;&#x5DE5;BIM',this)">&#x1F3D7;&#xFE0F; &#x65BD;&#x5DE5;BIM</button>
+    </div>
     <div class="staff-selector-wrap" id="staffSelectorWrap" style="display:none;">
       <label>&#x1F464; Staff:</label>
       <select class="staff-selector" id="staffSelect" onchange="onStaffChange()">
@@ -189,7 +194,6 @@
       <input type="date" id="trackEnd" onchange="renderTrack()"/>
     </div>
   </div>
-  <div class="controls-row" id="typeFilterRow"></div>
   <div class="track-wrap" id="trackWrap">
     <div style="padding:40px;text-align:center;color:#aaa;">Loading...</div>
   </div>
@@ -229,17 +233,18 @@
 
 <script src="js/config.js"></script>
 <script>
-var currentUserId   = null;
-var currentUserRole = 'Staff';
-var currentUserName = '';
-var viewingUserId   = null;
-var isReadOnly      = false;
-var pageMode        = 'view';
-var allDetails      = [];
-var collapsedProjs  = {};
-var editingDetailId = null;
-var editingTaskId   = null;
-var activeTypeFilter = 'all';
+var currentUserId    = null;
+var currentUserRole  = 'Staff';
+var currentUserName  = '';
+var viewingUserId    = null;
+var isReadOnly       = false;
+var pageMode         = 'view';
+var allDetails       = [];
+var collapsedProjs   = {};
+var editingDetailId  = null;
+var editingTaskId    = null;
+var activeGroupFilter = 'all';
+var allViewableUsers  = [];
 
 var TYPE_COLOR = {
   '\u30d1\u30fc\u30b9\u30fb\u52d5\u753b':'#f4a261',
@@ -274,7 +279,6 @@ window.onload = function() {
   });
   loadAllData().then(function(){
     initTopbar();
-    buildTypeFilterBar();
     loadDetails().then(function(){ renderTrack(); });
   }).catch(function(e){ showToast('Error: '+e.message,'error'); });
 };
@@ -283,12 +287,12 @@ function initTopbar() {
   var role  = localStorage.getItem('user_role') || 'Staff';
   var name  = localStorage.getItem('user_name') || 'User';
   var email = localStorage.getItem('user_email') || '';
-  currentUserRole = role; currentUserName = name;
+  currentUserRole=role; currentUserName=name;
   if (!email) { window.location.href='index.html'; return; }
-  document.getElementById('topName').textContent = name;
-  var me = null;
-  for (var i=0;i<allUsers.length;i++) { if (allUsers[i].email===email){me=allUsers[i];break;} }
-  if (!me) { for (var j=0;j<allUsers.length;j++) { if (allUsers[j].name===name){me=allUsers[j];break;} } }
+  document.getElementById('topName').textContent=name;
+  var me=null;
+  for (var i=0;i<allUsers.length;i++) { if(allUsers[i].email===email){me=allUsers[i];break;} }
+  if (!me) { for (var j=0;j<allUsers.length;j++) { if(allUsers[j].name===name){me=allUsers[j];break;} } }
   currentUserId = me ? me.id : null;
   if (role==='Admin') {
     var els=document.querySelectorAll('.admin-only');
@@ -297,36 +301,57 @@ function initTopbar() {
   if (pageMode==='edit') {
     isReadOnly=false; viewingUserId=currentUserId;
     document.getElementById('trackTitle').innerHTML='&#x1F4CA; Project Track &mdash; My Schedule';
+    document.getElementById('groupFilterWrap').style.display='none';
     document.getElementById('staffSelectorWrap').style.display='none';
     document.getElementById('readonlyNotice').style.display='none';
   } else {
     isReadOnly=true;
     document.getElementById('readonlyNotice').style.display='inline-block';
-    var viewableRoles = getViewableRoles(role);
-    var viewableUsers = allUsers.filter(function(u){ return viewableRoles.indexOf(u.role)>=0; });
+    var viewableRoles=getViewableRoles(role);
+    allViewableUsers=allUsers.filter(function(u){ return viewableRoles.indexOf(u.role)>=0; });
     if (role==='Staff') {
       viewingUserId=currentUserId;
-      document.getElementById('staffSelectorWrap').style.display='none';
-    } else if (!viewableUsers.length) {
-      viewingUserId=currentUserId;
+      document.getElementById('groupFilterWrap').style.display='none';
       document.getElementById('staffSelectorWrap').style.display='none';
     } else {
-      var sel=document.getElementById('staffSelect');
-      viewableUsers.forEach(function(u){
-        var opt=document.createElement('option');
-        opt.value=u.id;
-        opt.textContent=(u.name||u.email)+' ('+(u.role||'')+')';
-        sel.appendChild(opt);
-      });
+      document.getElementById('groupFilterWrap').style.display='flex';
       document.getElementById('staffSelectorWrap').style.display='flex';
-      viewingUserId=viewableUsers[0].id;
-      sel.value=viewingUserId;
+      populateStaffDropdown('all');
     }
   }
   var dropBtn=document.getElementById('userDropBtn');
   var dropMenu=document.getElementById('userDropMenu');
   dropBtn.addEventListener('click',function(e){e.stopPropagation();dropMenu.classList.toggle('open');});
   document.addEventListener('click',function(){dropMenu.classList.remove('open');});
+}
+
+function populateStaffDropdown(groupFilter) {
+  var sel=document.getElementById('staffSelect');
+  sel.innerHTML='<option value="">-- Select Staff --</option>';
+  var filtered=allViewableUsers.filter(function(u){
+    if (groupFilter==='all') return true;
+    return (u.group_name||'')===groupFilter;
+  });
+  filtered.forEach(function(u){
+    var opt=document.createElement('option');
+    opt.value=u.id;
+    opt.textContent=(u.name||u.email)+' ('+(u.role||'')+')';
+    sel.appendChild(opt);
+  });
+  if (filtered.length>0) { viewingUserId=filtered[0].id; sel.value=viewingUserId; }
+  else { viewingUserId=null; }
+}
+
+function setGroupFilter(group,btn) {
+  activeGroupFilter=group;
+  document.querySelectorAll('.group-filter-btn').forEach(function(b){
+    b.classList.remove('active');
+    b.style.background='#fff'; b.style.color='#555'; b.style.borderColor='#dde2ea';
+  });
+  btn.classList.add('active');
+  btn.style.background='#1a1a2e'; btn.style.color='#fff'; btn.style.borderColor='transparent';
+  populateStaffDropdown(group);
+  loadDetails().then(function(){ renderTrack(); });
 }
 
 function initNavDrops() {
@@ -342,36 +367,6 @@ function initNavDrops() {
   });
 }
 
-function buildTypeFilterBar() {
-  var row=document.getElementById('typeFilterRow');
-  var types=Object.keys(TYPE_COLOR);
-  var html='<span style="font-size:12px;font-weight:600;color:#555;">Filter:</span>';
-  html+='<button class="type-filter-btn" onclick="setTypeFilter(\'all\',this)" style="background:#1a1a2e;color:#fff;border-color:transparent;">All</button>';
-  types.forEach(function(tp){
-    var c=TYPE_COLOR[tp]||'#aaa';
-    html+='<button class="type-filter-btn" onclick="setTypeFilter(\''+tp+'\',this)" style="border-color:'+c+';color:'+c+';"><span class="type-dot-sm" style="background:'+c+';"></span>'+tp+'</button>';
-  });
-  row.innerHTML=html;
-}
-
-function setTypeFilter(type,btn) {
-  activeTypeFilter=type;
-  document.querySelectorAll('.type-filter-btn').forEach(function(b){
-    b.classList.remove('active');
-    b.style.background='#fff';
-    var bc=b.style.borderColor;
-    b.style.color=bc&&bc!=='transparent'?bc:'#555';
-  });
-  btn.classList.add('active');
-  if (type==='all') {
-    btn.style.background='#1a1a2e'; btn.style.color='#fff'; btn.style.borderColor='transparent';
-  } else {
-    var tc=TYPE_COLOR[type]||'#0077b6';
-    btn.style.background=tc; btn.style.color='#fff'; btn.style.borderColor=tc;
-  }
-  renderTrack();
-}
-
 function onStaffChange() {
   viewingUserId=document.getElementById('staffSelect').value||null;
   loadDetails().then(function(){ renderTrack(); });
@@ -380,7 +375,9 @@ function onStaffChange() {
 async function loadDetails() {
   if (!viewingUserId){allDetails=[];return;}
   try {
-    var taskIds=allTasks.filter(function(t){return t.assigned_to===viewingUserId&&t.task_source==='task_working';}).map(function(t){return t.id;});
+    var taskIds=allTasks
+      .filter(function(t){return t.assigned_to===viewingUserId&&t.task_source==='task_manager';})
+      .map(function(t){return t.id;});
     if (!taskIds.length){allDetails=[];return;}
     var res=await fetch(SUPABASE_URL+'/rest/v1/task_details?task_id=in.('+taskIds.join(',')+')',{headers:HDRS});
     if (res.ok){allDetails=await res.json();}else{allDetails=[];}
@@ -410,19 +407,27 @@ function calcCW(dayCount){
 }
 
 function renderTrack(){
-  if(!viewingUserId){document.getElementById('trackWrap').innerHTML='<div style="padding:40px;text-align:center;color:#aaa;">Please select a staff member.</div>';return;}
+  if(!viewingUserId){
+    document.getElementById('trackWrap').innerHTML='<div style="padding:40px;text-align:center;color:#aaa;">Please select a staff member.</div>';
+    return;
+  }
   var s=document.getElementById('trackStart').value;
   var e=document.getElementById('trackEnd').value;
   if(!s||!e)return;
   var days=getDays(s,e); var today=fmt(new Date()); var CW=calcCW(days.length);
-  var myTasks=allTasks.filter(function(t){return t.assigned_to===viewingUserId&&t.task_source==='task_working';});
-  if(activeTypeFilter!=='all') myTasks=myTasks.filter(function(t){return t.task_type===activeTypeFilter;});
+  var myTasks=allTasks.filter(function(t){
+    return t.assigned_to===viewingUserId && t.task_source==='task_manager';
+  });
   var projMap={};
-  myTasks.forEach(function(t){if(!projMap[t.project_id])projMap[t.project_id]=[];projMap[t.project_id].push(t);});
+  myTasks.forEach(function(t){
+    if(!projMap[t.project_id])projMap[t.project_id]=[];
+    projMap[t.project_id].push(t);
+  });
   var DAYS_JP=['\u65e5','\u6708','\u706b','\u6c34','\u6728','\u91d1','\u571f'];
   var hdr='<th style="width:320px;min-width:320px;">&#x1F4CB; Task / Detail</th>';
   days.forEach(function(d){
-    var dt=new Date(d+'T00:00:00'); var dow=DAYS_JP[dt.getDay()]; var we=isWeekend(d); var td=d===today;
+    var dt=new Date(d+'T00:00:00'); var dow=DAYS_JP[dt.getDay()];
+    var we=isWeekend(d); var td=d===today;
     hdr+='<th style="width:'+CW+'px;min-width:'+CW+'px;'+(we?'opacity:.45;':'')+(td?'background:#e63946;':'')+'"'+(td?' class="today-hdr"':'')+'>'+dt.getDate()+'<br><span style="font-size:8px;opacity:.8;">'+dow+'</span></th>';
   });
   var rows='';
@@ -446,20 +451,32 @@ function renderTrack(){
       projMap[projId].forEach(function(task){
         var details=allDetails.filter(function(d){return d.task_id===task.id;});
         var sumPlanned=0,sumActual=0,sumProgress=0;
-        details.forEach(function(d){sumPlanned+=parseFloat(d.planned_hours||0);sumActual+=parseFloat(d.actual_hours||0);sumProgress+=parseInt(d.progress||0);});
+        details.forEach(function(d){
+          sumPlanned+=parseFloat(d.planned_hours||0);
+          sumActual+=parseFloat(d.actual_hours||0);
+          sumProgress+=parseInt(d.progress||0);
+        });
         var avgProgress=details.length?Math.round(sumProgress/details.length):0;
         var tc=TYPE_COLOR[task.task_type]||color;
         var dispStyle=isOpen?'':'display:none;';
-        var taskCells=days.map(function(d){var we=isWeekend(d);var td=d===today;return'<td class="t-day-cell'+(we?' we':'')+(td?' tdy':'')+'" data-tid="'+task.id+'" data-d="'+d+'" style="width:'+CW+'px;min-width:'+CW+'px;"></td>';}).join('');
+        var taskCells=days.map(function(d){
+          var we=isWeekend(d);var td=d===today;
+          return '<td class="t-day-cell'+(we?' we':'')+(td?' tdy':'')+'" data-tid="'+task.id+'" data-d="'+d+'" style="width:'+CW+'px;min-width:'+CW+'px;"></td>';
+        }).join('');
         rows+='<tr class="task-row proj-child-'+projId+'" style="'+dispStyle+'">'
-          +'<td class="t-label-cell"><div class="task-label"><div class="task-type-dot" style="background:'+tc+';"></div>'
+          +'<td class="t-label-cell"><div class="task-label">'
+          +'<div class="task-type-dot" style="background:'+tc+';"></div>'
           +'<div><div class="task-name">'+(task.task_type||'Task')+'</div>'
-          +'<div class="task-meta"><span class="progress-badge'+(avgProgress>=100?' done':'')+'">'+(details.length?avgProgress+'%':'--')+'</span>'
+          +'<div class="task-meta">'
+          +'<span class="progress-badge'+(avgProgress>=100?' done':'')+'">'+(details.length?avgProgress+'%':'--')+'</span>'
           +(sumPlanned?'<span class="hours-badge">'+sumActual.toFixed(1)+'/'+sumPlanned.toFixed(1)+'h</span>':'')
           +(task.start_date&&task.end_date?'<span style="font-size:10px;color:#bbb;">'+task.start_date+' ~ '+task.end_date+'</span>':'')
           +'</div></div></div></td>'+taskCells+'</tr>';
         details.forEach(function(det){
-          var detCells=days.map(function(d){var we=isWeekend(d);var td=d===today;return'<td class="t-day-cell'+(we?' we':'')+(td?' tdy':'')+'" data-det="'+det.id+'" data-d="'+d+'" style="width:'+CW+'px;min-width:'+CW+'px;"></td>';}).join('');
+          var detCells=days.map(function(d){
+            var we=isWeekend(d);var td=d===today;
+            return '<td class="t-day-cell'+(we?' we':'')+(td?' tdy':'')+'" data-det="'+det.id+'" data-d="'+d+'" style="width:'+CW+'px;min-width:'+CW+'px;"></td>';
+          }).join('');
           rows+='<tr class="detail-row proj-child-'+projId+'" style="'+dispStyle+'">'
             +'<td class="t-label-cell" style="background:#f5f5f5;"><div class="detail-label">'
             +(!isReadOnly?'<button onclick="openEditDetail(\''+det.id+'\',event)" style="background:none;border:1.5px solid #dde2ea;color:#888;padding:1px 6px;border-radius:5px;font-size:10px;cursor:pointer;font-family:inherit;">&#x270F;</button>':'')
@@ -469,9 +486,14 @@ function renderTrack(){
             +'</div></div></div></td>'+detCells+'</tr>';
         });
         if(!isReadOnly){
-          var addCells=days.map(function(d){var we=isWeekend(d);var td=d===today;return'<td class="t-day-cell'+(we?' we':'')+(td?' tdy':'')+'" style="width:'+CW+'px;min-width:'+CW+'px;"></td>';}).join('');
+          var addCells=days.map(function(d){
+            var we=isWeekend(d);var td=d===today;
+            return '<td class="t-day-cell'+(we?' we':'')+(td?' tdy':'')+'" style="width:'+CW+'px;min-width:'+CW+'px;"></td>';
+          }).join('');
           rows+='<tr class="add-detail-row proj-child-'+projId+'" style="'+dispStyle+'">'
-            +'<td class="t-label-cell" style="background:#f9f9f9;"><button class="add-detail-btn" onclick="openAddDetail(\''+task.id+'\',\''+task.start_date+'\',\''+task.end_date+'\',event)">&#x2795; Add detail</button></td>'+addCells+'</tr>';
+            +'<td class="t-label-cell" style="background:#f9f9f9;">'
+            +'<button class="add-detail-btn" onclick="openAddDetail(\''+task.id+'\',\''+task.start_date+'\',\''+task.end_date+'\',event)">&#x2795; Add detail</button>'
+            +'</td>'+addCells+'</tr>';
         }
       });
     });
@@ -482,10 +504,7 @@ function renderTrack(){
 
 function drawBars(days,CW){
   if(!viewingUserId)return;
-  var myTasks=allTasks.filter(function(t){
-    var typeOk=activeTypeFilter==='all'||t.task_type===activeTypeFilter;
-    return t.assigned_to===viewingUserId&&t.task_source==='task_working'&&typeOk;
-  });
+  var myTasks=allTasks.filter(function(t){return t.assigned_to===viewingUserId&&t.task_source==='task_manager';});
   myTasks.forEach(function(task){
     if(!task.start_date||!task.end_date)return;
     var color=projColorMap[task.project_id]||'#a8dadc';
@@ -504,7 +523,6 @@ function drawBars(days,CW){
     var task=null;
     for(var i=0;i<allTasks.length;i++){if(allTasks[i].id===det.task_id){task=allTasks[i];break;}}
     if(!task)return;
-    if(activeTypeFilter!=='all'&&task.task_type!==activeTypeFilter)return;
     var color=projColorMap[task.project_id]||'#a8dadc';
     var si=days.indexOf(det.start_date); var ei=days.indexOf(det.end_date);
     if(si<0||si>=days.length)return;
