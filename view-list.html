@@ -394,7 +394,6 @@ function initTopbar() {
 if (role !== 'Staff') {
   document.getElementById('btnAddProject').style.display = 'flex';
 }
-  }
   var dropBtn  = document.getElementById('userDropBtn');
   var dropMenu = document.getElementById('userDropMenu');
   dropBtn.addEventListener('click', function(e) { e.stopPropagation(); dropMenu.classList.toggle('open'); });
