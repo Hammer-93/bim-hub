@@ -260,8 +260,9 @@ function render() {
 
   var filteredIds = new Set(projects.map(function(p) { return p.id; }));
   var activeTasks = allTasks.filter(function(t) {
-    return isActiveTask(t) && filteredIds.has(t.project_id);
-  });
+  if (t.task_source === 'task_working') return false;
+  return isActiveTask(t) && filteredIds.has(t.project_id);
+});
 
   document.getElementById('statTotal').textContent  = projects.length;
   document.getElementById('statActive').textContent = projects.length;
@@ -326,7 +327,9 @@ function render() {
 
 function openModal(p) {
   var code   = getCode(p);
-  var tasks  = allTasks.filter(function(t) { return t.project_id === p.id; });
+  var tasks = allTasks.filter(function(t) {
+  return t.project_id === p.id && t.task_source !== 'task_working';
+});
   var active = tasks.filter(isActiveTask);
   document.getElementById('modalTitle').textContent = code;
   var body = '';
