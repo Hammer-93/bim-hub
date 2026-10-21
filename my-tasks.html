@@ -329,7 +329,7 @@ async function loadData() {
     var pRes = await fetch(SUPABASE_URL+'/rest/v1/projects?select=*&order=created_at.desc', {headers:HDRS});
     allProjects = await pRes.json();
     if (myUserId) {
-      var tRes = await fetch(SUPABASE_URL+'/rest/v1/project_tasks?assigned_to=eq.'+myUserId+'&task_source=eq.task_working&select=*&order=start_date.asc', {headers:HDRS});
+      var tRes = await fetch(SUPABASE_URL+'/rest/v1/project_tasks?assigned_to=eq.'+myUserId+'&select=*&order=start_date.asc', {headers:HDRS});
       myTasks = await tRes.json();
     } else { myTasks = []; }
     renderMyTasks();
