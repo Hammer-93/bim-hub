@@ -341,6 +341,33 @@
     mtrigger.classList.remove('open'); mmenu.classList.remove('open');
   });
 }
+window.onload = async function() {
+  initTopbar();
+  initNavDrop();
+  var email = localStorage.getItem('user_email') || '';
+  await loadMyUserId(email);
+  await loadData();
+};
+
+async function loadMyUserId(email) {
+  if (!email) return;
+  var res = await fetch(SUPABASE_URL+'/rest/v1/users?email=eq.'+encodeURIComponent(email)+'&select=id', {headers:HDRS});
+  var data = await res.json();
+  if (data.length) myUserId = data[0].id;
+}
+
+async function loadData() {
+  try {
+    var pRes = await fetch(SUPABASE_URL+'/rest/v1/projects?select=*&order=created_at.desc', {headers:HDRS});
+    allProjects = await pRes.json();
+    if (myUserId) {
+      var tRes = await fetch(SUPABASE_URL+'/rest/v1/project_tasks?assigned_to=eq.'+myUserId+'&task_source=eq.task_working&select=*&order=start_date.asc', {headers:HDRS});
+      myTasks = await tRes.json();
+    } else { myTasks = []; }
+    renderMyTasks();
+  } catch(e) { showToast('Error loading data','error'); }
+}
+
   function renderMyTasks() {
     var active=myTasks.filter(function(t){return t.status!=='done';});
     var done=myTasks.filter(function(t){return t.status==='done';});
