@@ -193,12 +193,20 @@
       &#x1F4C5; Project Schedule <span class="nav-drop-arrow">&#x25BC;</span>
     </div>
     <div class="nav-drop-menu" id="scheduleNavMenu">
-      <a class="nav-drop-item" href="view-list.html">&#x1F4CB; List of Project</a>
-      <a class="nav-drop-item" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
-      <a class="nav-drop-item active" href="view-schedule.html">&#x1F4C5; Project Schedule</a>
+      <a class="nav-drop-item" href="view-list.html">...</a>
+      <a class="nav-drop-item" href="view-category.html">...</a>
+      <a class="nav-drop-item active" href="view-schedule.html">...</a>
     </div>
   </div>
-  <a class="nav-tab" href="view-staff.html">&#x1F465; Staff Schedule</a>
+  <div class="nav-drop" id="staffNavDrop">
+  <div class="nav-drop-trigger" id="staffNavTrigger">
+    &#x1F465; Staff <span class="nav-drop-arrow">&#x25BC;</span>
+  </div>
+  <div class="nav-drop-menu" id="staffNavMenu">
+    <a class="nav-drop-item" href="view-staff.html">&#x1F4C5; Staff Schedule</a>
+    <a class="nav-drop-item" href="view-track.html?mode=view">&#x1F4CA; Project Track</a>
+  </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -596,10 +604,24 @@ function initTopbar() {
   document.addEventListener('click',function(){dropMenu.classList.remove('open');});
 }
 function initNavDrop() {
-  var trigger=document.getElementById('scheduleNavTrigger');
-  var menu=document.getElementById('scheduleNavMenu');
-  trigger.addEventListener('click',function(e){e.stopPropagation();trigger.classList.toggle('open');menu.classList.toggle('open');});
-  document.addEventListener('click',function(){trigger.classList.remove('open');menu.classList.remove('open');});
+  var trigger  = document.getElementById('scheduleNavTrigger');
+  var menu     = document.getElementById('scheduleNavMenu');
+  var strigger = document.getElementById('staffNavTrigger');
+  var smenu    = document.getElementById('staffNavMenu');
+  trigger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    trigger.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+  strigger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    strigger.classList.toggle('open');
+    smenu.classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    trigger.classList.remove('open');  menu.classList.remove('open');
+    strigger.classList.remove('open'); smenu.classList.remove('open');
+  });
 }
 
 function getGroup(p) { return (p.proj_group||p.project_group||p.group||'').toString().toUpperCase().trim(); }
