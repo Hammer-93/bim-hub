@@ -207,6 +207,15 @@
   </div>
   <a class="nav-tab" href="view-staff.html">&#x1F465; Staff Schedule</a>
 </div>
+<div class="nav-drop" id="staffNavDrop">
+  <div class="nav-drop-trigger" id="staffNavTrigger">
+    &#x1F465; Staff <span class="nav-drop-arrow">&#x25BC;</span>
+  </div>
+  <div class="nav-drop-menu" id="staffNavMenu">
+    <a class="nav-drop-item" href="view-staff.html">&#x1F4C5; Staff Schedule</a>
+    <a class="nav-drop-item" href="view-track.html?mode=view">&#x1F4CA; Project Track</a>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 <div class="tooltip" id="tooltip"></div>
@@ -401,18 +410,32 @@ if (role !== 'Staff') {
 }
 
 function initNavDrop() {
-  var trigger = document.getElementById('scheduleNavTrigger');
-  var menu    = document.getElementById('scheduleNavMenu');
-  trigger.addEventListener('click', function(e) { e.stopPropagation(); trigger.classList.toggle('open'); menu.classList.toggle('open'); });
-  document.addEventListener('click', function() { trigger.classList.remove('open'); menu.classList.remove('open'); });
+  var trigger  = document.getElementById('scheduleNavTrigger');
+  var menu     = document.getElementById('scheduleNavMenu');
+  var strigger = document.getElementById('staffNavTrigger');
+  var smenu    = document.getElementById('staffNavMenu');
+  trigger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    trigger.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+  strigger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    strigger.classList.toggle('open');
+    smenu.classList.toggle('open');
+  });
+  document.addEventListener('click', function() {
+    trigger.classList.remove('open');  menu.classList.remove('open');
+    strigger.classList.remove('open'); smenu.classList.remove('open');
+  });
   var PAGE_LABELS = {
-  'view-list.html':     '📋 List of Project',
-  'view-category.html': '🗂️ Type of Work',
-  'view-schedule.html': '📅 Project Schedule'
-};
-var currentPage = location.pathname.split('/').pop();
-var label = PAGE_LABELS[currentPage];
-if (label) document.getElementById('navTriggerLabel').textContent = label;
+    'view-list.html':     '📋 List of Project',
+    'view-category.html': '🗂️ Type of Work',
+    'view-schedule.html': '📅 Project Schedule'
+  };
+  var currentPage = location.pathname.split('/').pop();
+  var label = PAGE_LABELS[currentPage];
+  if (label) document.getElementById('navTriggerLabel').textContent = label;
 }
 
 function selectGroup(g) {
