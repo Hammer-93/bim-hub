@@ -127,8 +127,8 @@
 <div class="nav-tabs">
   <div class="nav-drop" id="scheduleNavDrop">
     <div class="nav-drop-trigger active" id="scheduleNavTrigger">
-      &#x1F4C5; Project Schedule <span class="nav-drop-arrow">&#x25BC;</span>
-    </div>
+  <span id="navTriggerLabel">📅 Project Schedule</span> <span class="nav-drop-arrow">▼</span>
+</div>
     <div class="nav-drop-menu" id="scheduleNavMenu">
       <a class="nav-drop-item" href="view-list.html">&#x1F4CB; List of Project</a>
       <a class="nav-drop-item active" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
@@ -237,6 +237,14 @@ function initNavDrop() {
     trigger.classList.remove('open');
     menu.classList.remove('open');
   });
+  var PAGE_LABELS = {
+  'view-list.html':     '📋 List of Project',
+  'view-category.html': '🗂️ Type of Work',
+  'view-schedule.html': '📅 Project Schedule'
+};
+var currentPage = location.pathname.split('/').pop();
+var label = PAGE_LABELS[currentPage];
+if (label) document.getElementById('navTriggerLabel').textContent = label;
 }
 
 function render() {
