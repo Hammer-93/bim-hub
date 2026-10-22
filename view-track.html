@@ -446,7 +446,13 @@ function renderTrack(){
   var myTasks=allTasks.filter(function(t){return t.assigned_to===viewingUserId;});
 
   var projMap={};
-  myTasks.forEach(function(t){if(!projMap[t.project_id])projMap[t.project_id]=[];projMap[t.project_id].push(t);});
+myTasks.forEach(function(t){
+  var proj=null;
+  for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===t.project_id){proj=allProjects[i];break;}}
+  if(!proj||proj.finish_status==='future') return;
+  if(!projMap[t.project_id])projMap[t.project_id]=[];
+  projMap[t.project_id].push(t);
+});
   var DAYS_JP=['\u65e5','\u6708','\u706b','\u6c34','\u6728','\u91d1','\u571f'];
   var hdr='<th style="width:320px;min-width:320px;">&#x1F4CB; Task / Detail</th>';
   days.forEach(function(d){
