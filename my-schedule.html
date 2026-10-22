@@ -137,6 +137,7 @@
     </div>
     <div class="nav-drop-menu" id="myNavMenu">
       <a class="nav-drop-item" href="my-tasks.html">&#x1F5C2;&#xFE0F; Task List</a>
+      <a class="nav-drop-item" href="view-track.html?mode=edit">&#x1F4CA; Project Track</a>
       <a class="nav-drop-item active" href="my-schedule.html">&#x1F4C5; My Schedule</a>
     </div>
   </div>
@@ -233,12 +234,8 @@ function initTopbar(){
   var dropBtn=document.getElementById('userDropBtn');
   var dropMenu=document.getElementById('userDropMenu');
   dropBtn.addEventListener('click',function(e){e.stopPropagation();dropMenu.classList.toggle('open');});
-  var mtBtn=document.getElementById('myTaskDropBtn');
-  var mtMenu=document.getElementById('myTaskDropMenu');
-  mtBtn.addEventListener('click',function(e){e.stopPropagation();mtMenu.classList.toggle('open');});
   document.addEventListener('click',function(){
     dropMenu.classList.remove('open');
-    mtMenu.classList.remove('open');
   });
 }
 
