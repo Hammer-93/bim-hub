@@ -392,7 +392,8 @@ var currentChpwId  = null;
 window.onload = async function() {
   var role=localStorage.getItem('user_role')||'Staff';
   var name=localStorage.getItem('user_name')||'Admin';
-  if(role!=='Admin'){window.location.href='view-list.html';return;}
+  var allowedRoles = ['Admin','Manager','Sub Manager'];
+if(allowedRoles.indexOf(role) === -1){window.location.href='view-list.html';return;}
   document.getElementById('topName').textContent=name;
   document.getElementById('topAvatar').textContent=name.substring(0,2).toUpperCase();
   await loadMembers();
@@ -528,23 +529,6 @@ function switchToEdit() {
 function switchToView() {
   document.getElementById('pwEditMode').style.display = 'none';
   document.getElementById('pwViewMode').style.display = 'block';
-}
-async function saveNewPassword() {
-  var pw = document.getElementById('chpwInput').value;
-  if (!pw)       { showToast('Vui long nhap mat khau moi','error'); return; }
-  if (pw.length < 6) { showToast('Mat khau toi thieu 6 ky tu','error'); return; }
-  try {
-    var res = await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+currentChpwId, {
-      method:'PATCH', headers:HDRS, body:JSON.stringify({password:pw})
-    });
-    if (!res.ok) { showToast('Loi luu mat khau','error'); return; }
-    for (var i=0;i<allMembers.length;i++) {
-      if (allMembers[i].id===currentChpwId) { allMembers[i].password=pw; break; }
-    }
-    document.getElementById('modalPw').textContent = pw;
-    showToast('Da doi mat khau thanh cong!','success');
-    switchToView();
-  } catch(e) { showToast('Loi: '+e.message,'error'); }
 }
 function togglePwVisible(inputId, eyeId) {
   var inp = document.getElementById(inputId);
