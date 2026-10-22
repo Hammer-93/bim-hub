@@ -113,6 +113,16 @@
   <div class="topbar-right">
   <a class="btn-top" href="view-list.html">&#x1F4C5; Schedule</a>
   <div class="dropdown-wrap" id="userDropWrap">
+    <button class="dropdown-trigger" id="myTaskTopBtn">
+    &#x1F4CB; My Tasks <span class="dropdown-arrow">&#x25BC;</span>
+  </button>
+  <div class="dropdown-menu" id="myTaskTopMenu">
+    <a class="dropdown-item active" href="my-tasks.html">&#x1F5C2;&#xFE0F; Task List</a>
+    <a class="dropdown-item" href="view-track.html?mode=edit">&#x1F4CA; Project Track</a>
+    <a class="dropdown-item" href="my-schedule.html">&#x1F4C5; My Schedule</a>
+  </div>
+</div>
+<div class="dropdown-wrap" id="userDropWrap">
       <button class="dropdown-trigger" id="userDropBtn">
         <span class="user-name" id="topName">...</span>
         <span class="dropdown-arrow">&#x25BC;</span>
@@ -135,6 +145,7 @@
     <div class="nav-drop-menu" id="myTaskNavMenu">
       <a class="nav-drop-item active" href="my-tasks.html">&#x1F5C2;&#xFE0F; Task List</a>
       <a class="nav-drop-item" href="view-track.html?mode=edit">&#x1F4CA; Project Track</a>
+      <a class="nav-drop-item" href="my-schedule.html">&#x1F4C5; My Schedule</a>
     </div>
   </div>
 </div>
@@ -308,6 +319,16 @@
     mtrigger.classList.remove('open');
     mmenu.classList.remove('open');
   });
+  var myTopBtn  = document.getElementById('myTaskTopBtn');
+var myTopMenu = document.getElementById('myTaskTopMenu');
+if(myTopBtn){
+  myTopBtn.addEventListener('click',function(e){
+    e.stopPropagation();myTopMenu.classList.toggle('open');
+  });
+}
+document.addEventListener('click',function(){
+  if(myTopMenu) myTopMenu.classList.remove('open');
+});
 }
 window.onload = async function() {
   initTopbar();
