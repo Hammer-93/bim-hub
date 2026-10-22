@@ -686,7 +686,7 @@ function renderGantt() {
   var days=getDaysArray(fmt(start),fmt(end));
   var today=fmt(new Date());
   var CW=gZoom==='month'?20:gZoom==='week'?28:36;
-  var projects=sortProjects(allProjects);
+  var projects=sortProjects(allProjects.filter(function(p){return p.finish_status!=='future';}));
   var sttMap=buildSttMap(projects);
   var pw=projColWidth;
 
