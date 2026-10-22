@@ -217,9 +217,9 @@ function fmtDate(y,m,d){return y+'-'+fmt2(m+1)+'-'+fmt2(d);}
 function isWeekendDay(dateStr){var dt=new Date(dateStr+'T00:00:00');return dt.getDay()===0||dt.getDay()===6;}
 
 window.onload=function(){
-  initTopbar();
   initNavDrops();
   loadAllData().then(function(){
+    initTopbar();
     loadMyLeaves().then(function(){
       renderCalendar();
     });
