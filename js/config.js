@@ -22,7 +22,7 @@ let projColorMap = {};
 
 async function loadAllData() {
   const [pR, tR, uR] = await Promise.all([
-    fetch(SUPABASE_URL+'/rest/v1/projects?select=*&order=created_at.desc', {headers:HDRS}),
+    fetch(SUPABASE_URL+'/rest/v1/projects?select=*&finish_status=neq.future&order=created_at.desc', {headers:HDRS}),
     fetch(SUPABASE_URL+'/rest/v1/project_tasks?select=*', {headers:HDRS}),
     fetch(SUPABASE_URL+'/rest/v1/users?select=*&order=name.asc', {headers:HDRS}),
   ]);
