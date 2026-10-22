@@ -100,7 +100,7 @@ function initTopbar() {
   const rb = document.getElementById('topRole');
   rb.textContent = role;
   rb.className = 'role-badge '+(role==='Admin'?'role-admin':'role-staff');
-  if (role==='Admin') {
+  if (role==='Admin'|| role==='Manager' || role==='Sub Manager') {
     document.querySelectorAll('.admin-only').forEach(el => el.style.display='flex');
   }
 }
