@@ -271,6 +271,7 @@ function render() {
   );
 
   var projects = allProjects.filter(function(p) {
+    if (p.finish_status === 'future') return false;
     if (!activeProjectIds.has(p.id)) return false;
     if (group && getGroup(p) !== group) return false;
     if (search) {
