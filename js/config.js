@@ -95,8 +95,10 @@ function initTopbar() {
   if (!localStorage.getItem('user_email')) {
     window.location.href = 'index.html'; return;
   }
-  document.getElementById('topName').textContent   = name;
-  document.getElementById('topAvatar').textContent = name.substring(0,2).toUpperCase();
+  const tn = document.getElementById('topName');
+if (tn) tn.textContent = name;
+const ta = document.getElementById('topAvatar');
+if (ta) ta.textContent = name.substring(0,2).toUpperCase();
    const rb = document.getElementById('topRole');
   if (rb) {
     rb.textContent = role;
