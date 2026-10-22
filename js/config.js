@@ -104,6 +104,7 @@ function initTopbar() {
   if (role==='Admin'|| role==='Manager' || role==='Sub Manager') {
     document.querySelectorAll('.admin-only').forEach(el => el.style.display='flex');
   }
+} 
 }
 function logout() {
   if (confirm('Dang xuat?')) {
