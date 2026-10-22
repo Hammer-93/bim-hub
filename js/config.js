@@ -97,14 +97,14 @@ function initTopbar() {
   }
   document.getElementById('topName').textContent   = name;
   document.getElementById('topAvatar').textContent = name.substring(0,2).toUpperCase();
-  const rb = document.getElementById('topRole');
+   const rb = document.getElementById('topRole');
   if (rb) {
-  rb.textContent = role;
-  rb.className = 'role-badge '+(role==='Admin'?'role-admin':'role-staff');
-  if (role==='Admin'|| role==='Manager' || role==='Sub Manager') {
+    rb.textContent = role;
+    rb.className = 'role-badge '+(role==='Admin'?'role-admin':'role-staff');
+  }
+  if (role==='Admin' || role==='Manager' || role==='Sub Manager') {
     document.querySelectorAll('.admin-only').forEach(el => el.style.display='flex');
   }
-} 
 }
 function logout() {
   if (confirm('Dang xuat?')) {
