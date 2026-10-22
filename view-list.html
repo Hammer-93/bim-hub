@@ -26,9 +26,6 @@
     .dropdown-item.danger:hover { background:#fff0f0; color:#e63946; }
     .dropdown-divider { height:1px; background:#f0f0f0; margin:4px 0; }
     .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; position:relative; z-index:100; }
-    .nav-tab { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; text-decoration:none; display:flex; align-items:center; gap:7px; }
-    .nav-tab:hover { color:#0096c7; }
-    .nav-tab.active { color:#0077b6; border-bottom-color:#0077b6; }
     .nav-drop { position:relative; }
     .nav-drop-trigger { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; display:flex; align-items:center; gap:7px; transition:all .2s; white-space:nowrap; user-select:none; }
     .nav-drop-trigger:hover { color:#0096c7; }
@@ -138,7 +135,7 @@
     .edit-input  { font-size:12px; font-weight:600; color:#222; border:1.5px solid #0096c7; border-radius:6px; padding:4px 8px; background:#fff; outline:none; width:100%; }
     .edit-select { font-size:12px; font-weight:600; color:#222; border:1.5px solid #0096c7; border-radius:6px; padding:4px 8px; background:#fff; outline:none; width:100%; cursor:pointer; }
     .edit-btn-wrap { display:flex; gap:6px; margin-top:10px; }
-    .btn-save-task   { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
+    .btn-save-task { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:6px 14px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
     .btn-save-task:hover { opacity:.9; }
     .btn-cancel-task { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; }
     .btn-cancel-task:hover { background:#f5f5f5; }
@@ -180,21 +177,18 @@
     .year-group-count { font-size:11px; font-weight:600; background:#0077b6; color:#fff; padding:2px 8px; border-radius:10px; margin-left:auto; }
     .year-group-body { display:none; }
     .year-group-body.open { display:block; }
-    .future-section-header { background:linear-gradient(135deg,#e8f0ff,#cfe2ff); border:1.5px solid #86b7fe; border-radius:12px; padding:14px 20px; margin-bottom:16px; display:flex; align-items:center; gap:12px; }
-    .future-section-icon { font-size:28px; }
-    .future-section-text { font-size:13px; color:#0d4d9e; }
-    .future-section-text strong { font-size:15px; color:#0d4d9e; display:block; margin-bottom:3px; }
     .status-select-wrap { display:flex; gap:10px; margin-bottom:16px; }
     .status-opt { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:12px 8px; border:2px solid #dde2ea; border-radius:10px; cursor:pointer; transition:all .15s; background:#fff; text-align:center; }
     .status-opt:hover { border-color:#0096c7; background:#f0f7ff; }
     .status-opt.active-running { border-color:#1a7c3a; background:#d4edda; }
-    .status-opt.active-finish { border-color:#0044aa; background:#d4edff; }
-    .status-opt.active-future { border-color:#0d6efd; background:#cfe2ff; }
+    .status-opt.active-finish  { border-color:#0044aa; background:#d4edff; }
+    .status-opt.active-future  { border-color:#0d6efd; background:#cfe2ff; }
     .status-opt-icon { font-size:22px; }
     .status-opt-label { font-size:12px; font-weight:700; color:#555; }
     .status-opt.active-running .status-opt-label { color:#1a7c3a; }
-    .status-opt.active-finish .status-opt-label { color:#0044aa; }
-    .status-opt.active-future .status-opt-label { color:#0d6efd; }
+    .status-opt.active-finish  .status-opt-label { color:#0044aa; }
+    .status-opt.active-future  .status-opt-label { color:#0d6efd; }
+    .convert-notice { background:#cfe2ff; border:1.5px solid #86b7fe; border-radius:10px; padding:12px 16px; font-size:13px; color:#0d4d9e; margin-bottom:16px; display:flex; align-items:center; gap:10px; }
   </style>
 </head>
 <body>
@@ -288,13 +282,6 @@
     <div id="finishYearGroups"><div style="text-align:center;padding:32px;color:#aaa;">Loading...</div></div>
   </div>
   <div id="futureSection" style="display:none;">
-    <div class="future-section-header">
-      <div class="future-section-icon">&#x1F52D;</div>
-      <div class="future-section-text">
-        <strong>Future Projects</strong>
-        Danh sach cac du an du kien trong tuong lai. Khi du an duoc xac nhan, bam "Convert to Running" de chuyen sang danh sach chinh.
-      </div>
-    </div>
     <table class="proj-table future-table">
       <thead>
         <tr>
@@ -316,15 +303,19 @@
   </div>
 </div>
 
-<!-- MODAL TAO DU AN -->
+<!-- MODAL CREATE / CONVERT PROJECT -->
 <div class="modal-overlay" id="createModal" onclick="if(event.target.id==='createModal')closeModal()">
   <div class="modal">
     <div class="modal-title">
-      &#x1F3D7;&#xFE0F; Add New Project
+      <span id="modalTitleText">&#x1F3D7;&#xFE0F; Add New Project</span>
       <button class="modal-close" onclick="closeModal()">&#x2715;</button>
     </div>
 
-    <!-- STATUS SELECTOR -->
+    <div class="convert-notice" id="convertNotice" style="display:none;">
+      <span style="font-size:20px;">&#x1F4DD;</span>
+      <span>Please review and update the project information before converting to Running status.</span>
+    </div>
+
     <div class="form-group" style="margin-bottom:16px;">
       <label>Project Status <span class="req">*</span></label>
       <div class="status-select-wrap">
@@ -353,7 +344,7 @@
       </div>
     </div>
     <div class="form-group" style="margin-bottom:16px;">
-      <label>Project Team<span class="req">*</span></label>
+      <label>Project Team <span class="req">*</span></label>
       <div class="group-selector">
         <div class="group-opt active" id="grpA" onclick="selectGroup('A')">
           <span class="g-key" style="color:#0077b6;">A</span>
@@ -416,33 +407,35 @@
       <div class="form-group"><label>Start Project</label><input type="date" id="projStart"/></div>
       <div class="form-group"><label>End Project</label><input type="date" id="projEnd"/></div>
     </div>
-    <div class="tasks-section" id="tasksSectionWrap">
+    <div class="tasks-section">
       <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:10px;">&#x1F4CB; Type of Work</div>
       <div id="taskRows"></div>
       <button class="btn-add-task" onclick="addTaskRow()">&#x2795; Add Task</button>
     </div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn-primary" onclick="createProject()">&#x2705; OK</button>
+      <button class="btn-primary" id="modalOkBtn" onclick="saveProject()">&#x2705; OK</button>
     </div>
   </div>
 </div>
 
 <script src="js/config.js"></script>
 <script>
-var taskRowCount    = 0;
-var selectedGroup   = 'A';
-var selectedStatus  = 'running';
-var currentUserRole = 'Staff';
-var expandedId      = null;
-var mainTab         = 'running';
+var taskRowCount     = 0;
+var selectedGroup    = 'A';
+var selectedStatus   = 'running';
+var currentUserRole  = 'Staff';
+var expandedId       = null;
+var mainTab          = 'running';
 var expandedFinishYears = {};
+var editingProjectId = null;
+var isConvertMode    = false;
 
 var GROUP_CFG = {
-  A: { label:'&#x8A2D;&#x8A08;BIM', icon:'&#x1F3DB;&#xFE0F;' },
-  B: { label:'&#x65BD;&#x5DE5;BIM', icon:'&#x1F3D7;&#xFE0F;' },
-  C: { label:'&#x6E05;&#x7B97;',    icon:'&#x1F4B0;' },
-  D: { label:'M&F',    icon:'&#x1F527;' }
+  A:{ label:'\u8A2D\u8A08BIM', icon:'\uD83C\uDFDB\uFE0F' },
+  B:{ label:'\u65BD\u5DE5BIM', icon:'\uD83C\uDFD7\uFE0F' },
+  C:{ label:'\u6E05\u7B97',    icon:'\uD83D\uDCB0' },
+  D:{ label:'M&F',             icon:'\uD83D\uDD27' }
 };
 var TYPE_COLOR = {
   '\u30d1\u30fc\u30b9\u30fb\u52d5\u753b':'#f4a261',
@@ -453,155 +446,129 @@ var TYPE_COLOR = {
   '\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7':'#ffd166'
 };
 
-window.onload = function() {
+window.onload = function(){
   initTopbar();
   initNavDrop();
-  loadAllData().then(function() {
+  loadAllData().then(function(){
     renderList(); suggestNextNum();
     renderTags('branch'); renderTags('design');
     updatePreview(); selectGroup('A'); selectStatus('running');
-  }).catch(function(e) { showToast('Error loading data: '+e.message,'error'); });
+  }).catch(function(e){ showToast('Error loading data: '+e.message,'error'); });
 };
 
-function initTopbar() {
-  var role = localStorage.getItem('user_role') || 'Staff';
-  var name = localStorage.getItem('user_name') || 'User';
-  currentUserRole = role;
-  if (!localStorage.getItem('user_email')) { window.location.href='index.html'; return; }
-  document.getElementById('topName').textContent = name;
-  if (role==='Admin'||role==='Manager'||role==='Sub Manager') {
-    var els = document.querySelectorAll('.admin-only');
-    for (var i=0;i<els.length;i++) els[i].style.display='flex';
+function initTopbar(){
+  var role=localStorage.getItem('user_role')||'Staff';
+  var name=localStorage.getItem('user_name')||'User';
+  currentUserRole=role;
+  if(!localStorage.getItem('user_email')){window.location.href='index.html';return;}
+  document.getElementById('topName').textContent=name;
+  if(role==='Admin'||role==='Manager'||role==='Sub Manager'){
+    var els=document.querySelectorAll('.admin-only');
+    for(var i=0;i<els.length;i++) els[i].style.display='flex';
   }
-  if (role !== 'Staff') {
-    document.getElementById('btnAddProject').style.display = 'flex';
-  }
-  var dropBtn  = document.getElementById('userDropBtn');
-  var dropMenu = document.getElementById('userDropMenu');
-  dropBtn.addEventListener('click', function(e) { e.stopPropagation(); dropMenu.classList.toggle('open'); });
-  document.addEventListener('click', function() { dropMenu.classList.remove('open'); });
+  if(role!=='Staff') document.getElementById('btnAddProject').style.display='flex';
+  var dropBtn=document.getElementById('userDropBtn');
+  var dropMenu=document.getElementById('userDropMenu');
+  dropBtn.addEventListener('click',function(e){e.stopPropagation();dropMenu.classList.toggle('open');});
+  document.addEventListener('click',function(){dropMenu.classList.remove('open');});
 }
 
-function initNavDrop() {
-  var trigger  = document.getElementById('scheduleNavTrigger');
-  var menu     = document.getElementById('scheduleNavMenu');
-  var strigger = document.getElementById('staffNavTrigger');
-  var smenu    = document.getElementById('staffNavMenu');
-  trigger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    trigger.classList.toggle('open');
-    menu.classList.toggle('open');
+function initNavDrop(){
+  var trigger=document.getElementById('scheduleNavTrigger');
+  var menu=document.getElementById('scheduleNavMenu');
+  var strigger=document.getElementById('staffNavTrigger');
+  var smenu=document.getElementById('staffNavMenu');
+  trigger.addEventListener('click',function(e){e.stopPropagation();trigger.classList.toggle('open');menu.classList.toggle('open');});
+  strigger.addEventListener('click',function(e){e.stopPropagation();strigger.classList.toggle('open');smenu.classList.toggle('open');});
+  document.addEventListener('click',function(){
+    trigger.classList.remove('open');menu.classList.remove('open');
+    strigger.classList.remove('open');smenu.classList.remove('open');
   });
-  strigger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    strigger.classList.toggle('open');
-    smenu.classList.toggle('open');
-  });
-  document.addEventListener('click', function() {
-    trigger.classList.remove('open');  menu.classList.remove('open');
-    strigger.classList.remove('open'); smenu.classList.remove('open');
-  });
-  var PAGE_LABELS = {
-    'view-list.html':     '&#x1F4CB; List of Project',
-    'view-category.html': '&#x1F5C2;&#xFE0F; Type of Work',
-    'view-schedule.html': '&#x1F4C5; Project Schedule'
-  };
-  var currentPage = location.pathname.split('/').pop();
-  var label = PAGE_LABELS[currentPage];
-  if (label) document.getElementById('navTriggerLabel').innerHTML = label;
+  var PAGE_LABELS={'view-list.html':'\uD83D\uDCCB List of Project','view-category.html':'\uD83D\uDDC2\uFE0F Type of Work','view-schedule.html':'\uD83D\uDCC5 Project Schedule'};
+  var cur=location.pathname.split('/').pop();
+  if(PAGE_LABELS[cur]) document.getElementById('navTriggerLabel').textContent=PAGE_LABELS[cur];
 }
 
-function selectGroup(g) {
-  selectedGroup = g;
-  ['A','B','C','D'].forEach(function(k) {
-    var el = document.getElementById('grp'+k);
-    if (k===g) el.classList.add('active'); else el.classList.remove('active');
+function selectGroup(g){
+  selectedGroup=g;
+  ['A','B','C','D'].forEach(function(k){
+    var el=document.getElementById('grp'+k);
+    if(k===g) el.classList.add('active'); else el.classList.remove('active');
   });
 }
 
-function selectStatus(s) {
-  selectedStatus = s;
-  var ids = { running:'statusRunning', finish:'statusFinish', future:'statusFuture' };
-  var activeClasses = { running:'active-running', finish:'active-finish', future:'active-future' };
-  Object.keys(ids).forEach(function(k) {
-    var el = document.getElementById(ids[k]);
+function selectStatus(s){
+  selectedStatus=s;
+  var ids={running:'statusRunning',finish:'statusFinish',future:'statusFuture'};
+  var cls={running:'active-running',finish:'active-finish',future:'active-future'};
+  Object.keys(ids).forEach(function(k){
+    var el=document.getElementById(ids[k]);
     el.classList.remove('active-running','active-finish','active-future');
-    if (k===s) el.classList.add(activeClasses[k]);
+    if(k===s) el.classList.add(cls[k]);
   });
-  // Show/hide tasks section for future projects
-  var taskWrap = document.getElementById('tasksSectionWrap');
-  // Future projects can still have tasks, so keep visible
-  // Just update num suggestion
-  if (s==='future') {
-    document.getElementById('numInput').value='000';
-    updatePreview();
-  } else {
-    suggestNextNum();
-  }
+  if(s==='future'){document.getElementById('numInput').value='000';updatePreview();}
+  else if(!isConvertMode){suggestNextNum();}
 }
 
-function switchMainTab(tab) {
-  mainTab = tab;
-  document.getElementById('runningSection').style.display = tab==='running' ? '' : 'none';
-  document.getElementById('finishSection').style.display  = tab==='finish'  ? '' : 'none';
-  document.getElementById('futureSection').style.display  = tab==='future'  ? '' : 'none';
-  document.getElementById('tabRunningBtn').className = 'tab-switch-btn'+(tab==='running'?' active':'');
-  document.getElementById('tabFinishBtn').className  = 'tab-switch-btn'+(tab==='finish'?' active':'');
-  document.getElementById('tabFutureBtn').className  = 'tab-switch-btn'+(tab==='future'?' active-future':'');
+function switchMainTab(tab){
+  mainTab=tab;
+  document.getElementById('runningSection').style.display=tab==='running'?'':'none';
+  document.getElementById('finishSection').style.display=tab==='finish'?'':'none';
+  document.getElementById('futureSection').style.display=tab==='future'?'':'none';
+  document.getElementById('tabRunningBtn').className='tab-switch-btn'+(tab==='running'?' active':'');
+  document.getElementById('tabFinishBtn').className='tab-switch-btn'+(tab==='finish'?' active':'');
+  document.getElementById('tabFutureBtn').className='tab-switch-btn'+(tab==='future'?' active-future':'');
   renderList();
 }
 
-function getCodeNum(p) {
-  if (p.year && p.seq_number) return parseInt(p.year)*1000+parseInt(p.seq_number);
-  var code = p.code||p.project_code||'';
-  var m = code.match(/^(\d+)/);
-  return m ? parseInt(m[1]) : 99999;
+function getCodeNum(p){
+  if(p.year&&p.seq_number) return parseInt(p.year)*1000+parseInt(p.seq_number);
+  var code=p.code||p.project_code||'';
+  var m=code.match(/^(\d+)/);
+  return m?parseInt(m[1]):99999;
 }
-function getProjectsSorted() {
-  return allProjects.slice().sort(function(a,b){ return getCodeNum(a)-getCodeNum(b); });
-}
-function getProjCode(p) {
-  if (p.year && p.seq_number !== undefined && p.seq_number !== null) return p.year+String(p.seq_number).padStart(3,'0');
+function getProjectsSorted(){return allProjects.slice().sort(function(a,b){return getCodeNum(a)-getCodeNum(b);});}
+function getProjCode(p){
+  if(p.year&&p.seq_number!==undefined&&p.seq_number!==null) return p.year+String(p.seq_number).padStart(3,'0');
   return (p.code||'').split('_')[0]||'';
 }
-function getYearFromCode(code) {
-  if (!code) return 'Unknown';
-  var m = code.match(/^(\d{2})/);
-  if (m) return '20'+m[1];
-  return 'Unknown';
+function getYearFromCode(code){
+  if(!code) return 'Unknown';
+  var m=code.match(/^(\d{2})/);
+  return m?'20'+m[1]:'Unknown';
 }
 
-function calcStatus(p) {
-  if (p.finish_status === 'finish') return 'finish';
-  if (p.finish_status === 'future') return 'future';
+function calcStatus(p){
+  if(p.finish_status==='finish') return 'finish';
+  if(p.finish_status==='future') return 'future';
   var today=new Date(); today.setHours(0,0,0,0);
-  var pt=allTasks.filter(function(t){ return t.project_id===p.id; });
-  if (!pt.length) return 'running';
-  var hasNoSend=false, allPast=true;
-  for (var j=0;j<pt.length;j++) {
-    if (!pt[j].send_date) { hasNoSend=true; allPast=false; break; }
-    var sd=new Date(pt[j].send_date); sd.setHours(0,0,0,0);
-    if (sd>=today) allPast=false;
+  var pt=allTasks.filter(function(t){return t.project_id===p.id;});
+  if(!pt.length) return 'running';
+  var hasNoSend=false,allPast=true;
+  for(var j=0;j<pt.length;j++){
+    if(!pt[j].send_date){hasNoSend=true;allPast=false;break;}
+    var sd=new Date(pt[j].send_date);sd.setHours(0,0,0,0);
+    if(sd>=today) allPast=false;
   }
-  if (hasNoSend) return 'running';
+  if(hasNoSend) return 'running';
   return allPast?'ended':'running';
 }
 
-function getActiveTasks(projId) {
-  var today=new Date(); today.setHours(0,0,0,0);
-  return allTasks.filter(function(t) {
-    if (t.project_id!==projId) return false;
-    if (!t.send_date) return true;
-    var sd=new Date(t.send_date); sd.setHours(0,0,0,0);
+function getActiveTasks(projId){
+  var today=new Date();today.setHours(0,0,0,0);
+  return allTasks.filter(function(t){
+    if(t.project_id!==projId) return false;
+    if(!t.send_date) return true;
+    var sd=new Date(t.send_date);sd.setHours(0,0,0,0);
     return sd>=today;
   });
 }
 
-function toggleExpand(projId) {
-  if (expandedId===projId) { collapseRow(projId); expandedId=null; }
-  else { if(expandedId) collapseRow(expandedId); expandRow(projId); expandedId=projId; }
+function toggleExpand(projId){
+  if(expandedId===projId){collapseRow(projId);expandedId=null;}
+  else{if(expandedId)collapseRow(expandedId);expandRow(projId);expandedId=projId;}
 }
-function expandRow(id) {
+function expandRow(id){
   var pr=document.getElementById('proj-row-'+id);
   var tr=document.getElementById('task-row-'+id);
   var ch=document.getElementById('chev-'+id);
@@ -609,7 +576,7 @@ function expandRow(id) {
   if(tr) tr.classList.add('open');
   if(ch) ch.classList.add('open');
 }
-function collapseRow(id) {
+function collapseRow(id){
   var pr=document.getElementById('proj-row-'+id);
   var tr=document.getElementById('task-row-'+id);
   var ch=document.getElementById('chev-'+id);
@@ -618,32 +585,25 @@ function collapseRow(id) {
   if(ch) ch.classList.remove('open');
 }
 
-function buildUserOptions(selectedId) {
+function buildUserOptions(selectedId){
   var ALLOWED=['Leader','Sub Manager','Manager','Admin'];
   var html='<option value="">- Not yet assigned -</option>';
-  for (var i=0;i<allUsers.length;i++) {
+  for(var i=0;i<allUsers.length;i++){
     var u=allUsers[i];
-    if (ALLOWED.indexOf(u.role)===-1) continue;
+    if(ALLOWED.indexOf(u.role)===-1) continue;
     html+='<option value="'+u.id+'"'+(u.id===selectedId?' selected':'')+'>'+(u.name||u.email)+'</option>';
   }
   return html;
 }
-function buildTypeOptions(sel) {
+function buildTypeOptions(sel){
   var html='';
-  for (var i=0;i<TASK_TYPES.length;i++) {
-    html+='<option value="'+TASK_TYPES[i]+'"'+(TASK_TYPES[i]===sel?' selected':'')+'>'+TASK_TYPES[i]+'</option>';
-  }
+  for(var i=0;i<TASK_TYPES.length;i++) html+='<option value="'+TASK_TYPES[i]+'"'+(TASK_TYPES[i]===sel?' selected':'')+'>'+TASK_TYPES[i]+'</option>';
   return html;
 }
-function editTask(tid) {
-  document.getElementById('view-'+tid).style.display='none';
-  document.getElementById('edit-'+tid).style.display='block';
-}
-function cancelEdit(tid) {
-  document.getElementById('edit-'+tid).style.display='none';
-  document.getElementById('view-'+tid).style.display='block';
-}
-async function saveTask(tid) {
+function editTask(tid){document.getElementById('view-'+tid).style.display='none';document.getElementById('edit-'+tid).style.display='block';}
+function cancelEdit(tid){document.getElementById('edit-'+tid).style.display='none';document.getElementById('view-'+tid).style.display='block';}
+
+async function saveTask(tid){
   var uid=document.getElementById('eu-'+tid).value||null;
   var rcv=document.getElementById('er-'+tid).value||null;
   var st=document.getElementById('es-'+tid).value||null;
@@ -651,93 +611,285 @@ async function saveTask(tid) {
   var snd=document.getElementById('eg-'+tid).value||null;
   var mask=document.getElementById('mask-'+tid);
   if(mask) mask.style.display='flex';
-  try {
-    var res=await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+tid,{
-      method:'PATCH',headers:HDRS,
-      body:JSON.stringify({assigned_to:uid,receive_date:rcv,start_date:st,end_date:en,send_date:snd})
-    });
+  try{
+    var res=await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+tid,{method:'PATCH',headers:HDRS,body:JSON.stringify({assigned_to:uid,receive_date:rcv,start_date:st,end_date:en,send_date:snd})});
     if(!res.ok){showToast('Error saving task','error');if(mask)mask.style.display='none';return;}
-    for (var i=0;i<allTasks.length;i++){
-      if(allTasks[i].id===tid){
-        allTasks[i].assigned_to=uid;allTasks[i].receive_date=rcv;
-        allTasks[i].start_date=st;allTasks[i].end_date=en;allTasks[i].send_date=snd;break;
-      }
-    }
+    for(var i=0;i<allTasks.length;i++){if(allTasks[i].id===tid){allTasks[i].assigned_to=uid;allTasks[i].receive_date=rcv;allTasks[i].start_date=st;allTasks[i].end_date=en;allTasks[i].send_date=snd;break;}}
     showToast('Task saved','success');
     var projId=null;
-    for (var j=0;j<allTasks.length;j++){if(allTasks[j].id===tid){projId=allTasks[j].project_id;break;}}
+    for(var j=0;j<allTasks.length;j++){if(allTasks[j].id===tid){projId=allTasks[j].project_id;break;}}
     if(projId) refreshExpand(projId);
     renderList();
-  } catch(e){showToast('Error: '+e.message,'error');if(mask)mask.style.display='none';}
+  }catch(e){showToast('Error: '+e.message,'error');if(mask)mask.style.display='none';}
 }
-async function deleteTask(tid, projId) {
+
+async function deleteTask(tid,projId){
   if(!confirm('Confirm delete this task?')) return;
-  try {
+  try{
     await fetch(SUPABASE_URL+'/rest/v1/project_tasks?id=eq.'+tid,{method:'DELETE',headers:HDRS});
     allTasks=allTasks.filter(function(t){return t.id!==tid;});
     showToast('Task deleted','success');
-    refreshExpand(projId); renderList();
-  } catch(e){showToast('Error: '+e.message,'error');}
+    refreshExpand(projId);renderList();
+  }catch(e){showToast('Error: '+e.message,'error');}
 }
-function toggleAddTask(projId) {
+
+function toggleAddTask(projId){
   var btn=document.getElementById('add-btn-'+projId);
   var form=document.getElementById('add-form-'+projId);
   if(!btn||!form) return;
   if(form.classList.contains('open')){form.classList.remove('open');btn.style.display='flex';}
   else{form.classList.add('open');btn.style.display='none';}
 }
-async function saveNewTask(projId) {
+
+async function saveNewTask(projId){
   var ttype=document.getElementById('an-type-'+projId).value;
   var uid=document.getElementById('an-user-'+projId).value||null;
   var rcv=document.getElementById('an-rcv-'+projId).value||null;
   var st=document.getElementById('an-st-'+projId).value||null;
   var en=document.getElementById('an-en-'+projId).value||null;
   var snd=document.getElementById('an-snd-'+projId).value||null;
-  try {
-    var res=await fetch(SUPABASE_URL+'/rest/v1/project_tasks',{
-      method:'POST',headers:HDRS,
-      body:JSON.stringify({
-        project_id:projId,task_type:ttype,assigned_to:uid,
-        receive_date:rcv,start_date:st,end_date:en,send_date:snd,
-        status:'active',task_source:'task_manager'
-      })
-    });
+  try{
+    var res=await fetch(SUPABASE_URL+'/rest/v1/project_tasks',{method:'POST',headers:HDRS,body:JSON.stringify({project_id:projId,task_type:ttype,assigned_to:uid,receive_date:rcv,start_date:st,end_date:en,send_date:snd,status:'active',task_source:'task_manager'})});
     if(!res.ok){showToast('Error adding task','error');return;}
     var arr=await res.json();
     if(arr&&arr[0]) allTasks.push(arr[0]);
     showToast('Task added: '+ttype,'success');
-    refreshExpand(projId); renderList();
-  } catch(e){showToast('Error: '+e.message,'error');}
+    refreshExpand(projId);renderList();
+  }catch(e){showToast('Error: '+e.message,'error');}
 }
 
-async function markProjectFinish(pid) {
+async function markProjectFinish(pid){
   if(!confirm('Mark this project as Finish?')) return;
-  try {
+  try{
     await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+pid,{method:'PATCH',headers:HDRS,body:JSON.stringify({finish_status:'finish'})});
     for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){allProjects[i].finish_status='finish';break;}}
-    showToast('Project marked as Finish!','success'); renderList();
-  } catch(e){showToast('Error: '+e.message,'error');}
-}
-async function revertProjectFinish(pid) {
-  if(!confirm('Revert this project to Running?')) return;
-  try {
-    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+pid,{method:'PATCH',headers:HDRS,body:JSON.stringify({finish_status:'active'})});
-    for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){allProjects[i].finish_status='active';break;}}
-    showToast('Project reverted to Running!','success'); renderList();
-  } catch(e){showToast('Error: '+e.message,'error');}
-}
-async function convertToRunning(pid) {
-  if(!confirm('Convert this Future project to Running?\\nThe project will appear in the Running tab.')) return;
-  try {
-    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+pid,{method:'PATCH',headers:HDRS,body:JSON.stringify({finish_status:'active'})});
-    for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){allProjects[i].finish_status='active';break;}}
-    showToast('Project converted to Running!','success');
-    switchMainTab('running');
-    renderList();
-  } catch(e){showToast('Error: '+e.message,'error');}
+    showToast('Project marked as Finish!','success');renderList();
+  }catch(e){showToast('Error: '+e.message,'error');}
 }
 
-function refreshExpand(projId) {
+async function revertProjectFinish(pid){
+  if(!confirm('Revert this project to Running?')) return;
+  try{
+    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+pid,{method:'PATCH',headers:HDRS,body:JSON.stringify({finish_status:'active'})});
+    for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){allProjects[i].finish_status='active';break;}}
+    showToast('Project reverted to Running!','success');renderList();
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+
+function openConvertModal(pid){
+  var proj=null;
+  for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){proj=allProjects[i];break;}}
+  if(!proj) return;
+  isConvertMode=true;
+  editingProjectId=pid;
+  document.getElementById('modalTitleText').textContent='\u25B6\uFE0F Convert to Running';
+  document.getElementById('convertNotice').style.display='flex';
+  document.getElementById('modalOkBtn').textContent='\u25B6\uFE0F Convert to Running';
+  selectGroup(proj.proj_group||'A');
+  selectStatus('running');
+  var codeRaw=getProjCode(proj);
+  var yearVal=proj.year||(codeRaw.length>=2?codeRaw.substring(0,2):'26');
+  var numVal=proj.seq_number!==undefined&&proj.seq_number!==null?String(proj.seq_number).padStart(3,'0'):(codeRaw.length>=5?codeRaw.substring(2,5):'000');
+  document.getElementById('yearInput').value=yearVal;
+  document.getElementById('yearDisp').textContent=yearVal;
+  document.getElementById('numInput').value=numVal;
+  document.getElementById('branchInput').value=proj.branch||'';
+  document.getElementById('designInput').value=proj.design_type||'';
+  document.getElementById('nameInput').value=proj.project_name||'';
+  document.getElementById('projStart').value=proj.start_date||'';
+  document.getElementById('projEnd').value=proj.end_date||'';
+  renderTags('branch');renderTags('design');updatePreview();
+  document.getElementById('taskRows').innerHTML='';
+  taskRowCount=0;
+  document.getElementById('createModal').classList.add('open');
+}
+
+function openModal(){
+  isConvertMode=false;
+  editingProjectId=null;
+  document.getElementById('modalTitleText').textContent='\uD83C\uDFD7\uFE0F Add New Project';
+  document.getElementById('convertNotice').style.display='none';
+  document.getElementById('modalOkBtn').textContent='\u2705 OK';
+  suggestNextNum();selectGroup('A');selectStatus('running');
+  document.getElementById('createModal').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('createModal').classList.remove('open');
+  isConvertMode=false;editingProjectId=null;
+}
+
+async function saveProject(){
+  if(isConvertMode&&editingProjectId) await doConvertProject();
+  else await createProject();
+}
+
+async function doConvertProject(){
+  var year=(document.getElementById('yearInput').value||'26').padStart(2,'0');
+  var num=(document.getElementById('numInput').value||'000').padStart(3,'0');
+  var branch=document.getElementById('branchInput').value.trim();
+  var design=document.getElementById('designInput').value.trim();
+  var name=document.getElementById('nameInput').value.trim();
+  var pStart=document.getElementById('projStart').value;
+  var pEnd=document.getElementById('projEnd').value;
+  if(!branch){showToast('Please enter branch name','error');return;}
+  if(!name){showToast('Please enter project name','error');return;}
+  var parts=[year+num,branch];if(design)parts.push(design);parts.push(name);
+  var code=parts.join('_');
+  var finVal=selectedStatus==='finish'?'finish':(selectedStatus==='future'?'future':'active');
+  try{
+    var res=await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+editingProjectId,{
+      method:'PATCH',headers:HDRS,
+      body:JSON.stringify({code:code,year:year,seq_number:parseInt(num),branch:branch,design_type:design||null,project_name:name,finish_status:finVal,proj_group:selectedGroup,start_date:pStart||null,end_date:pEnd||null})
+    });
+    if(!res.ok){var e=await res.json();showToast(e.message||'Error saving','error');return;}
+    for(var i=0;i<allProjects.length;i++){
+      if(allProjects[i].id===editingProjectId){
+        allProjects[i].code=code;allProjects[i].year=year;allProjects[i].seq_number=parseInt(num);
+        allProjects[i].branch=branch;allProjects[i].design_type=design||null;
+        allProjects[i].project_name=name;allProjects[i].finish_status=finVal;
+        allProjects[i].proj_group=selectedGroup;
+        allProjects[i].start_date=pStart||null;allProjects[i].end_date=pEnd||null;
+        break;
+      }
+    }
+    showToast('Project updated and converted!','success');
+    closeModal();
+    if(finVal==='active') switchMainTab('running');
+    else if(finVal==='finish') switchMainTab('finish');
+    else switchMainTab('future');
+    renderList();
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+
+function addTaskRow(){
+  taskRowCount++;
+  var id='task_'+taskRowCount;
+  var div=document.createElement('div');
+  div.className='task-row';div.id=id;
+  var typeOpts='';
+  for(var i=0;i<TASK_TYPES.length;i++) typeOpts+='<option value="'+TASK_TYPES[i]+'">'+TASK_TYPES[i]+'</option>';
+  var ALLOWED=['Leader','Sub Manager','Manager','Admin'];
+  var userOpts='';
+  for(var j=0;j<allUsers.length;j++){
+    if(ALLOWED.indexOf(allUsers[j].role)===-1) continue;
+    userOpts+='<option value="'+allUsers[j].id+'">'+(allUsers[j].name||allUsers[j].email)+'</option>';
+  }
+  div.innerHTML='<button class="btn-remove-task" onclick="document.getElementById(\''+id+'\').remove()">&#x2715;</button>'
+    +'<div class="task-grid">'
+    +'<div class="form-group"><label>Type of Work</label><select class="task-type">'+typeOpts+'</select></div>'
+    +'<div class="form-group"><label>Person in Charge</label><select class="task-user"><option value="">- Not yet assigned -</option>'+userOpts+'</select></div>'
+    +'<div class="form-group"><label>Memo</label><input type="text" class="task-note" placeholder="Note..."/></div>'
+    +'</div>'
+    +'<div class="task-dates">'
+    +'<div class="form-group"><label>Receive</label><input type="date" class="task-receive"/></div>'
+    +'<div class="form-group"><label>Start Work</label><input type="date" class="task-start"/></div>'
+    +'<div class="form-group"><label>End Work</label><input type="date" class="task-end"/></div>'
+    +'<div class="form-group"><label>Send</label><input type="date" class="task-send"/></div>'
+    +'</div>';
+  document.getElementById('taskRows').appendChild(div);
+}
+
+async function createProject(){
+  var year=(document.getElementById('yearInput').value||'26').padStart(2,'0');
+  var num=(document.getElementById('numInput').value||'000').padStart(3,'0');
+  var branch=document.getElementById('branchInput').value.trim();
+  var design=document.getElementById('designInput').value.trim();
+  var name=document.getElementById('nameInput').value.trim();
+  var pStart=document.getElementById('projStart').value;
+  var pEnd=document.getElementById('projEnd').value;
+  if(!branch){showToast('Please enter branch name','error');return;}
+  if(!name){showToast('Please enter project name','error');return;}
+  var parts=[year+num,branch];if(design)parts.push(design);parts.push(name);
+  var code=parts.join('_');
+  var color=PASTEL_COLORS[allProjects.length%PASTEL_COLORS.length];
+  var createdBy=localStorage.getItem('user_email')||'admin';
+  var finVal=selectedStatus==='finish'?'finish':(selectedStatus==='future'?'future':'active');
+  try{
+    var res=await fetch(SUPABASE_URL+'/rest/v1/projects',{method:'POST',headers:HDRS,body:JSON.stringify({code:code,year:year,seq_number:parseInt(num),branch:branch,design_type:design||null,project_name:name,status:'active',finish_status:finVal,color:color,proj_group:selectedGroup,start_date:pStart||null,end_date:pEnd||null,created_by:createdBy})});
+    if(!res.ok){var e=await res.json();showToast(e.message||'Error','error');return;}
+    var arr=await res.json();var proj=arr[0];
+    allProjects.push(proj);projColorMap[proj.id]=color;
+    var taskDivs=document.querySelectorAll('#taskRows .task-row');
+    var promises=[];
+    for(var i=0;i<taskDivs.length;i++){
+      var d2=taskDivs[i];
+      promises.push(fetch(SUPABASE_URL+'/rest/v1/project_tasks',{method:'POST',headers:HDRS,body:JSON.stringify({project_id:proj.id,task_type:d2.querySelector('.task-type').value,assigned_to:d2.querySelector('.task-user').value||null,note:d2.querySelector('.task-note').value.trim()||null,receive_date:d2.querySelector('.task-receive').value||null,start_date:d2.querySelector('.task-start').value||null,end_date:d2.querySelector('.task-end').value||null,send_date:d2.querySelector('.task-send').value||null,status:'active',task_source:'task_manager'})}));
+    }
+    await Promise.all(promises);
+    await loadAllData();
+    if(selectedStatus==='future') switchMainTab('future');
+    else if(selectedStatus==='finish') switchMainTab('finish');
+    else switchMainTab('running');
+    renderList();closeModal();
+    ['nameInput','branchInput','designInput','projStart','projEnd'].forEach(function(id){document.getElementById(id).value='';});
+    document.getElementById('taskRows').innerHTML='';
+    taskRowCount=0;addTaskRow();
+    renderTags('branch');renderTags('design');updatePreview();suggestNextNum();
+    showToast('Project created: '+name,'success');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+
+async function deleteProject(id,name){
+  if(!confirm('Confirm delete project: '+name+'?')) return;
+  try{
+    await fetch(SUPABASE_URL+'/rest/v1/project_tasks?project_id=eq.'+id,{method:'DELETE',headers:HDRS});
+    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+id,{method:'DELETE',headers:HDRS});
+    allProjects=allProjects.filter(function(p){return p.id!==id;});
+    delete projColorMap[id];expandedId=null;
+    renderList();showToast('Deleted: '+name,'success');
+  }catch(e){showToast('Error: '+e.message,'error');}
+}
+
+function suggestNextNum(){
+  if(selectedStatus==='future'){document.getElementById('numInput').value='000';updatePreview();return;}
+  var y=document.getElementById('yearInput').value||'26';
+  var count=0;
+  for(var i=0;i<allProjects.length;i++){if((allProjects[i].code||'').startsWith(y))count++;}
+  document.getElementById('numInput').value=String(count+1).padStart(3,'0');
+  updatePreview();
+}
+function onYearChange(v){document.getElementById('yearDisp').textContent=String(v).padStart(2,'0');suggestNextNum();}
+function updatePreview(){
+  var y=String(document.getElementById('yearInput').value||'26').padStart(2,'0');
+  var n=String(document.getElementById('numInput').value||'000').padStart(3,'0');
+  var b=document.getElementById('branchInput').value.trim();
+  var d=document.getElementById('designInput').value.trim();
+  var nm=document.getElementById('nameInput').value.trim();
+  function se(id,v,ph){var el=document.getElementById(id);el.textContent=v||ph;el.className=v?'':'dim';}
+  document.getElementById('pYear').textContent=y;document.getElementById('pNum').textContent=n;
+  se('pBranch',b,'\u652F\u5E97');se('pDesign',d,'\u8A2D\u8A08\u533A\u5206');se('pName',nm,'\u7269\u4EF6\u540D');
+}
+function onCombo(k){renderDD(k);updatePreview();}
+function openDD(k){renderDD(k);}
+function closeDD(k){setTimeout(function(){document.getElementById(k+'DD').classList.remove('open');},200);}
+function renderDD(k){
+  var data=k==='branch'?BRANCHES:DESIGNS;
+  var val=document.getElementById(k+'Input').value.trim();
+  var dd=document.getElementById(k+'DD');
+  var filt=val?data.filter(function(d){return d.toLowerCase().indexOf(val.toLowerCase())>=0;}):data;
+  var html='';
+  for(var i=0;i<filt.length;i++) html+='<div class="combo-item" onmousedown="selectCombo(\''+k+'\',\''+filt[i]+'\')">'+filt[i]+'</div>';
+  var found=false;
+  for(var j=0;j<data.length;j++){if(data[j].toLowerCase()===val.toLowerCase()){found=true;break;}}
+  if(val&&!found) html+='<div class="combo-item combo-new" onmousedown="selectCombo(\''+k+'\',\''+val+'\')">+ New: '+val+'</div>';
+  if(!html) html='<div class="combo-item" style="color:#aaa;cursor:default;">No options</div>';
+  dd.innerHTML=html;dd.classList.add('open');renderTags(k);
+}
+function selectCombo(k,v){
+  document.getElementById(k+'Input').value=v;
+  document.getElementById(k+'DD').classList.remove('open');
+  renderTags(k);updatePreview();
+}
+function renderTags(k){
+  var data=k==='branch'?BRANCHES:DESIGNS;
+  var cur=document.getElementById(k+'Input').value.trim();
+  var html='';
+  for(var i=0;i<data.length;i++) html+='<span class="tag '+(cur===data[i]?'active':'')+'" onclick="selectCombo(\''+k+'\',\''+data[i]+'\')">'+data[i]+'</span>';
+  document.getElementById(k+'Tags').innerHTML=html;
+}
+
+function refreshExpand(projId){
   var inner=document.querySelector('#task-row-'+projId+' .task-expand-inner');
   if(!inner) return;
   var color=projColorMap[projId]||'#a8dadc';
@@ -745,7 +897,8 @@ function refreshExpand(projId) {
   if(expandedId===projId) expandRow(projId);
   bindExpandEvents(projId);
 }
-function buildExpandInner(projId, projColor) {
+
+function buildExpandInner(projId,projColor){
   var tasks=getActiveTasks(projId);
   var cardsHtml='';
   for(var i=0;i<tasks.length;i++){
@@ -811,10 +964,10 @@ function buildExpandInner(projId, projColor) {
       +'</div>'
     +'</div>'
     +'</div>';
-  return '<div class="task-expand-title">&#x1F4CB; Active task</div>'
-    +'<div class="task-cards">'+cardsHtml+addCardHtml+'</div>';
+  return '<div class="task-expand-title">&#x1F4CB; Active task</div><div class="task-cards">'+cardsHtml+addCardHtml+'</div>';
 }
-function bindExpandEvents(projId) {
+
+function bindExpandEvents(projId){
   var tasks=getActiveTasks(projId);
   for(var i=0;i<tasks.length;i++){
     (function(tid,pid){
@@ -840,7 +993,7 @@ function bindExpandEvents(projId) {
   })(projId);
 }
 
-function buildProjectRow(p, sttNum, color, cfg, autoSt, tabType) {
+function buildProjectRow(p,sttNum,color,cfg,autoSt,tabType){
   var date=p.created_at?new Date(p.created_at).toLocaleDateString('vi-VN'):'-';
   var projId2=getProjCode(p)||'-';
   var activeCnt=getActiveTasks(p.id).length;
@@ -855,17 +1008,17 @@ function buildProjectRow(p, sttNum, color, cfg, autoSt, tabType) {
   if(tabType==='running'){
     actionBtns+='<button class="btn-finish-proj" id="finbtn-'+p.id+'">&#x2705; Finish</button> ';
     if(currentUserRole==='Admin') actionBtns+='<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Delete</button>';
-  } else if(tabType==='finish') {
+  } else if(tabType==='finish'){
     actionBtns='<button class="btn-revert-proj" id="revbtn-'+p.id+'">&#x21A9;&#xFE0F; Revert</button>';
-  } else if(tabType==='future') {
+  } else if(tabType==='future'){
     actionBtns='<button class="btn-convert-proj" id="convbtn-'+p.id+'">&#x25B6;&#xFE0F; Convert to Running</button> ';
     if(currentUserRole==='Admin') actionBtns+='<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Delete</button>';
   }
-  var sttBadgeClass = isFuture ? 'stt-badge stt-badge-future' : 'stt-badge';
-  var sttLabel = isFuture ? 'F-'+String(sttNum).padStart(3,'0') : sttNum;
-  var codeClass = isFuture ? 'proj-code future-code' : 'proj-code';
-  var rowClass = isFuture ? 'proj-row future-row' : 'proj-row';
-  var expandCellClass = isFuture ? 'task-expand-cell future-cell' : 'task-expand-cell';
+  var sttBadgeClass=isFuture?'stt-badge stt-badge-future':'stt-badge';
+  var sttLabel=isFuture?'F-'+String(sttNum).padStart(3,'0'):sttNum;
+  var codeClass=isFuture?'proj-code future-code':'proj-code';
+  var rowClass=isFuture?'proj-row future-row':'proj-row';
+  var expandCellClass=isFuture?'task-expand-cell future-cell':'task-expand-cell';
   var expandInner=buildExpandInner(p.id,color);
   return '<tr class="'+rowClass+'" id="proj-row-'+p.id+'">'
     +'<td style="text-align:center;"><div class="'+sttBadgeClass+'">'+sttLabel+'</div></td>'
@@ -883,12 +1036,12 @@ function buildProjectRow(p, sttNum, color, cfg, autoSt, tabType) {
     +'</tr>';
 }
 
-function renderList() {
+function renderList(){
   var q=(document.getElementById('searchProj').value||'').toLowerCase();
   var grpF=document.getElementById('fGroup').value;
-  var prevExp=expandedId; expandedId=null;
+  var prevExp=expandedId;expandedId=null;
   var sortedAll=getProjectsSorted();
-  var runningProjects=[], finishProjects=[], futureProjects=[];
+  var runningProjects=[],finishProjects=[],futureProjects=[];
   for(var i=0;i<sortedAll.length;i++){
     var p=sortedAll[i];
     var mQ=!q||p.project_name.toLowerCase().indexOf(q)>=0||(p.code||'').toLowerCase().indexOf(q)>=0;
@@ -901,15 +1054,13 @@ function renderList() {
 
   if(mainTab==='running'){
     var tbody=document.getElementById('runningBody');
-    if(!runningProjects.length){
-      tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">No projects</td></tr>';
-    } else {
+    if(!runningProjects.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">No projects</td></tr>';}
+    else{
       var html='';
       for(var d=0;d<runningProjects.length;d++){
         var rp=runningProjects[d];
         var color=projColorMap[rp.id]||'#a8dadc';
-        var grp2=rp.proj_group||'A';
-        var cfg=GROUP_CFG[grp2]||GROUP_CFG['A'];
+        var cfg=GROUP_CFG[rp.proj_group||'A']||GROUP_CFG['A'];
         html+=buildProjectRow(rp,d+1,color,cfg,calcStatus(rp),'running');
       }
       tbody.innerHTML=html;
@@ -925,11 +1076,10 @@ function renderList() {
         bindExpandEvents(runningProjects[d2].id);
       }
     }
-  } else if(mainTab==='finish') {
+  } else if(mainTab==='finish'){
     var container=document.getElementById('finishYearGroups');
-    if(!finishProjects.length){
-      container.innerHTML='<div style="text-align:center;padding:32px;color:#aaa;">No finished projects</div>';
-    } else {
+    if(!finishProjects.length){container.innerHTML='<div style="text-align:center;padding:32px;color:#aaa;">No finished projects</div>';}
+    else{
       var groups={};
       finishProjects.forEach(function(p){
         var yr=getYearFromCode(getProjCode(p));
@@ -939,7 +1089,7 @@ function renderList() {
       var thisYear=String(new Date().getFullYear());
       var years=Object.keys(groups).sort(function(a,b){return b-a;});
       years.forEach(function(yr){if(!(yr in expandedFinishYears))expandedFinishYears[yr]=(yr===thisYear);});
-      var outerHtml=''; var sttOffset=0;
+      var outerHtml='';var sttOffset=0;
       years.forEach(function(yr){
         var yProjects=groups[yr];
         var isOpen=expandedFinishYears[yr];
@@ -976,17 +1126,15 @@ function renderList() {
         bindExpandEvents(p.id);
       });
     }
-  } else if(mainTab==='future') {
+  } else if(mainTab==='future'){
     var fbody=document.getElementById('futureBody');
-    if(!futureProjects.length){
-      fbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">No future projects</td></tr>';
-    } else {
+    if(!futureProjects.length){fbody.innerHTML='<tr><td colspan="9" style="text-align:center;padding:32px;color:#aaa;">No future projects</td></tr>';}
+    else{
       var fhtml='';
       for(var f=0;f<futureProjects.length;f++){
         var fp=futureProjects[f];
         var fcolor=projColorMap[fp.id]||'#a8dadc';
-        var fgrp=fp.proj_group||'A';
-        var fcfg=GROUP_CFG[fgrp]||GROUP_CFG['A'];
+        var fcfg=GROUP_CFG[fp.proj_group||'A']||GROUP_CFG['A'];
         fhtml+=buildProjectRow(fp,f+1,fcolor,fcfg,'future','future');
       }
       fbody.innerHTML=fhtml;
@@ -995,7 +1143,7 @@ function renderList() {
           var row=document.getElementById('proj-row-'+pid);
           if(row) row.onclick=function(e){if(e.target.tagName==='BUTTON'||e.target.closest('button'))return;toggleExpand(pid);};
           var convBtn=document.getElementById('convbtn-'+pid);
-          if(convBtn) convBtn.onclick=function(e){e.stopPropagation();convertToRunning(pid);};
+          if(convBtn) convBtn.onclick=function(e){e.stopPropagation();openConvertModal(pid);};
           var dpb=document.getElementById('delprojbtn-'+pid);
           if(dpb) dpb.onclick=function(e){e.stopPropagation();var proj=null;for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===pid){proj=allProjects[i];break;}}if(proj)deleteProject(pid,proj.project_name);};
         })(futureProjects[f2].id);
@@ -1011,154 +1159,10 @@ function toggleFinishYear(yr){
   expandedFinishYears[yr]=!expandedFinishYears[yr];
   var body=document.getElementById('fybody-'+yr);
   var arrow=document.getElementById('fyarrow-'+yr);
-  if(body)body.className='year-group-body'+(expandedFinishYears[yr]?' open':'');
-  if(arrow)arrow.className='year-group-arrow'+(expandedFinishYears[yr]?' open':'');
+  if(body) body.className='year-group-body'+(expandedFinishYears[yr]?' open':'');
+  if(arrow) arrow.className='year-group-arrow'+(expandedFinishYears[yr]?' open':'');
 }
 
-function openModal(){suggestNextNum();selectGroup('A');selectStatus('running');document.getElementById('createModal').classList.add('open');}
-function closeModal(){document.getElementById('createModal').classList.remove('open');}
-function addTaskRow(){
-  taskRowCount++;
-  var id='task_'+taskRowCount;
-  var div=document.createElement('div');
-  div.className='task-row';div.id=id;
-  var typeOpts='';
-  for(var i=0;i<TASK_TYPES.length;i++) typeOpts+='<option value="'+TASK_TYPES[i]+'">'+TASK_TYPES[i]+'</option>';
-  var ALLOWED=['Leader','Sub Manager','Manager','Admin'];
-  var userOpts='';
-  for(var j=0;j<allUsers.length;j++){
-    if(ALLOWED.indexOf(allUsers[j].role)===-1) continue;
-    userOpts+='<option value="'+allUsers[j].id+'">'+(allUsers[j].name||allUsers[j].email)+'</option>';
-  }
-  div.innerHTML='<button class="btn-remove-task" onclick="document.getElementById(\''+id+'\').remove()">&#x2715;</button>'
-    +'<div class="task-grid">'
-    +'<div class="form-group"><label>Type of Work</label><select class="task-type">'+typeOpts+'</select></div>'
-    +'<div class="form-group"><label>Person in Charge</label><select class="task-user"><option value="">- Not yet assigned -</option>'+userOpts+'</select></div>'
-    +'<div class="form-group"><label>Memo</label><input type="text" class="task-note" placeholder="Note..."/></div>'
-    +'</div>'
-    +'<div class="task-dates">'
-    +'<div class="form-group"><label>Receive</label><input type="date" class="task-receive"/></div>'
-    +'<div class="form-group"><label>Start Work</label><input type="date" class="task-start"/></div>'
-    +'<div class="form-group"><label>End Work</label><input type="date" class="task-end"/></div>'
-    +'<div class="form-group"><label>Send</label><input type="date" class="task-send"/></div>'
-    +'</div>';
-  document.getElementById('taskRows').appendChild(div);
-}
-async function createProject(){
-  var year=(document.getElementById('yearInput').value||'26').padStart(2,'0');
-  var numRaw=document.getElementById('numInput').value||'000';
-  var num=numRaw.padStart(3,'0');
-  var branch=document.getElementById('branchInput').value.trim();
-  var design=document.getElementById('designInput').value.trim();
-  var name=document.getElementById('nameInput').value.trim();
-  var pStart=document.getElementById('projStart').value;
-  var pEnd=document.getElementById('projEnd').value;
-  if(!branch){showToast('Please enter branch name','error');return;}
-  if(!name){showToast('Please enter project name','error');return;}
-  var parts=[year+num,branch]; if(design)parts.push(design); parts.push(name);
-  var code=parts.join('_');
-  var color=PASTEL_COLORS[allProjects.length%PASTEL_COLORS.length];
-  var createdBy=localStorage.getItem('user_email')||'admin';
-  var finishStatusVal = selectedStatus==='finish' ? 'finish' : (selectedStatus==='future' ? 'future' : 'active');
-  try{
-    var res=await fetch(SUPABASE_URL+'/rest/v1/projects',{method:'POST',headers:HDRS,
-      body:JSON.stringify({code:code,year:year,seq_number:parseInt(num),branch:branch,
-        design_type:design||null,project_name:name,status:'active',finish_status:finishStatusVal,
-        color:color,proj_group:selectedGroup,start_date:pStart||null,end_date:pEnd||null,created_by:createdBy})});
-    if(!res.ok){var e=await res.json();showToast(e.message||'Error','error');return;}
-    var arr=await res.json();var proj=arr[0];
-    allProjects.push(proj);projColorMap[proj.id]=color;
-    var taskDivs=document.querySelectorAll('#taskRows .task-row');
-    var promises=[];
-    for(var i=0;i<taskDivs.length;i++){
-      var d2=taskDivs[i];
-      promises.push(fetch(SUPABASE_URL+'/rest/v1/project_tasks',{method:'POST',headers:HDRS,
-        body:JSON.stringify({
-          project_id:proj.id,task_type:d2.querySelector('.task-type').value,
-          assigned_to:d2.querySelector('.task-user').value||null,
-          note:d2.querySelector('.task-note').value.trim()||null,
-          receive_date:d2.querySelector('.task-receive').value||null,
-          start_date:d2.querySelector('.task-start').value||null,
-          end_date:d2.querySelector('.task-end').value||null,
-          send_date:d2.querySelector('.task-send').value||null,
-          status:'active',task_source:'task_manager'
-        })}));
-    }
-    await Promise.all(promises);
-    await loadAllData();
-    // Switch to appropriate tab
-    if(selectedStatus==='future') switchMainTab('future');
-    else if(selectedStatus==='finish') switchMainTab('finish');
-    else switchMainTab('running');
-    renderList();closeModal();
-    ['nameInput','branchInput','designInput','projStart','projEnd'].forEach(function(id){document.getElementById(id).value='';});
-    document.getElementById('taskRows').innerHTML='';
-    taskRowCount=0;addTaskRow();
-    renderTags('branch');renderTags('design');updatePreview();suggestNextNum();
-    showToast('Project created: '+name,'success');
-  }catch(e){showToast('Error: '+e.message,'error');}
-}
-async function deleteProject(id,name){
-  if(!confirm('Confirm delete project:\\n'+name+'?')) return;
-  try{
-    await fetch(SUPABASE_URL+'/rest/v1/project_tasks?project_id=eq.'+id,{method:'DELETE',headers:HDRS});
-    await fetch(SUPABASE_URL+'/rest/v1/projects?id=eq.'+id,{method:'DELETE',headers:HDRS});
-    allProjects=allProjects.filter(function(p){return p.id!==id;});
-    delete projColorMap[id];expandedId=null;
-    renderList();showToast('Deleted: '+name,'success');
-  }catch(e){showToast('Error: '+e.message,'error');}
-}
-function suggestNextNum(){
-  if(selectedStatus==='future'){
-    document.getElementById('numInput').value='000';
-    updatePreview();
-    return;
-  }
-  var y=document.getElementById('yearInput').value||'26';
-  var count=0;
-  for(var i=0;i<allProjects.length;i++){if((allProjects[i].code||'').startsWith(y))count++;}
-  document.getElementById('numInput').value=String(count+1).padStart(3,'0');
-  updatePreview();
-}
-function onYearChange(v){document.getElementById('yearDisp').textContent=String(v).padStart(2,'0');suggestNextNum();}
-function updatePreview(){
-  var y=String(document.getElementById('yearInput').value||'26').padStart(2,'0');
-  var n=String(document.getElementById('numInput').value||'000').padStart(3,'0');
-  var b=document.getElementById('branchInput').value.trim();
-  var d=document.getElementById('designInput').value.trim();
-  var nm=document.getElementById('nameInput').value.trim();
-  function se(id,v,ph){var el=document.getElementById(id);el.textContent=v||ph;el.className=v?'':'dim';}
-  document.getElementById('pYear').textContent=y;document.getElementById('pNum').textContent=n;
-  se('pBranch',b,'\u652F\u5E97');se('pDesign',d,'\u8A2D\u8A08\u533A\u5206');se('pName',nm,'\u7269\u4EF6\u540D');
-}
-function onCombo(k){renderDD(k);updatePreview();}
-function openDD(k){renderDD(k);}
-function closeDD(k){setTimeout(function(){document.getElementById(k+'DD').classList.remove('open');},200);}
-function renderDD(k){
-  var data=k==='branch'?BRANCHES:DESIGNS;
-  var val=document.getElementById(k+'Input').value.trim();
-  var dd=document.getElementById(k+'DD');
-  var filt=val?data.filter(function(d){return d.toLowerCase().indexOf(val.toLowerCase())>=0;}):data;
-  var html='';
-  for(var i=0;i<filt.length;i++) html+='<div class="combo-item" onmousedown="selectCombo(\''+k+'\',\''+filt[i]+'\')">'+filt[i]+'</div>';
-  var found=false;
-  for(var j=0;j<data.length;j++){if(data[j].toLowerCase()===val.toLowerCase()){found=true;break;}}
-  if(val&&!found) html+='<div class="combo-item combo-new" onmousedown="selectCombo(\''+k+'\',\''+val+'\')">+ New: '+val+'</div>';
-  if(!html) html='<div class="combo-item" style="color:#aaa;cursor:default;">No options</div>';
-  dd.innerHTML=html;dd.classList.add('open');renderTags(k);
-}
-function selectCombo(k,v){
-  document.getElementById(k+'Input').value=v;
-  document.getElementById(k+'DD').classList.remove('open');
-  renderTags(k);updatePreview();
-}
-function renderTags(k){
-  var data=k==='branch'?BRANCHES:DESIGNS;
-  var cur=document.getElementById(k+'Input').value.trim();
-  var html='';
-  for(var i=0;i<data.length;i++) html+='<span class="tag '+(cur===data[i]?'active':'')+'" onclick="selectCombo(\''+k+'\',\''+data[i]+'\')">'+data[i]+'</span>';
-  document.getElementById(k+'Tags').innerHTML=html;
-}
 function logout(){if(confirm('Sign out?')){localStorage.clear();window.location.href='index.html';}}
 </script>
 </body>
