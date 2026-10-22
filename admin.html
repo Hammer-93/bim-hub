@@ -1,187 +1,150 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>BIM Hub - Quan ly thanh vien</title>
+  <title>VINADECO BIM Hub – Member Management</title>
   <style>
-    * { box-sizing:border-box; margin:0; padding:0; }
-    body { font-family:'Segoe UI',Arial,sans-serif; background:#f0f4f8; min-height:100vh; }
-    .topbar { display:flex; align-items:center; justify-content:space-between; background:#1a1a2e; padding:0 24px; height:52px; position:sticky; top:0; z-index:200; }
-    .topbar-left { display:flex; align-items:center; gap:10px; }
-    .topbar-logo { width:30px; height:30px; background:linear-gradient(135deg,#00b4d8,#0077b6); border-radius:7px; display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:15px; }
-    .topbar-title { color:#fff; font-size:16px; font-weight:700; }
-    .admin-badge { background:#e63946; color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; }
-    .topbar-right { display:flex; align-items:center; gap:12px; }
-    .user-name { color:#ddd; font-size:13px; }
-    .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#00b4d8,#0077b6); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:12px; }
-    .btn-top { background:rgba(255,255,255,.12); border:none; color:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:12px; text-decoration:none; transition:background .2s; font-family:inherit; }
-    .btn-top:hover { background:rgba(255,255,255,.22); }
-    .main { max-width:1100px; margin:32px auto; padding:0 24px; }
-    .page-title { font-size:22px; font-weight:700; color:#1a1a2e; margin-bottom:4px; }
-    .page-sub   { font-size:13px; color:#888; margin-bottom:28px; }
-
-    /* STATS */
-    .stats { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-bottom:28px; }
-    .stat-card { background:#fff; border-radius:13px; padding:16px 14px; box-shadow:0 2px 10px rgba(0,0,0,.06); text-align:center; }
-    .stat-num   { font-size:24px; font-weight:800; }
-    .stat-label { font-size:11px; color:#888; margin-top:4px; }
-    .c-blue   { color:#0077b6; }
-    .c-teal   { color:#0096c7; }
-    .c-green  { color:#52b788; }
-    .c-orange { color:#f4a261; }
-    .c-purple { color:#9b5de5; }
-    .c-red    { color:#e63946; }
-
-    /* CARD */
-    .card { background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,.07); padding:24px 28px; margin-bottom:24px; }
-    .card-title { font-size:14px; font-weight:700; color:#1a1a2e; margin-bottom:18px; padding-bottom:12px; border-bottom:1.5px solid #f0f0f0; }
-
-    /* FORM */
-    .form-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px 18px; }
-    .form-grid-bottom { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:14px 18px; align-items:end; margin-top:14px; }
-    .field { display:flex; flex-direction:column; gap:6px; }
-    .field label { font-size:12px; font-weight:600; color:#555; }
-    .req { color:#e63946; }
-    input[type=email], input[type=text], input[type=password], select {
-      width:100%; padding:10px 14px; border:1.5px solid #dde2ea;
-      border-radius:8px; font-size:13.5px; outline:none;
-      transition:border-color .2s; font-family:inherit; color:#222;
-    }
-    input:focus, select:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.12); }
-    .pw-wrap { position:relative; }
-    .pw-wrap input { padding-right:40px; }
-    .pw-eye { position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#aaa; font-size:15px; user-select:none; }
-    .pw-eye:hover { color:#0096c7; }
-    .btn-add { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:10px 20px; border-radius:8px; font-size:13.5px; font-weight:600; cursor:pointer; white-space:nowrap; transition:all .2s; box-shadow:0 3px 10px rgba(0,119,182,.25); height:42px; width:100%; }
-    .btn-add:hover { box-shadow:0 6px 18px rgba(0,119,182,.4); transform:translateY(-1px); }
-    .btn-add:disabled { opacity:.6; cursor:not-allowed; transform:none; }
-    .info-box { background:#f0f7ff; border:1.5px solid #b8dff5; border-radius:10px; padding:12px 16px; font-size:12.5px; color:#0077b6; margin-top:16px; line-height:1.7; }
-
-    /* SEARCH + FILTER */
-    .table-controls { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
-    .search-bar { display:flex; align-items:center; gap:8px; background:#f8f8f8; border:1.5px solid #e8e8e8; border-radius:8px; padding:8px 14px; min-width:260px; }
-    .search-bar input { border:none; background:transparent; outline:none; font-size:13.5px; flex:1; font-family:inherit; }
-    .filter-select { padding:8px 12px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; font-family:inherit; color:#333; cursor:pointer; }
-
-    /* TABLE */
-    .table-wrap { overflow-x:auto; }
-    table { width:100%; border-collapse:collapse; min-width:780px; }
-    thead th { text-align:left; padding:11px 14px; font-size:11.5px; font-weight:700; color:#fff; background:#0077b6; }
-    thead th:first-child { border-radius:8px 0 0 0; }
-    thead th:last-child  { border-radius:0 8px 0 0; }
-    tbody td { padding:12px 14px; font-size:13px; color:#333; border-bottom:1px solid #f0f0f0; vertical-align:middle; }
-    tbody tr:hover td { background:#f8fbff; }
-    .member-cell { display:flex; align-items:center; gap:10px; }
-    .av-sm { width:34px; height:34px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; }
-    .email-text { font-weight:600; font-size:13px; color:#1a1a2e; }
-    .name-text  { font-size:11px; color:#888; margin-top:1px; }
-
-    /* ROLE BADGES */
-    .rb-staff   { background:#e8f4fe; color:#0077b6; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; display:inline-block; }
-    .rb-leader  { background:#d4edda; color:#1a7c3a; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; display:inline-block; }
-    .rb-sub     { background:#fff3cd; color:#856404; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; display:inline-block; }
-    .rb-manager { background:#fde8e8; color:#c0392b; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; display:inline-block; }
-    .rb-admin   { background:#e63946; color:#fff; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; display:inline-block; }
-    .grp-badge  { display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700; }
-    .grp-sekkei { background:#e8f4fe; color:#0077b6; }
-    .grp-sekou  { background:#d4edda; color:#1a7c3a; }
-    .grp-cim    { background:#f3e8ff; color:#7b2d8b; }
-
-    /* ACTION BUTTONS */
-    .action-btns { display:flex; gap:6px; flex-wrap:wrap; }
-    .btn-sm { border:1.5px solid; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:11.5px; font-weight:600; background:#fff; transition:all .15s; white-space:nowrap; }
-    .btn-del  { border-color:#ffb3b3; color:#e63946; }
-    .btn-del:hover  { background:#fff0f0; }
-    .btn-role { border-color:#d4edda; color:#1a7c3a; }
-    .btn-role:hover { background:#f0fff4; }
-    .btn-pw   { border-color:#b8dff5; color:#0077b6; }
-    .btn-pw:hover   { background:#e8f4fe; }
-    .btn-chpw { border-color:#f3e8ff; color:#7b2d8b; }
-    .btn-chpw:hover { background:#f3e8ff; }
-
-    /* MODAL */
-    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:500; display:none; align-items:center; justify-content:center; }
-    .modal-overlay.open { display:flex; }
-    .modal { background:#fff; border-radius:16px; padding:32px; width:100%; max-width:420px; box-shadow:0 24px 64px rgba(0,0,0,.25); animation:slideIn .3s ease; }
-    @keyframes slideIn { from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);} }
-    .modal-icon  { font-size:44px; margin-bottom:10px; text-align:center; }
-    .modal-title { font-size:17px; font-weight:700; color:#1a1a2e; margin-bottom:6px; text-align:center; }
-    .modal-sub   { font-size:13px; color:#888; margin-bottom:18px; text-align:center; }
-    .pw-display  { background:#f0f7ff; border:1.5px solid #b8dff5; border-radius:10px; padding:16px; font-size:20px; font-weight:800; color:#0077b6; letter-spacing:2px; margin-bottom:8px; font-family:'Courier New',monospace; word-break:break-all; text-align:center; }
-    .pw-note     { font-size:12px; color:#aaa; margin-bottom:20px; line-height:1.6; text-align:center; }
-    .modal-actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
-    .btn-copy { background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
-    .btn-copy:hover { opacity:.9; }
-    .btn-close-modal { background:#fff; color:#555; border:1.5px solid #dde2ea; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
-    .btn-close-modal:hover { background:#f5f5f5; }
-    .chpw-field { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
-.chpw-field label { font-size:12px; font-weight:600; color:#555; }
-.chpw-input-wrap { position:relative; }
-.chpw-input-wrap input { width:100%; padding:10px 40px 10px 14px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13.5px; outline:none; font-family:inherit; }
-.chpw-input-wrap input:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.12); }
-.chpw-eye { position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#aaa; font-size:15px; user-select:none; }
-.chpw-eye:hover { color:#0096c7; }
-.btn-save-pw { background:linear-gradient(135deg,#9b5de5,#7b2d8b); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
-.btn-save-pw:hover { opacity:.9; }
-
-    /* CHANGE PW MODAL */
-    .chpw-field { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
-    .chpw-field label { font-size:12px; font-weight:600; color:#555; }
-    .chpw-input-wrap { position:relative; }
-    .chpw-input-wrap input { padding-right:40px; }
-    .chpw-eye { position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:#aaa; font-size:15px; user-select:none; }
-    .chpw-eye:hover { color:#0096c7; }
-    .btn-save-pw { background:linear-gradient(135deg,#9b5de5,#7b2d8b); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
-    .btn-save-pw:hover { opacity:.9; }
-
-    /* ROLE MODAL */
-    .role-opt-btn { display:flex; align-items:center; gap:12px; width:100%; padding:11px 16px; border:1.5px solid #dde2ea; border-radius:10px; background:#fff; font-size:14px; font-weight:600; color:#333; cursor:pointer; transition:all .15s; margin-bottom:8px; }
-    .role-opt-btn:hover { background:#e8f4fe; border-color:#0096c7; color:#0077b6; }
-    .role-opt-btn.selected { background:#e8f4fe; border-color:#0096c7; color:#0077b6; box-shadow:0 0 0 3px rgba(0,150,199,.12); }
-    .role-opt-btn:last-child { margin-bottom:0; }
-
-    /* TOAST */
-    .toast { position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:999; transform:translateY(80px); opacity:0; transition:all .35s; }
-    .toast.show { transform:translateY(0); opacity:1; }
-    .toast.success { border-left:4px solid #52b788; }
-    .toast.error   { border-left:4px solid #e63946; }
-
-    @media(max-width:900px) {
-      .stats { grid-template-columns:repeat(3,1fr); }
-      .form-grid { grid-template-columns:1fr 1fr; }
-      .form-grid-bottom { grid-template-columns:1fr 1fr; }
-    }
-    @media(max-width:600px) {
-      .stats { grid-template-columns:repeat(2,1fr); }
-      .form-grid { grid-template-columns:1fr; }
-      .form-grid-bottom { grid-template-columns:1fr; }
-    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;min-height:100vh;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;background:#1a1a2e;padding:0 24px;height:52px;position:sticky;top:0;z-index:200;}
+    .topbar-left{display:flex;align-items:center;gap:10px;}
+    .topbar-title{color:#fff;font-size:16px;font-weight:700;}
+    .topbar-right{display:flex;align-items:center;gap:12px;}
+    .btn-top{background:rgba(255,255,255,.12);border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;text-decoration:none;transition:background .2s;font-family:inherit;}
+    .btn-top:hover{background:rgba(255,255,255,.22);}
+    .dropdown-wrap{position:relative;}
+    .dropdown-trigger{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-family:inherit;transition:background .2s;}
+    .dropdown-trigger:hover{background:rgba(255,255,255,.22);}
+    .dropdown-trigger .user-name{font-weight:600;}
+    .dropdown-arrow{font-size:10px;opacity:.7;}
+    .dropdown-menu{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.18);min-width:160px;z-index:999;overflow:hidden;display:none;}
+    .dropdown-menu.open{display:block;}
+    .dropdown-item{display:flex;align-items:center;gap:9px;padding:11px 16px;font-size:13px;color:#333;cursor:pointer;transition:background .15s;text-decoration:none;border:none;background:none;width:100%;font-family:inherit;}
+    .dropdown-item:hover{background:#f0f7ff;color:#0077b6;}
+    .dropdown-item.danger{color:#e63946;}
+    .dropdown-item.danger:hover{background:#fff0f0;color:#e63946;}
+    .dropdown-divider{height:1px;background:#f0f0f0;margin:4px 0;}
+    .main{max-width:1100px;margin:32px auto;padding:0 24px;}
+    .page-title{font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:4px;}
+    .page-sub{font-size:13px;color:#888;margin-bottom:28px;}
+    .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:28px;}
+    .stat-card{background:#fff;border-radius:13px;padding:16px 14px;box-shadow:0 2px 10px rgba(0,0,0,.06);text-align:center;}
+    .stat-num{font-size:24px;font-weight:800;}
+    .stat-label{font-size:11px;color:#888;margin-top:4px;}
+    .c-blue{color:#0077b6;}.c-teal{color:#0096c7;}.c-green{color:#52b788;}.c-orange{color:#f4a261;}.c-purple{color:#9b5de5;}.c-red{color:#e63946;}
+    .card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:24px 28px;margin-bottom:24px;}
+    .card-title{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:18px;padding-bottom:12px;border-bottom:1.5px solid #f0f0f0;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px 18px;}
+    .form-grid-bottom{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:14px 18px;align-items:end;margin-top:14px;}
+    .field{display:flex;flex-direction:column;gap:6px;}
+    .field label{font-size:12px;font-weight:600;color:#555;}
+    .req{color:#e63946;}
+    input[type=email],input[type=text],input[type=password],select{width:100%;padding:10px 14px;border:1.5px solid #dde2ea;border-radius:8px;font-size:13.5px;outline:none;transition:border-color .2s;font-family:inherit;color:#222;}
+    input:focus,select:focus{border-color:#0096c7;box-shadow:0 0 0 3px rgba(0,150,199,.12);}
+    .pw-wrap{position:relative;}
+    .pw-wrap input{padding-right:40px;}
+    .pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:#aaa;font-size:15px;user-select:none;}
+    .pw-eye:hover{color:#0096c7;}
+    .btn-add{background:linear-gradient(135deg,#0096c7,#0077b6);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;box-shadow:0 3px 10px rgba(0,119,182,.25);height:42px;width:100%;}
+    .btn-add:hover{box-shadow:0 6px 18px rgba(0,119,182,.4);transform:translateY(-1px);}
+    .btn-add:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+    .info-box{background:#f0f7ff;border:1.5px solid #b8dff5;border-radius:10px;padding:12px 16px;font-size:12.5px;color:#0077b6;margin-top:16px;line-height:1.7;}
+    .table-controls{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+    .search-bar{display:flex;align-items:center;gap:8px;background:#f8f8f8;border:1.5px solid #e8e8e8;border-radius:8px;padding:8px 14px;min-width:260px;}
+    .search-bar input{border:none;background:transparent;outline:none;font-size:13.5px;flex:1;font-family:inherit;}
+    .filter-select{padding:8px 12px;border:1.5px solid #dde2ea;border-radius:8px;font-size:13px;outline:none;font-family:inherit;color:#333;cursor:pointer;}
+    .table-wrap{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;min-width:780px;}
+    thead th{text-align:left;padding:11px 14px;font-size:11.5px;font-weight:700;color:#fff;background:#0077b6;}
+    thead th:first-child{border-radius:8px 0 0 0;}
+    thead th:last-child{border-radius:0 8px 0 0;}
+    tbody td{padding:12px 14px;font-size:13px;color:#333;border-bottom:1px solid #f0f0f0;vertical-align:middle;}
+    tbody tr:hover td{background:#f8fbff;}
+    .member-cell{display:flex;align-items:center;gap:10px;}
+    .av-sm{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;}
+    .email-text{font-weight:600;font-size:13px;color:#1a1a2e;}
+    .name-text{font-size:11px;color:#888;margin-top:1px;}
+    .rb-staff{background:#e8f4fe;color:#0077b6;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block;}
+    .rb-leader{background:#d4edda;color:#1a7c3a;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block;}
+    .rb-sub{background:#fff3cd;color:#856404;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block;}
+    .rb-manager{background:#fde8e8;color:#c0392b;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block;}
+    .rb-admin{background:#e63946;color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block;}
+    .grp-badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+    .grp-sekkei{background:#e8f4fe;color:#0077b6;}
+    .grp-sekou{background:#d4edda;color:#1a7c3a;}
+    .grp-cim{background:#f3e8ff;color:#7b2d8b;}
+    .action-btns{display:flex;gap:6px;flex-wrap:wrap;}
+    .btn-sm{border:1.5px solid;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11.5px;font-weight:600;background:#fff;transition:all .15s;white-space:nowrap;}
+    .btn-del{border-color:#ffb3b3;color:#e63946;}.btn-del:hover{background:#fff0f0;}
+    .btn-role{border-color:#d4edda;color:#1a7c3a;}.btn-role:hover{background:#f0fff4;}
+    .btn-pw{border-color:#b8dff5;color:#0077b6;}.btn-pw:hover{background:#e8f4fe;}
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;align-items:center;justify-content:center;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:#fff;border-radius:16px;padding:32px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.25);animation:slideIn .3s ease;}
+    @keyframes slideIn{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+    .modal-icon{font-size:44px;margin-bottom:10px;text-align:center;}
+    .modal-title{font-size:17px;font-weight:700;color:#1a1a2e;margin-bottom:6px;text-align:center;}
+    .modal-sub{font-size:13px;color:#888;margin-bottom:18px;text-align:center;}
+    .pw-display{background:#f0f7ff;border:1.5px solid #b8dff5;border-radius:10px;padding:16px;font-size:20px;font-weight:800;color:#0077b6;letter-spacing:2px;margin-bottom:8px;font-family:'Courier New',monospace;word-break:break-all;text-align:center;}
+    .pw-note{font-size:12px;color:#aaa;margin-bottom:20px;line-height:1.6;text-align:center;}
+    .modal-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+    .btn-copy{background:linear-gradient(135deg,#0096c7,#0077b6);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+    .btn-copy:hover{opacity:.9;}
+    .btn-close-modal{background:#fff;color:#555;border:1.5px solid #dde2ea;padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+    .btn-close-modal:hover{background:#f5f5f5;}
+    .chpw-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+    .chpw-field label{font-size:12px;font-weight:600;color:#555;}
+    .chpw-input-wrap{position:relative;}
+    .chpw-input-wrap input{width:100%;padding:10px 40px 10px 14px;border:1.5px solid #dde2ea;border-radius:8px;font-size:13.5px;outline:none;font-family:inherit;}
+    .chpw-input-wrap input:focus{border-color:#0096c7;box-shadow:0 0 0 3px rgba(0,150,199,.12);}
+    .chpw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:#aaa;font-size:15px;user-select:none;}
+    .chpw-eye:hover{color:#0096c7;}
+    .btn-save-pw{background:linear-gradient(135deg,#9b5de5,#7b2d8b);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+    .btn-save-pw:hover{opacity:.9;}
+    .role-opt-btn{display:flex;align-items:center;gap:12px;width:100%;padding:11px 16px;border:1.5px solid #dde2ea;border-radius:10px;background:#fff;font-size:14px;font-weight:600;color:#333;cursor:pointer;transition:all .15s;margin-bottom:8px;}
+    .role-opt-btn:hover{background:#e8f4fe;border-color:#0096c7;color:#0077b6;}
+    .role-opt-btn.selected{background:#e8f4fe;border-color:#0096c7;color:#0077b6;box-shadow:0 0 0 3px rgba(0,150,199,.12);}
+    .role-opt-btn:last-child{margin-bottom:0;}
+    .toast{position:fixed;bottom:24px;right:24px;background:#1a1a2e;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:9999;transform:translateY(80px);opacity:0;transition:all .35s;}
+    .toast.show{transform:translateY(0);opacity:1;}
+    .toast.success{border-left:4px solid #52b788;}
+    .toast.error{border-left:4px solid #e63946;}
+    @media(max-width:900px){.stats{grid-template-columns:repeat(3,1fr);}.form-grid{grid-template-columns:1fr 1fr;}.form-grid-bottom{grid-template-columns:1fr 1fr;}}
+    @media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr);}.form-grid{grid-template-columns:1fr;}.form-grid-bottom{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
 
 <nav class="topbar">
   <div class="topbar-left">
-    <div class="topbar-logo">B</div>
-    <span class="topbar-title">BIM Hub</span>
-    <span class="admin-badge">ADMIN</span>
+    <span class="topbar-title">VINADECO BIM Hub</span>
   </div>
   <div class="topbar-right">
-    <div class="avatar" id="topAvatar">AD</div>
-    <span class="user-name" id="topName">Admin</span>
-    <a class="btn-top" href="view-list.html">&#x1F3E0; Dashboard</a>
-    <button class="btn-top" onclick="logout()">Dang xuat</button>
+    <a class="btn-top" href="view-list.html">&#x1F4C5; Schedule</a>
+    <a class="btn-top" href="my-tasks.html">&#x1F4CB; My Task</a>
+    <div class="dropdown-wrap" id="userDropWrap">
+      <button class="dropdown-trigger" id="userDropBtn">
+        <span class="user-name" id="topName">...</span>
+        <span class="dropdown-arrow">&#x25BC;</span>
+      </button>
+      <div class="dropdown-menu" id="userDropMenu">
+        <a class="dropdown-item" href="admin.html">&#x1F465; Member</a>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item danger" onclick="logout()">&#x1F6AA; Sign Out</button>
+      </div>
+    </div>
   </div>
 </nav>
 
-<div class="main">
-  <div class="page-title">&#x1F465; Quan ly thanh vien</div>
-  <div class="page-sub">Them va phan quyen nhan vien VINADECONS (@vinadecons.vn)</div>
+<div class="toast" id="toast"></div>
 
-  <!-- STATS -->
+<div class="main">
+  <div class="page-title">&#x1F465; Member Management</div>
+  <div class="page-sub">Add and manage members of VINADECONS (@vinadecons.vn)</div>
+
   <div class="stats">
-    <div class="stat-card"><div class="stat-num c-blue"   id="statTotal">0</div><div class="stat-label">Tong thanh vien</div></div>
+    <div class="stat-card"><div class="stat-num c-blue"   id="statTotal">0</div><div class="stat-label">Total Members</div></div>
     <div class="stat-card"><div class="stat-num c-teal"   id="statStaff">0</div><div class="stat-label">Staff</div></div>
     <div class="stat-card"><div class="stat-num c-green"  id="statLeader">0</div><div class="stat-label">Leader</div></div>
     <div class="stat-card"><div class="stat-num c-orange" id="statSub">0</div><div class="stat-label">Sub Manager</div></div>
@@ -189,29 +152,28 @@
     <div class="stat-card"><div class="stat-num c-red"    id="statAdmin">0</div><div class="stat-label">Admin</div></div>
   </div>
 
-  <!-- FORM THEM THANH VIEN -->
   <div class="card">
-    <div class="card-title">&#x2795; Them thanh vien moi</div>
+    <div class="card-title">&#x2795; Add New Member</div>
     <div class="form-grid">
       <div class="field">
         <label>Email <span class="req">*</span></label>
         <input type="email" id="inviteEmail" placeholder="email@vinadecons.vn"/>
       </div>
       <div class="field">
-        <label>Ho ten <span class="req">*</span></label>
+        <label>Full Name <span class="req">*</span></label>
         <input type="text" id="inviteName" placeholder="Nguyen Van A"/>
       </div>
       <div class="field">
-        <label>Mat khau <span class="req">*</span></label>
+        <label>Password <span class="req">*</span></label>
         <div class="pw-wrap">
-          <input type="password" id="invitePw" placeholder="Nhap mat khau..."/>
-          <span class="pw-eye" onclick="togglePwVisible('invitePw','eyeAdd')">&#x1F441;&#xFE0F;</span>
+          <input type="password" id="invitePw" placeholder="Enter password..."/>
+          <span class="pw-eye" onclick="togglePwVisible('invitePw','eyeAdd')" id="eyeAdd">&#x1F441;&#xFE0F;</span>
         </div>
       </div>
     </div>
     <div class="form-grid-bottom">
       <div class="field">
-        <label>Nhom <span class="req">*</span></label>
+        <label>Group <span class="req">*</span></label>
         <select id="inviteGroup">
           <option value="&#x8A2D;&#x8A08;BIM">&#x1F3DB;&#xFE0F; &#x8A2D;&#x8A08;BIM</option>
           <option value="&#x65BD;&#x5DE5;BIM">&#x1F3D7;&#xFE0F; &#x65BD;&#x5DE5;BIM</option>
@@ -219,7 +181,7 @@
         </select>
       </div>
       <div class="field">
-        <label>Phan quyen <span class="req">*</span></label>
+        <label>Role <span class="req">*</span></label>
         <select id="inviteRole">
           <option value="Staff">&#x1F464; Staff</option>
           <option value="Leader">&#x1F7E2; Leader</option>
@@ -229,35 +191,34 @@
         </select>
       </div>
       <div class="field">
-        <label>Chuc danh</label>
-        <input type="text" id="inviteTitle" placeholder="VD: BIM Designer..."/>
+        <label>Title</label>
+        <input type="text" id="inviteTitle" placeholder="e.g. BIM Designer..."/>
       </div>
       <div class="field">
-        <button class="btn-add" id="addBtn" onclick="addMember()">&#x2705; Them thanh vien</button>
+        <button class="btn-add" id="addBtn" onclick="addMember()">&#x2705; Add Member</button>
       </div>
     </div>
     <div class="info-box">
-      &#x2139;&#xFE0F; Chi chap nhan email <b>@vinadecons.vn</b>.
-      Admin cung cap <b>email + mat khau</b> truc tiep cho nhan vien de dang nhap.
+      &#x2139;&#xFE0F; Only <b>@vinadecons.vn</b> emails are accepted.
+      Provide the <b>email + password</b> directly to the member for login.
     </div>
   </div>
 
-  <!-- DANH SACH -->
   <div class="card">
-    <div class="card-title">&#x1F4CB; Danh sach thanh vien</div>
+    <div class="card-title">&#x1F4CB; Member List</div>
     <div class="table-controls">
       <div class="search-bar">
         <span>&#x1F50D;</span>
-        <input type="text" id="searchInput" placeholder="Tim theo email hoac ten..." oninput="filterTable()"/>
+        <input type="text" id="searchInput" placeholder="Search by email or name..." oninput="filterTable()"/>
       </div>
       <select class="filter-select" id="filterGroup" onchange="filterTable()">
-        <option value="">Tat ca nhom</option>
+        <option value="">All Groups</option>
         <option value="&#x8A2D;&#x8A08;BIM">&#x1F3DB;&#xFE0F; &#x8A2D;&#x8A08;BIM</option>
         <option value="&#x65BD;&#x5DE5;BIM">&#x1F3D7;&#xFE0F; &#x65BD;&#x5DE5;BIM</option>
         <option value="CIM">&#x1F310; CIM</option>
       </select>
       <select class="filter-select" id="filterRole" onchange="filterTable()">
-        <option value="">Tat ca quyen</option>
+        <option value="">All Roles</option>
         <option value="Staff">Staff</option>
         <option value="Leader">Leader</option>
         <option value="Sub Manager">Sub Manager</option>
@@ -269,107 +230,74 @@
       <table>
         <thead>
           <tr>
-            <th>Thanh vien</th>
-            <th>Nhom</th>
-            <th>Quyen</th>
-            <th>Ngay them</th>
-            <th>Hanh dong</th>
+            <th>Member</th>
+            <th>Group</th>
+            <th>Role</th>
+            <th>Date Added</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="memberTable">
-          <tr><td colspan="5" style="text-align:center;padding:32px;color:#aaa;">Dang tai...</td></tr>
+          <tr><td colspan="5" style="text-align:center;padding:32px;color:#aaa;">Loading...</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
 
-<!-- MODAL XEM / DOI MAT KHAU -->
+<!-- MODAL VIEW PASSWORD -->
 <div class="modal-overlay" id="pwModal">
   <div class="modal">
-    <div class="modal-icon">🔐</div>
-    <div class="modal-title">Thong tin tai khoan</div>
+    <div class="modal-icon">&#x1F510;</div>
+    <div class="modal-title">Account Info</div>
     <div class="modal-sub" id="modalEmail">email@vinadecons.vn</div>
-
-    <!-- CHE DO XEM -->
     <div id="pwViewMode">
       <div class="pw-display" id="modalPw">-</div>
-      <div class="pw-note">Mat khau hien tai cua tai khoan nay.</div>
+      <div class="pw-note">Current password of this account.</div>
       <div class="modal-actions">
-        <button class="btn-copy"         onclick="copyPw()">📋 Copy</button>
-        <button class="btn-save-pw"      onclick="switchToEdit()">✏️ Chinh sua MK</button>
-        <button class="btn-close-modal"  onclick="closeModal('pwModal')">Dong</button>
+        <button class="btn-copy" onclick="copyPw()">&#x1F4CB; Copy</button>
+        <button class="btn-save-pw" onclick="switchToEdit()">&#x270F;&#xFE0F; Edit Password</button>
+        <button class="btn-close-modal" onclick="closeModal('pwModal')">Close</button>
       </div>
     </div>
-
-    <!-- CHE DO CHINH SUA -->
     <div id="pwEditMode" style="display:none;">
       <div class="chpw-field">
-        <label>Mat khau moi <span class="req">*</span></label>
+        <label>New Password <span class="req">*</span></label>
         <div class="chpw-input-wrap">
-          <input type="password" id="chpwInput" placeholder="Toi thieu 6 ky tu..."/>
-          <span class="chpw-eye" onclick="togglePwVisible('chpwInput','chpwEye')" id="chpwEye">👁️</span>
+          <input type="password" id="chpwInputInline" placeholder="Minimum 6 characters..."/>
+          <span class="chpw-eye" onclick="togglePwVisible('chpwInputInline','chpwEyeInline')" id="chpwEyeInline">&#x1F441;&#xFE0F;</span>
         </div>
       </div>
       <div class="modal-actions">
-        <button class="btn-save-pw"     onclick="saveNewPassword()">💾 Luu mat khau</button>
-        <button class="btn-close-modal" onclick="switchToView()">Huy</button>
+        <button class="btn-save-pw" onclick="saveInlinePassword()">&#x1F4BE; Save Password</button>
+        <button class="btn-close-modal" onclick="switchToView()">Cancel</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL DOI QUYEN -->
+<!-- MODAL CHANGE ROLE -->
 <div class="modal-overlay" id="roleModal">
   <div class="modal">
     <div class="modal-icon">&#x1F504;</div>
-    <div class="modal-title">Doi quyen thanh vien</div>
+    <div class="modal-title">Change Role</div>
     <div class="modal-sub" id="roleModalSub">email@vinadecons.vn</div>
     <div id="roleOptList">
-      <button class="role-opt-btn" id="ropt-Staff"       onclick="selectRole('Staff')">&#x1F464; Staff</button>
-      <button class="role-opt-btn" id="ropt-Leader"      onclick="selectRole('Leader')">&#x1F7E2; Leader</button>
-      <button class="role-opt-btn" id="ropt-SubManager"  onclick="selectRole('Sub Manager')">&#x1F7E1; Sub Manager</button>
-      <button class="role-opt-btn" id="ropt-Manager"     onclick="selectRole('Manager')">&#x1F7E0; Manager</button>
-      <button class="role-opt-btn" id="ropt-Admin"       onclick="selectRole('Admin')">&#x1F534; Admin</button>
+      <button class="role-opt-btn" id="ropt-Staff"      onclick="selectRole('Staff')">&#x1F464; Staff</button>
+      <button class="role-opt-btn" id="ropt-Leader"     onclick="selectRole('Leader')">&#x1F7E2; Leader</button>
+      <button class="role-opt-btn" id="ropt-SubManager" onclick="selectRole('Sub Manager')">&#x1F7E1; Sub Manager</button>
+      <button class="role-opt-btn" id="ropt-Manager"    onclick="selectRole('Manager')">&#x1F7E0; Manager</button>
+      <button class="role-opt-btn" id="ropt-Admin"      onclick="selectRole('Admin')">&#x1F534; Admin</button>
     </div>
     <div class="modal-actions" style="margin-top:14px;">
-      <button class="btn-close-modal" onclick="closeModal('roleModal')">Huy</button>
+      <button class="btn-close-modal" onclick="closeModal('roleModal')">Cancel</button>
     </div>
   </div>
 </div>
-
-<!-- MODAL DOI MAT KHAU -->
-<div class="modal-overlay" id="chpwModal">
-  <div class="modal">
-    <div class="modal-icon">&#x1F511;</div>
-    <div class="modal-title">Doi mat khau</div>
-    <div class="modal-sub" id="chpwModalSub">email@vinadecons.vn</div>
-    <div class="chpw-field">
-      <label>Mat khau moi <span class="req">*</span></label>
-      <div class="chpw-input-wrap">
-        <input type="password" id="chpwInput" placeholder="Nhap mat khau moi (toi thieu 6 ky tu)..."/>
-        <span class="chpw-eye" onclick="togglePwVisible('chpwInput','chpwEye')" id="chpwEye">&#x1F441;&#xFE0F;</span>
-      </div>
-    </div>
-    <div class="chpw-field">
-      <label>Xac nhan mat khau <span class="req">*</span></label>
-      <div class="chpw-input-wrap">
-        <input type="password" id="chpwConfirm" placeholder="Nhap lai mat khau moi..."/>
-        <span class="chpw-eye" onclick="togglePwVisible('chpwConfirm','chpwEye2')" id="chpwEye2">&#x1F441;&#xFE0F;</span>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-save-pw" onclick="saveNewPassword()">&#x1F4BE; Luu mat khau</button>
-      <button class="btn-close-modal" onclick="closeModal('chpwModal')">Huy</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script src="js/config.js"></script>
 <script>
-var AVATAR_COLORS = [
+var AVATAR_COLORS=[
   'linear-gradient(135deg,#0096c7,#0077b6)',
   'linear-gradient(135deg,#52b788,#2d6a4f)',
   'linear-gradient(135deg,#9b5de5,#7b2d8b)',
@@ -379,74 +307,79 @@ var AVATAR_COLORS = [
   'linear-gradient(135deg,#06d6a0,#028a6a)',
   'linear-gradient(135deg,#e63946,#b5000f)',
 ];
-var ROLE_CLASS = { 'Staff':'rb-staff','Leader':'rb-leader','Sub Manager':'rb-sub','Manager':'rb-manager','Admin':'rb-admin' };
-var ROLE_ICON  = { 'Staff':'👤','Leader':'🟢','Sub Manager':'🟡','Manager':'🟠','Admin':'🔴' };
-var GRP_CLASS  = { '設計BIM':'grp-sekkei','施工BIM':'grp-sekou','CIM':'grp-cim' };
-var GRP_ICON   = { '設計BIM':'🏛️','施工BIM':'🏗️','CIM':'🌐' };
+var ROLE_CLASS={'Staff':'rb-staff','Leader':'rb-leader','Sub Manager':'rb-sub','Manager':'rb-manager','Admin':'rb-admin'};
+var ROLE_ICON={'Staff':'👤','Leader':'🟢','Sub Manager':'🟡','Manager':'🟠','Admin':'🔴'};
+var GRP_CLASS={'設計BIM':'grp-sekkei','施工BIM':'grp-sekou','CIM':'grp-cim'};
+var GRP_ICON={'設計BIM':'🏛️','施工BIM':'🏗️','CIM':'🌐'};
 
-var allMembers     = [];
-var currentEditId  = null;
-var currentEditRole= null;
-var currentChpwId  = null;
+var allMembers=[];
+var currentEditId=null;
+var currentEditRole=null;
+var currentChpwId=null;
 
-window.onload = async function() {
+window.onload=async function(){
   var role=localStorage.getItem('user_role')||'Staff';
-  var name=localStorage.getItem('user_name')||'Admin';
-  var allowedRoles = ['Admin','Manager','Sub Manager'];
-if(allowedRoles.indexOf(role) === -1){window.location.href='view-list.html';return;}
+  var name=localStorage.getItem('user_name')||'User';
+  var email=localStorage.getItem('user_email')||'';
+  var allowedRoles=['Admin','Manager','Sub Manager'];
+  if(!email){window.location.href='index.html';return;}
+  if(allowedRoles.indexOf(role)===-1){window.location.href='view-list.html';return;}
   document.getElementById('topName').textContent=name;
-  document.getElementById('topAvatar').textContent=name.substring(0,2).toUpperCase();
+  var dropBtn=document.getElementById('userDropBtn');
+  var dropMenu=document.getElementById('userDropMenu');
+  dropBtn.addEventListener('click',function(e){e.stopPropagation();dropMenu.classList.toggle('open');});
+  document.addEventListener('click',function(){dropMenu.classList.remove('open');});
   await loadMembers();
 };
 
-async function loadMembers() {
-  try {
+async function loadMembers(){
+  try{
     var res=await fetch(SUPABASE_URL+'/rest/v1/users?select=*&order=created_at.asc',{headers:HDRS});
     allMembers=await res.json();
     renderTable(allMembers);
     updateStats(allMembers);
-  } catch(e) { showToast('Loi tai danh sach: '+e.message,'error'); }
+  }catch(e){showToast('Error loading members: '+e.message,'error');}
 }
 
-async function addMember() {
+async function addMember(){
   var email=document.getElementById('inviteEmail').value.trim().toLowerCase();
-  var name =document.getElementById('inviteName').value.trim();
-  var pw   =document.getElementById('invitePw').value;
+  var name=document.getElementById('inviteName').value.trim();
+  var pw=document.getElementById('invitePw').value;
   var group=document.getElementById('inviteGroup').value;
-  var role =document.getElementById('inviteRole').value;
+  var role=document.getElementById('inviteRole').value;
   var title=document.getElementById('inviteTitle').value.trim();
-  if(!email){showToast('Vui long nhap email','error');return;}
-  if(!email.endsWith('@vinadecons.vn')){showToast('Chi chap nhan @vinadecons.vn','error');return;}
-  if(!name) {showToast('Vui long nhap ho ten','error');return;}
-  if(!pw)   {showToast('Vui long nhap mat khau','error');return;}
-  if(pw.length<6){showToast('Mat khau toi thieu 6 ky tu','error');return;}
+  if(!email){showToast('Please enter an email','error');return;}
+  if(!email.endsWith('@vinadecons.vn')){showToast('Only @vinadecons.vn emails accepted','error');return;}
+  if(!name){showToast('Please enter a full name','error');return;}
+  if(!pw){showToast('Please enter a password','error');return;}
+  if(pw.length<6){showToast('Password must be at least 6 characters','error');return;}
   var btn=document.getElementById('addBtn');
-  btn.disabled=true; btn.textContent='Dang them...';
-  try {
+  btn.disabled=true;btn.textContent='Adding...';
+  try{
     var body={email:email,name:name,password:pw,role:role,status:'active'};
-    if(group) body.group_name=group;
-    if(title) body.role_title=title;
+    if(group)body.group_name=group;
+    if(title)body.role_title=title;
     var res=await fetch(SUPABASE_URL+'/rest/v1/users',{method:'POST',headers:HDRS,body:JSON.stringify(body)});
     if(!res.ok){
       var e=await res.json();
-      showToast(e.code==='23505'?'Email nay da ton tai':(e.message||'Loi'),'error');
-      btn.disabled=false; btn.textContent='✅ Them thanh vien'; return;
+      showToast(e.code==='23505'?'This email already exists':(e.message||'Error'),'error');
+      btn.disabled=false;btn.textContent='✅ Add Member';return;
     }
     showPwModal(email,pw);
     document.getElementById('inviteEmail').value='';
     document.getElementById('inviteName').value='';
     document.getElementById('invitePw').value='';
     document.getElementById('inviteTitle').value='';
-    showToast('Da them thanh vien: '+name,'success');
+    showToast('Member added: '+name,'success');
     await loadMembers();
-  } catch(e){showToast('Loi ket noi: '+e.message,'error');}
-  btn.disabled=false; btn.textContent='✅ Them thanh vien';
+  }catch(e){showToast('Connection error: '+e.message,'error');}
+  btn.disabled=false;btn.textContent='✅ Add Member';
 }
 
-function renderTable(data) {
+function renderTable(data){
   var tbody=document.getElementById('memberTable');
   var me=localStorage.getItem('user_email')||'';
-  if(!data.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:32px;color:#aaa;">Chua co thanh vien</td></tr>';return;}
+  if(!data.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:32px;color:#aaa;">No members found.</td></tr>';return;}
   tbody.innerHTML=data.map(function(m,i){
     var initials=(m.name||m.email).substring(0,2).toUpperCase();
     var color=AVATAR_COLORS[i%AVATAR_COLORS.length];
@@ -455,31 +388,29 @@ function renderTable(data) {
     var gc=GRP_CLASS[m.group_name]||'';
     var gi=GRP_ICON[m.group_name]||'';
     var grpTxt=m.group_name?(gi+' '+m.group_name):'-';
-    var date=m.created_at?new Date(m.created_at).toLocaleDateString('vi-VN'):'-';
+    var date=m.created_at?new Date(m.created_at).toLocaleDateString('en-GB'):'-';
     var isMe=m.email===me;
     var actions=isMe
-      ?'<span style="color:#aaa;font-size:12px;">( Tai khoan cua ban )</span>'
+      ?'<span style="color:#aaa;font-size:12px;">(Your account)</span>'
       :'<div class="action-btns">'
-        +'<button class="btn-sm btn-pw"   onclick="showPwModal(\''+m.email+'\',\''+m.password+'\')">&#x1F510; Xem MK</button>'
-        +'<button class="btn-sm btn-role" onclick="openRoleModal(\''+m.id+'\',\''+m.email+'\',\''+m.role+'\')">&#x1F504; Doi quyen</button>'
-        +'<button class="btn-sm btn-del"  onclick="deleteMember(\''+m.id+'\',\''+m.email+'\')">&#x1F5D1;&#xFE0F; Xoa</button>'
+        +'<button class="btn-sm btn-pw" onclick="showPwModal(\''+m.email+'\',\''+m.password+'\')">&#x1F510; View PW</button>'
+        +'<button class="btn-sm btn-role" onclick="openRoleModal(\''+m.id+'\',\''+m.email+'\',\''+m.role+'\')">&#x1F504; Change Role</button>'
+        +'<button class="btn-sm btn-del" onclick="deleteMember(\''+m.id+'\',\''+m.email+'\')">&#x1F5D1;&#xFE0F; Delete</button>'
         +'</div>';
     return '<tr>'
       +'<td><div class="member-cell">'
       +'<div class="av-sm" style="background:'+color+'">'+initials+'</div>'
-      +'<div>'
-      +'<div class="email-text">'+m.email+'</div>'
+      +'<div><div class="email-text">'+m.email+'</div>'
       +'<div class="name-text">'+(m.name||'')+(m.role_title?' · '+m.role_title:'')+'</div>'
       +'</div></div></td>'
       +'<td>'+(gc?'<span class="grp-badge '+gc+'">'+grpTxt+'</span>':'-')+'</td>'
       +'<td><span class="'+rc+'">'+ri+' '+m.role+'</span></td>'
       +'<td style="color:#888;">'+date+'</td>'
-      +'<td>'+actions+'</td>'
-      +'</tr>';
+      +'<td>'+actions+'</td></tr>';
   }).join('');
 }
 
-function filterTable() {
+function filterTable(){
   var q=document.getElementById('searchInput').value.trim().toLowerCase();
   var grp=document.getElementById('filterGroup').value;
   var role=document.getElementById('filterRole').value;
@@ -492,132 +423,95 @@ function filterTable() {
   renderTable(filtered);
 }
 
-function updateStats(data) {
-  document.getElementById('statTotal').textContent  =data.length;
-  document.getElementById('statStaff').textContent  =data.filter(function(m){return m.role==='Staff';}).length;
-  document.getElementById('statLeader').textContent =data.filter(function(m){return m.role==='Leader';}).length;
-  document.getElementById('statSub').textContent    =data.filter(function(m){return m.role==='Sub Manager';}).length;
+function updateStats(data){
+  document.getElementById('statTotal').textContent=data.length;
+  document.getElementById('statStaff').textContent=data.filter(function(m){return m.role==='Staff';}).length;
+  document.getElementById('statLeader').textContent=data.filter(function(m){return m.role==='Leader';}).length;
+  document.getElementById('statSub').textContent=data.filter(function(m){return m.role==='Sub Manager';}).length;
   document.getElementById('statManager').textContent=data.filter(function(m){return m.role==='Manager';}).length;
-  document.getElementById('statAdmin').textContent  =data.filter(function(m){return m.role==='Admin';}).length;
+  document.getElementById('statAdmin').textContent=data.filter(function(m){return m.role==='Admin';}).length;
 }
 
-/* ── XEM MAT KHAU ── */
-function showPwModal(email, pw) {
-  currentChpwId = null;
-  for (var i=0; i<allMembers.length; i++) {
-    if (allMembers[i].email === email) { currentChpwId = allMembers[i].id; break; }
-  }
-  document.getElementById('modalEmail').textContent = email;
-  document.getElementById('modalPw').textContent    = pw || '(khong co)';
+function showPwModal(email,pw){
+  currentChpwId=null;
+  for(var i=0;i<allMembers.length;i++){if(allMembers[i].email===email){currentChpwId=allMembers[i].id;break;}}
+  document.getElementById('modalEmail').textContent=email;
+  document.getElementById('modalPw').textContent=pw||'(none)';
   switchToView();
   document.getElementById('pwModal').classList.add('open');
 }
-function copyPw() {
-  var pw = document.getElementById('modalPw').textContent;
+function copyPw(){
+  var pw=document.getElementById('modalPw').textContent;
   navigator.clipboard.writeText(pw)
-    .then(function(){ showToast('Da copy mat khau','success'); })
-    .catch(function(){ showToast('Khong the copy','error'); });
+    .then(function(){showToast('Password copied!','success');})
+    .catch(function(){showToast('Cannot copy','error');});
 }
-function switchToEdit() {
-  document.getElementById('pwViewMode').style.display = 'none';
-  document.getElementById('pwEditMode').style.display = 'block';
-  document.getElementById('chpwInput').value = '';
-  document.getElementById('chpwInput').type  = 'password';
-  document.getElementById('chpwEye').textContent = '👁️';
-  document.getElementById('chpwInput').focus();
+function switchToEdit(){
+  document.getElementById('pwViewMode').style.display='none';
+  document.getElementById('pwEditMode').style.display='block';
+  document.getElementById('chpwInputInline').value='';
+  document.getElementById('chpwInputInline').type='password';
+  document.getElementById('chpwEyeInline').textContent='👁️';
+  document.getElementById('chpwInputInline').focus();
 }
-function switchToView() {
-  document.getElementById('pwEditMode').style.display = 'none';
-  document.getElementById('pwViewMode').style.display = 'block';
+function switchToView(){
+  document.getElementById('pwEditMode').style.display='none';
+  document.getElementById('pwViewMode').style.display='block';
 }
-function togglePwVisible(inputId, eyeId) {
-  var inp = document.getElementById(inputId);
-  var eye = document.getElementById(eyeId);
-  if (!inp) return;
-  if (inp.type==='password') { inp.type='text'; if(eye) eye.textContent='🙈'; }
-  else { inp.type='password'; if(eye) eye.textContent='👁️'; }
-}
-
-/* ── DOI MAT KHAU ── */
-function openChpwModal(id,email) {
-  currentChpwId=id;
-  document.getElementById('chpwModalSub').textContent=email;
-  document.getElementById('chpwInput').value='';
-  document.getElementById('chpwConfirm').value='';
-  document.getElementById('chpwInput').type='password';
-  document.getElementById('chpwConfirm').type='password';
-  document.getElementById('chpwEye').textContent='👁️';
-  document.getElementById('chpwEye2').textContent='👁️';
-  document.getElementById('chpwModal').classList.add('open');
-}
-async function saveNewPassword() {
-  var pw1=document.getElementById('chpwInput').value;
-  var pw2=document.getElementById('chpwConfirm').value;
-  if(!pw1){showToast('Vui long nhap mat khau moi','error');return;}
-  if(pw1.length<6){showToast('Mat khau toi thieu 6 ky tu','error');return;}
-  if(pw1!==pw2){showToast('Mat khau xac nhan khong khop','error');return;}
-  try {
-    var res=await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+currentChpwId,{
-      method:'PATCH',headers:HDRS,body:JSON.stringify({password:pw1})
-    });
-    if(!res.ok){showToast('Loi doi mat khau','error');return;}
-    // Update local data
-    for(var i=0;i<allMembers.length;i++){
-      if(allMembers[i].id===currentChpwId){allMembers[i].password=pw1;break;}
-    }
-    showToast('Da doi mat khau thanh cong!','success');
-    closeModal('chpwModal');
-  } catch(e){showToast('Loi: '+e.message,'error');}
+async function saveInlinePassword(){
+  var pw=document.getElementById('chpwInputInline').value;
+  if(!pw){showToast('Please enter a new password','error');return;}
+  if(pw.length<6){showToast('Password must be at least 6 characters','error');return;}
+  try{
+    var res=await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+currentChpwId,{method:'PATCH',headers:HDRS,body:JSON.stringify({password:pw})});
+    if(!res.ok){showToast('Error saving password','error');return;}
+    for(var i=0;i<allMembers.length;i++){if(allMembers[i].id===currentChpwId){allMembers[i].password=pw;break;}}
+    document.getElementById('modalPw').textContent=pw;
+    showToast('Password updated!','success');
+    switchToView();
+  }catch(e){showToast('Error: '+e.message,'error');}
 }
 
-/* ── DOI QUYEN ── */
-function openRoleModal(id,email,currentRole) {
-  currentEditId=id; currentEditRole=currentRole;
+function openRoleModal(id,email,currentRole){
+  currentEditId=id;currentEditRole=currentRole;
   document.getElementById('roleModalSub').textContent=email;
   var keys=['Staff','Leader','Sub Manager','Manager','Admin'];
-  var ids =['Staff','Leader','SubManager','Manager','Admin'];
+  var ids=['Staff','Leader','SubManager','Manager','Admin'];
   for(var i=0;i<keys.length;i++){
     var btn=document.getElementById('ropt-'+ids[i]);
-    if(btn){
-      if(keys[i]===currentRole) btn.classList.add('selected');
-      else btn.classList.remove('selected');
-    }
+    if(btn){if(keys[i]===currentRole)btn.classList.add('selected');else btn.classList.remove('selected');}
   }
   document.getElementById('roleModal').classList.add('open');
 }
-async function selectRole(newRole) {
-  if(!currentEditId) return;
-  if(newRole===currentEditRole){closeModal('roleModal');showToast('Quyen khong thay doi','success');return;}
-  try {
-    await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+currentEditId,{
-      method:'PATCH',headers:HDRS,body:JSON.stringify({role:newRole})
-    });
-    showToast('Da doi quyen thanh '+newRole,'success');
+async function selectRole(newRole){
+  if(!currentEditId)return;
+  if(newRole===currentEditRole){closeModal('roleModal');showToast('Role unchanged','success');return;}
+  try{
+    await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+currentEditId,{method:'PATCH',headers:HDRS,body:JSON.stringify({role:newRole})});
+    showToast('Role changed to '+newRole,'success');
     closeModal('roleModal');
     await loadMembers();
-  } catch(e){showToast('Loi doi quyen: '+e.message,'error');}
+  }catch(e){showToast('Error changing role: '+e.message,'error');}
 }
 
-/* ── XOA THANH VIEN ── */
-async function deleteMember(id,email) {
-  if(!confirm('Xac nhan xoa: '+email+'?')) return;
-  try {
+async function deleteMember(id,email){
+  if(!confirm('Delete member: '+email+'?'))return;
+  try{
     await fetch(SUPABASE_URL+'/rest/v1/users?id=eq.'+id,{method:'DELETE',headers:HDRS});
-    showToast('Da xoa: '+email,'success');
+    showToast('Deleted: '+email,'success');
     await loadMembers();
-  } catch(e){showToast('Loi xoa: '+e.message,'error');}
+  }catch(e){showToast('Error deleting: '+e.message,'error');}
 }
 
-/* ── HELPERS ── */
 function closeModal(id){document.getElementById(id).classList.remove('open');}
-function togglePwVisible(inputId, eyeId) {
+function togglePwVisible(inputId,eyeId){
   var inp=document.getElementById(inputId);
   var eye=document.getElementById(eyeId);
-  if(!inp) return;
-  if(inp.type==='password'){inp.type='text'; if(eye)eye.textContent='🙈';}
-  else{inp.type='password'; if(eye)eye.textContent='👁️';}
+  if(!inp)return;
+  if(inp.type==='password'){inp.type='text';if(eye)eye.textContent='🙈';}
+  else{inp.type='password';if(eye)eye.textContent='👁️';}
 }
-function logout(){if(confirm('Dang xuat?')){localStorage.clear();window.location.href='index.html';}}
+function logout(){if(confirm('Sign out?')){localStorage.clear();window.location.href='index.html';}}
 </script>
 </body>
 </html>
