@@ -1007,12 +1007,12 @@ function buildProjectRow(p,sttNum,color,cfg,autoSt,tabType){
   var actionBtns='';
   if(tabType==='running'){
     actionBtns+='<button class="btn-finish-proj" id="finbtn-'+p.id+'">&#x2705; Finish</button> ';
-    if(currentUserRole==='Admin') actionBtns+='<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Delete</button>';
+    if(currentUserRole==='Admin'||currentUserRole==='Manager'||currentUserRole==='Sub Manager') actionBtns+='<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Delete</button>';
   } else if(tabType==='finish'){
     actionBtns='<button class="btn-revert-proj" id="revbtn-'+p.id+'">&#x21A9;&#xFE0F; Revert</button>';
   } else if(tabType==='future'){
     actionBtns='<button class="btn-convert-proj" id="convbtn-'+p.id+'">&#x25B6;&#xFE0F; Convert to Running</button> ';
-    if(currentUserRole==='Admin') actionBtns+='<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Delete</button>';
+    if(currentUserRole==='Admin'||currentUserRole==='Manager'||currentUserRole==='Sub Manager') actionBtns+='<button class="btn-del-proj" id="delprojbtn-'+p.id+'">&#x1F5D1;&#xFE0F; Delete</button>';
   }
   var sttBadgeClass=isFuture?'stt-badge stt-badge-future':'stt-badge';
   var sttLabel=isFuture?'F-'+String(sttNum).padStart(3,'0'):sttNum;
