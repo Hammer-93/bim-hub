@@ -97,15 +97,6 @@
   </div>
   <div class="topbar-right">
     <a class="btn-top" href="view-list.html">&#x1F4C5; Schedule</a>
-    <div class="dropdown-wrap" id="myTaskDropWrap">
-      <button class="dropdown-trigger" id="myTaskDropBtn">
-        &#x1F4CB; My Tasks <span class="dropdown-arrow">&#x25BC;</span>
-      </button>
-      <div class="dropdown-menu" id="myTaskDropMenu">
-        <a class="dropdown-item" href="my-tasks.html">&#x1F5C2;&#xFE0F; Task List</a>
-        <a class="dropdown-item active" href="my-schedule.html">&#x1F4C5; My Schedule</a>
-      </div>
-    </div>
     <div class="dropdown-wrap" id="userDropWrap">
       <button class="dropdown-trigger" id="userDropBtn">
         <span class="user-name" id="topName">...</span>
@@ -121,7 +112,7 @@
 </nav>
 
 <div class="nav-tabs">
-  <div class="nav-drop" id="scheduleNavDrop">
+  <div class="nav-drop" id="scheduleNavDrop" style="display:none;">
     <div class="nav-drop-trigger" id="scheduleNavTrigger">
       &#x1F4C5; Project Schedule <span class="nav-drop-arrow">&#x25BC;</span>
     </div>
@@ -131,7 +122,7 @@
       <a class="nav-drop-item" href="view-schedule.html">&#x1F4C5; Project Schedule</a>
     </div>
   </div>
-  <div class="nav-drop" id="staffNavDrop">
+  <div class="nav-drop" id="staffNavDrop" style="display:none;">
     <div class="nav-drop-trigger" id="staffNavTrigger">
       &#x1F465; Staff <span class="nav-drop-arrow">&#x25BC;</span>
     </div>
