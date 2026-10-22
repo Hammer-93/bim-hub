@@ -75,15 +75,15 @@
     table.track thead th { background:#1a1a2e; color:#fff; font-size:11px; font-weight:700; text-align:center; padding:8px 4px; border-right:1px solid rgba(255,255,255,.1); position:sticky; top:0; z-index:30; white-space:nowrap; }
     table.track thead th:first-child { width:320px; min-width:320px; text-align:left; padding:8px 14px; position:sticky; left:0; z-index:40; background:#0d2137; }
     table.track thead th.today-hdr { background:#e63946; }
-    table.track thead th.leave-hdr { background:#888 !important; opacity:1 !important; }
+    table.track thead th.leave-hdr { opacity:.45; }
     table.track tbody td { padding:0; border-bottom:1px solid #f0f0f0; }
     .t-label-cell { width:320px; min-width:320px; max-width:320px; padding:8px 14px; border-right:2px solid #e8e8e8; vertical-align:middle; background:#fff; position:sticky; left:0; z-index:10; box-shadow:2px 0 5px rgba(0,0,0,.05); }
     .t-day-cell { position:relative; height:32px; border-right:1px solid #f0f0f0; vertical-align:middle; overflow:visible; }
     .t-day-cell.we { background:#f8f8f8; }
     .t-day-cell.tdy { background:#fff5f5; }
     .t-day-cell.tdy::before { content:""; position:absolute; top:0; bottom:0; left:50%; width:2px; background:#e63946; z-index:5; transform:translateX(-50%); }
-    .t-day-cell.lv { background:#e0e0e0 !important; }
-    .t-day-cell.we.lv { background:#d0d0d0 !important; }
+    .t-day-cell.lv { background:#f8f8f8 !important; }
+    .t-day-cell.we.lv { background:#f8f8f8 !important; }
     tr.proj-hdr td { padding:0; }
     .proj-hdr-inner { display:flex; align-items:center; padding:8px 14px; font-size:12px; font-weight:800; cursor:pointer; user-select:none; gap:8px; }
     .proj-hdr-arrow { font-size:10px; transition:transform .2s; }
@@ -475,7 +475,7 @@ function renderTrack(){
     var thCls=td?'today-hdr':(lv?'leave-hdr':'');
     var opacity=(we&&!td&&!lv)?'opacity:.45;':'';
     var thStyle='width:'+CW+'px;min-width:'+CW+'px;'+opacity;
-    hdr+='<th style="'+thStyle+'"'+(thCls?' class="'+thCls+'"':'')+'>'+dt.getDate()+'<br><span style="font-size:8px;opacity:.8;">'+dow+'</span>'+(lv&&!td?'<br><span style="font-size:8px;">Off</span>':'')+'</th>';
+    hdr+='<th style="'+thStyle+'"'+(thCls?' class="'+thCls+'"':'')+'>'+dt.getDate()+'<br><span style="font-size:8px;opacity:.8;">'+dow+'</span>'+''+'</th>';
   });
 
   var rows=''; var projIds=Object.keys(projMap);
