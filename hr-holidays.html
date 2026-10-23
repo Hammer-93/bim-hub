@@ -44,17 +44,16 @@
     .toast.error{border-left:4px solid #e63946;}
     .main{padding:28px 32px;}
 
-    /* HEADER */
     .cal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:16px;}
     .cal-header-left h1{font-size:20px;font-weight:800;color:#1a1a2e;}
     .cal-header-left p{font-size:12px;color:#888;margin-top:2px;}
     .cal-header-right{font-size:12px;color:#888;white-space:nowrap;}
 
-    /* YEAR NAV */
     .year-nav{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
     .year-btn{background:#fff;border:1.5px solid #dde2ea;color:#555;padding:6px 14px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;}
     .year-btn:hover{background:#e8f4fe;border-color:#0096c7;color:#0077b6;}
     .year-label{font-size:20px;font-weight:800;color:#1a1a2e;min-width:60px;text-align:center;}
+
     .summary-row{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
     .summary-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#444;}
     .swatch{width:20px;height:14px;border-radius:3px;flex-shrink:0;}
@@ -65,18 +64,9 @@
     .summary-count{font-weight:700;color:#1a1a2e;}
     .summary-total{font-size:13px;font-weight:700;color:#1a1a2e;margin-left:auto;}
 
-    /* ADD FORM */
-    .add-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:20px 24px;margin-bottom:24px;}
-    .add-card-title{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #f0f0f0;}
-    .add-form{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
-    .add-form .field{display:flex;flex-direction:column;gap:5px;}
-    .add-form label{font-size:11px;font-weight:600;color:#555;}
-    .add-form input[type=date],.add-form input[type=text],.add-form select{padding:8px 12px;border:1.5px solid #dde2ea;border-radius:8px;font-size:13px;outline:none;font-family:inherit;color:#222;}
-    .add-form input:focus,.add-form select:focus{border-color:#0096c7;}
-    .btn-add-holiday{background:linear-gradient(135deg,#0096c7,#0077b6);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px rgba(0,119,182,.25);transition:all .2s;font-family:inherit;}
-    .btn-add-holiday:hover{box-shadow:0 6px 18px rgba(0,119,182,.35);transform:translateY(-1px);}
+    .hint-bar{background:#e8f4fe;border:1.5px solid #b8dff5;border-radius:10px;padding:10px 16px;font-size:12px;color:#0077b6;margin-bottom:18px;display:none;align-items:center;gap:8px;}
+    .hint-bar.show{display:flex;}
 
-    /* CALENDAR GRID */
     .cal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
     @media(max-width:700px){.cal-grid{grid-template-columns:1fr;}}
     .month-card{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);overflow:hidden;}
@@ -85,20 +75,37 @@
     .month-table th{font-size:10px;font-weight:700;color:#888;text-align:center;padding:6px 2px;border-bottom:1.5px solid #f0f0f0;}
     .month-table th.sat-hdr{color:#52b788;}
     .month-table th.sun-hdr{color:#e63946;}
-    .month-table td{text-align:center;padding:4px 2px;font-size:12px;font-weight:600;cursor:default;border-radius:4px;position:relative;}
-    .month-table td.empty{background:transparent;}
+    .month-table td{text-align:center;padding:5px 2px;font-size:12px;font-weight:600;border-radius:4px;position:relative;transition:opacity .15s;}
+    .month-table td.empty{background:transparent;cursor:default;}
+    .month-table td.day-clickable{cursor:pointer;}
+    .month-table td.day-clickable:hover{filter:brightness(.92);}
     .month-table td.day-normal{color:#333;}
+    .month-table td.day-normal.day-clickable:hover{background:#f0f0f0;}
     .month-table td.day-sat{background:#d4edda;color:#1a7c3a;}
     .month-table td.day-sun{background:#fce8d8;color:#c0392b;}
-    .month-table td.day-holiday{background:#cce5ff;color:#0056b3;cursor:pointer;}
-    .month-table td.day-adj{background:#fff9c4;color:#856404;cursor:pointer;}
-    .month-table td.day-today{outline:2px solid #e63946;outline-offset:-2px;border-radius:4px;}
-    .month-table td.day-sat.day-holiday{background:#cce5ff;color:#0056b3;}
-    .month-table td.day-sun.day-holiday{background:#cce5ff;color:#0056b3;}
-    .day-dot{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#e63946;}
-    .day-label{font-size:8px;display:block;color:#0056b3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;margin-top:1px;}
+    .month-table td.day-holiday{background:#cce5ff;color:#0056b3;}
+    .month-table td.day-adj{background:#fff9c4;color:#856404;}
+    .month-table td.day-today{outline:2px solid #e63946;outline-offset:-2px;}
+    .day-label{font-size:8px;display:block;color:inherit;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;margin-top:1px;}
 
-    /* HOLIDAY LIST */
+    /* DAY POPUP */
+    .day-popup{position:fixed;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.22);z-index:9500;padding:0;min-width:260px;max-width:320px;display:none;overflow:hidden;}
+    .day-popup.open{display:block;}
+    .day-popup-head{background:#1a1a2e;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;}
+    .day-popup-date{color:#fff;font-size:13px;font-weight:700;}
+    .day-popup-x{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;opacity:.7;padding:0;line-height:1;}
+    .day-popup-body{padding:14px 16px;}
+    .day-popup-name{width:100%;padding:8px 10px;border:1.5px solid #dde2ea;border-radius:8px;font-size:13px;outline:none;font-family:inherit;color:#222;margin-bottom:12px;}
+    .day-popup-name:focus{border-color:#0096c7;}
+    .day-popup-btns{display:flex;gap:8px;flex-wrap:wrap;}
+    .btn-type{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid transparent;flex:1;justify-content:center;transition:all .15s;font-family:inherit;}
+    .btn-type-holiday{background:#cce5ff;color:#0056b3;border-color:#74b9ff;}
+    .btn-type-holiday:hover{background:#a8d4ff;border-color:#0096c7;}
+    .btn-type-adj{background:#fff9c4;color:#856404;border-color:#f4d03f;}
+    .btn-type-adj:hover{background:#fff176;border-color:#f4c430;}
+    .btn-type-del{background:#fff;color:#e63946;border:2px solid #ffb3b3;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;font-family:inherit;}
+    .btn-type-del:hover{background:#fff0f0;}
+
     .list-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:20px 24px;margin-top:24px;}
     .list-card-title{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #f0f0f0;}
     .holiday-list{display:flex;flex-direction:column;gap:8px;}
@@ -183,11 +190,27 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- DAY POPUP -->
+<div class="day-popup" id="dayPopup">
+  <div class="day-popup-head">
+    <span class="day-popup-date" id="popupDateLabel"></span>
+    <button class="day-popup-x" onclick="closePopup()">&#x2715;</button>
+  </div>
+  <div class="day-popup-body">
+    <input type="text" class="day-popup-name" id="popupName" placeholder="Holiday name (optional)..."/>
+    <div class="day-popup-btns" id="popupAddBtns">
+      <button class="btn-type btn-type-holiday" onclick="saveHoliday('holiday')">&#x1F535; 国民の休日</button>
+      <button class="btn-type btn-type-adj" onclick="saveHoliday('adj')">&#x1F7E1; 振調整休日</button>
+    </div>
+    <button class="btn-type-del" id="popupDelBtn" style="display:none;" onclick="deleteCurrentHoliday()">&#x1F5D1;&#xFE0F; Delete this holiday</button>
+  </div>
+</div>
+
 <div class="main">
   <div class="cal-header">
     <div class="cal-header-left">
       <h1>&#x1F5D3;&#xFE0F; VDCデザインセンター 休日カレンダー</h1>
-      <p id="calSubtitle">VDC Design Center Holiday Calendar</p>
+      <p>VDC Design Center Holiday Calendar</p>
     </div>
     <div class="cal-header-right" id="createdDate"></div>
   </div>
@@ -198,47 +221,24 @@
     <button class="year-btn" onclick="changeYear(1)">&#x25B6;</button>
   </div>
 
-  <div class="summary-row" id="summaryRow">
-    <div class="summary-item"><div class="swatch swatch-sun"></div><span>Ngày chủ Nhật &nbsp;/&nbsp; 休日</span> &nbsp;<span class="summary-count" id="cntSun">0</span> 日</div>
-    <div class="summary-item"><div class="swatch swatch-holiday"></div><span>Ngày lễ quốc gia &nbsp;/&nbsp; 国民の休日</span> &nbsp;<span class="summary-count" id="cntHoliday">0</span> 日</div>
-    <div class="summary-item"><div class="swatch swatch-sat"></div><span>Nghỉ thứ Bảy &nbsp;/&nbsp; 土休</span> &nbsp;<span class="summary-count" id="cntSat">0</span> 日</div>
-    <div class="summary-item"><div class="swatch swatch-adj"></div><span>Ngày nghỉ điều chỉnh &nbsp;/&nbsp; 振調整休日</span> &nbsp;<span class="summary-count" id="cntAdj">0</span> 日</div>
+  <div class="summary-row">
+    <div class="summary-item"><div class="swatch swatch-sun"></div><span>Ngày chủ Nhật &nbsp;/&nbsp; 休日</span>&nbsp;<span class="summary-count" id="cntSun">0</span> 日</div>
+    <div class="summary-item"><div class="swatch swatch-holiday"></div><span>Ngày lễ quốc gia &nbsp;/&nbsp; 国民の休日</span>&nbsp;<span class="summary-count" id="cntHoliday">0</span> 日</div>
+    <div class="summary-item"><div class="swatch swatch-sat"></div><span>Nghỉ thứ Bảy &nbsp;/&nbsp; 土休</span>&nbsp;<span class="summary-count" id="cntSat">0</span> 日</div>
+    <div class="summary-item"><div class="swatch swatch-adj"></div><span>Ngày nghỉ điều chỉnh &nbsp;/&nbsp; 振調整休日</span>&nbsp;<span class="summary-count" id="cntAdj">0</span> 日</div>
     <div class="summary-total">年間計: <span id="cntTotal">0</span> 日</div>
   </div>
 
-  <!-- ADD FORM (HR/Admin only) -->
-  <div class="add-card" id="addCard">
-    <div class="add-card-title">&#x2795; Add Holiday / 休日追加</div>
-    <div class="add-form">
-      <div class="field">
-        <label>Date / 日付 <span style="color:#e63946;">*</span></label>
-        <input type="date" id="newDate"/>
-      </div>
-      <div class="field">
-        <label>Name / 名称</label>
-        <input type="text" id="newName" placeholder="e.g. Tết Nguyên Đán..." style="min-width:200px;"/>
-      </div>
-      <div class="field">
-        <label>Type / 種類</label>
-        <select id="newType">
-          <option value="holiday">&#x1F535; 国民の休日 (National Holiday)</option>
-          <option value="adj">&#x1F7E1; 振調整休日 (Adjusted Day Off)</option>
-        </select>
-      </div>
-      <div class="field">
-        <button class="btn-add-holiday" onclick="addHoliday()">&#x1F4BE; Save</button>
-      </div>
-    </div>
+  <div class="hint-bar" id="hintBar">
+    &#x1F4A1; Click vào ô ngày để thêm ngày lễ &nbsp;|&nbsp; Click vào ô đã tô màu để xóa
   </div>
 
-  <!-- CALENDAR -->
   <div class="cal-grid" id="calGrid">
     <div style="padding:40px;text-align:center;color:#aaa;grid-column:span 2;">Loading...</div>
   </div>
 
-  <!-- HOLIDAY LIST -->
   <div class="list-card">
-    <div class="list-card-title">&#x1F4CB; Holiday List / 休日一覧</div>
+    <div class="list-card-title">&#x1F4CB; Holiday List / 休日一覧 &nbsp;<span id="listYear" style="color:#888;font-weight:400;"></span></div>
     <div class="holiday-list" id="holidayList">
       <div class="empty-list">No holidays registered.</div>
     </div>
@@ -248,18 +248,32 @@
 <script src="js/config.js"></script>
 <script>
 var currentYear = new Date().getFullYear();
-var holidays = []; // [{id, holiday_date, holiday_name, holiday_type}]
+var holidays = [];
 var canEdit = false;
+var popupDateStr = null;
+var popupHolidayId = null;
 var DOW_JP = ['日','月','火','水','木','金','土'];
-var DOW_EN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
 window.onload = async function(){
   initTopbarLocal();
   initNavDrops();
-  document.getElementById('createdDate').textContent = '作成: ' + fmt(new Date());
+  document.getElementById('createdDate').textContent = '作成: ' + fmtDate(new Date());
+  document.getElementById('yearLabel').textContent = currentYear;
   await loadHolidays();
   render();
+  document.addEventListener('click', function(e){
+    var popup = document.getElementById('dayPopup');
+    if(popup.classList.contains('open') && !popup.contains(e.target)){
+      closePopup();
+    }
+  });
 };
+
+function fmtDate(d){
+  if(!d) return '';
+  var dt = (d instanceof Date) ? d : new Date(d+'T00:00:00');
+  return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+}
 
 function initTopbarLocal(){
   var role = localStorage.getItem('user_role') || 'Staff';
@@ -268,9 +282,7 @@ function initTopbarLocal(){
   if(!email){ window.location.href='index.html'; return; }
   document.getElementById('topName').textContent = name;
   canEdit = (role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='HR');
-  if(!canEdit){
-    document.getElementById('addCard').style.display = 'none';
-  }
+  if(canEdit) document.getElementById('hintBar').classList.add('show');
   if(role==='Admin'||role==='Manager'||role==='Sub Manager'){
     document.querySelectorAll('.admin-only').forEach(function(el){el.style.display='flex';});
   }
@@ -280,8 +292,8 @@ function initTopbarLocal(){
   if(role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='HR'){
     document.querySelectorAll('.hr-only').forEach(function(el){el.style.display='flex';});
   }
-  var dropBtn=document.getElementById('userDropBtn');
-  var dropMenu=document.getElementById('userDropMenu');
+  var dropBtn = document.getElementById('userDropBtn');
+  var dropMenu = document.getElementById('userDropMenu');
   dropBtn.addEventListener('click',function(e){e.stopPropagation();dropMenu.classList.toggle('open');});
   document.addEventListener('click',function(){dropMenu.classList.remove('open');});
 }
@@ -320,14 +332,8 @@ async function loadHolidays(){
       {headers:HDRS}
     );
     if(res.ok){ holidays = await res.json(); }
-    else{ holidays = []; }
+    else { holidays = []; }
   }catch(e){ holidays = []; }
-}
-
-function fmt(d){
-  if(!d)return'';
-  var dt=(d instanceof Date)?d:new Date(d+'T00:00:00');
-  return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
 }
 
 function changeYear(delta){
@@ -350,171 +356,190 @@ function render(){
 }
 
 function renderSummary(){
-  var today = fmt(new Date());
-  var yearHolidays = holidays.filter(function(h){ return h.holiday_date.startsWith(currentYear+''); });
-  var cntSun=0, cntSat=0, cntAdj=0, cntHoliday=0;
-  // Count Sundays and Saturdays for the year
-  var d = new Date(currentYear, 0, 1);
+  var cntSun=0,cntSat=0,cntHoliday=0,cntAdj=0;
+  var d = new Date(currentYear,0,1);
   while(d.getFullYear()===currentYear){
-    var dow = d.getDay();
+    var dow=d.getDay();
     if(dow===0) cntSun++;
     if(dow===6) cntSat++;
     d.setDate(d.getDate()+1);
   }
-  yearHolidays.forEach(function(h){
+  holidays.forEach(function(h){
+    if(!h.holiday_date.startsWith(String(currentYear))) return;
     if(h.holiday_type==='adj') cntAdj++;
     else cntHoliday++;
   });
-  document.getElementById('cntSun').textContent = cntSun;
-  document.getElementById('cntSat').textContent = cntSat;
-  document.getElementById('cntHoliday').textContent = cntHoliday;
-  document.getElementById('cntAdj').textContent = cntAdj;
-  document.getElementById('cntTotal').textContent = cntSun + cntSat + cntHoliday + cntAdj;
+  document.getElementById('cntSun').textContent=cntSun;
+  document.getElementById('cntSat').textContent=cntSat;
+  document.getElementById('cntHoliday').textContent=cntHoliday;
+  document.getElementById('cntAdj').textContent=cntAdj;
+  document.getElementById('cntTotal').textContent=cntSun+cntSat+cntHoliday+cntAdj;
 }
 
 function renderCalendar(){
-  var today = fmt(new Date());
+  var today = fmtDate(new Date());
   var grid = document.getElementById('calGrid');
   var html = '';
   for(var mo=0;mo<12;mo++){
-    var monthName = (mo+1)+'月';
-    html += '<div class="month-card"><div class="month-title">'+monthName+'</div>';
-    html += '<table class="month-table"><thead><tr>';
-    var headers = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
-    headers.forEach(function(h,i){
+    html += '<div class="month-card">'
+      +'<div class="month-title">'+(mo+1)+'月</div>'
+      +'<table class="month-table"><thead><tr>';
+    ['MON','TUE','WED','THU','FRI','SAT','SUN'].forEach(function(h,i){
       var cls = i===5?'sat-hdr':i===6?'sun-hdr':'';
-      html += '<th class="'+cls+'">'+h+'</th>';
+      html += '<th'+(cls?' class="'+cls+'"':'')+'>'+h+'</th>';
     });
-    html += '</tr></thead><tbody>';
-    // First day of month (0=Sun,1=Mon...)
-    var firstDay = new Date(currentYear, mo, 1).getDay();
-    // Convert to Mon=0
-    var startOffset = (firstDay === 0) ? 6 : firstDay - 1;
-    var daysInMonth = new Date(currentYear, mo+1, 0).getDate();
-    var dayCount = 0;
-    html += '<tr>';
-    // Empty cells before first day
-    for(var e=0;e<startOffset;e++){
-      html += '<td class="empty"></td>';
-      dayCount++;
+    html += '</tr></thead><tbody><tr>';
+    var firstDow = new Date(currentYear,mo,1).getDay();
+    var offset = (firstDow===0)?6:firstDow-1;
+    var daysInMonth = new Date(currentYear,mo+1,0).getDate();
+    var cellCount = 0;
+    for(var e=0;e<offset;e++){
+      html+='<td class="empty"></td>';
+      cellCount++;
     }
     for(var day=1;day<=daysInMonth;day++){
-      var dateStr = currentYear+'-'+String(mo+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
-      var dt = new Date(dateStr+'T00:00:00');
-      var dow = dt.getDay(); // 0=Sun,6=Sat
-      var hobj = getHolidayForDate(dateStr);
+      var ds = currentYear+'-'+String(mo+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+      var dt2 = new Date(ds+'T00:00:00');
+      var dow2 = dt2.getDay();
+      var hobj = getHolidayForDate(ds);
       var cls = 'day-normal';
-      if(hobj && hobj.holiday_type==='adj') cls = 'day-adj';
-      else if(hobj) cls = 'day-holiday';
-      else if(dow===0) cls = 'day-sun';
-      else if(dow===6) cls = 'day-sat';
-      if(dateStr===today) cls += ' day-today';
-      var inner = day;
+      if(hobj && hobj.holiday_type==='adj') cls='day-adj';
+      else if(hobj) cls='day-holiday';
+      else if(dow2===0) cls='day-sun';
+      else if(dow2===6) cls='day-sat';
+      if(ds===today) cls+=' day-today';
+      if(canEdit) cls+=' day-clickable';
+      var inner = String(day);
       if(hobj && hobj.holiday_name){
         inner += '<span class="day-label">'+escHtml(hobj.holiday_name)+'</span>';
       }
-      var onclick = '';
-      if(canEdit && hobj){
-        onclick = ' onclick="deleteHolidayByDate(\''+dateStr+'\')" title="Click to delete: '+(hobj.holiday_name||hobj.holiday_type)+'"';
-      }
-      html += '<td class="'+cls+'"'+onclick+'>'+inner+'</td>';
-      dayCount++;
-      if(dayCount%7===0 && day<daysInMonth) html += '</tr><tr>';
+      var attr = canEdit ? ' onclick="openPopup(\''+ds+'\',event)"' : '';
+      html += '<td class="'+cls+'"'+attr+'>'+inner+'</td>';
+      cellCount++;
+      if(cellCount%7===0 && day<daysInMonth) html+='</tr><tr>';
     }
-    // Fill remaining cells
-    var remaining = (7 - (dayCount%7)) % 7;
-    for(var r=0;r<remaining;r++) html += '<td class="empty"></td>';
-    html += '</tr></tbody></table></div>';
+    var rem=(7-(cellCount%7))%7;
+    for(var r=0;r<rem;r++) html+='<td class="empty"></td>';
+    html+='</tr></tbody></table></div>';
   }
   grid.innerHTML = html;
 }
 
 function renderList(){
-  var yearHolidays = holidays.filter(function(h){ return h.holiday_date.startsWith(currentYear+''); });
+  var yr = String(currentYear);
+  document.getElementById('listYear').textContent = yr+'年';
+  var yearH = holidays.filter(function(h){return h.holiday_date.startsWith(yr);});
   var list = document.getElementById('holidayList');
-  if(!yearHolidays.length){
-    list.innerHTML = '<div class="empty-list">No holidays registered for '+currentYear+'.</div>';
+  if(!yearH.length){
+    list.innerHTML='<div class="empty-list">No holidays registered for '+yr+'.</div>';
     return;
   }
-  var html = '';
-  yearHolidays.forEach(function(h){
-    var dt = new Date(h.holiday_date+'T00:00:00');
-    var dow = DOW_JP[dt.getDay()];
-    var isAdj = h.holiday_type==='adj';
-    var badgeCls = isAdj?'badge-adj':'badge-holiday';
-    var badgeLabel = isAdj?'振調整休日':'国民の休日';
-    var itemCls = isAdj?'holiday-item type-adj':'holiday-item type-holiday';
-    html += '<div class="'+itemCls+'">'
+  var html='';
+  yearH.forEach(function(h){
+    var dt=new Date(h.holiday_date+'T00:00:00');
+    var dow=DOW_JP[dt.getDay()];
+    var isAdj=h.holiday_type==='adj';
+    html+='<div class="holiday-item '+(isAdj?'type-adj':'type-holiday')+'">'
       +'<div class="holiday-date">'+h.holiday_date+'</div>'
       +'<div class="holiday-dow">('+dow+')</div>'
       +'<div class="holiday-name">'+(h.holiday_name?escHtml(h.holiday_name):'-')+'</div>'
-      +'<span class="holiday-type-badge '+badgeCls+'">'+badgeLabel+'</span>';
+      +'<span class="holiday-type-badge '+(isAdj?'badge-adj':'badge-holiday')+'">'+(isAdj?'振調整休日':'国民の休日')+'</span>';
     if(canEdit){
-      html += '<button class="btn-del-holiday" onclick="deleteHoliday(\''+h.id+'\')">&#x1F5D1; Delete</button>';
+      html+='<button class="btn-del-holiday" onclick="deleteHoliday(\''+h.id+'\')">&#x1F5D1;</button>';
     }
-    html += '</div>';
+    html+='</div>';
   });
-  list.innerHTML = html;
+  list.innerHTML=html;
 }
 
 function escHtml(s){
-  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-async function addHoliday(){
-  var dateVal = document.getElementById('newDate').value;
-  var nameVal = document.getElementById('newName').value.trim();
-  var typeVal = document.getElementById('newType').value;
-  if(!dateVal){ showToast('Please select a date','error'); return; }
-  // Check duplicate
-  for(var i=0;i<holidays.length;i++){
-    if(holidays[i].holiday_date===dateVal){
-      showToast('This date is already registered','error'); return;
-    }
+function openPopup(dateStr, e){
+  e.stopPropagation();
+  popupDateStr = dateStr;
+  var hobj = getHolidayForDate(dateStr);
+  popupHolidayId = hobj ? hobj.id : null;
+  var dt = new Date(dateStr+'T00:00:00');
+  var dow = DOW_JP[dt.getDay()];
+  document.getElementById('popupDateLabel').textContent = dateStr + ' (' + dow + ')';
+  document.getElementById('popupName').value = hobj ? (hobj.holiday_name||'') : '';
+  if(hobj){
+    document.getElementById('popupAddBtns').style.display='none';
+    document.getElementById('popupDelBtn').style.display='block';
+  }else{
+    document.getElementById('popupAddBtns').style.display='flex';
+    document.getElementById('popupDelBtn').style.display='none';
   }
+  var popup = document.getElementById('dayPopup');
+  popup.classList.add('open');
+  var x=e.clientX, y=e.clientY;
+  var pw=320, ph=180;
+  if(x+pw>window.innerWidth) x=window.innerWidth-pw-8;
+  if(y+ph>window.innerHeight) y=window.innerHeight-ph-8;
+  if(x<4) x=4;
+  if(y<4) y=4;
+  popup.style.left=x+'px';
+  popup.style.top=y+'px';
+  setTimeout(function(){document.getElementById('popupName').focus();},80);
+}
+
+function closePopup(){
+  document.getElementById('dayPopup').classList.remove('open');
+  popupDateStr=null;
+  popupHolidayId=null;
+}
+
+async function saveHoliday(type){
+  if(!popupDateStr) return;
+  var nameVal = document.getElementById('popupName').value.trim();
   try{
-    var body = {holiday_date:dateVal, holiday_type:typeVal};
-    if(nameVal) body.holiday_name = nameVal;
-    var res = await fetch(SUPABASE_URL+'/rest/v1/public_holidays',{
+    var body={holiday_date:popupDateStr,holiday_type:type};
+    if(nameVal) body.holiday_name=nameVal;
+    var res=await fetch(SUPABASE_URL+'/rest/v1/public_holidays',{
       method:'POST',
-      headers: Object.assign({},HDRS,{'Prefer':'return=representation'}),
-      body: JSON.stringify(body)
+      headers:Object.assign({},HDRS,{'Prefer':'return=representation'}),
+      body:JSON.stringify(body)
     });
-    if(!res.ok){ var err=await res.json(); showToast(err.message||'Error adding','error'); return; }
-    var arr = await res.json();
+    if(!res.ok){
+      var err=await res.json();
+      showToast(err.message||'Error adding','error');
+      return;
+    }
+    var arr=await res.json();
     if(arr&&arr[0]) holidays.push(arr[0]);
     holidays.sort(function(a,b){return a.holiday_date.localeCompare(b.holiday_date);});
-    document.getElementById('newDate').value='';
-    document.getElementById('newName').value='';
     showToast('Holiday added!','success');
+    closePopup();
     render();
   }catch(e){ showToast('Error: '+e.message,'error'); }
+}
+
+async function deleteCurrentHoliday(){
+  if(!popupHolidayId) return;
+  await deleteHoliday(popupHolidayId);
+  closePopup();
 }
 
 async function deleteHoliday(id){
   if(!confirm('Delete this holiday?')) return;
   try{
     await fetch(SUPABASE_URL+'/rest/v1/public_holidays?id=eq.'+id,{method:'DELETE',headers:HDRS});
-    holidays = holidays.filter(function(h){return h.id!==id;});
+    holidays=holidays.filter(function(h){return h.id!==id;});
     showToast('Deleted!','success');
     render();
   }catch(e){ showToast('Error: '+e.message,'error'); }
 }
 
-async function deleteHolidayByDate(dateStr){
-  var h = getHolidayForDate(dateStr);
-  if(!h) return;
-  await deleteHoliday(h.id);
-}
-
-function showToast(msg, type){
+function showToast(msg,type){
   var t=document.getElementById('toast');
   t.textContent=msg;
   t.className='toast '+(type||'success')+' show';
   setTimeout(function(){t.classList.remove('show');},3200);
 }
 
-function logout(){ if(confirm('Sign out?')){ localStorage.clear(); window.location.href='index.html'; } }
+function logout(){if(confirm('Sign out?')){localStorage.clear();window.location.href='index.html';}}
 </script>
 </body>
 </html>
