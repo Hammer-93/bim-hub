@@ -78,6 +78,7 @@
     .s-cell.tdy::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:2px;background:#e63946;z-index:5;transform:translateX(-50%);}
     .s-cell.lv{background:#f8f8f8 !important;}
     .s-cell.we.lv{background:#f8f8f8 !important;}
+    .s-cell.ph{background:#f8f8f8 !important;}
     .lane-first .s-cell,.lane-first .s-name-cell{border-top:2px solid #dde2ea;}
     .lane-last .s-cell{border-bottom:2px solid #dde2ea !important;}
     .s-bar{position:absolute;height:22px;border-radius:3px;top:7px;display:flex;align-items:center;padding:0 6px;font-size:9.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15);z-index:2;transition:opacity .2s,transform .15s;}
@@ -166,7 +167,7 @@
     </div>
     <div class="nav-drop-menu" id="hrNavMenu">
       <a class="nav-drop-item" href="hr.html">&#x1F3E0; Overview</a>
-      <a class="nav-drop-item coming-soon" href="#">&#x1F5D3;&#xFE0F; Public Holidays <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item" href="hr-holidays.html">&#x1F5D3;&#xFE0F; Public Holidays</a>
       <a class="nav-drop-item coming-soon" href="#">&#x1F465; Staff Management <span style="font-size:10px;color:#bbb;">(soon)</span></a>
     </div>
   </div>
@@ -195,6 +196,7 @@
   <div class="legend">
     <div class="legend-item"><div class="legend-bar" style="background:#a8dadc;"></div><span>Work Period (color by project)</span></div>
     <div class="legend-item"><div class="legend-line" style="background:#e63946;"></div><span>Today</span></div>
+    <div class="legend-item"><div class="legend-bar" style="background:#f8f8f8;border:1px solid #ddd;"></div><span>Holiday / Weekend</span></div>
     <span id="addTaskHint" style="display:none;font-size:11px;color:#0077b6;font-weight:600;">&#x1F4A1; Click staff name to add task &nbsp;|&nbsp; Click bar to edit/delete</span>
   </div>
   <div class="staff-wrap" id="staffWrap">
@@ -416,7 +418,7 @@ function renderStaff(){
     days.forEach(function(d){
       var dt=new Date(d+'T00:00:00');
       var dow=['日','月','火','水','木','金','土'][dt.getDay()];
-      var we=isWeekend(d),td=d===today;
+      var we=isWeekend(d)||isHoliday(d),td=d===today;
       hdr+='<th style="'+(we?'opacity:.45;':'')+(td?'background:#e63946;':'')+'"'+(td?' class="today-hdr"':'')+'>'+dt.getDate()+'<br><span style="font-size:9px;opacity:.8;">'+dow+'</span></th>';
     });
   }
@@ -461,9 +463,11 @@ function buildUserRows(u,days,today,CW){
       nameCell='<td class="s-name-cell" rowspan="'+laneCount+'"><div class="'+nc+'" data-uid="'+u.id+'" data-uname="'+(u.name||u.email)+'">'+(u.name||u.email)+'</div><span class="role-pill '+pillClass+'">'+(u.role||'Staff')+'</span></td>';
     }
     var cells=days.map(function(d){
-      var we=isWeekend(d),td2=(d===today),lv=(allLeaves[u.id]||[]).indexOf(d)>=0;
+      var we=isWeekend(d)||isHoliday(d);
+      var td2=(d===today);
+      var lv=(allLeaves[u.id]||[]).indexOf(d)>=0;
       var cls='s-cell'+(we?' we':'')+(td2?' tdy':'')+(lv?' lv':'');
-      return '<td class="'+cls+'" data-uid="'+u.id+'" data-lane="'+lane+'" data-date="'+d+'"'+(lv?' title="Day Off"':'')+' style="width:'+CW+'px;min-width:'+CW+'px;"></td>';
+      return '<td class="'+cls+'" data-uid="'+u.id+'" data-lane="'+lane+'" data-date="'+d+'"'+(lv?' title="Day Off"':'')+(isHoliday(d)&&!lv?' title="Public Holiday"':'')+' style="width:'+CW+'px;min-width:'+CW+'px;"></td>';
     }).join('');
     html+='<tr class="'+rowClass+'" data-uid="'+u.id+'" data-lane="'+lane+'">'+nameCell+cells+'</tr>';
   }
