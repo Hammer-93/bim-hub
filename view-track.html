@@ -176,7 +176,7 @@
     </div>
     <div class="nav-drop-menu" id="hrNavMenu">
       <a class="nav-drop-item" href="hr.html">&#x1F3E0; Overview</a>
-      <a class="nav-drop-item coming-soon" href="#">&#x1F5D3;&#xFE0F; Public Holidays <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item" href="hr-holidays.html">&#x1F5D3;&#xFE0F; Public Holidays</a>
       <a class="nav-drop-item coming-soon" href="#">&#x1F465; Staff Management <span style="font-size:10px;color:#bbb;">(soon)</span></a>
     </div>
   </div>
@@ -484,8 +484,8 @@ function renderTrack(){
   days.forEach(function(d){
     var dt=new Date(d+'T00:00:00');
     var dow=DAYS_JP[dt.getDay()];
-    var we=isWeekend(d),td=(d===today),lv=isLeaveDay(d);
-    var thCls=td?'today-hdr':(lv?'leave-hdr':'');
+    var we=isWeekend(d)||isHoliday(d),td=(d===today),lv=isLeaveDay(d);
+    var thCls=td?'today-hdr':(lv?'leave-hdr':(we&&!td?'leave-hdr':''));
     var opacity=(we&&!td&&!lv)?'opacity:.45;':'';
     hdr+='<th style="width:'+CW+'px;min-width:'+CW+'px;'+opacity+'"'+(thCls?' class="'+thCls+'"':'')+'>'+dt.getDate()+'<br><span style="font-size:8px;opacity:.8;">'+dow+'</span></th>';
   });
@@ -515,9 +515,9 @@ function renderTrack(){
           ?'<span class="task-source-badge task-source-working">My Task</span>'
           :'<span class="task-source-badge task-source-manager">Assigned</span>';
         var taskCells=days.map(function(d){
-          var we=isWeekend(d),td2=(d===today),lv=isLeaveDay(d);
+          var we=isWeekend(d)||isHoliday(d),td2=(d===today),lv=isLeaveDay(d);
           var cls='t-day-cell'+(we?' we':'')+(td2?' tdy':'')+(lv?' lv':'');
-          return '<td class="'+cls+'" data-tid="'+task.id+'" data-d="'+d+'" style="width:'+CW+'px;min-width:'+CW+'px;"'+(lv?' title="Day Off"':'')+'></td>';
+          return '<td class="'+cls+'" data-tid="'+task.id+'" data-d="'+d+'" style="width:'+CW+'px;min-width:'+CW+'px;"'+(lv?' title="Day Off"':'')+(isHoliday(d)&&!lv?' title="Public Holiday"':'')+'></td>';
         }).join('');
         rows+='<tr class="task-row proj-child-'+projId+'" style="'+dispStyle+'">'
           +'<td class="t-label-cell"><div class="task-label">'
@@ -528,7 +528,7 @@ function renderTrack(){
           +'</div></div></div></td>'+taskCells+'</tr>';
         details.forEach(function(det){
           var detCells=days.map(function(d){
-            var we=isWeekend(d),td2=(d===today),lv=isLeaveDay(d);
+            var we=isWeekend(d)||isHoliday(d),td2=(d===today),lv=isLeaveDay(d);
             var cls='t-day-cell'+(we?' we':'')+(td2?' tdy':'')+(lv?' lv':'');
             return '<td class="'+cls+'" data-det="'+det.id+'" data-d="'+d+'" style="width:'+CW+'px;min-width:'+CW+'px;"'+(lv?' title="Day Off"':'')+'></td>';
           }).join('');
@@ -542,7 +542,7 @@ function renderTrack(){
         });
         if(!isReadOnly){
           var addCells=days.map(function(d){
-            var we=isWeekend(d),td2=(d===today),lv=isLeaveDay(d);
+            var we=isWeekend(d)||isHoliday(d),td2=(d===today),lv=isLeaveDay(d);
             var cls='t-day-cell'+(we?' we':'')+(td2?' tdy':'')+(lv?' lv':'');
             return '<td class="'+cls+'" style="width:'+CW+'px;min-width:'+CW+'px;"></td>';
           }).join('');
