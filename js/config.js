@@ -107,10 +107,48 @@ if (ta) ta.textContent = name.substring(0,2).toUpperCase();
   if (role==='Admin' || role==='Manager' || role==='Sub Manager') {
     document.querySelectorAll('.admin-only').forEach(el => el.style.display='flex');
   }
+  if (role==='Admin' || role==='Manager' || role==='Sub Manager' || role==='Leader') {
+    document.querySelectorAll('.mgmt-only').forEach(el => el.style.display='flex');
+  }
+  if (role==='Admin' || role==='Manager' || role==='Sub Manager' || role==='HR') {
+    document.querySelectorAll('.hr-only').forEach(el => el.style.display='flex');
+  }
 }
 function logout() {
   if (confirm('Dang xuat?')) {
     localStorage.clear();
     window.location.href = 'index.html';
   }
+}
+function hasRole(allowedRoles) {
+  var role = localStorage.getItem('user_role') || 'Staff';
+  return allowedRoles.indexOf(role) >= 0;
+}
+function isMgmtRole() {
+  return hasRole(['Admin','Manager','Sub Manager','Leader']);
+}
+function isHRRole() {
+  return hasRole(['Admin','Manager','Sub Manager','HR']);
+}
+async function fetchUserLeaves(userId) {
+  if (!userId) return [];
+  try {
+    var res = await fetch(SUPABASE_URL+'/rest/v1/user_leaves?user_id=eq.'+userId+'&select=leave_date', {headers:HDRS});
+    if (!res.ok) return [];
+    var arr = await res.json();
+    return arr.map(function(r){ return r.leave_date; });
+  } catch(e) { return []; }
+}
+async function fetchAllLeaves() {
+  try {
+    var res = await fetch(SUPABASE_URL+'/rest/v1/user_leaves?select=user_id,leave_date', {headers:HDRS});
+    if (!res.ok) return {};
+    var arr = await res.json();
+    var map = {};
+    arr.forEach(function(r){
+      if (!map[r.user_id]) map[r.user_id] = [];
+      map[r.user_id].push(r.leave_date);
+    });
+    return map;
+  } catch(e) { return {}; }
 }
