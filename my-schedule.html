@@ -33,11 +33,12 @@
     .nav-drop-trigger.active{color:#0077b6;border-bottom-color:#0077b6;}
     .nav-drop-arrow{font-size:10px;opacity:.6;transition:transform .2s;}
     .nav-drop-trigger.open .nav-drop-arrow{transform:rotate(180deg);}
-    .nav-drop-menu{position:absolute;top:calc(100% + 2px);left:0;background:#fff;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.13);min-width:190px;z-index:300;display:none;overflow:hidden;border:1px solid #eee;}
+    .nav-drop-menu{position:absolute;top:calc(100% + 2px);left:0;background:#fff;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.13);min-width:210px;z-index:300;display:none;overflow:hidden;border:1px solid #eee;}
     .nav-drop-menu.open{display:block;}
     .nav-drop-item{display:flex;align-items:center;gap:9px;padding:11px 18px;font-size:13px;font-weight:600;color:#555;text-decoration:none;transition:background .15s;}
     .nav-drop-item:hover{background:#f0f7ff;color:#0077b6;}
     .nav-drop-item.active{color:#0077b6;background:#e8f4fe;}
+    .nav-drop-item.coming-soon{color:#bbb;cursor:default;pointer-events:none;}
     .toast{position:fixed;bottom:24px;right:24px;background:#1a1a2e;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:9999;transform:translateY(80px);opacity:0;transition:all .35s;}
     .toast.show{transform:translateY(0);opacity:1;}
     .toast.success{border-left:4px solid #52b788;}
@@ -131,6 +132,27 @@
       <a class="nav-drop-item" href="view-track.html?mode=view">&#x1F4CA; Project Track</a>
     </div>
   </div>
+  <div class="nav-drop mgmt-only" id="mgmtNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="mgmtNavTrigger">
+      &#x1F4CA; Management <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="mgmtNavMenu">
+      <a class="nav-drop-item" href="management.html">&#x1F3E0; Overview</a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F4C4; Quotation <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F680; Project Deployment <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F4B0; Revenue Analysis <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+    </div>
+  </div>
+  <div class="nav-drop hr-only" id="hrNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="hrNavTrigger">
+      &#x1F464; HR <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="hrNavMenu">
+      <a class="nav-drop-item" href="hr.html">&#x1F3E0; Overview</a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F5D3;&#xFE0F; Public Holidays <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F465; Staff Management <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+    </div>
+  </div>
   <div class="nav-drop" id="myNavDrop">
     <div class="nav-drop-trigger active" id="myNavTrigger">
       &#x1F4CB; My Tasks <span class="nav-drop-arrow">&#x25BC;</span>
@@ -195,8 +217,8 @@
 <script>
 var currentUserId = null;
 var currentYear   = new Date().getFullYear();
-var currentMonth  = new Date().getMonth(); // 0-indexed
-var myLeaves      = {}; // key: 'YYYY-MM-DD', value: leave record id
+var currentMonth  = new Date().getMonth();
+var myLeaves      = {};
 var saving        = false;
 
 function fmt2(n){return String(n).padStart(2,'0');}
@@ -223,24 +245,32 @@ function initTopbar(){
     var els=document.querySelectorAll('.admin-only');
     for(var i=0;i<els.length;i++)els[i].style.display='flex';
   }
+  if(role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='Leader'){
+    var els2=document.querySelectorAll('.mgmt-only');
+    for(var i=0;i<els2.length;i++)els2[i].style.display='flex';
+  }
+  if(role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='HR'){
+    var els3=document.querySelectorAll('.hr-only');
+    for(var i=0;i<els3.length;i++)els3[i].style.display='flex';
+  }
   for(var i=0;i<allUsers.length;i++){
     if(allUsers[i].email===email){currentUserId=allUsers[i].id;break;}
   }
   var dropBtn=document.getElementById('userDropBtn');
   var dropMenu=document.getElementById('userDropMenu');
   dropBtn.addEventListener('click',function(e){e.stopPropagation();dropMenu.classList.toggle('open');});
-  document.addEventListener('click',function(){
-    dropMenu.classList.remove('open');
-  });
+  document.addEventListener('click',function(){dropMenu.classList.remove('open');});
 }
 
 function initNavDrops(){
-  var pairs=[
+  var drops=[
     ['scheduleNavTrigger','scheduleNavMenu'],
     ['staffNavTrigger','staffNavMenu'],
+    ['mgmtNavTrigger','mgmtNavMenu'],
+    ['hrNavTrigger','hrNavMenu'],
     ['myNavTrigger','myNavMenu']
   ];
-  pairs.forEach(function(p){
+  drops.forEach(function(p){
     var trigger=document.getElementById(p[0]);
     var menu=document.getElementById(p[1]);
     if(!trigger||!menu)return;
@@ -251,7 +281,7 @@ function initNavDrops(){
     });
   });
   document.addEventListener('click',function(){
-    pairs.forEach(function(p){
+    drops.forEach(function(p){
       var t=document.getElementById(p[0]);
       var m=document.getElementById(p[1]);
       if(t)t.classList.remove('open');
@@ -288,32 +318,24 @@ function goToday(){
 function renderCalendar(){
   var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('monthLabel').textContent=months[currentMonth]+' '+currentYear;
-
   var today=fmtDate(new Date().getFullYear(),new Date().getMonth(),new Date().getDate());
   var firstDay=new Date(currentYear,currentMonth,1);
   var lastDay=new Date(currentYear,currentMonth+1,0);
-  var startDow=firstDay.getDay(); // 0=Sun
-  // Convert to Mon-first: Mon=0 ... Sun=6
+  var startDow=firstDay.getDay();
   var startOffset=(startDow===0)?6:(startDow-1);
   var totalDays=lastDay.getDate();
-
   var cells=[];
-  // Previous month padding
   var prevLast=new Date(currentYear,currentMonth,0).getDate();
   for(var i=startOffset-1;i>=0;i--){
     cells.push({day:prevLast-i,month:currentMonth-1,year:currentYear,other:true});
   }
-  // Current month
   for(var d=1;d<=totalDays;d++){
     cells.push({day:d,month:currentMonth,year:currentYear,other:false});
   }
-  // Next month padding
   var remaining=cells.length%7===0?0:7-(cells.length%7);
   for(var n=1;n<=remaining;n++){
     cells.push({day:n,month:currentMonth+1,year:currentYear,other:true});
   }
-
-  // Stats
   var monthLeaves=0,yearLeaves=0,workDays=0;
   Object.keys(myLeaves).forEach(function(d){
     if(d.startsWith(currentYear+'-'))yearLeaves++;
@@ -326,7 +348,6 @@ function renderCalendar(){
   document.getElementById('statMonth').textContent=monthLeaves;
   document.getElementById('statYear').textContent=yearLeaves;
   document.getElementById('statWork').textContent=workDays;
-
   var html='';
   cells.forEach(function(cell){
     var ds=fmtDate(cell.year,cell.month,cell.day);
@@ -338,28 +359,26 @@ function renderCalendar(){
     if(isWE)cls+=' weekend';
     if(isToday)cls+=' today';
     if(isLeave)cls+=' leave';
-    html+='<div class="'+cls+'" data-date="'+ds+'" onclick="toggleLeave(\''+ds+'\')">'
-      +'<div class="day-num">'+cell.day+'</div>'
-      +'<div class="day-leave-icon">Day Off</div>'
-      +'</div>';
+    html+='<div class="'+cls+'" data-date="'+ds+'" onclick="toggleLeave(\''+ds+'\')">'+
+      '<div class="day-num">'+cell.day+'</div>'+
+      '<div class="day-leave-icon">Day Off</div>'+
+      '</div>';
   });
   document.getElementById('calBody').innerHTML=html;
 }
 
 async function toggleLeave(dateStr){
   if(saving)return;
-  if(isWeekendDay(dateStr))return; // weekend always off, skip
+  if(isWeekendDay(dateStr))return;
   saving=true;
   try{
     if(myLeaves[dateStr]){
-      // DELETE
       var res=await fetch(SUPABASE_URL+'/rest/v1/user_leaves?id=eq.'+myLeaves[dateStr],{method:'DELETE',headers:HDRS});
       if(res.ok||res.status===204){
         delete myLeaves[dateStr];
         showToast('Leave cancelled: '+dateStr,'success');
       }else{showToast('Error removing leave','error');}
     }else{
-      // INSERT
       var body={user_id:currentUserId,leave_date:dateStr};
       var res2=await fetch(SUPABASE_URL+'/rest/v1/user_leaves',{method:'POST',headers:HDRS,body:JSON.stringify(body)});
       if(res2.ok){
@@ -394,7 +413,7 @@ async function clearMonth(){
 function exportLeaves(){
   var all=Object.keys(myLeaves).sort();
   if(!all.length){showToast('No leave days recorded','error');return;}
-  var text='My Leave Days:\n'+all.join('\n');
+  var text='My Leave Days:\\n'+all.join('\\n');
   var blob=new Blob([text],{type:'text/plain'});
   var a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
