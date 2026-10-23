@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VINADECO BIM Hub – My Tasks</title>
+  <title>VINADECO BIM Hub \u2013 My Tasks</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;min-height:100vh;}
@@ -35,11 +35,12 @@
     .nav-drop-trigger.active{color:#0077b6;border-bottom-color:#0077b6;}
     .nav-drop-arrow{font-size:10px;opacity:.6;transition:transform .2s;}
     .nav-drop-trigger.open .nav-drop-arrow{transform:rotate(180deg);}
-    .nav-drop-menu{position:absolute;top:calc(100% + 2px);left:0;background:#fff;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.13);min-width:190px;z-index:300;display:none;overflow:hidden;border:1px solid #eee;}
+    .nav-drop-menu{position:absolute;top:calc(100% + 2px);left:0;background:#fff;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.13);min-width:210px;z-index:300;display:none;overflow:hidden;border:1px solid #eee;}
     .nav-drop-menu.open{display:block;}
     .nav-drop-item{display:flex;align-items:center;gap:9px;padding:11px 18px;font-size:13px;font-weight:600;color:#555;text-decoration:none;transition:background .15s;}
     .nav-drop-item:hover{background:#f0f7ff;color:#0077b6;}
     .nav-drop-item.active{color:#0077b6;background:#e8f4fe;}
+    .nav-drop-item.coming-soon{color:#bbb;cursor:default;pointer-events:none;}
     .main{max-width:1100px;margin:28px auto;padding:0 24px;}
     .page-title{font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:4px;}
     .page-sub{font-size:13px;color:#888;margin-bottom:24px;}
@@ -111,8 +112,8 @@
     <span class="topbar-title">VINADECO BIM Hub</span>
   </div>
   <div class="topbar-right">
-  <a class="btn-top" href="view-list.html">&#x1F4C5; Schedule</a>
-  <div class="dropdown-wrap" id="userDropWrap">
+    <a class="btn-top" href="view-list.html">&#x1F4C5; Schedule</a>
+    <div class="dropdown-wrap" id="userDropWrap">
       <button class="dropdown-trigger" id="userDropBtn">
         <span class="user-name" id="topName">...</span>
         <span class="dropdown-arrow">&#x25BC;</span>
@@ -127,7 +128,46 @@
 </nav>
 
 <div class="nav-tabs-bar">
-  
+  <div class="nav-drop" id="scheduleNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="scheduleNavTrigger">
+      &#x1F4C5; Project Schedule <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="scheduleNavMenu">
+      <a class="nav-drop-item" href="view-list.html">&#x1F4CB; List of Project</a>
+      <a class="nav-drop-item" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
+      <a class="nav-drop-item" href="view-schedule.html">&#x1F4C5; Project Schedule</a>
+    </div>
+  </div>
+  <div class="nav-drop" id="staffNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="staffNavTrigger">
+      &#x1F465; Staff <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="staffNavMenu">
+      <a class="nav-drop-item" href="view-staff.html">&#x1F4C5; Staff Schedule</a>
+      <a class="nav-drop-item" href="view-track.html?mode=view">&#x1F4CA; Project Track</a>
+    </div>
+  </div>
+  <div class="nav-drop mgmt-only" id="mgmtNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="mgmtNavTrigger">
+      &#x1F4CA; Management <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="mgmtNavMenu">
+      <a class="nav-drop-item" href="management.html">&#x1F3E0; Overview</a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F4C4; Quotation <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F680; Project Deployment <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F4B0; Revenue Analysis <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+    </div>
+  </div>
+  <div class="nav-drop hr-only" id="hrNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="hrNavTrigger">
+      &#x1F464; HR <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="hrNavMenu">
+      <a class="nav-drop-item" href="hr.html">&#x1F3E0; Overview</a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F5D3;&#xFE0F; Public Holidays <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F465; Staff Management <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+    </div>
+  </div>
   <div class="nav-drop" id="myTaskNavDrop">
     <div class="nav-drop-trigger active" id="myTaskNavTrigger">
       &#x1F4CB; My Tasks <span class="nav-drop-arrow">&#x25BC;</span>
@@ -186,12 +226,12 @@
     <div class="form-group">
       <label>Type of Work</label>
       <select id="taskTypeSel">
-        <option value="パース・動画">パース・動画</option>
-        <option value="意匠モデル">意匠モデル</option>
-        <option value="構造モデル">構造モデル</option>
-        <option value="清算モデル">清算モデル</option>
-        <option value="図面">図面</option>
-        <option value="施工ステップ">施工ステップ</option>
+        <option value="\u30d1\u30fc\u30b9\u30fb\u52d5\u753b">\u30d1\u30fc\u30b9\u30fb\u52d5\u753b</option>
+        <option value="\u610f\u5320\u30e2\u30c7\u30eb">\u610f\u5320\u30e2\u30c7\u30eb</option>
+        <option value="\u69cb\u9020\u30e2\u30c7\u30eb">\u69cb\u9020\u30e2\u30c7\u30eb</option>
+        <option value="\u6e05\u7b97\u30e2\u30c7\u30eb">\u6e05\u7b97\u30e2\u30c7\u30eb</option>
+        <option value="\u56f3\u9762">\u56f3\u9762</option>
+        <option value="\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7">\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7</option>
       </select>
     </div>
     <div class="form-group"><label>Start Date</label><input type="date" id="taskStart"/></div>
@@ -215,14 +255,13 @@
   };
   var PASTEL = ['#a8dadc','#b5ead7','#ffdac1','#c7ceea','#ffb7b2','#e2f0cb','#bee5eb','#d4b8e0','#f7c59f','#a0c4ff'];
   var TYPE_COLORS = {
-    'パース・動画': '#f4a261',
-    '意匠モデル': '#4cc9f0',
-    '構造モデル': '#52b788',
-    '清算モデル': '#9b5de5',
-    '図面': '#e63946',
-    '施工ステップ': '#ffd166'
+    '\u30d1\u30fc\u30b9\u30fb\u52d5\u753b': '#f4a261',
+    '\u610f\u5320\u30e2\u30c7\u30eb': '#4cc9f0',
+    '\u69cb\u9020\u30e2\u30c7\u30eb': '#52b788',
+    '\u6e05\u7b97\u30e2\u30c7\u30eb': '#9b5de5',
+    '\u56f3\u9762': '#e63946',
+    '\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7': '#ffd166'
   };
-  var TASK_TYPES = ['パース・動画','意匠モデル','構造モデル','清算モデル','図面','施工ステップ'];
   var myUserId = null;
   var allProjects = [];
   var myTasks = [];
@@ -236,7 +275,7 @@
   }
   function getYearFromCode(code) {
     if (!code) return 'Unknown';
-    var m = code.match(/^(\d{2})/);
+    var m = code.match(/^(\\d{2})/);
     if (m) return '20' + m[1];
     return 'Unknown';
   }
@@ -275,7 +314,7 @@
     document.getElementById('taskProjId').value = id;
     var code = getProjCode(p);
     document.getElementById('projSearchInput').value = code;
-    document.getElementById('projSelectedDisplay').textContent = code + ' · ' + (p.project_name||'');
+    document.getElementById('projSelectedDisplay').textContent = code + ' \u00b7 ' + (p.project_name||'');
     closeProjDD();
   }
   function closeProjDD() { document.getElementById('projComboDD').classList.remove('open'); }
@@ -290,62 +329,77 @@
     var email=localStorage.getItem('user_email')||'';
     if (!email){window.location.href='index.html';return;}
     document.getElementById('topName').textContent=name;
-    document.getElementById('mySubTitle').textContent=name+' – '+email;
-    if (role==='Admin'||role==='Manager'||role==='Sub Manager'){var els=document.querySelectorAll('.admin-only');for(var i=0;i<els.length;i++)els[i].style.display='flex';}
+    document.getElementById('mySubTitle').textContent=name+' \u2013 '+email;
+    if (role==='Admin'||role==='Manager'||role==='Sub Manager'){
+      var els=document.querySelectorAll('.admin-only');
+      for(var i=0;i<els.length;i++) els[i].style.display='flex';
+    }
+    if (role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='Leader'){
+      var els2=document.querySelectorAll('.mgmt-only');
+      for(var i=0;i<els2.length;i++) els2[i].style.display='flex';
+    }
+    if (role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='HR'){
+      var els3=document.querySelectorAll('.hr-only');
+      for(var i=0;i<els3.length;i++) els3[i].style.display='flex';
+    }
     var dropBtn=document.getElementById('userDropBtn');
     var dropMenu=document.getElementById('userDropMenu');
     dropBtn.addEventListener('click',function(e){e.stopPropagation();dropMenu.classList.toggle('open');});
     document.addEventListener('click',function(){dropMenu.classList.remove('open');});
   }
-  function initNavDrop() {
-  var mtrigger = document.getElementById('myTaskNavTrigger');
-  var mmenu    = document.getElementById('myTaskNavMenu');
-  mtrigger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    mtrigger.classList.toggle('open');
-    mmenu.classList.toggle('open');
-  });
-  document.addEventListener('click', function() {
-    mtrigger.classList.remove('open');
-    mmenu.classList.remove('open');
-  });
-  var myTopBtn  = document.getElementById('myTaskTopBtn');
-var myTopMenu = document.getElementById('myTaskTopMenu');
-if(myTopBtn){
-  myTopBtn.addEventListener('click',function(e){
-    e.stopPropagation();myTopMenu.classList.toggle('open');
-  });
-}
-document.addEventListener('click',function(){
-  if(myTopMenu) myTopMenu.classList.remove('open');
-});
-}
-window.onload = async function() {
-  initTopbar();
-  initNavDrop();
-  var email = localStorage.getItem('user_email') || '';
-  await loadMyUserId(email);
-  await loadData();
-};
+  function initNavDrops() {
+    var drops = [
+      ['scheduleNavTrigger','scheduleNavMenu'],
+      ['staffNavTrigger','staffNavMenu'],
+      ['mgmtNavTrigger','mgmtNavMenu'],
+      ['hrNavTrigger','hrNavMenu'],
+      ['myTaskNavTrigger','myTaskNavMenu']
+    ];
+    drops.forEach(function(p) {
+      var trigger = document.getElementById(p[0]);
+      var menu = document.getElementById(p[1]);
+      if (!trigger || !menu) return;
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        trigger.classList.toggle('open');
+        menu.classList.toggle('open');
+      });
+    });
+    document.addEventListener('click', function() {
+      drops.forEach(function(p) {
+        var t = document.getElementById(p[0]);
+        var m = document.getElementById(p[1]);
+        if (t) t.classList.remove('open');
+        if (m) m.classList.remove('open');
+      });
+    });
+  }
+  window.onload = async function() {
+    initTopbar();
+    initNavDrops();
+    var email = localStorage.getItem('user_email') || '';
+    await loadMyUserId(email);
+    await loadData();
+  };
 
-async function loadMyUserId(email) {
-  if (!email) return;
-  var res = await fetch(SUPABASE_URL+'/rest/v1/users?email=eq.'+encodeURIComponent(email)+'&select=id', {headers:HDRS});
-  var data = await res.json();
-  if (data.length) myUserId = data[0].id;
-}
+  async function loadMyUserId(email) {
+    if (!email) return;
+    var res = await fetch(SUPABASE_URL+'/rest/v1/users?email=eq.'+encodeURIComponent(email)+'&select=id', {headers:HDRS});
+    var data = await res.json();
+    if (data.length) myUserId = data[0].id;
+  }
 
-async function loadData() {
-  try {
-    var pRes = await fetch(SUPABASE_URL+'/rest/v1/projects?select=*&order=created_at.desc', {headers:HDRS});
-    allProjects = await pRes.json();
-    if (myUserId) {
-      var tRes = await fetch(SUPABASE_URL+'/rest/v1/project_tasks?assigned_to=eq.'+myUserId+'&select=*&order=start_date.asc', {headers:HDRS});
-      myTasks = await tRes.json();
-    } else { myTasks = []; }
-    renderMyTasks();
-  } catch(e) { showToast('Error loading data','error'); }
-}
+  async function loadData() {
+    try {
+      var pRes = await fetch(SUPABASE_URL+'/rest/v1/projects?select=*&order=created_at.desc', {headers:HDRS});
+      allProjects = await pRes.json();
+      if (myUserId) {
+        var tRes = await fetch(SUPABASE_URL+'/rest/v1/project_tasks?assigned_to=eq.'+myUserId+'&select=*&order=start_date.asc', {headers:HDRS});
+        myTasks = await tRes.json();
+      } else { myTasks = []; }
+      renderMyTasks();
+    } catch(e) { showToast('Error loading data','error'); }
+  }
 
   function renderMyTasks() {
     var active=myTasks.filter(function(t){return t.status!=='done';});
@@ -361,13 +415,13 @@ async function loadData() {
       var color=proj?PASTEL[allProjects.indexOf(proj)%PASTEL.length]:'#aaa';
       var tc=TYPE_COLORS[t.task_type]||'#888';
       var code=proj?getProjCode(proj):'';
-      var name=proj?(proj.project_name||''):'–';
+      var name=proj?(proj.project_name||''):'\\u2013';
       var tid=t.id;
       return '<tr>'
-        +'<td>'+(proj?'<span class="proj-chip" style="background:'+color+';color:#333;">'+code+'</span>'+name:'–')+'</td>'
-        +'<td><span class="type-badge" style="background:'+tc+';">'+(t.task_type||'–')+'</span></td>'
-        +'<td>'+(t.start_date||'–')+'</td>'
-        +'<td>'+(t.end_date||'–')+'</td>'
+        +'<td>'+(proj?'<span class="proj-chip" style="background:'+color+';color:#333;">'+code+'</span>'+name:'\\u2013')+'</td>'
+        +'<td><span class="type-badge" style="background:'+tc+';">'+(t.task_type||'\\u2013')+'</span></td>'
+        +'<td>'+(t.start_date||'\\u2013')+'</td>'
+        +'<td>'+(t.end_date||'\\u2013')+'</td>'
         +'<td><div style="display:flex;gap:6px;">'
         +'<button class="btn-sm btn-edit" onclick="openEditModal(\''+tid+'\')">&#x270F;&#xFE0F; Edit</button>'
         +'<button class="btn-sm btn-done" onclick="markDone(\''+tid+'\')">&#x2705; Done</button>'
@@ -398,13 +452,13 @@ async function loadData() {
         var color=proj?PASTEL[allProjects.indexOf(proj)%PASTEL.length]:'#aaa';
         var tc=TYPE_COLORS[t.task_type]||'#888';
         var code=proj?getProjCode(proj):'';
-        var name=proj?(proj.project_name||''):'–';
+        var name=proj?(proj.project_name||''):'\\u2013';
         var tid=t.id;
         return '<tr>'
-          +'<td>'+(proj?'<span class="proj-chip" style="background:'+color+';color:#333;">'+code+'</span>'+name:'–')+'</td>'
-          +'<td><span class="type-badge" style="background:'+tc+';">'+(t.task_type||'–')+'</span></td>'
-          +'<td>'+(t.start_date||'–')+'</td>'
-          +'<td>'+(t.end_date||'–')+'</td>'
+          +'<td>'+(proj?'<span class="proj-chip" style="background:'+color+';color:#333;">'+code+'</span>'+name:'\\u2013')+'</td>'
+          +'<td><span class="type-badge" style="background:'+tc+';">'+(t.task_type||'\\u2013')+'</span></td>'
+          +'<td>'+(t.start_date||'\\u2013')+'</td>'
+          +'<td>'+(t.end_date||'\\u2013')+'</td>'
           +'<td><button class="btn-sm btn-undone" onclick="markActive(\''+tid+'\')">&#x21A9;&#xFE0F; Revert</button></td>'
           +'</tr>';
       }).join('');
