@@ -15,10 +15,30 @@ const PASTEL_COLORS = [
   '#cdb4db','#ffc8dd','#d0f4de','#e9c46a','#8ecae6','#95d5b2'
 ];
 
-let allProjects  = [];
-let allTasks     = [];
-let allUsers     = [];
-let projColorMap = {};
+let allProjects      = [];
+let allTasks         = [];
+let allUsers         = [];
+let projColorMap     = {};
+let allPublicHolidays = []; // array of 'YYYY-MM-DD' strings
+
+async function loadPublicHolidays() {
+  try {
+    var year = new Date().getFullYear();
+    var res = await fetch(
+      SUPABASE_URL + '/rest/v1/public_holidays?select=holiday_date&order=holiday_date.asc',
+      {headers: HDRS}
+    );
+    if (!res.ok) { allPublicHolidays = []; return; }
+    var arr = await res.json();
+    allPublicHolidays = arr.map(function(r) { return r.holiday_date; });
+  } catch(e) {
+    allPublicHolidays = [];
+  }
+}
+
+function isHoliday(d) {
+  return allPublicHolidays.indexOf(d) >= 0;
+}
 
 async function loadAllData() {
   const [pR, tR, uR] = await Promise.all([
@@ -32,6 +52,7 @@ async function loadAllData() {
   allProjects.forEach((p,i) => {
     projColorMap[p.id] = p.color || PASTEL_COLORS[i % PASTEL_COLORS.length];
   });
+  await loadPublicHolidays();
 }
 
 function fmt(d) {
@@ -96,10 +117,10 @@ function initTopbar() {
     window.location.href = 'index.html'; return;
   }
   const tn = document.getElementById('topName');
-if (tn) tn.textContent = name;
-const ta = document.getElementById('topAvatar');
-if (ta) ta.textContent = name.substring(0,2).toUpperCase();
-   const rb = document.getElementById('topRole');
+  if (tn) tn.textContent = name;
+  const ta = document.getElementById('topAvatar');
+  if (ta) ta.textContent = name.substring(0,2).toUpperCase();
+  const rb = document.getElementById('topRole');
   if (rb) {
     rb.textContent = role;
     rb.className = 'role-badge '+(role==='Admin'?'role-admin':'role-staff');
