@@ -26,29 +26,18 @@
     .dropdown-item.danger:hover { background:#fff0f0; color:#e63946; }
     .dropdown-divider { height:1px; background:#f0f0f0; margin:4px 0; }
     .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; position:sticky; top:52px; z-index:150; }
-    .nav-tab { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; text-decoration:none; display:flex; align-items:center; gap:7px; }
-    .nav-tab:hover { color:#0096c7; }
-    .nav-tab.active { color:#0077b6; border-bottom-color:#0077b6; }
     .nav-drop { position:relative; }
     .nav-drop-trigger { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; display:flex; align-items:center; gap:7px; transition:all .2s; white-space:nowrap; user-select:none; }
     .nav-drop-trigger:hover { color:#0096c7; }
     .nav-drop-trigger.active { color:#0077b6; border-bottom-color:#0077b6; }
     .nav-drop-arrow { font-size:10px; opacity:.6; transition:transform .2s; }
     .nav-drop-trigger.open .nav-drop-arrow { transform:rotate(180deg); }
-    .nav-drop-menu { position:absolute; top:calc(100% + 2px); left:0; background:#fff; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,.13); min-width:190px; z-index:300; display:none; overflow:hidden; border:1px solid #eee; }
+    .nav-drop-menu { position:absolute; top:calc(100% + 2px); left:0; background:#fff; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,.13); min-width:210px; z-index:300; display:none; overflow:hidden; border:1px solid #eee; }
     .nav-drop-menu.open { display:block; }
     .nav-drop-item { display:flex; align-items:center; gap:9px; padding:11px 18px; font-size:13px; font-weight:600; color:#555; text-decoration:none; transition:background .15s; }
     .nav-drop-item:hover { background:#f0f7ff; color:#0077b6; }
     .nav-drop-item.active { color:#0077b6; background:#e8f4fe; }
-    .staff-nav-drop { position:relative; }
-    .staff-nav-trigger { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; display:flex; align-items:center; gap:7px; transition:all .2s; white-space:nowrap; user-select:none; }
-    .staff-nav-trigger:hover { color:#0096c7; }
-    .staff-nav-trigger.active { color:#0077b6; border-bottom-color:#0077b6; }
-    .staff-nav-menu { position:absolute; top:calc(100% + 2px); left:0; background:#fff; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,.13); min-width:200px; z-index:300; display:none; overflow:hidden; border:1px solid #eee; }
-    .staff-nav-menu.open { display:block; }
-    .staff-nav-item { display:flex; align-items:center; gap:9px; padding:11px 18px; font-size:13px; font-weight:600; color:#555; text-decoration:none; transition:background .15s; }
-    .staff-nav-item:hover { background:#f0f7ff; color:#0077b6; }
-    .staff-nav-item.active { color:#0077b6; background:#e8f4fe; }
+    .nav-drop-item.coming-soon { color:#bbb; cursor:default; pointer-events:none; }
     .toast { position:fixed; bottom:24px; right:24px; background:#1a1a2e; color:#fff; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; box-shadow:0 8px 24px rgba(0,0,0,.2); z-index:9999; transform:translateY(80px); opacity:0; transition:all .35s; }
     .toast.show { transform:translateY(0); opacity:1; }
     .toast.success { border-left:4px solid #52b788; }
@@ -116,8 +105,8 @@
     .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:18px; }
     .form-group { display:flex; flex-direction:column; gap:5px; margin-bottom:13px; }
     label { font-size:12px; font-weight:600; color:#555; }
-    input[type=text], input[type=date], input[type=number], select, textarea { width:100%; padding:9px 12px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; transition:border-color .2s; font-family:inherit; color:#222; }
-    input:focus, select:focus, textarea:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.1); }
+    input[type=text],input[type=date],input[type=number],select,textarea { width:100%; padding:9px 12px; border:1.5px solid #dde2ea; border-radius:8px; font-size:13px; outline:none; transition:border-color .2s; font-family:inherit; color:#222; }
+    input:focus,select:focus,textarea:focus { border-color:#0096c7; box-shadow:0 0 0 3px rgba(0,150,199,.1); }
     .form-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px 18px; }
     .btn-primary { display:inline-flex; align-items:center; gap:7px; background:linear-gradient(135deg,#0096c7,#0077b6); color:#fff; border:none; padding:9px 20px; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-shadow:0 3px 10px rgba(0,119,182,.25); transition:all .2s; font-family:inherit; }
     .btn-primary:hover { box-shadow:0 6px 18px rgba(0,119,182,.35); transform:translateY(-1px); }
@@ -161,13 +150,34 @@
       <a class="nav-drop-item" href="view-schedule.html">&#x1F4C5; Project Schedule</a>
     </div>
   </div>
-  <div class="staff-nav-drop" id="staffNavDrop">
-    <div class="staff-nav-trigger active" id="staffNavTrigger">
+  <div class="nav-drop" id="staffNavDrop">
+    <div class="nav-drop-trigger active" id="staffNavTrigger">
       &#x1F465; Staff <span class="nav-drop-arrow">&#x25BC;</span>
     </div>
-    <div class="staff-nav-menu" id="staffNavMenu">
-      <a class="staff-nav-item" href="view-staff.html">&#x1F4C5; Staff Schedule</a>
-      <a class="staff-nav-item active" href="view-track.html?mode=view">&#x1F4CA; Project Track</a>
+    <div class="nav-drop-menu" id="staffNavMenu">
+      <a class="nav-drop-item" href="view-staff.html">&#x1F4C5; Staff Schedule</a>
+      <a class="nav-drop-item active" href="view-track.html?mode=view">&#x1F4CA; Project Track</a>
+    </div>
+  </div>
+  <div class="nav-drop mgmt-only" id="mgmtNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="mgmtNavTrigger">
+      &#x1F4CA; Management <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="mgmtNavMenu">
+      <a class="nav-drop-item" href="management.html">&#x1F3E0; Overview</a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F4C4; Quotation <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F680; Project Deployment <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F4B0; Revenue Analysis <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+    </div>
+  </div>
+  <div class="nav-drop hr-only" id="hrNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="hrNavTrigger">
+      &#x1F464; HR <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="hrNavMenu">
+      <a class="nav-drop-item" href="hr.html">&#x1F3E0; Overview</a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F5D3;&#xFE0F; Public Holidays <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F465; Staff Management <span style="font-size:10px;color:#bbb;">(soon)</span></a>
     </div>
   </div>
   <div class="nav-drop" id="myTaskNavDrop" style="display:none;">
@@ -212,7 +222,6 @@
   </div>
 </div>
 
-<!-- MODAL ADD / EDIT DETAIL -->
 <div class="modal-overlay" id="detailModal" onclick="if(event.target.id==='detailModal')closeDetailModal()">
   <div class="modal">
     <div class="modal-title" id="detailModalTitle">
@@ -241,69 +250,77 @@
 
 <script src="js/config.js"></script>
 <script>
-var currentUserId    = null;
-var currentUserRole  = 'Staff';
-var currentUserName  = '';
-var viewingUserId    = null;
-var isReadOnly       = false;
-var pageMode         = 'view';
-var allDetails       = [];
-var collapsedProjs   = {};
-var editingDetailId  = null;
-var editingTaskId    = null;
+var currentUserId   = null;
+var currentUserRole = 'Staff';
+var currentUserName = '';
+var viewingUserId   = null;
+var isReadOnly      = false;
+var pageMode        = 'view';
+var allDetails      = [];
+var collapsedProjs  = {};
+var editingDetailId = null;
+var editingTaskId   = null;
 var activeGroupFilter = 'all';
 var allViewableUsers  = [];
-var userLeaveDates   = [];
+var userLeaveDates    = [];
 
 var TASK_TYPE_COLOR = {
-  '\u30d1\u30fc\u30b9\u30fb\u52d5\u753b': '#f4a261',
-  '\u610f\u5320\u30e2\u30c7\u30eb': '#4cc9f0',
-  '\u69cb\u9020\u30e2\u30c7\u30eb': '#52b788',
-  '\u6e05\u7b97\u30e2\u30c7\u30eb': '#9b5de5',
-  '\u56f3\u9762': '#e63946',
-  '\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7': '#ffd166'
+  '\u30d1\u30fc\u30b9\u30fb\u52d5\u753b':'#f4a261',
+  '\u610f\u5320\u30e2\u30c7\u30eb':'#4cc9f0',
+  '\u69cb\u9020\u30e2\u30c7\u30eb':'#52b788',
+  '\u6e05\u7b97\u30e2\u30c7\u30eb':'#9b5de5',
+  '\u56f3\u9762':'#e63946',
+  '\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7':'#ffd166'
 };
 
-function getViewableRoles(role) {
-  if (role==='Staff')       return ['Staff'];
-  if (role==='Leader')      return ['Leader','Staff'];
-  if (role==='Sub Manager') return ['Sub Manager','Leader','Staff'];
-  if (role==='Manager')     return ['Manager','Sub Manager','Leader','Staff'];
-  if (role==='Admin')       return ['Manager','Sub Manager','Leader','Staff'];
-  return ['Staff'];
+function getViewableRoles(role){
+  if(role==='Staff')       return['Staff'];
+  if(role==='Leader')      return['Leader','Staff'];
+  if(role==='Sub Manager') return['Sub Manager','Leader','Staff'];
+  if(role==='Manager')     return['Manager','Sub Manager','Leader','Staff'];
+  if(role==='Admin')       return['Manager','Sub Manager','Leader','Staff'];
+  return['Staff'];
 }
 
-window.onload = function() {
-  var params = new URLSearchParams(location.search);
-  pageMode = params.get('mode') || 'view';
+window.onload=function(){
+  var params=new URLSearchParams(location.search);
+  pageMode=params.get('mode')||'view';
   initNavDrops();
-  var t=new Date(); var y=t.getFullYear(); var m=t.getMonth();
-  document.getElementById('trackStart').value = fmt(new Date(y,m,1));
-  document.getElementById('trackEnd').value   = fmt(new Date(y,m+1,0));
-  document.getElementById('todayBadge').textContent = '\u4eca\u65e5: '+fmt(new Date());
+  var t=new Date(),y=t.getFullYear(),m=t.getMonth();
+  document.getElementById('trackStart').value=fmt(new Date(y,m,1));
+  document.getElementById('trackEnd').value=fmt(new Date(y,m+1,0));
+  document.getElementById('todayBadge').textContent='\u4eca\u65e5: '+fmt(new Date());
   loadAllData().then(function(){
     initTopbar();
-    loadDetails().then(function(){ renderTrack(); });
-  }).catch(function(e){ showToast('Error: '+e.message,'error'); });
+    loadDetails().then(function(){renderTrack();});
+  }).catch(function(e){showToast('Error: '+e.message,'error');});
 };
 
-function initTopbar() {
-  var role  = localStorage.getItem('user_role') || 'Staff';
-  var name  = localStorage.getItem('user_name') || 'User';
-  var email = localStorage.getItem('user_email') || '';
-  currentUserRole=role; currentUserName=name;
-  if (!email) { window.location.href='index.html'; return; }
+function initTopbar(){
+  var role=localStorage.getItem('user_role')||'Staff';
+  var name=localStorage.getItem('user_name')||'User';
+  var email=localStorage.getItem('user_email')||'';
+  currentUserRole=role;currentUserName=name;
+  if(!email){window.location.href='index.html';return;}
   document.getElementById('topName').textContent=name;
   var me=null;
-  for (var i=0;i<allUsers.length;i++){if(allUsers[i].email===email){me=allUsers[i];break;}}
-  if (!me){for(var j=0;j<allUsers.length;j++){if(allUsers[j].name===name){me=allUsers[j];break;}}}
-  currentUserId = me ? me.id : null;
-  if (role==='Admin'||role==='Manager'||role==='Sub Manager'){
+  for(var i=0;i<allUsers.length;i++){if(allUsers[i].email===email){me=allUsers[i];break;}}
+  if(!me){for(var j=0;j<allUsers.length;j++){if(allUsers[j].name===name){me=allUsers[j];break;}}}
+  currentUserId=me?me.id:null;
+  if(role==='Admin'||role==='Manager'||role==='Sub Manager'){
     var els=document.querySelectorAll('.admin-only');
-    for(var k=0;k<els.length;k++) els[k].style.display='flex';
+    for(var k=0;k<els.length;k++)els[k].style.display='flex';
   }
-  if (pageMode==='edit') {
-    isReadOnly=false; viewingUserId=currentUserId;
+  if(role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='Leader'){
+    var els2=document.querySelectorAll('.mgmt-only');
+    for(var k2=0;k2<els2.length;k2++)els2[k2].style.display='flex';
+  }
+  if(role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='HR'){
+    var els3=document.querySelectorAll('.hr-only');
+    for(var k3=0;k3<els3.length;k3++)els3[k3].style.display='flex';
+  }
+  if(pageMode==='edit'){
+    isReadOnly=false;viewingUserId=currentUserId;
     document.getElementById('trackTitle').innerHTML='&#x1F4CA; Project Track &mdash; My Schedule';
     document.getElementById('groupFilterWrap').style.display='none';
     document.getElementById('staffSelectorWrap').style.display='none';
@@ -313,7 +330,7 @@ function initTopbar() {
     document.getElementById('scheduleNavDrop').style.display='none';
     document.getElementById('staffNavDrop').style.display='none';
     document.getElementById('myTaskNavDrop').style.display='flex';
-  } else {
+  }else{
     isReadOnly=true;
     document.getElementById('readonlyNotice').style.display='inline-block';
     document.getElementById('myTaskBtn').style.display='inline-block';
@@ -323,11 +340,11 @@ function initTopbar() {
     document.getElementById('myTaskNavDrop').style.display='none';
     var viewableRoles=getViewableRoles(role);
     allViewableUsers=allUsers.filter(function(u){return viewableRoles.indexOf(u.role)>=0;});
-    if (role==='Staff'){
+    if(role==='Staff'){
       viewingUserId=currentUserId;
       document.getElementById('groupFilterWrap').style.display='none';
       document.getElementById('staffSelectorWrap').style.display='none';
-    } else {
+    }else{
       document.getElementById('groupFilterWrap').style.display='flex';
       document.getElementById('staffSelectorWrap').style.display='flex';
       populateStaffDropdown('all');
@@ -369,19 +386,30 @@ function setGroupFilter(group,btn){
 }
 
 function initNavDrops(){
-  var trigger=document.getElementById('scheduleNavTrigger');
-  var menu=document.getElementById('scheduleNavMenu');
-  trigger.addEventListener('click',function(e){e.stopPropagation();trigger.classList.toggle('open');menu.classList.toggle('open');});
-  var strigger=document.getElementById('staffNavTrigger');
-  var smenu=document.getElementById('staffNavMenu');
-  strigger.addEventListener('click',function(e){e.stopPropagation();strigger.classList.toggle('open');smenu.classList.toggle('open');});
-  var mtrigger=document.getElementById('myTaskNavTrigger');
-  var mmenu=document.getElementById('myTaskNavMenu');
-  mtrigger.addEventListener('click',function(e){e.stopPropagation();mtrigger.classList.toggle('open');mmenu.classList.toggle('open');});
+  var drops=[
+    ['scheduleNavTrigger','scheduleNavMenu'],
+    ['staffNavTrigger','staffNavMenu'],
+    ['mgmtNavTrigger','mgmtNavMenu'],
+    ['hrNavTrigger','hrNavMenu'],
+    ['myTaskNavTrigger','myTaskNavMenu']
+  ];
+  drops.forEach(function(p){
+    var trigger=document.getElementById(p[0]);
+    var menu=document.getElementById(p[1]);
+    if(!trigger||!menu)return;
+    trigger.addEventListener('click',function(e){
+      e.stopPropagation();
+      trigger.classList.toggle('open');
+      menu.classList.toggle('open');
+    });
+  });
   document.addEventListener('click',function(){
-    trigger.classList.remove('open');menu.classList.remove('open');
-    strigger.classList.remove('open');smenu.classList.remove('open');
-    mtrigger.classList.remove('open');mmenu.classList.remove('open');
+    drops.forEach(function(p){
+      var t=document.getElementById(p[0]);
+      var m=document.getElementById(p[1]);
+      if(t)t.classList.remove('open');
+      if(m)m.classList.remove('open');
+    });
   });
 }
 
@@ -394,27 +422,17 @@ async function fetchLeaveDates(userId){
   if(!userId){userLeaveDates=[];return;}
   try{
     var res=await fetch(SUPABASE_URL+'/rest/v1/user_leaves?user_id=eq.'+userId+'&select=leave_date',{headers:HDRS});
-    if(res.ok){
-      var arr=await res.json();
-      userLeaveDates=arr.map(function(r){return r.leave_date;});
-    }else{
-      userLeaveDates=[];
-    }
-  }catch(e){
-    userLeaveDates=[];
-  }
+    if(res.ok){var arr=await res.json();userLeaveDates=arr.map(function(r){return r.leave_date;});}
+    else{userLeaveDates=[];}
+  }catch(e){userLeaveDates=[];}
 }
 
 async function loadDetails(){
   if(!viewingUserId){allDetails=[];userLeaveDates=[];return;}
   try{
-    var taskIds=allTasks
-      .filter(function(t){return t.assigned_to===viewingUserId;})
-      .map(function(t){return t.id;});
-    var p1=taskIds.length
-      ? fetch(SUPABASE_URL+'/rest/v1/task_details?task_id=in.('+taskIds.join(',')+')',{headers:HDRS})
-      : Promise.resolve(null);
-    var results=await Promise.all([p1, fetchLeaveDates(viewingUserId)]);
+    var taskIds=allTasks.filter(function(t){return t.assigned_to===viewingUserId;}).map(function(t){return t.id;});
+    var p1=taskIds.length?fetch(SUPABASE_URL+'/rest/v1/task_details?task_id=in.('+taskIds.join(',')+')',{headers:HDRS}):Promise.resolve(null);
+    var results=await Promise.all([p1,fetchLeaveDates(viewingUserId)]);
     var res=results[0];
     if(res&&res.ok){allDetails=await res.json();}else{allDetails=[];}
   }catch(e){allDetails=[];userLeaveDates=[];}
@@ -426,7 +444,7 @@ function fmt(d){
   return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
 }
 function getDays(s,e){
-  var days=[]; var cur=new Date(s+'T00:00:00'); var end=new Date(e+'T00:00:00');
+  var days=[],cur=new Date(s+'T00:00:00'),end=new Date(e+'T00:00:00');
   while(cur<=end){days.push(fmt(cur));cur.setDate(cur.getDate()+1);}
   return days;
 }
@@ -451,37 +469,30 @@ function renderTrack(){
   var s=document.getElementById('trackStart').value;
   var e=document.getElementById('trackEnd').value;
   if(!s||!e)return;
-  var days=getDays(s,e); var today=fmt(new Date()); var CW=calcCW(days.length);
-
+  var days=getDays(s,e),today=fmt(new Date()),CW=calcCW(days.length);
   var myTasks=allTasks.filter(function(t){return t.assigned_to===viewingUserId;});
-
   var projMap={};
   myTasks.forEach(function(t){
     var proj=null;
     for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===t.project_id){proj=allProjects[i];break;}}
-    if(!proj||proj.finish_status==='future') return;
+    if(!proj||proj.finish_status==='future')return;
     if(!projMap[t.project_id])projMap[t.project_id]=[];
     projMap[t.project_id].push(t);
   });
-
   var DAYS_JP=['\u65e5','\u6708','\u706b','\u6c34','\u6728','\u91d1','\u571f'];
   var hdr='<th style="width:320px;min-width:320px;">&#x1F4CB; Task / Detail</th>';
   days.forEach(function(d){
     var dt=new Date(d+'T00:00:00');
     var dow=DAYS_JP[dt.getDay()];
-    var we=isWeekend(d);
-    var td=(d===today);
-    var lv=isLeaveDay(d);
+    var we=isWeekend(d),td=(d===today),lv=isLeaveDay(d);
     var thCls=td?'today-hdr':(lv?'leave-hdr':'');
     var opacity=(we&&!td&&!lv)?'opacity:.45;':'';
-    var thStyle='width:'+CW+'px;min-width:'+CW+'px;'+opacity;
-    hdr+='<th style="'+thStyle+'"'+(thCls?' class="'+thCls+'"':'')+'>'+dt.getDate()+'<br><span style="font-size:8px;opacity:.8;">'+dow+'</span>'+''+'</th>';
+    hdr+='<th style="width:'+CW+'px;min-width:'+CW+'px;'+opacity+'"'+(thCls?' class="'+thCls+'"':'')+'>'+dt.getDate()+'<br><span style="font-size:8px;opacity:.8;">'+dow+'</span></th>';
   });
-
-  var rows=''; var projIds=Object.keys(projMap);
+  var rows='',projIds=Object.keys(projMap);
   if(!projIds.length){
     rows='<tr><td colspan="'+(days.length+1)+'" style="text-align:center;padding:40px;color:#aaa;">No tasks found.</td></tr>';
-  } else {
+  }else{
     projIds.forEach(function(projId){
       var proj=null;
       for(var i=0;i<allProjects.length;i++){if(allProjects[i].id===projId){proj=allProjects[i];break;}}
@@ -497,29 +508,27 @@ function renderTrack(){
         +'<span class="proj-hdr-arrow'+(isOpen?' open':'')+'" id="parrow-'+projId+'">&#x25B6;</span>'+projLabel+'</div></td></tr>';
       projMap[projId].forEach(function(task){
         var details=allDetails.filter(function(d){return d.task_id===task.id;});
-        var sumDays=0; details.forEach(function(d){sumDays+=parseFloat(d.planned_days||0);});
+        var sumDays=0;details.forEach(function(d){sumDays+=parseFloat(d.planned_days||0);});
         var tc=TASK_TYPE_COLOR[task.task_type]||color;
         var dispStyle=isOpen?'':'display:none;';
-        var srcBadge='';
-        if(task.task_source==='task_working'){
-          srcBadge='<span class="task-source-badge task-source-working">My Task</span>';
-        } else {
-          srcBadge='<span class="task-source-badge task-source-manager">Assigned</span>';
-        }
+        var srcBadge=task.task_source==='task_working'
+          ?'<span class="task-source-badge task-source-working">My Task</span>'
+          :'<span class="task-source-badge task-source-manager">Assigned</span>';
         var taskCells=days.map(function(d){
-          var we=isWeekend(d); var td2=(d===today); var lv=isLeaveDay(d);
+          var we=isWeekend(d),td2=(d===today),lv=isLeaveDay(d);
           var cls='t-day-cell'+(we?' we':'')+(td2?' tdy':'')+(lv?' lv':'');
           return '<td class="'+cls+'" data-tid="'+task.id+'" data-d="'+d+'" style="width:'+CW+'px;min-width:'+CW+'px;"'+(lv?' title="Day Off"':'')+'></td>';
         }).join('');
         rows+='<tr class="task-row proj-child-'+projId+'" style="'+dispStyle+'">'
-          +'<td class="t-label-cell"><div class="task-label"><div class="task-type-dot" style="background:'+tc+';"></div>'
+          +'<td class="t-label-cell"><div class="task-label">'
+          +'<div class="task-type-dot" style="background:'+tc+';"></div>'
           +'<div><div class="task-name">'+(task.task_type||'Task')+srcBadge+'</div>'
           +'<div class="task-meta">'+(sumDays?'<span class="days-badge">'+sumDays.toFixed(1)+' days planned</span>':'')
           +(task.start_date&&task.end_date?'<span style="font-size:10px;color:#bbb;">'+task.start_date+' ~ '+task.end_date+'</span>':'')
           +'</div></div></div></td>'+taskCells+'</tr>';
         details.forEach(function(det){
           var detCells=days.map(function(d){
-            var we=isWeekend(d); var td2=(d===today); var lv=isLeaveDay(d);
+            var we=isWeekend(d),td2=(d===today),lv=isLeaveDay(d);
             var cls='t-day-cell'+(we?' we':'')+(td2?' tdy':'')+(lv?' lv':'');
             return '<td class="'+cls+'" data-det="'+det.id+'" data-d="'+d+'" style="width:'+CW+'px;min-width:'+CW+'px;"'+(lv?' title="Day Off"':'')+'></td>';
           }).join('');
@@ -533,7 +542,7 @@ function renderTrack(){
         });
         if(!isReadOnly){
           var addCells=days.map(function(d){
-            var we=isWeekend(d); var td2=(d===today); var lv=isLeaveDay(d);
+            var we=isWeekend(d),td2=(d===today),lv=isLeaveDay(d);
             var cls='t-day-cell'+(we?' we':'')+(td2?' tdy':'')+(lv?' lv':'');
             return '<td class="'+cls+'" style="width:'+CW+'px;min-width:'+CW+'px;"></td>';
           }).join('');
@@ -555,15 +564,17 @@ function drawBars(days,CW){
   myTasks.forEach(function(task){
     if(!task.start_date||!task.end_date)return;
     var tc=TASK_TYPE_COLOR[task.task_type]||(projColorMap[task.project_id]||'#a8dadc');
-    var si=days.indexOf(task.start_date);var ei=days.indexOf(task.end_date);
+    var si=days.indexOf(task.start_date),ei=days.indexOf(task.end_date);
     if(si<0||si>=days.length)return;
     var realEi=ei<0?days.length-1:Math.min(ei,days.length-1);
     var barW=Math.max((realEi-si+1)*CW-4,CW-4);
     var anchor=document.querySelector('td[data-tid="'+task.id+'"][data-d="'+days[si]+'"]');
     if(!anchor)return;
-    var bar=document.createElement('div');bar.className='t-bar';
+    var bar=document.createElement('div');
+    bar.className='t-bar';
     bar.style.cssText='left:2px;width:'+barW+'px;background:'+tc+';color:'+(isLight(tc)?'#333':'#fff')+';';
-    bar.textContent=task.task_type||'Task';anchor.appendChild(bar);
+    bar.textContent=task.task_type||'Task';
+    anchor.appendChild(bar);
   });
   allDetails.forEach(function(det){
     if(!det.start_date||!det.end_date)return;
@@ -571,15 +582,17 @@ function drawBars(days,CW){
     for(var i=0;i<allTasks.length;i++){if(allTasks[i].id===det.task_id){task=allTasks[i];break;}}
     if(!task)return;
     var tc=TASK_TYPE_COLOR[task.task_type]||(projColorMap[task.project_id]||'#a8dadc');
-    var si=days.indexOf(det.start_date);var ei=days.indexOf(det.end_date);
+    var si=days.indexOf(det.start_date),ei=days.indexOf(det.end_date);
     if(si<0||si>=days.length)return;
     var realEi=ei<0?days.length-1:Math.min(ei,days.length-1);
     var barW=Math.max((realEi-si+1)*CW-4,CW-4);
     var anchor=document.querySelector('td[data-det="'+det.id+'"][data-d="'+days[si]+'"]');
     if(!anchor)return;
-    var bar=document.createElement('div');bar.className='t-bar detail-bar';
+    var bar=document.createElement('div');
+    bar.className='t-bar detail-bar';
     bar.style.cssText='left:2px;width:'+barW+'px;background:'+tc+';color:'+(isLight(tc)?'#333':'#fff')+';';
-    bar.textContent=det.title||'Detail';anchor.appendChild(bar);
+    bar.textContent=det.title||'Detail';
+    anchor.appendChild(bar);
   });
 }
 
