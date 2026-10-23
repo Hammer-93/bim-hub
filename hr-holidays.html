@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>VINADECO BIM Hub – Public Holidays</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;min-height:100vh;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;background:#1a1a2e;padding:0 24px;height:52px;position:sticky;top:0;z-index:200;}
+    .topbar-left{display:flex;align-items:center;gap:10px;}
+    .topbar-title{color:#fff;font-size:16px;font-weight:700;}
+    .topbar-right{display:flex;align-items:center;gap:12px;}
+    .btn-top{background:rgba(255,255,255,.12);border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;text-decoration:none;transition:background .2s;font-family:inherit;}
+    .btn-top:hover{background:rgba(255,255,255,.22);}
+    .dropdown-wrap{position:relative;}
+    .dropdown-trigger{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border:none;color:#fff;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-family:inherit;transition:background .2s;}
+    .dropdown-trigger:hover{background:rgba(255,255,255,.22);}
+    .dropdown-trigger .user-name{font-weight:600;}
+    .dropdown-arrow{font-size:10px;opacity:.7;}
+    .dropdown-menu{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.18);min-width:160px;z-index:999;overflow:hidden;display:none;}
+    .dropdown-menu.open{display:block;}
+    .dropdown-item{display:flex;align-items:center;gap:9px;padding:11px 16px;font-size:13px;color:#333;cursor:pointer;transition:background .15s;text-decoration:none;border:none;background:none;width:100%;font-family:inherit;}
+    .dropdown-item:hover{background:#f0f7ff;color:#0077b6;}
+    .dropdown-item.danger{color:#e63946;}
+    .dropdown-item.danger:hover{background:#fff0f0;color:#e63946;}
+    .dropdown-divider{height:1px;background:#f0f0f0;margin:4px 0;}
+    .nav-tabs{background:#fff;border-bottom:2px solid #e8e8e8;display:flex;align-items:center;padding:0 24px;gap:4px;position:sticky;top:52px;z-index:150;}
+    .nav-drop{position:relative;}
+    .nav-drop-trigger{padding:14px 20px;font-size:13.5px;font-weight:600;color:#888;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;display:flex;align-items:center;gap:7px;transition:all .2s;white-space:nowrap;user-select:none;}
+    .nav-drop-trigger:hover{color:#0096c7;}
+    .nav-drop-trigger.active{color:#0077b6;border-bottom-color:#0077b6;}
+    .nav-drop-arrow{font-size:10px;opacity:.6;transition:transform .2s;}
+    .nav-drop-trigger.open .nav-drop-arrow{transform:rotate(180deg);}
+    .nav-drop-menu{position:absolute;top:calc(100% + 2px);left:0;background:#fff;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.13);min-width:210px;z-index:300;display:none;overflow:hidden;border:1px solid #eee;}
+    .nav-drop-menu.open{display:block;}
+    .nav-drop-item{display:flex;align-items:center;gap:9px;padding:11px 18px;font-size:13px;font-weight:600;color:#555;text-decoration:none;transition:background .15s;}
+    .nav-drop-item:hover{background:#f0f7ff;color:#0077b6;}
+    .nav-drop-item.active{color:#0077b6;background:#e8f4fe;}
+    .nav-drop-item.coming-soon{color:#bbb;cursor:default;pointer-events:none;}
+    .toast{position:fixed;bottom:24px;right:24px;background:#1a1a2e;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:9999;transform:translateY(80px);opacity:0;transition:all .35s;}
+    .toast.show{transform:translateY(0);opacity:1;}
+    .toast.success{border-left:4px solid #52b788;}
+    .toast.error{border-left:4px solid #e63946;}
+    .main{padding:28px 32px;}
+
+    /* HEADER */
+    .cal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:16px;}
+    .cal-header-left h1{font-size:20px;font-weight:800;color:#1a1a2e;}
+    .cal-header-left p{font-size:12px;color:#888;margin-top:2px;}
+    .cal-header-right{font-size:12px;color:#888;white-space:nowrap;}
+
+    /* YEAR NAV */
+    .year-nav{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+    .year-btn{background:#fff;border:1.5px solid #dde2ea;color:#555;padding:6px 14px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;}
+    .year-btn:hover{background:#e8f4fe;border-color:#0096c7;color:#0077b6;}
+    .year-label{font-size:20px;font-weight:800;color:#1a1a2e;min-width:60px;text-align:center;}
+    .summary-row{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:20px;align-items:center;}
+    .summary-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#444;}
+    .swatch{width:20px;height:14px;border-radius:3px;flex-shrink:0;}
+    .swatch-sun{background:#fce8d8;border:1px solid #f4a261;}
+    .swatch-holiday{background:#cce5ff;border:1px solid #74b9ff;}
+    .swatch-sat{background:#d4edda;border:1px solid #52b788;}
+    .swatch-adj{background:#fff9c4;border:1px solid #f4d03f;}
+    .summary-count{font-weight:700;color:#1a1a2e;}
+    .summary-total{font-size:13px;font-weight:700;color:#1a1a2e;margin-left:auto;}
+
+    /* ADD FORM */
+    .add-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:20px 24px;margin-bottom:24px;}
+    .add-card-title{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #f0f0f0;}
+    .add-form{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
+    .add-form .field{display:flex;flex-direction:column;gap:5px;}
+    .add-form label{font-size:11px;font-weight:600;color:#555;}
+    .add-form input[type=date],.add-form input[type=text],.add-form select{padding:8px 12px;border:1.5px solid #dde2ea;border-radius:8px;font-size:13px;outline:none;font-family:inherit;color:#222;}
+    .add-form input:focus,.add-form select:focus{border-color:#0096c7;}
+    .btn-add-holiday{background:linear-gradient(135deg,#0096c7,#0077b6);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px rgba(0,119,182,.25);transition:all .2s;font-family:inherit;}
+    .btn-add-holiday:hover{box-shadow:0 6px 18px rgba(0,119,182,.35);transform:translateY(-1px);}
+
+    /* CALENDAR GRID */
+    .cal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+    @media(max-width:700px){.cal-grid{grid-template-columns:1fr;}}
+    .month-card{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);overflow:hidden;}
+    .month-title{background:#1a1a2e;color:#fff;font-size:13px;font-weight:700;padding:10px 16px;}
+    .month-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+    .month-table th{font-size:10px;font-weight:700;color:#888;text-align:center;padding:6px 2px;border-bottom:1.5px solid #f0f0f0;}
+    .month-table th.sat-hdr{color:#52b788;}
+    .month-table th.sun-hdr{color:#e63946;}
+    .month-table td{text-align:center;padding:4px 2px;font-size:12px;font-weight:600;cursor:default;border-radius:4px;position:relative;}
+    .month-table td.empty{background:transparent;}
+    .month-table td.day-normal{color:#333;}
+    .month-table td.day-sat{background:#d4edda;color:#1a7c3a;}
+    .month-table td.day-sun{background:#fce8d8;color:#c0392b;}
+    .month-table td.day-holiday{background:#cce5ff;color:#0056b3;cursor:pointer;}
+    .month-table td.day-adj{background:#fff9c4;color:#856404;cursor:pointer;}
+    .month-table td.day-today{outline:2px solid #e63946;outline-offset:-2px;border-radius:4px;}
+    .month-table td.day-sat.day-holiday{background:#cce5ff;color:#0056b3;}
+    .month-table td.day-sun.day-holiday{background:#cce5ff;color:#0056b3;}
+    .day-dot{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#e63946;}
+    .day-label{font-size:8px;display:block;color:#0056b3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;margin-top:1px;}
+
+    /* HOLIDAY LIST */
+    .list-card{background:#fff;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.07);padding:20px 24px;margin-top:24px;}
+    .list-card-title{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:14px;padding-bottom:10px;border-bottom:1.5px solid #f0f0f0;}
+    .holiday-list{display:flex;flex-direction:column;gap:8px;}
+    .holiday-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;background:#f8fbff;border:1.5px solid #e8f0f8;}
+    .holiday-item.type-holiday{border-color:#b8d8ff;background:#f0f7ff;}
+    .holiday-item.type-adj{border-color:#f4e04d;background:#fffde7;}
+    .holiday-date{font-size:13px;font-weight:700;color:#1a1a2e;min-width:100px;}
+    .holiday-dow{font-size:11px;color:#888;min-width:24px;}
+    .holiday-name{font-size:13px;color:#444;flex:1;}
+    .holiday-type-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
+    .badge-holiday{background:#cce5ff;color:#0056b3;}
+    .badge-adj{background:#fff9c4;color:#856404;}
+    .btn-del-holiday{background:none;border:1.5px solid #ffb3b3;color:#e63946;padding:3px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;}
+    .btn-del-holiday:hover{background:#fff0f0;}
+    .empty-list{text-align:center;color:#bbb;padding:24px;font-size:13px;}
+  </style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-left">
+    <span class="topbar-title">VINADECO BIM Hub</span>
+  </div>
+  <div class="topbar-right">
+    <a class="btn-top" href="my-tasks.html">&#x1F4CB; My Task</a>
+    <div class="dropdown-wrap" id="userDropWrap">
+      <button class="dropdown-trigger" id="userDropBtn">
+        <span class="user-name" id="topName">...</span>
+        <span class="dropdown-arrow">&#x25BC;</span>
+      </button>
+      <div class="dropdown-menu" id="userDropMenu">
+        <a class="dropdown-item admin-only" href="admin.html" style="display:none;">&#x1F465; Member</a>
+        <div class="dropdown-divider admin-only" style="display:none;"></div>
+        <button class="dropdown-item danger" onclick="logout()">&#x1F6AA; Sign Out</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="nav-tabs">
+  <div class="nav-drop" id="scheduleNavDrop">
+    <div class="nav-drop-trigger" id="scheduleNavTrigger">
+      &#x1F4C5; Project Schedule <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="scheduleNavMenu">
+      <a class="nav-drop-item" href="view-list.html">&#x1F4CB; List of Project</a>
+      <a class="nav-drop-item" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
+      <a class="nav-drop-item" href="view-schedule.html">&#x1F4C5; Project Schedule</a>
+    </div>
+  </div>
+  <div class="nav-drop" id="staffNavDrop">
+    <div class="nav-drop-trigger" id="staffNavTrigger">
+      &#x1F465; Staff <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="staffNavMenu">
+      <a class="nav-drop-item" href="view-staff.html">&#x1F4C5; Staff Schedule</a>
+      <a class="nav-drop-item" href="view-track.html?mode=view">&#x1F4CA; Project Track</a>
+    </div>
+  </div>
+  <div class="nav-drop mgmt-only" id="mgmtNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="mgmtNavTrigger">
+      &#x1F4CA; Management <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="mgmtNavMenu">
+      <a class="nav-drop-item" href="management.html">&#x1F3E0; Overview</a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F4C4; Quotation <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F680; Project Deployment <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F4B0; Revenue Analysis <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+    </div>
+  </div>
+  <div class="nav-drop hr-only" id="hrNavDrop" style="display:none;">
+    <div class="nav-drop-trigger active" id="hrNavTrigger">
+      &#x1F464; HR <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="hrNavMenu">
+      <a class="nav-drop-item" href="hr.html">&#x1F3E0; Overview</a>
+      <a class="nav-drop-item active" href="hr-holidays.html">&#x1F5D3;&#xFE0F; Public Holidays</a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F465; Staff Management <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="main">
+  <div class="cal-header">
+    <div class="cal-header-left">
+      <h1>&#x1F5D3;&#xFE0F; VDCデザインセンター 休日カレンダー</h1>
+      <p id="calSubtitle">VDC Design Center Holiday Calendar</p>
+    </div>
+    <div class="cal-header-right" id="createdDate"></div>
+  </div>
+
+  <div class="year-nav">
+    <button class="year-btn" onclick="changeYear(-1)">&#x25C0;</button>
+    <span class="year-label" id="yearLabel">2026</span>
+    <button class="year-btn" onclick="changeYear(1)">&#x25B6;</button>
+  </div>
+
+  <div class="summary-row" id="summaryRow">
+    <div class="summary-item"><div class="swatch swatch-sun"></div><span>Ngày chủ Nhật &nbsp;/&nbsp; 休日</span> &nbsp;<span class="summary-count" id="cntSun">0</span> 日</div>
+    <div class="summary-item"><div class="swatch swatch-holiday"></div><span>Ngày lễ quốc gia &nbsp;/&nbsp; 国民の休日</span> &nbsp;<span class="summary-count" id="cntHoliday">0</span> 日</div>
+    <div class="summary-item"><div class="swatch swatch-sat"></div><span>Nghỉ thứ Bảy &nbsp;/&nbsp; 土休</span> &nbsp;<span class="summary-count" id="cntSat">0</span> 日</div>
+    <div class="summary-item"><div class="swatch swatch-adj"></div><span>Ngày nghỉ điều chỉnh &nbsp;/&nbsp; 振調整休日</span> &nbsp;<span class="summary-count" id="cntAdj">0</span> 日</div>
+    <div class="summary-total">年間計: <span id="cntTotal">0</span> 日</div>
+  </div>
+
+  <!-- ADD FORM (HR/Admin only) -->
+  <div class="add-card" id="addCard">
+    <div class="add-card-title">&#x2795; Add Holiday / 休日追加</div>
+    <div class="add-form">
+      <div class="field">
+        <label>Date / 日付 <span style="color:#e63946;">*</span></label>
+        <input type="date" id="newDate"/>
+      </div>
+      <div class="field">
+        <label>Name / 名称</label>
+        <input type="text" id="newName" placeholder="e.g. Tết Nguyên Đán..." style="min-width:200px;"/>
+      </div>
+      <div class="field">
+        <label>Type / 種類</label>
+        <select id="newType">
+          <option value="holiday">&#x1F535; 国民の休日 (National Holiday)</option>
+          <option value="adj">&#x1F7E1; 振調整休日 (Adjusted Day Off)</option>
+        </select>
+      </div>
+      <div class="field">
+        <button class="btn-add-holiday" onclick="addHoliday()">&#x1F4BE; Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="cal-grid" id="calGrid">
+    <div style="padding:40px;text-align:center;color:#aaa;grid-column:span 2;">Loading...</div>
+  </div>
+
+  <!-- HOLIDAY LIST -->
+  <div class="list-card">
+    <div class="list-card-title">&#x1F4CB; Holiday List / 休日一覧</div>
+    <div class="holiday-list" id="holidayList">
+      <div class="empty-list">No holidays registered.</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script>
+var currentYear = new Date().getFullYear();
+var holidays = []; // [{id, holiday_date, holiday_name, holiday_type}]
+var canEdit = false;
+var DOW_JP = ['日','月','火','水','木','金','土'];
+var DOW_EN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+window.onload = async function(){
+  initTopbarLocal();
+  initNavDrops();
+  document.getElementById('createdDate').textContent = '作成: ' + fmt(new Date());
+  await loadHolidays();
+  render();
+};
+
+function initTopbarLocal(){
+  var role = localStorage.getItem('user_role') || 'Staff';
+  var name = localStorage.getItem('user_name') || 'User';
+  var email = localStorage.getItem('user_email') || '';
+  if(!email){ window.location.href='index.html'; return; }
+  document.getElementById('topName').textContent = name;
+  canEdit = (role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='HR');
+  if(!canEdit){
+    document.getElementById('addCard').style.display = 'none';
+  }
+  if(role==='Admin'||role==='Manager'||role==='Sub Manager'){
+    document.querySelectorAll('.admin-only').forEach(function(el){el.style.display='flex';});
+  }
+  if(role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='Leader'){
+    document.querySelectorAll('.mgmt-only').forEach(function(el){el.style.display='flex';});
+  }
+  if(role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='HR'){
+    document.querySelectorAll('.hr-only').forEach(function(el){el.style.display='flex';});
+  }
+  var dropBtn=document.getElementById('userDropBtn');
+  var dropMenu=document.getElementById('userDropMenu');
+  dropBtn.addEventListener('click',function(e){e.stopPropagation();dropMenu.classList.toggle('open');});
+  document.addEventListener('click',function(){dropMenu.classList.remove('open');});
+}
+
+function initNavDrops(){
+  var drops=[
+    ['scheduleNavTrigger','scheduleNavMenu'],
+    ['staffNavTrigger','staffNavMenu'],
+    ['mgmtNavTrigger','mgmtNavMenu'],
+    ['hrNavTrigger','hrNavMenu']
+  ];
+  drops.forEach(function(p){
+    var trigger=document.getElementById(p[0]);
+    var menu=document.getElementById(p[1]);
+    if(!trigger||!menu)return;
+    trigger.addEventListener('click',function(e){
+      e.stopPropagation();
+      trigger.classList.toggle('open');
+      menu.classList.toggle('open');
+    });
+  });
+  document.addEventListener('click',function(){
+    drops.forEach(function(p){
+      var t=document.getElementById(p[0]);
+      var m=document.getElementById(p[1]);
+      if(t)t.classList.remove('open');
+      if(m)m.classList.remove('open');
+    });
+  });
+}
+
+async function loadHolidays(){
+  try{
+    var res = await fetch(
+      SUPABASE_URL+'/rest/v1/public_holidays?select=*&order=holiday_date.asc',
+      {headers:HDRS}
+    );
+    if(res.ok){ holidays = await res.json(); }
+    else{ holidays = []; }
+  }catch(e){ holidays = []; }
+}
+
+function fmt(d){
+  if(!d)return'';
+  var dt=(d instanceof Date)?d:new Date(d+'T00:00:00');
+  return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+}
+
+function changeYear(delta){
+  currentYear += delta;
+  document.getElementById('yearLabel').textContent = currentYear;
+  render();
+}
+
+function getHolidayForDate(dateStr){
+  for(var i=0;i<holidays.length;i++){
+    if(holidays[i].holiday_date===dateStr) return holidays[i];
+  }
+  return null;
+}
+
+function render(){
+  renderSummary();
+  renderCalendar();
+  renderList();
+}
+
+function renderSummary(){
+  var today = fmt(new Date());
+  var yearHolidays = holidays.filter(function(h){ return h.holiday_date.startsWith(currentYear+''); });
+  var cntSun=0, cntSat=0, cntAdj=0, cntHoliday=0;
+  // Count Sundays and Saturdays for the year
+  var d = new Date(currentYear, 0, 1);
+  while(d.getFullYear()===currentYear){
+    var dow = d.getDay();
+    if(dow===0) cntSun++;
+    if(dow===6) cntSat++;
+    d.setDate(d.getDate()+1);
+  }
+  yearHolidays.forEach(function(h){
+    if(h.holiday_type==='adj') cntAdj++;
+    else cntHoliday++;
+  });
+  document.getElementById('cntSun').textContent = cntSun;
+  document.getElementById('cntSat').textContent = cntSat;
+  document.getElementById('cntHoliday').textContent = cntHoliday;
+  document.getElementById('cntAdj').textContent = cntAdj;
+  document.getElementById('cntTotal').textContent = cntSun + cntSat + cntHoliday + cntAdj;
+}
+
+function renderCalendar(){
+  var today = fmt(new Date());
+  var grid = document.getElementById('calGrid');
+  var html = '';
+  for(var mo=0;mo<12;mo++){
+    var monthName = (mo+1)+'月';
+    html += '<div class="month-card"><div class="month-title">'+monthName+'</div>';
+    html += '<table class="month-table"><thead><tr>';
+    var headers = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+    headers.forEach(function(h,i){
+      var cls = i===5?'sat-hdr':i===6?'sun-hdr':'';
+      html += '<th class="'+cls+'">'+h+'</th>';
+    });
+    html += '</tr></thead><tbody>';
+    // First day of month (0=Sun,1=Mon...)
+    var firstDay = new Date(currentYear, mo, 1).getDay();
+    // Convert to Mon=0
+    var startOffset = (firstDay === 0) ? 6 : firstDay - 1;
+    var daysInMonth = new Date(currentYear, mo+1, 0).getDate();
+    var dayCount = 0;
+    html += '<tr>';
+    // Empty cells before first day
+    for(var e=0;e<startOffset;e++){
+      html += '<td class="empty"></td>';
+      dayCount++;
+    }
+    for(var day=1;day<=daysInMonth;day++){
+      var dateStr = currentYear+'-'+String(mo+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+      var dt = new Date(dateStr+'T00:00:00');
+      var dow = dt.getDay(); // 0=Sun,6=Sat
+      var hobj = getHolidayForDate(dateStr);
+      var cls = 'day-normal';
+      if(hobj && hobj.holiday_type==='adj') cls = 'day-adj';
+      else if(hobj) cls = 'day-holiday';
+      else if(dow===0) cls = 'day-sun';
+      else if(dow===6) cls = 'day-sat';
+      if(dateStr===today) cls += ' day-today';
+      var inner = day;
+      if(hobj && hobj.holiday_name){
+        inner += '<span class="day-label">'+escHtml(hobj.holiday_name)+'</span>';
+      }
+      var onclick = '';
+      if(canEdit && hobj){
+        onclick = ' onclick="deleteHolidayByDate(\''+dateStr+'\')" title="Click to delete: '+(hobj.holiday_name||hobj.holiday_type)+'"';
+      }
+      html += '<td class="'+cls+'"'+onclick+'>'+inner+'</td>';
+      dayCount++;
+      if(dayCount%7===0 && day<daysInMonth) html += '</tr><tr>';
+    }
+    // Fill remaining cells
+    var remaining = (7 - (dayCount%7)) % 7;
+    for(var r=0;r<remaining;r++) html += '<td class="empty"></td>';
+    html += '</tr></tbody></table></div>';
+  }
+  grid.innerHTML = html;
+}
+
+function renderList(){
+  var yearHolidays = holidays.filter(function(h){ return h.holiday_date.startsWith(currentYear+''); });
+  var list = document.getElementById('holidayList');
+  if(!yearHolidays.length){
+    list.innerHTML = '<div class="empty-list">No holidays registered for '+currentYear+'.</div>';
+    return;
+  }
+  var html = '';
+  yearHolidays.forEach(function(h){
+    var dt = new Date(h.holiday_date+'T00:00:00');
+    var dow = DOW_JP[dt.getDay()];
+    var isAdj = h.holiday_type==='adj';
+    var badgeCls = isAdj?'badge-adj':'badge-holiday';
+    var badgeLabel = isAdj?'振調整休日':'国民の休日';
+    var itemCls = isAdj?'holiday-item type-adj':'holiday-item type-holiday';
+    html += '<div class="'+itemCls+'">'
+      +'<div class="holiday-date">'+h.holiday_date+'</div>'
+      +'<div class="holiday-dow">('+dow+')</div>'
+      +'<div class="holiday-name">'+(h.holiday_name?escHtml(h.holiday_name):'-')+'</div>'
+      +'<span class="holiday-type-badge '+badgeCls+'">'+badgeLabel+'</span>';
+    if(canEdit){
+      html += '<button class="btn-del-holiday" onclick="deleteHoliday(\''+h.id+'\')">&#x1F5D1; Delete</button>';
+    }
+    html += '</div>';
+  });
+  list.innerHTML = html;
+}
+
+function escHtml(s){
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function addHoliday(){
+  var dateVal = document.getElementById('newDate').value;
+  var nameVal = document.getElementById('newName').value.trim();
+  var typeVal = document.getElementById('newType').value;
+  if(!dateVal){ showToast('Please select a date','error'); return; }
+  // Check duplicate
+  for(var i=0;i<holidays.length;i++){
+    if(holidays[i].holiday_date===dateVal){
+      showToast('This date is already registered','error'); return;
+    }
+  }
+  try{
+    var body = {holiday_date:dateVal, holiday_type:typeVal};
+    if(nameVal) body.holiday_name = nameVal;
+    var res = await fetch(SUPABASE_URL+'/rest/v1/public_holidays',{
+      method:'POST',
+      headers: Object.assign({},HDRS,{'Prefer':'return=representation'}),
+      body: JSON.stringify(body)
+    });
+    if(!res.ok){ var err=await res.json(); showToast(err.message||'Error adding','error'); return; }
+    var arr = await res.json();
+    if(arr&&arr[0]) holidays.push(arr[0]);
+    holidays.sort(function(a,b){return a.holiday_date.localeCompare(b.holiday_date);});
+    document.getElementById('newDate').value='';
+    document.getElementById('newName').value='';
+    showToast('Holiday added!','success');
+    render();
+  }catch(e){ showToast('Error: '+e.message,'error'); }
+}
+
+async function deleteHoliday(id){
+  if(!confirm('Delete this holiday?')) return;
+  try{
+    await fetch(SUPABASE_URL+'/rest/v1/public_holidays?id=eq.'+id,{method:'DELETE',headers:HDRS});
+    holidays = holidays.filter(function(h){return h.id!==id;});
+    showToast('Deleted!','success');
+    render();
+  }catch(e){ showToast('Error: '+e.message,'error'); }
+}
+
+async function deleteHolidayByDate(dateStr){
+  var h = getHolidayForDate(dateStr);
+  if(!h) return;
+  await deleteHoliday(h.id);
+}
+
+function showToast(msg, type){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast '+(type||'success')+' show';
+  setTimeout(function(){t.classList.remove('show');},3200);
+}
+
+function logout(){ if(confirm('Sign out?')){ localStorage.clear(); window.location.href='index.html'; } }
+</script>
+</body>
+</html>
