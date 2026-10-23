@@ -32,11 +32,12 @@
     .nav-drop-trigger.active { color:#0077b6; border-bottom-color:#0077b6; }
     .nav-drop-arrow { font-size:10px; opacity:.6; transition:transform .2s; }
     .nav-drop-trigger.open .nav-drop-arrow { transform:rotate(180deg); }
-    .nav-drop-menu { position:absolute; top:calc(100% + 2px); left:auto; right:0; background:#fff; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,.13); min-width:190px; z-index:300; display:none; overflow:hidden; border:1px solid #eee; }
+    .nav-drop-menu { position:absolute; top:calc(100% + 2px); left:0; background:#fff; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,.13); min-width:210px; z-index:300; display:none; overflow:hidden; border:1px solid #eee; }
     .nav-drop-menu.open { display:block; }
     .nav-drop-item { display:flex; align-items:center; gap:9px; padding:11px 18px; font-size:13px; font-weight:600; color:#555; text-decoration:none; transition:background .15s; }
     .nav-drop-item:hover { background:#f0f7ff; color:#0077b6; }
     .nav-drop-item.active { color:#0077b6; background:#e8f4fe; }
+    .nav-drop-item.coming-soon { color:#bbb; cursor:default; pointer-events:none; }
     .main { padding:28px 32px; }
     .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:12px; }
     .section-title { font-size:18px; font-weight:700; color:#1a1a2e; }
@@ -216,7 +217,7 @@
 <div class="nav-tabs">
   <div class="nav-drop" id="scheduleNavDrop">
     <div class="nav-drop-trigger active" id="scheduleNavTrigger">
-      <span id="navTriggerLabel">&#x1F4C5; Project Schedule</span> <span class="nav-drop-arrow">&#x25BC;</span>
+      &#x1F4C5; Project Schedule <span class="nav-drop-arrow">&#x25BC;</span>
     </div>
     <div class="nav-drop-menu" id="scheduleNavMenu">
       <a class="nav-drop-item active" href="view-list.html">&#x1F4CB; List of Project</a>
@@ -231,6 +232,27 @@
     <div class="nav-drop-menu" id="staffNavMenu">
       <a class="nav-drop-item" href="view-staff.html">&#x1F4C5; Staff Schedule</a>
       <a class="nav-drop-item" href="view-track.html?mode=view">&#x1F4CA; Project Track</a>
+    </div>
+  </div>
+  <div class="nav-drop mgmt-only" id="mgmtNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="mgmtNavTrigger">
+      &#x1F4CA; Management <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="mgmtNavMenu">
+      <a class="nav-drop-item" href="management.html">&#x1F3E0; Overview</a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F4C4; Quotation <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F680; Project Deployment <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F4B0; Revenue Analysis <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+    </div>
+  </div>
+  <div class="nav-drop hr-only" id="hrNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="hrNavTrigger">
+      &#x1F464; HR <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="hrNavMenu">
+      <a class="nav-drop-item" href="hr.html">&#x1F3E0; Overview</a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F5D3;&#xFE0F; Public Holidays <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F465; Staff Management <span style="font-size:10px;color:#bbb;">(soon)</span></a>
     </div>
   </div>
 </div>
@@ -448,7 +470,7 @@ var TYPE_COLOR = {
 
 window.onload = function(){
   initTopbar();
-  initNavDrop();
+  initNavDrops();
   loadAllData().then(function(){
     renderList(); suggestNextNum();
     renderTags('branch'); renderTags('design');
@@ -466,6 +488,14 @@ function initTopbar(){
     var els=document.querySelectorAll('.admin-only');
     for(var i=0;i<els.length;i++) els[i].style.display='flex';
   }
+  if(role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='Leader'){
+    var els2=document.querySelectorAll('.mgmt-only');
+    for(var i=0;i<els2.length;i++) els2[i].style.display='flex';
+  }
+  if(role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='HR'){
+    var els3=document.querySelectorAll('.hr-only');
+    for(var i=0;i<els3.length;i++) els3[i].style.display='flex';
+  }
   if(role!=='Staff') document.getElementById('btnAddProject').style.display='flex';
   var dropBtn=document.getElementById('userDropBtn');
   var dropMenu=document.getElementById('userDropMenu');
@@ -473,20 +503,31 @@ function initTopbar(){
   document.addEventListener('click',function(){dropMenu.classList.remove('open');});
 }
 
-function initNavDrop(){
-  var trigger=document.getElementById('scheduleNavTrigger');
-  var menu=document.getElementById('scheduleNavMenu');
-  var strigger=document.getElementById('staffNavTrigger');
-  var smenu=document.getElementById('staffNavMenu');
-  trigger.addEventListener('click',function(e){e.stopPropagation();trigger.classList.toggle('open');menu.classList.toggle('open');});
-  strigger.addEventListener('click',function(e){e.stopPropagation();strigger.classList.toggle('open');smenu.classList.toggle('open');});
-  document.addEventListener('click',function(){
-    trigger.classList.remove('open');menu.classList.remove('open');
-    strigger.classList.remove('open');smenu.classList.remove('open');
+function initNavDrops() {
+  var drops = [
+    ['scheduleNavTrigger','scheduleNavMenu'],
+    ['staffNavTrigger','staffNavMenu'],
+    ['mgmtNavTrigger','mgmtNavMenu'],
+    ['hrNavTrigger','hrNavMenu']
+  ];
+  drops.forEach(function(p) {
+    var trigger = document.getElementById(p[0]);
+    var menu = document.getElementById(p[1]);
+    if (!trigger || !menu) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      trigger.classList.toggle('open');
+      menu.classList.toggle('open');
+    });
   });
-  var PAGE_LABELS={'view-list.html':'\uD83D\uDCCB List of Project','view-category.html':'\uD83D\uDDC2\uFE0F Type of Work','view-schedule.html':'\uD83D\uDCC5 Project Schedule'};
-  var cur=location.pathname.split('/').pop();
-  if(PAGE_LABELS[cur]) document.getElementById('navTriggerLabel').textContent=PAGE_LABELS[cur];
+  document.addEventListener('click', function() {
+    drops.forEach(function(p) {
+      var t = document.getElementById(p[0]);
+      var m = document.getElementById(p[1]);
+      if (t) t.classList.remove('open');
+      if (m) m.classList.remove('open');
+    });
+  });
 }
 
 function selectGroup(g){
