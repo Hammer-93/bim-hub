@@ -222,7 +222,7 @@
     </div>
     <div class="nav-drop-menu" id="hrNavMenu">
       <a class="nav-drop-item" href="hr.html">&#x1F3E0; Overview</a>
-      <a class="nav-drop-item coming-soon" href="#">&#x1F5D3;&#xFE0F; Public Holidays <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item" href="hr-holidays.html">&#x1F5D3;&#xFE0F; Public Holidays</a>
       <a class="nav-drop-item coming-soon" href="#">&#x1F465; Staff Management <span style="font-size:10px;color:#bbb;">(soon)</span></a>
     </div>
   </div>
@@ -303,6 +303,7 @@
     <div class="legend-item"><div class="legend-bar" style="background:#a8dadc;"></div><span>Work Period</span></div>
     <div class="legend-item"><div class="legend-dot" style="background:#52b788;"></div><span>Receive Date (click to edit)</span></div>
     <div class="legend-item"><div class="legend-dot" style="background:#e63946;"></div><span>Send Date (click to edit)</span></div>
+    <div class="legend-item"><div class="legend-bar" style="background:#f8f8f8;border:1px solid #ddd;"></div><span>Holiday / Weekend</span></div>
   </div>
   <div class="gantt-wrap">
     <div id="ganttCont"><div style="padding:40px;text-align:center;color:#aaa;">Loading...</div></div>
@@ -694,14 +695,14 @@ function renderGantt(){
     days.forEach(function(d){var k=d.substring(0,7);months[k]=(months[k]||0)+1;});
     Object.entries(months).forEach(function(en){hdr1+='<th colspan="'+en[1]+'" style="min-width:'+(en[1]*CW)+'px;border-right:1px solid rgba(255,255,255,.15);">'+en[0]+'</th>';});
     days.forEach(function(d){
-      var we=isWeekend(d),td=d===today;
+      var we=isWeekend(d)||isHoliday(d),td=d===today;
       hdr2+='<th style="min-width:'+CW+'px;'+(we?'opacity:.45':'')+(td?';background:#e63946;':'')+'">'+new Date(d).getDate()+'</th>';
     });
   }else{
     days.forEach(function(d){
       var dt=new Date(d);
       var dow=['日','月','火','水','木','金','土'][dt.getDay()];
-      var we=isWeekend(d),td=d===today;
+      var we=isWeekend(d)||isHoliday(d),td=d===today;
       hdr1+='<th style="min-width:'+CW+'px;'+(we?'opacity:.45':'')+(td?'background:#e63946 !important;':'')+'"'+(td?' class="today-hdr"':'')+'>'+dt.getDate()+'<br><span style="font-size:9px;opacity:.8;">'+dow+'</span></th>';
     });
   }
@@ -726,14 +727,23 @@ function renderGantt(){
       +'<div class="g-pname">'+(p.project_name||p.name||'')+'</div><div class="g-pcode">'+getCode(p)+'</div>'+swHtml+'</td>';
     var bicoCell='<td class="g-bico" rowspan="'+rs+'">'+noteVal+'</td>';
     var adhzmStaffCell='<td class="g-staff" style="min-width:130px;max-width:180px;vertical-align:top;border-right:2px solid #e8e8e8;"><div class="g-staff-adhzm">'+staffAdhzm+'</div></td>';
-    var dcAdhzm=days.map(function(d){return'<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;"></td>';}).join('');
+    var dcAdhzm=days.map(function(d){
+      var we=isWeekend(d)||isHoliday(d),td=d===today;
+      return'<td class="g-cell '+(we?'we':'')+' '+(td?'tdy':'')+'" style="min-width:'+CW+'px;"></td>';
+    }).join('');
     rows+='<tr>'+sttCell+pCell+bicoCell+adhzmStaffCell+dcAdhzm+'</tr>';
     if(!tasks.length){
-      var dcBlank=days.map(function(d){return'<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;"></td>';}).join('');
+      var dcBlank=days.map(function(d){
+        var we=isWeekend(d)||isHoliday(d),td=d===today;
+        return'<td class="g-cell '+(we?'we':'')+' '+(td?'tdy':'')+'" style="min-width:'+CW+'px;"></td>';
+      }).join('');
       rows+='<tr><td class="g-staff" style="min-width:130px;max-width:180px;vertical-align:top;border-right:2px solid #e8e8e8;"><div class="g-staff-vndc"></div></td>'+dcBlank+'</tr>';
     }else{
       tasks.forEach(function(t){
-        var dc=days.map(function(d){return'<td class="g-cell '+(isWeekend(d)?'we':'')+' '+(d===today?'tdy':'')+'" style="min-width:'+CW+'px;" data-tid="'+t.id+'" data-day="'+d+'"></td>';}).join('');
+        var dc=days.map(function(d){
+          var we=isWeekend(d)||isHoliday(d),td=d===today;
+          return'<td class="g-cell '+(we?'we':'')+' '+(td?'tdy':'')+'" style="min-width:'+CW+'px;" data-tid="'+t.id+'" data-day="'+d+'"></td>';
+        }).join('');
         rows+='<tr data-tid="'+t.id+'"><td class="g-staff" style="min-width:130px;max-width:180px;vertical-align:top;border-right:2px solid #e8e8e8;"><div class="g-staff-vndc">'+staffVndc+'</div></td>'+dc+'</tr>';
       });
     }
