@@ -27,24 +27,22 @@
   .dropdown-item.danger:hover { background:#fff0f0; color:#e63946; }
   .dropdown-divider { height:1px; background:#f0f0f0; margin:4px 0; }
 
-  /* NAV TABS */
   .nav-tabs { background:#fff; border-bottom:2px solid #e8e8e8; display:flex; align-items:center; padding:0 24px; gap:4px; position:relative; z-index:100; }
   .nav-tab { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; white-space:nowrap; text-decoration:none; display:flex; align-items:center; gap:7px; }
   .nav-tab:hover { color:#0096c7; }
   .nav-tab.active { color:#0077b6; border-bottom-color:#0077b6; }
-
-  /* NAV DROPDOWN */
   .nav-drop { position:relative; }
   .nav-drop-trigger { padding:14px 20px; font-size:13.5px; font-weight:600; color:#888; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; display:flex; align-items:center; gap:7px; transition:all .2s; white-space:nowrap; user-select:none; }
   .nav-drop-trigger:hover { color:#0096c7; }
   .nav-drop-trigger.active { color:#0077b6; border-bottom-color:#0077b6; }
   .nav-drop-arrow { font-size:10px; opacity:.6; transition:transform .2s; }
   .nav-drop-trigger.open .nav-drop-arrow { transform:rotate(180deg); }
-  .nav-drop-menu { position:absolute; top:calc(100% + 2px); left:0; background:#fff; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,.13); min-width:190px; z-index:300; display:none; overflow:hidden; border:1px solid #eee; }
+  .nav-drop-menu { position:absolute; top:calc(100% + 2px); left:0; background:#fff; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,.13); min-width:210px; z-index:300; display:none; overflow:hidden; border:1px solid #eee; }
   .nav-drop-menu.open { display:block; }
   .nav-drop-item { display:flex; align-items:center; gap:9px; padding:11px 18px; font-size:13px; font-weight:600; color:#555; text-decoration:none; transition:background .15s; }
   .nav-drop-item:hover { background:#f0f7ff; color:#0077b6; }
   .nav-drop-item.active { color:#0077b6; background:#e8f4fe; }
+  .nav-drop-item.coming-soon { color:#bbb; cursor:default; pointer-events:none; }
 
   .stats-bar { display:flex; gap:16px; padding:20px 24px 0; }
   .stat-card { background:#fff; border-radius:12px; padding:16px 28px; text-align:center; flex:1; box-shadow:0 1px 6px #0001; }
@@ -127,8 +125,8 @@
 <div class="nav-tabs">
   <div class="nav-drop" id="scheduleNavDrop">
     <div class="nav-drop-trigger active" id="scheduleNavTrigger">
-  <span id="navTriggerLabel">📅 Project Schedule</span> <span class="nav-drop-arrow">▼</span>
-</div>
+      &#x1F4C5; Project Schedule <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
     <div class="nav-drop-menu" id="scheduleNavMenu">
       <a class="nav-drop-item" href="view-list.html">&#x1F4CB; List of Project</a>
       <a class="nav-drop-item active" href="view-category.html">&#x1F5C2;&#xFE0F; Type of Work</a>
@@ -142,6 +140,27 @@
     <div class="nav-drop-menu" id="staffNavMenu">
       <a class="nav-drop-item" href="view-staff.html">&#x1F4C5; Staff Schedule</a>
       <a class="nav-drop-item" href="view-track.html?mode=view">&#x1F4CA; Project Track</a>
+    </div>
+  </div>
+  <div class="nav-drop mgmt-only" id="mgmtNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="mgmtNavTrigger">
+      &#x1F4CA; Management <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="mgmtNavMenu">
+      <a class="nav-drop-item" href="management.html">&#x1F3E0; Overview</a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F4C4; Quotation <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F680; Project Deployment <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F4B0; Revenue Analysis <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+    </div>
+  </div>
+  <div class="nav-drop hr-only" id="hrNavDrop" style="display:none;">
+    <div class="nav-drop-trigger" id="hrNavTrigger">
+      &#x1F464; HR <span class="nav-drop-arrow">&#x25BC;</span>
+    </div>
+    <div class="nav-drop-menu" id="hrNavMenu">
+      <a class="nav-drop-item" href="hr.html">&#x1F3E0; Overview</a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F5D3;&#xFE0F; Public Holidays <span style="font-size:10px;color:#bbb;">(soon)</span></a>
+      <a class="nav-drop-item coming-soon" href="#">&#x1F465; Staff Management <span style="font-size:10px;color:#bbb;">(soon)</span></a>
     </div>
   </div>
 </div>
@@ -190,8 +209,8 @@
 
 <script src="js/config.js"></script>
 <script>
-const TASK_TYPES_LOCAL = ['\u30d1\u30fc\u30b9\u30fb\u52d5\u753b','\u610f\u5320\u30e2\u30c7\u30eb','\u69cb\u9020\u30e2\u30c7\u30eb','\u6e05\u7b97\u30e2\u30c7\u30eb','\u56f3\u9762','\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7'];
-const ACTIVE_STATUSES  = ['active','in_progress','doing','\u9032\u884c\u4e2d','\u30a2\u30af\u30c6\u30a3\u30d6','running','ongoing'];
+var TASK_TYPES_LOCAL = ['\u30d1\u30fc\u30b9\u30fb\u52d5\u753b','\u610f\u5320\u30e2\u30c7\u30eb','\u69cb\u9020\u30e2\u30c7\u30eb','\u6e05\u7b97\u30e2\u30c7\u30eb','\u56f3\u9762','\u65bd\u5de5\u30b9\u30c6\u30c3\u30d7'];
+var ACTIVE_STATUSES  = ['active','in_progress','doing','\u9032\u884c\u4e2d','\u30a2\u30af\u30c6\u30a3\u30d6','running','ongoing'];
 
 function isActiveTask(t) {
   var s = (t.status || '').toLowerCase().trim();
@@ -203,7 +222,7 @@ function getName(p)  { return p.project_name || p.name || ''; }
 
 window.onload = async function() {
   initTopbar();
-  initNavDrop();
+  initNavDrops();
   try {
     await loadAllData();
     render();
@@ -222,6 +241,14 @@ function initTopbar() {
     var els = document.querySelectorAll('.admin-only');
     for (var i=0;i<els.length;i++) els[i].style.display='flex';
   }
+  if (role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='Leader') {
+    var els2 = document.querySelectorAll('.mgmt-only');
+    for (var i=0;i<els2.length;i++) els2[i].style.display='flex';
+  }
+  if (role==='Admin'||role==='Manager'||role==='Sub Manager'||role==='HR') {
+    var els3 = document.querySelectorAll('.hr-only');
+    for (var i=0;i<els3.length;i++) els3[i].style.display='flex';
+  }
   var dropBtn  = document.getElementById('userDropBtn');
   var dropMenu = document.getElementById('userDropMenu');
   dropBtn.addEventListener('click', function(e) {
@@ -233,33 +260,31 @@ function initTopbar() {
   });
 }
 
-function initNavDrop() {
-  var trigger  = document.getElementById('scheduleNavTrigger');
-  var menu     = document.getElementById('scheduleNavMenu');
-  var strigger = document.getElementById('staffNavTrigger');
-  var smenu    = document.getElementById('staffNavMenu');
-  trigger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    trigger.classList.toggle('open');
-    menu.classList.toggle('open');
-  });
-  strigger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    strigger.classList.toggle('open');
-    smenu.classList.toggle('open');
+function initNavDrops() {
+  var drops = [
+    ['scheduleNavTrigger','scheduleNavMenu'],
+    ['staffNavTrigger','staffNavMenu'],
+    ['mgmtNavTrigger','mgmtNavMenu'],
+    ['hrNavTrigger','hrNavMenu']
+  ];
+  drops.forEach(function(p) {
+    var trigger = document.getElementById(p[0]);
+    var menu = document.getElementById(p[1]);
+    if (!trigger || !menu) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      trigger.classList.toggle('open');
+      menu.classList.toggle('open');
+    });
   });
   document.addEventListener('click', function() {
-    trigger.classList.remove('open');  menu.classList.remove('open');
-    strigger.classList.remove('open'); smenu.classList.remove('open');
+    drops.forEach(function(p) {
+      var t = document.getElementById(p[0]);
+      var m = document.getElementById(p[1]);
+      if (t) t.classList.remove('open');
+      if (m) m.classList.remove('open');
+    });
   });
-  var PAGE_LABELS = {
-    'view-list.html':     '📋 List of Project',
-    'view-category.html': '🗂️ Type of Work',
-    'view-schedule.html': '📅 Project Schedule'
-  };
-  var currentPage = location.pathname.split('/').pop();
-  var label = PAGE_LABELS[currentPage];
-  if (label) document.getElementById('navTriggerLabel').textContent = label;
 }
 
 function render() {
@@ -284,9 +309,9 @@ function render() {
 
   var filteredIds = new Set(projects.map(function(p) { return p.id; }));
   var activeTasks = allTasks.filter(function(t) {
-  if (t.task_source === 'task_working') return false;
-  return isActiveTask(t) && filteredIds.has(t.project_id);
-});
+    if (t.task_source === 'task_working') return false;
+    return isActiveTask(t) && filteredIds.has(t.project_id);
+  });
 
   document.getElementById('statTotal').textContent  = projects.length;
   document.getElementById('statActive').textContent = projects.length;
@@ -350,10 +375,10 @@ function render() {
 }
 
 function openModal(p) {
-  var code   = getCode(p);
+  var code  = getCode(p);
   var tasks = allTasks.filter(function(t) {
-  return t.project_id === p.id && t.task_source !== 'task_working';
-});
+    return t.project_id === p.id && t.task_source !== 'task_working';
+  });
   var active = tasks.filter(isActiveTask);
   document.getElementById('modalTitle').textContent = code;
   var body = '';
